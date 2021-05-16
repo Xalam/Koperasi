@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Toko;
 
 use App\Http\Controllers\Controller;
-use App\Models\Master\Barang\BarangModel;
+use App\Models\Toko\Master\Barang\BarangModel;
 use Illuminate\Http\Request;
 
 class DataBarangController extends Controller

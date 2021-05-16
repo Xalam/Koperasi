@@ -1,8 +1,9 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Toko;
 
-use App\Models\Master\Supplier\SupplierModel;
+use App\Http\Controllers\Controller;
+use App\Toko\Models\Master\Supplier\SupplierModel;
 use Illuminate\Http\Request;
 
 class DataSupplierController extends Controller

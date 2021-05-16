@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Models\Master\Akun;
+namespace App\Models\Toko\Master\Akun;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;

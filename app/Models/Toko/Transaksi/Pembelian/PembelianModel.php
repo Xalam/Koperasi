@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Models\Transaksi\Pembelian;
+namespace App\Models\Toko\Transaksi\Pembelian;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;

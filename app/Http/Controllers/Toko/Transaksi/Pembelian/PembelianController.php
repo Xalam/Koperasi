@@ -1,14 +1,14 @@
 <?php
 
-namespace App\Http\Controllers\Transaksi\Pembelian;
+namespace App\Http\Controllers\Toko\Transaksi\Pembelian;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
-use App\Models\Transaksi\PembayaranModel;
-use App\Models\Transaksi\Pembelian\PembelianModel;
-use App\Models\Master\Barang\BarangModel;
-use App\Models\Master\Supplier\SupplierModel;
+use App\Models\Toko\Master\Barang\BarangModel;
+use App\Models\Toko\Transaksi\PembayaranModel;
+use App\Models\Toko\Transaksi\Pembelian\PembelianModel;
+use App\Models\Toko\Master\Supplier\SupplierModel;
 
 class PembelianController extends Controller
 {
@@ -53,7 +53,7 @@ class PembelianController extends Controller
         }
 
 
-        return view('transaksi.pembelian.index', compact('barang', 'kode_barang', 'kode_supplier', 'pembayaran', 'supplier'));
+        return view('toko.transaksi.pembelian.index', compact('barang', 'kode_barang', 'kode_supplier', 'pembayaran', 'supplier'));
     }
 
     public function show($nomor) {

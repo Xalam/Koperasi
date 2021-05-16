@@ -25,8 +25,8 @@
     @yield('popup')
     <div class="page-wrapper chiller-theme toggled">
         <main class="page-content">
-            @include('navbar')
-            @include('sidebar')
+            @include('toko.navbar')
+            @include('toko.sidebar')
             <div class="container-fluid">
                 @yield('main')
             </div>
