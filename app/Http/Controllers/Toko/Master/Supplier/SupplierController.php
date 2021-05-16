@@ -1,23 +1,23 @@
 <?php
 
-namespace App\Http\Controllers\Master\Supplier;
+namespace App\Http\Controllers\Toko\Master\Supplier;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
-use App\Models\Master\Supplier\SupplierModel;
+use App\Models\Toko\Master\Supplier\SupplierModel;
 
 class SupplierController extends Controller
 {
     public function index() {
         $supplier = SupplierModel::all();
 
-        return view('master.supplier.index', compact('supplier'));
+        return view('toko.master.supplier.index', compact('supplier'));
     }
 
     public function store(Request $request) {
         SupplierModel::create($request->all());
 
-        return redirect('/master/supplier');
+        return redirect('/toko/master/supplier');
     }
 }

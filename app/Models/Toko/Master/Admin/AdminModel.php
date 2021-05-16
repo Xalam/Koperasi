@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Models\Master\Admin;
+namespace App\Models\Toko\Master\Admin;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;

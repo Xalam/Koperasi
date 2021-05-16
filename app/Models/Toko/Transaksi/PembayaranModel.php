@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Models\Transaksi;
+namespace App\Models\Toko\Transaksi;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;

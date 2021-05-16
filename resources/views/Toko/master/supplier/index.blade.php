@@ -1,4 +1,4 @@
-@extends('layout')
+@extends('toko.layout')
 
 @section('popup')
 <div class="popup-background hide">

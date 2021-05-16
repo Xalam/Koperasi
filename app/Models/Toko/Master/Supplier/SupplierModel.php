@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Models\Master\Supplier;
+namespace App\Models\Toko\Master\Supplier;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;

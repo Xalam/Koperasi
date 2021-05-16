@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Models\Master\Pelanggan;
+namespace App\Models\Toko\Master\Pelanggan;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
