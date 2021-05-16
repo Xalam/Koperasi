@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Simpan_Pinjam\Dashboard\DashboardController;
 use App\Http\Controllers\Toko\DataBarangController;
 use App\Http\Controllers\Toko\DataSupplierController;
 use Illuminate\Support\Facades\Route;
@@ -21,6 +22,7 @@ use App\Http\Controllers\Toko\Laporan\Master\LaporanMasterController;
 use App\Http\Controllers\Toko\Laporan\Pembelian\LaporanPembelianController;
 use App\Http\Controllers\Toko\Laporan\Penjualan\LaporanPenjualanController;
 use App\Http\Controllers\Toko\Laporan\Persediaan\LaporanPersediaanController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -114,4 +116,13 @@ Route::group(['prefix' => 'toko'], function () {
             Route::post('/store', [SupplierController::class, 'store']);
         });
     });
+});
+
+//SIMPAN PINJAM
+Route::prefix('simpan-pinjam')->group(function () {
+
+    #Dashboard
+    Route::get('/dashboard', [DashboardController::class, 'index']);
+
+    
 });
