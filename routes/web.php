@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Controllers\Simpan_Pinjam\Dashboard\DashboardController;
+use App\Http\Controllers\Simpan_Pinjam\Master\Anggota\AnggotaController;
+use App\Http\Controllers\Simpan_Pinjam\Master\User\UserController;
 use App\Http\Controllers\Toko\DataBarangController;
 use App\Http\Controllers\Toko\DataSupplierController;
 use Illuminate\Support\Facades\Route;
@@ -122,7 +124,15 @@ Route::group(['prefix' => 'toko'], function () {
 Route::prefix('simpan-pinjam')->group(function () {
 
     #Dashboard
-    Route::get('/dashboard', [DashboardController::class, 'index']);
+    Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
-    
+    #Login
+    Route::get('login', [UserController::class, 'login'])->name('login');
+
+    #Anggota
+    Route::prefix('master')->group(function () {
+        Route::resource('anggota', 'Simpan_Pinjam\Master\Anggota\AnggotaController');
+        Route::get('anggota/modal/{id}', 'Simpan_Pinjam\Master\Anggota\AnggotaController@modal')->name('anggota.modal');
+        Route::get('anggota/cetak/{id}', 'Simpan_Pinjam\Master\Anggota\AnggotaController@print')->name('anggota.print');
+    });
 });

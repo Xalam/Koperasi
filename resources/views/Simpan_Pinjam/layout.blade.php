@@ -12,6 +12,8 @@
         href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
     <!-- Font Awesome -->
     <link rel="stylesheet" href="{{ asset('assets/plugins/fontawesome-free/css/all.min.css') }}">
+    
+    @stack('before-link');
     <!-- Ionicons -->
     <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
     <!-- Theme style -->
@@ -25,9 +27,9 @@
 <body class="hold-transition sidebar-mini layout-fixed sidebar-mini-xs layout-footer-fixed">
     <div class="wrapper">
 
-		@include('simpan_pinjam.navbar')
+        @include('simpan_pinjam.navbar')
 
-		@include('simpan_pinjam.sidebar')
+        @include('simpan_pinjam.sidebar')
 
         <!-- Content Wrapper. Contains page content -->
         <div class="content-wrapper">
@@ -38,7 +40,12 @@
                         <div class="col-sm-6">
                             <h1 class="m-0">@yield('content_header') <small
                                     style="font-size:16px;">@yield('content_header_small')</small></h1>
-                        </div><!-- /.col -->
+                        </div>
+                        <div class="col-sm-6">
+                            <ol class="breadcrumb float-sm-right">
+                                @yield('breadcrumb')
+                            </ol>
+                        </div>
                     </div><!-- /.row -->
                 </div><!-- /.container-fluid -->
             </div>
@@ -70,6 +77,8 @@
     </script>
     <!-- Bootstrap 4 -->
     <script src="{{ asset('assets/plugins/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
+    
+    @stack('before-script')
     <!-- AdminLTE App -->
     <script src="{{ asset('assets/dist/js/adminlte.js') }}"></script>
     <!-- AdminLTE for demo purposes -->

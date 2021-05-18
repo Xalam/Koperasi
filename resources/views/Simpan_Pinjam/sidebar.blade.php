@@ -22,16 +22,14 @@
         <nav class="mt-2">
             <ul class="nav nav-pills nav-sidebar nav-flat nav-child-indent flex-column" data-widget="treeview" role="menu"
                 data-accordion="false">
-                <!-- Add icons to the links using the .nav-icon class
-       with font-awesome or any other icon font library -->
-                <li class="nav-item menu-open">
-                    <a href="#" class="nav-link active">
+                <li class="nav-item">
+                    <a href="{{ route('dashboard') }}" class="nav-link {{ request()->is('simpan-pinjam/dashboard*') ? ' active' : '' }}">
                         <i class="nav-icon fas fa-tachometer-alt"></i>
                         <p>Dashboard</p>
                     </a>
                 </li>
-                <li class="nav-item">
-                    <a href="#" class="nav-link">
+                <li class="nav-item {{ request()->is('simpan-pinjam/master*') ? ' menu-open' : '' }}">
+                    <a href="#" class="nav-link {{ request()->is('simpan-pinjam/master*') ? ' active' : '' }}">
                         <i class="nav-icon fas fa-book"></i>
                         <p>
                             Master
@@ -46,9 +44,15 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="pages/layout/top-nav-sidebar.html" class="nav-link">
+                            <a href="{{ route('anggota.index') }}" class="nav-link {{ request()->is('simpan-pinjam/master/anggota*') ? ' active' : '' }}">
                                 <i class="far fa-circle nav-icon"></i>
                                 <p>Anggota</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="pages/layout/top-nav.html" class="nav-link">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>Administrator</p>
                             </a>
                         </li>
                     </ul>
