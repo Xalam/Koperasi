@@ -12,8 +12,8 @@
         href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
     <!-- Font Awesome -->
     <link rel="stylesheet" href="{{ asset('assets/plugins/fontawesome-free/css/all.min.css') }}">
-    
-    @stack('before-link');
+
+    @stack('style')
     <!-- Ionicons -->
     <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
     <!-- Theme style -->
@@ -21,7 +21,7 @@
     <!-- overlayScrollbars -->
     <link rel="stylesheet" href="{{ asset('assets/plugins/overlayScrollbars/css/OverlayScrollbars.min.css') }}">
 
-    @yield('style')
+    @stack('custom-style')
 </head>
 
 <body class="hold-transition sidebar-mini layout-fixed sidebar-mini-xs layout-footer-fixed">

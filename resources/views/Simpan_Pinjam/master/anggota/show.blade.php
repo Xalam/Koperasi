@@ -4,10 +4,10 @@
 
 @section('content_header', 'Profil Anggota')
 
-@section('style')
+@push('style')
     <link rel="stylesheet"
         href="{{ asset('assets/plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css') }}">
-@endsection
+@endpush
 
 @section('breadcrumb')
     <li class="breadcrumb-item"><a href="#">Master</a></li>
