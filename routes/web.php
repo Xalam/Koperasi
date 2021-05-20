@@ -129,10 +129,13 @@ Route::prefix('simpan-pinjam')->group(function () {
     #Login
     Route::get('login', [UserController::class, 'login'])->name('login');
 
-    #Anggota
+    #Anggota & Akun
     Route::prefix('master')->group(function () {
         Route::resource('anggota', 'Simpan_Pinjam\Master\Anggota\AnggotaController');
         Route::get('anggota/modal/{id}', 'Simpan_Pinjam\Master\Anggota\AnggotaController@modal')->name('anggota.modal');
         Route::get('anggota/cetak/{id}', 'Simpan_Pinjam\Master\Anggota\AnggotaController@print')->name('anggota.print');
+
+        Route::resource('akun', 'Simpan_Pinjam\Master\Akun\AkunController');
+        Route::get('akun/modal/{id}', 'Simpan_Pinjam\Master\Akun\AkunController@modal')->name('akun.modal');
     });
 });
