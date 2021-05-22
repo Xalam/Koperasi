@@ -1,8 +1,8 @@
 @extends('simpan_pinjam.layout')
 
-@section('title', 'Akun')
+@section('title', 'Simpanan')
 
-@section('content_header', 'Data Akun')
+@section('content_header', 'Data Simpanan Anggota')
 
 @push('style')
     <!-- DataTables -->
@@ -13,8 +13,8 @@
 @endpush
 
 @section('breadcrumb')
-    <li class="breadcrumb-item"><a href="#">Master</a></li>
-    <li class="breadcrumb-item active">Akun</li>
+    <li class="breadcrumb-item"><a href="#">Simpanan</a></li>
+    <li class="breadcrumb-item active">Data Simpanan</li>
 @endsection
 
 @section('content_main')
@@ -23,25 +23,33 @@
         <div class="col-12">
             <div class="card">
                 <div class="card-header">
-                    <h3 class="card-title">Daftar Akun Koperasi</h3>
-                    <a href="{{ route('akun.create') }}" class="btn btn-sm btn-primary float-right">Tambah Akun</a>
+                    <h3 class="card-title">Data Simpanan Anggota</h3>
+                    <a href="{{ route('data.create') }}" class="btn btn-sm btn-primary float-right">Tambah Simpanan</a>
                 </div>
                 <div class="card-body">
-                    <table id="table-akun" class="table table-bordered table-hover">
+                    <div class="row">
+                        <span>Tampilkan:&nbsp;</span>
+                        <select id="filter-select" class="form-control-sm col-md-2" style="margin-bottom: 15px;">
+                            <option value="all" selected="selected">Semua</option>
+                            <option value="pokok">Pokok</option>
+                            <option value="wajib">Wajib</option>
+                            <option value="sukarela">Sukarela</option>
+                        </select>
+                    </div>
+                    <table id="table-simpanan" class="table table-bordered table-hover">
                         <thead>
                             <tr>
                                 <th>No</th>
-                                <th>Kode Akun</th>
-                                <th>Nama Akun</th>
-                                <th>Saldo</th>
+                                <th>Kode Simpanan</th>
+                                <th>Tanggal Simpan</th>
+                                <th>Jenis Simpanan</th>
+                                <th>Nama Anggota</th>
+                                <th>Nominal Setoran</th>
+                                <th>Status Bayar</th>
+                                <th>Keterangan</th>
                                 <th>Aksi</th>
                             </tr>
                         </thead>
-                        <tfoot>
-                            <th colspan="3">Total</th>
-                            <th>{{ $total }}</th>
-                            <th></th>
-                        </tfoot>
                     </table>
                 </div>
             </div>
@@ -59,7 +67,7 @@
 
     <script>
         $(function() {
-            $('#table-akun').DataTable({
+            var table = $('#table-simpanan').DataTable({
                 "paging": true,
                 "lengthChange": true,
                 "searching": true,
@@ -67,25 +75,44 @@
                 "info": true,
                 "autoWidth": false,
                 "responsive": true,
+                "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]],
                 "deferRender": true,
-                "ajax": "{{ route('akun.index') }}",
+                "ajax": {
+                    url: "{{ route('data.index') }}"
+                },
                 "columns": [{
                         data: 'no'
                     },
                     {
-                        data: 'kode_akun'
+                        data: 'kode_simpanan'
                     },
                     {
-                        data: 'nama_akun'
+                        data: 'tanggal'
                     },
                     {
-                        data: 'saldo'
+                        data: 'jenis_simpanan'
+                    },
+                    {
+                        data: 'nama_anggota'
+                    },
+                    {
+                        data: 'nominal'
+                    },
+                    {
+                        data: 'status'
+                    },
+                    {
+                        data: 'keterangan'
                     },
                     {
                         data: 'action',
                         orderable: false
                     }
                 ]
+            });
+
+            $('#filter-select').on('change', function() {
+                table.ajax.url("{{ route('data.index') }}?filter="+$(this).val()).load();
             });
         });
 
@@ -94,6 +121,7 @@
     @if (session()->has('success'))
         <script>
             toastr.success("{{ session()->get('success') }}");
+
         </script>
     @endif
 

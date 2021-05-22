@@ -129,7 +129,7 @@ Route::prefix('simpan-pinjam')->group(function () {
     #Login
     Route::get('login', [UserController::class, 'login'])->name('login');
 
-    #Anggota & Akun
+    #Master
     Route::prefix('master')->group(function () {
         Route::resource('anggota', 'Simpan_Pinjam\Master\Anggota\AnggotaController');
         Route::get('anggota/modal/{id}', 'Simpan_Pinjam\Master\Anggota\AnggotaController@modal')->name('anggota.modal');
@@ -137,5 +137,16 @@ Route::prefix('simpan-pinjam')->group(function () {
 
         Route::resource('akun', 'Simpan_Pinjam\Master\Akun\AkunController');
         Route::get('akun/modal/{id}', 'Simpan_Pinjam\Master\Akun\AkunController@modal')->name('akun.modal');
+    });
+
+    #Simpanan
+    Route::prefix('simpanan')->group(function () {
+        Route::resource('data', 'Simpan_Pinjam\Master\Simpanan\SimpananController');
+        Route::get('data/cetak/{id}', 'Simpan_Pinjam\Master\Simpanan\SimpananController@print')->name('data.print');
+        Route::get('data/cetak/show/{id}', 'Simpan_Pinjam\Master\Simpanan\SimpananController@print_show')->name('data.print-show');
+        Route::get('data/cetak/modal/{id}', 'Simpan_Pinjam\Master\Simpanan\SimpananController@modal')->name('data.modal');
+        Route::post('data/store-all', 'Simpan_Pinjam\Master\Simpanan\SimpananController@store_all')->name('data.store-all');
+
+        Route::resource('saldo', 'Simpan_Pinjam\Master\Simpanan\SaldoController');
     });
 });

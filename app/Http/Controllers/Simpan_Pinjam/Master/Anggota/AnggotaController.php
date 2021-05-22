@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Simpan_Pinjam\Master\Anggota;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\Simpan_Pinjam\Master\Anggota\Anggota;
+use App\Models\Simpan_Pinjam\Simpanan\Saldo;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
@@ -63,6 +64,7 @@ class AnggotaController extends Controller
      */
     public function store(Request $request)
     {
+        #Insert data Anggota
         $rules = [
             'kd_anggota'  => 'max:255',
             'nama_anggota'  => 'required',
@@ -121,6 +123,14 @@ class AnggotaController extends Controller
         $data['password'] = Hash::make($data['password']);
 
         Anggota::create($data);
+
+        #Insert Saldo
+        $anggotaId = Anggota::orderBy('id', 'DESC')->first();
+
+        $saldo = new Saldo();
+        $saldo->id_anggota = $anggotaId->id;
+        $saldo->saldo = 0;
+        $saldo->save();
 
         return redirect()->route('anggota.index')->with([
             'success' => 'Berhasil menambahkan anggota'

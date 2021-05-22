@@ -17,10 +17,11 @@ class AkunController extends Controller
     public function index()
     {
         $akun = Akun::get();
+        $total = 'Rp. ' . number_format($akun->sum('saldo'), 2, ',', '.');
 
         if (request()->ajax()) {
-            $data = [];
-            $no   = 1;
+            $data  = [];
+            $no    = 1;
 
             foreach ($akun as $key => $value) {
                 $data[] = [
@@ -35,7 +36,9 @@ class AkunController extends Controller
 
             return response()->json(compact('data'));
         }
-        return view('simpan_pinjam.master.akun.akun');
+        return view('simpan_pinjam.master.akun.akun')->with([
+            'total' => $total
+        ]);
     }
 
     /**
@@ -77,6 +80,7 @@ class AkunController extends Controller
         }
 
         $data = $request->all();
+        $data['saldo'] = str_replace('.', '', $request->saldo);
 
         Akun::create($data);
 

@@ -1,8 +1,8 @@
 @extends('simpan_pinjam.layout')
 
-@section('title', 'Akun')
+@section('title', 'Simpanan')
 
-@section('content_header', 'Data Akun')
+@section('content_header', 'Saldo Simpanan Anggota')
 
 @push('style')
     <!-- DataTables -->
@@ -13,8 +13,8 @@
 @endpush
 
 @section('breadcrumb')
-    <li class="breadcrumb-item"><a href="#">Master</a></li>
-    <li class="breadcrumb-item active">Akun</li>
+    <li class="breadcrumb-item"><a href="#">Simpanan</a></li>
+    <li class="breadcrumb-item active">Saldo Simpanan</li>
 @endsection
 
 @section('content_main')
@@ -23,25 +23,18 @@
         <div class="col-12">
             <div class="card">
                 <div class="card-header">
-                    <h3 class="card-title">Daftar Akun Koperasi</h3>
-                    <a href="{{ route('akun.create') }}" class="btn btn-sm btn-primary float-right">Tambah Akun</a>
+                    <h3 class="card-title">Saldo Simpanan Anggota</h3>
                 </div>
                 <div class="card-body">
-                    <table id="table-akun" class="table table-bordered table-hover">
+                    <table id="table-saldo" class="table table-bordered table-hover">
                         <thead>
                             <tr>
                                 <th>No</th>
-                                <th>Kode Akun</th>
-                                <th>Nama Akun</th>
+                                <th>Kode Anggota</th>
+                                <th>Nama Anggota</th>
                                 <th>Saldo</th>
-                                <th>Aksi</th>
                             </tr>
                         </thead>
-                        <tfoot>
-                            <th colspan="3">Total</th>
-                            <th>{{ $total }}</th>
-                            <th></th>
-                        </tfoot>
                     </table>
                 </div>
             </div>
@@ -59,7 +52,7 @@
 
     <script>
         $(function() {
-            $('#table-akun').DataTable({
+            $('#table-saldo').DataTable({
                 "paging": true,
                 "lengthChange": true,
                 "searching": true,
@@ -68,61 +61,22 @@
                 "autoWidth": false,
                 "responsive": true,
                 "deferRender": true,
-                "ajax": "{{ route('akun.index') }}",
+                "ajax": "{{ route('saldo.index') }}",
                 "columns": [{
                         data: 'no'
                     },
                     {
-                        data: 'kode_akun'
+                        data: 'kode'
                     },
                     {
-                        data: 'nama_akun'
+                        data: 'nama'
                     },
                     {
                         data: 'saldo'
-                    },
-                    {
-                        data: 'action',
-                        orderable: false
                     }
                 ]
             });
         });
 
     </script>
-
-    @if (session()->has('success'))
-        <script>
-            toastr.success("{{ session()->get('success') }}");
-        </script>
-    @endif
-
-    <script>
-        jQuery(document).ready(function($) {
-            $('#mymodal').on('show.bs.modal', function(e) {
-                var button = $(e.relatedTarget);
-                var modal = $(this);
-
-                modal.find('.modal-content').load(button.data("remote"));
-            });
-        });
-
-    </script>
-
-    <div class="modal" id="mymodal" tabindex="-1" role="dialog">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">Konfirmasi</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <i class="fa fa-spinner fa-spin"></i>
-                </div>
-            </div>
-        </div>
-    </div>
-
 @endsection
