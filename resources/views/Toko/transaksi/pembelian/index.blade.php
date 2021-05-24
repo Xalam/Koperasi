@@ -188,17 +188,21 @@ function tampil_daftar() {
 
                 $('#jumlah-harga').html("Rp. " + jumlah_harga + ",-");
                 $('[name="jumlah_harga"]').val(jumlah_harga);
-                $('[name="jumlah_bayar"]').val(response.supplier_pembelian.jumlah_bayar);
-                $('#jumlah-kembalian').html("Rp. " + response.supplier_pembelian.jumlah_kembalian + ",-");
-                $('[name="jumlah_kembalian"]').val(response.supplier_pembelian.jumlah_kembalian);
 
-                $('[name="tanggal"]').val(response.supplier_pembelian.tanggal);
-                $('[name="kode_supplier"]').val(response.supplier_pembelian.id_supplier);
-                $('[name="nama_supplier"]').val(response.supplier_pembelian.id_supplier);
-                $('[name="alamat"]').val(response.supplier_pembelian.alamat);
-                $('[name="telepon"]').val(response.supplier_pembelian.telepon);
+                if (response.supplier_pembelian) {
+                    $('[name="jumlah_bayar"]').val(response.supplier_pembelian.jumlah_bayar);
+                    $('#jumlah-kembalian').html("Rp. " + response.supplier_pembelian.jumlah_kembalian +
+                        ",-");
+                    $('[name="jumlah_kembalian"]').val(response.supplier_pembelian.jumlah_kembalian);
 
-                $('[name="pembayaran"]').val(response.supplier_pembelian.pembayaran);
+                    $('[name="tanggal"]').val(response.supplier_pembelian.tanggal);
+                    $('[name="kode_supplier"]').val(response.supplier_pembelian.id_supplier);
+                    $('[name="nama_supplier"]').val(response.supplier_pembelian.id_supplier);
+                    $('[name="alamat"]').val(response.supplier_pembelian.alamat);
+                    $('[name="telepon"]').val(response.supplier_pembelian.telepon);
+
+                    $('[name="pembayaran"]').val(response.supplier_pembelian.pembayaran);
+                }
 
                 if ($('[name="pembayaran"]').val() == 1) {
                     $('[for="dibayar"]').addClass('hide');

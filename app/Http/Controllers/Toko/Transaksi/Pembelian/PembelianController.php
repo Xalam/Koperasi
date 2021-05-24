@@ -78,7 +78,8 @@ class PembelianController extends Controller
     }
 
     public function store(Request $request) {
-        $barang = PembelianBarangModel::where('id_barang', $request->id_barang)->first();
+        $barang = PembelianBarangModel::where('nomor', $request->nomor)
+                                        ->where('id_barang', $request->id_barang)->first();
 
         if ($barang) {
             PembelianBarangModel::where('id_barang', $request->id_barang)->update([
@@ -94,6 +95,8 @@ class PembelianController extends Controller
 
     public function buy(Request $request) {
         $nomor = $request->input('nomor');
+
+        PembelianBarangModel::where('nomor', $nomor)->update(['submited' => 1]);
 
         $data_barang = PembelianBarangModel::where('nomor', $nomor)->get();
 
@@ -140,6 +143,7 @@ class PembelianController extends Controller
     public function cancel(Request $request) {
         $nomor = $request->input('nomor');
 
+        PembelianModel::where('nomor', $nomor)->delete();
         PembelianBarangModel::where('nomor', $nomor)->delete();
         
         return response()->json(['code'=>200]);

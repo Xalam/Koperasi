@@ -19,7 +19,7 @@
 @section('main')
 <div class="card m-6">
     <div class="card-body">
-        {!! Form::open(['url' => '/master/barang/store']) !!}
+        {!! Form::open(['url' => '/toko/master/barang/store']) !!}
         <div class="row align-item-center mb-1">
             {!! Form::label(null, 'Tambah Barang', ['class' => 'col-3 font-weight-bold']) !!}
         </div>

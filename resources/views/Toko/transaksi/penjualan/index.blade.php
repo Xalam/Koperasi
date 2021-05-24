@@ -188,17 +188,21 @@ function tampil_daftar() {
 
                 $('#jumlah-harga').html("Rp. " + jumlah_harga + ",-");
                 $('[name="jumlah_harga"]').val(jumlah_harga);
-                $('[name="jumlah_bayar"]').val(response.pelanggan_penjualan.jumlah_bayar);
-                $('#jumlah-kembalian').html("Rp. " + response.pelanggan_penjualan.jumlah_kembalian + ",-");
-                $('[name="jumlah_kembalian"]').val(response.pelanggan_penjualan.jumlah_kembalian);
 
-                $('[name="tanggal"]').val(response.pelanggan_penjualan.tanggal);
-                $('[name="kode_pelanggan"]').val(response.pelanggan_penjualan.id_pelanggan);
-                $('[name="nama_pelanggan"]').val(response.pelanggan_penjualan.id_pelanggan);
-                $('[name="alamat"]').val(response.pelanggan_penjualan.alamat);
-                $('[name="telepon"]').val(response.pelanggan_penjualan.telepon);
+                if (response.pelanggan_penjualan) {
+                    $('[name="jumlah_bayar"]').val(response.pelanggan_penjualan.jumlah_bayar);
+                    $('#jumlah-kembalian').html("Rp. " + response.pelanggan_penjualan.jumlah_kembalian +
+                        ",-");
+                    $('[name="jumlah_kembalian"]').val(response.pelanggan_penjualan.jumlah_kembalian);
 
-                $('[name="pembayaran"]').val(response.pelanggan_penjualan.pembayaran);
+                    $('[name="tanggal"]').val(response.pelanggan_penjualan.tanggal);
+                    $('[name="kode_pelanggan"]').val(response.pelanggan_penjualan.id_pelanggan);
+                    $('[name="nama_pelanggan"]').val(response.pelanggan_penjualan.id_pelanggan);
+                    $('[name="alamat"]').val(response.pelanggan_penjualan.alamat);
+                    $('[name="telepon"]').val(response.pelanggan_penjualan.telepon);
+
+                    $('[name="pembayaran"]').val(response.pelanggan_penjualan.pembayaran);
+                }
 
                 if ($('[name="pembayaran"]').val() == 1) {
                     $('[for="dibayar"]').addClass('hide');

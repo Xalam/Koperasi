@@ -15,6 +15,7 @@ class PembelianBarangModel extends Model
         'nomor',
         'id_barang',
         'jumlah',
-        'total_harga'
+        'total_harga',
+        'submited'
     ];
 }

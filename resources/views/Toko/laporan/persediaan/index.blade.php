@@ -9,7 +9,7 @@
         </div>
         <div class="row align-item-center mb-1">
             {!! Form::label(null, 'Jumlah barang kurang dari', ['class' => 'col-5']) !!}
-            {!! Form::number('jumlah_barang', (isset($jumlah_barang) ? $jumlah_barang : null), ['class' => 'col-2 text-center']) !!}
+            {!! Form::number('jumlah_barang', (isset($jumlah_barang) ? $jumlah_barang : 0), ['class' => 'col-2 text-center']) !!}
         </div>
         <div class="row align-item-center mb-1">
             {!! Form::submit('Cek', ['class' => 'btn btn-primary btn-small']) !!}

@@ -75,7 +75,8 @@ class PenjualanController extends Controller
     }
 
     public function store(Request $request) {
-        $barang = PenjualanBarangModel::where('id_barang', $request->id_barang)->first();
+        $barang = PenjualanBarangModel::where('nomor', $request->nomor)
+                                        ->where('id_barang', $request->id_barang)->first();
 
         if ($barang) {
             PenjualanBarangModel::where('id_barang', $request->id_barang)->update([
@@ -92,13 +93,15 @@ class PenjualanController extends Controller
     public function sell(Request $request) {
         $nomor = $request->input('nomor');
 
+        PenjualanBarangModel::where('nomor', $nomor)->update(['submited' => 1]);
+
         $data_barang = PenjualanBarangModel::where('nomor', $nomor)->get();
 
         foreach ($data_barang as $data) {
             $barang = BarangModel::where('id', $data->id_barang)->first();
 
             BarangModel::where('id', $data->id_barang)->update([
-                'stok' => $barang->stok + $data->jumlah]);
+                'stok' => $barang->stok - $data->jumlah]);
         }
 
         $data_penjualan = PenjualanModel::where('nomor', $nomor)->first();
@@ -137,6 +140,7 @@ class PenjualanController extends Controller
     public function cancel(Request $request) {
         $nomor = $request->input('nomor');
 
+        PenjualanModel::where('nomor', $nomor)->delete();
         PenjualanBarangModel::where('nomor', $nomor)->delete();
         
         return response()->json(['code'=>200]);
