@@ -54,8 +54,16 @@ jQuery(function($) {
         $(".sidebar-submenu").slideUp(200);
         $(".sidebar-submenu2").slideUp(200);
         $(".sidebar-submenu3").slideUp(200);
+        $(".sidebar-submenu4").slideUp(200);
+        $(".sidebar-submenu5").slideUp(200);
+        $(".sidebar-submenu6").slideUp(200);
         if ($(this).parent().hasClass("active")) {
             $(".sidebar-dropdown").removeClass("active");
+            $(".sidebar-dropdown2").removeClass("active");
+            $(".sidebar-dropdown3").removeClass("active");
+            $(".sidebar-dropdown4").removeClass("active");
+            $(".sidebar-dropdown5").removeClass("active");
+            $(".sidebar-dropdown6").removeClass("active");
             $(this).parent().removeClass("active");
         } else {
             $(".sidebar-dropdown").removeClass("active");
@@ -67,8 +75,15 @@ jQuery(function($) {
     $(".sidebar-dropdown2 > a").click(function() {
         $(".sidebar-submenu2").slideUp(200);
         $(".sidebar-submenu3").slideUp(200);
+        $(".sidebar-submenu4").slideUp(200);
+        $(".sidebar-submenu5").slideUp(200);
+        $(".sidebar-submenu6").slideUp(200);
         if ($(this).parent().hasClass("active")) {
             $(".sidebar-dropdown2").removeClass("active");
+            $(".sidebar-dropdown3").removeClass("active");
+            $(".sidebar-dropdown4").removeClass("active");
+            $(".sidebar-dropdown5").removeClass("active");
+            $(".sidebar-dropdown6").removeClass("active");
             $(this).parent().removeClass("active");
         } else {
             $(".sidebar-dropdown2").removeClass("active");
@@ -79,8 +94,14 @@ jQuery(function($) {
 
     $(".sidebar-dropdown3 > a").click(function() {
         $(".sidebar-submenu3").slideUp(200);
+        $(".sidebar-submenu4").slideUp(200);
+        $(".sidebar-submenu5").slideUp(200);
+        $(".sidebar-submenu6").slideUp(200);
         if ($(this).parent().hasClass("active")) {
             $(".sidebar-dropdown3").removeClass("active");
+            $(".sidebar-dropdown4").removeClass("active");
+            $(".sidebar-dropdown5").removeClass("active");
+            $(".sidebar-dropdown6").removeClass("active");
             $(this).parent().removeClass("active");
         } else {
             $(".sidebar-dropdown3").removeClass("active");
@@ -91,8 +112,12 @@ jQuery(function($) {
 
     $(".sidebar-dropdown4 > a").click(function() {
         $(".sidebar-submenu4").slideUp(200);
+        $(".sidebar-submenu5").slideUp(200);
+        $(".sidebar-submenu6").slideUp(200);
         if ($(this).parent().hasClass("active")) {
             $(".sidebar-dropdown4").removeClass("active");
+            $(".sidebar-dropdown5").removeClass("active");
+            $(".sidebar-dropdown6").removeClass("active");
             $(this).parent().removeClass("active");
         } else {
             $(".sidebar-dropdown4").removeClass("active");
@@ -103,8 +128,10 @@ jQuery(function($) {
 
     $(".sidebar-dropdown5 > a").click(function() {
         $(".sidebar-submenu5").slideUp(200);
+        $(".sidebar-submenu6").slideUp(200);
         if ($(this).parent().hasClass("active")) {
             $(".sidebar-dropdown5").removeClass("active");
+            $(".sidebar-dropdown6").removeClass("active");
             $(this).parent().removeClass("active");
         } else {
             $(".sidebar-dropdown5").removeClass("active");
@@ -148,5 +175,10 @@ jQuery(function($) {
             $(".page-wrapper").addClass("toggled");
         }
     });
+
+    if (window.innerWidth < 1280 && $('.page-wrapper').hasClass('toggled')) {
+        $(".page-wrapper").removeClass("toggled");
+    }
+
 });
 </script>

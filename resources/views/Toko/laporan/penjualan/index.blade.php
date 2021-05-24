@@ -3,13 +3,20 @@
 @section('main')
 <div class="card m-6">
     <div class="card-body">
-        {!! Form::open( ['url' => 'laporan/penjualan/cek', 'method' => 'GET']) !!}
+        {!! Form::open( ['url' => '/laporan/penjualan/cek', 'method' => 'GET']) !!}
         <div class="row align-item-center mb-1">
             {!! Form::label(null, 'Laporan Penjualan', ['class' => 'col-3 font-weight-bold']) !!}
         </div>
         <div class="row align-item-center mb-1">
-            {!! Form::label(null, 'Laporan Berdasarkan', ['class' => 'col-5']) !!}
-            {!! Form::select('select-laporan', ['Pilih' => '-- Pilih Jenis Laporan --', 'Nota' => 'Nota', 'Harian' => 'Harian', 'Mingguan' => 'Mingguan', 'Bulanan' =>
+            {!! Form::label(null, 'Tanggal Awal', ['class' => 'col-3']) !!}
+            {!! Form::date('tanggal_awal', null, ['class' => 'col-4']) !!}
+            {!! Form::label(null, '-', ['class' => 'offset-5 col-1']) !!}
+            {!! Form::label(null, 'Tanggal Akhir', ['class' => 'col-3']) !!}
+            {!! Form::date('tanggal_awal', null, ['class' => 'col-4']) !!}
+        </div>
+        <div class="row align-item-center mb-1">
+            {!! Form::label(null, 'Type Pembayaran', ['class' => 'col-5']) !!}
+            {!! Form::select('type_pembayaran', ['Pilih' => '-- Pilih Jenis Laporan --', 'Nota' => 'Nota', 'Harian' => 'Harian', 'Mingguan' => 'Mingguan', 'Bulanan' =>
             'Bulanan'], null, ['class' => 'col-8']) !!}
         </div>
         <div id="select-nota" class="hide">

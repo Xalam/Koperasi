@@ -190,6 +190,11 @@ body {
     flex: 0 0 100%;
 }
 
+.col-auto {
+    flex: 0 0 auto;
+    width: auto;
+}
+
 .color-danger {
     color: red;
 }
@@ -206,6 +211,11 @@ body {
     margin: auto;
     max-width: 375px;
     width: 100%;
+}
+
+input[readonly] {
+    pointer-events: none;
+    touch-action: none;
 }
 
 .font-1 {
@@ -331,7 +341,6 @@ input {
 
     .row {
         display: flex;
-        height: 2rem;
     }
 }
 
@@ -550,6 +559,11 @@ select {
     border-radius: 0.25rem;
     padding: 0.35rem;
     width: 100%;
+}
+
+select[readonly] {
+    pointer-events: none;
+    touch-action: none;
 }
 
 table {

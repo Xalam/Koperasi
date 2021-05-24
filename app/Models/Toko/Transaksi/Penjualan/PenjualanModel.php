@@ -1,20 +1,20 @@
 <?php
 
-namespace App\Models\Toko\Transaksi\Pembelian;
+namespace App\Models\Toko\Transaksi\Penjualan;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class PembelianModel extends Model
+class PenjualanModel extends Model
 {
     use HasFactory;
 
-    protected $table = 'pembelian';
+    protected $table = 'penjualan';
 
     protected $fillable = [
         'tanggal',
         'nomor',
-        'id_supplier',
+        'id_pelanggan',
         'jumlah_harga',
         'jumlah_bayar',
         'jumlah_kembalian',

@@ -2,12 +2,13 @@
 
 use App\Http\Controllers\Toko\DataBarangController;
 use App\Http\Controllers\Toko\DataSupplierController;
+use App\Http\Controllers\Toko\DataPelangganController;
 use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\Toko\LoginController;
 
 use App\Http\Controllers\Toko\Transaksi\Pembelian\PembelianController;
-use App\Http\Controllers\Toko\Transaksi\Penjualan\WaserbaController;
+use App\Http\Controllers\Toko\Transaksi\Penjualan\PenjualanController;
 use App\Http\Controllers\Toko\Transaksi\Penjualan\ReturController;
 
 use App\Http\Controllers\Toko\Master\Barang\BarangController;
@@ -41,6 +42,7 @@ Route::get('/', function () {
 Route::group(['prefix' => 'api'], function () {
     Route::get('/data-barang/{id}', [DataBarangController::class, 'dataBarang']);
     Route::get('/data-supplier/{id}', [DataSupplierController::class, 'dataSupplier']);
+    Route::get('/data-pelanggan/{id}', [DataPelangganController::class, 'dataPelanggan']);
 });
 
 Route::group(['prefix' => 'toko'], function () {
@@ -52,11 +54,17 @@ Route::group(['prefix' => 'toko'], function () {
         Route::group(['prefix' => 'pembelian'], function () {
             Route::get('/', [PembelianController::class, 'index']);
             Route::post('/store', [PembelianController::class, 'store']);
+            Route::post('/beli', [PembelianController::class, 'buy']);
+            Route::post('/cancel', [PembelianController::class, 'cancel']);
             Route::get('/{nomor}', [PembelianController::class, 'show']);
         });
         
         Route::group(['prefix' => 'penjualan'], function () {
-            Route::get('/', [WaserbaController::class, 'index']);
+            Route::get('/', [PenjualanController::class, 'index']);
+            Route::post('/store', [PenjualanController::class, 'store']);
+            Route::post('/jual', [PenjualanController::class, 'sell']);
+            Route::post('/cancel', [PenjualanController::class, 'cancel']);
+            Route::get('/{nomor}', [PenjualanController::class, 'show']);
         });
         
         Route::group(['prefix' => 'retur-pembelian'], function () {

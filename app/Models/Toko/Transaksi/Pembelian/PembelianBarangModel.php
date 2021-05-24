@@ -5,19 +5,16 @@ namespace App\Models\Toko\Transaksi\Pembelian;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class PembelianModel extends Model
+class PembelianBarangModel extends Model
 {
     use HasFactory;
 
-    protected $table = 'pembelian';
+    protected $table = 'pembelian_barang';
 
     protected $fillable = [
-        'tanggal',
         'nomor',
-        'id_supplier',
-        'jumlah_harga',
-        'jumlah_bayar',
-        'jumlah_kembalian',
-        'pembayaran'
+        'id_barang',
+        'jumlah',
+        'total_harga'
     ];
 }
