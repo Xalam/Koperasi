@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\Simpan_Pinjam\Master\Anggota\Anggota;
 use App\Models\Simpan_Pinjam\Simpanan\Saldo;
+use App\Models\Simpan_Pinjam\Simpanan\SaldoTarik;
+use App\Models\Simpan_Pinjam\Simpanan\Simpanan;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
@@ -31,7 +33,7 @@ class AnggotaController extends Controller
                     'no'     => $no++,
                     'kode'   => $value->kd_anggota,
                     'nama'   => $value->nama_anggota,
-                    'ttl'    => $value->tempat_lahir .', '. $value->tanggal_lahir,
+                    'ttl'    => $value->tempat_lahir .', '. date('d-m-Y', strtotime($value->tanggal_lahir)),
                     'gender' => $value->jenis_kelamin,
                     'agama'  => $value->agama,
                     'alamat' => $value->alamat,
@@ -251,11 +253,23 @@ class AnggotaController extends Controller
      */
     public function destroy($id)
     {
+        #Hapus anggota
         $anggota = Anggota::findOrFail($id);
 
         Storage::delete('foto/' . $anggota->foto);
 
         $anggota->delete();
+
+        #Hapus simpanan
+        $simpanan = new Simpanan();
+        $simpanan->where('id_anggota', $id)->delete();
+
+        #Hapus saldo
+        $saldo = Saldo::select('id')->where('id_anggota', $id)->first();
+        if ($saldo != null ){
+            Saldo::where('id_anggota', $id)->delete();
+            SaldoTarik::where('id_saldo', $saldo->id)->delete();
+        }
 
         return redirect()->route('anggota.index')->with([
             'success' => 'Data anggota berhasil dihapus'

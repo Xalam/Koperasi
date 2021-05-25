@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Simpan_Pinjam\Master\Simpanan;
+namespace App\Http\Controllers\Simpan_Pinjam\Simpanan;
 
 use App\Http\Controllers\Controller;
 use App\Models\Simpan_Pinjam\Master\Anggota\Anggota;
@@ -32,15 +32,14 @@ class SimpananController extends Controller
                         $data[] = [
                             'no' => $no++,
                             'kode_simpanan'  => $value->kode_simpanan,
-                            'tanggal'        => $value->tanggal,
+                            'tanggal'        => date('d-m-Y', strtotime($value->tanggal)),
                             'jenis_simpanan' => 'Simpanan Pokok',
                             'nama_anggota'   => $value->anggota->nama_anggota,
                             'nominal'        => 'Rp. ' . number_format($value->nominal, 2, ',', '.'),
                             'status'         => ($value->status == 0) ? '<span class="badge bg-danger">Belum Bayar</span>' : '<span class="badge bg-success">Sudah Bayar</span>',
                             'keterangan'     => $value->keterangan == null ? '-' : $value->keterangan,
                             'action'         => '<a href="' . route('data.print', $value->id) . '" class="btn btn-light btn-sm"><i class="fas fa-print"></i>&nbsp; Cetak</a>
-                                                &nbsp; <a href="#" class="btn btn-warning btn-sm"><i class="far fa-edit"></i>&nbsp; Edit</a>
-                                                &nbsp; <a href="#mymodal" data-remote="' . route('data.modal', $value->id) . '" data-toggle="modal" data-target="#mymodal" class="btn btn-danger btn-sm"><i class="far fa-trash-alt"></i>&nbsp; Hapus</a>',
+                                                &nbsp; <a href="#" class="btn btn-warning btn-sm"><i class="far fa-edit"></i>&nbsp; Edit</a>'
                         ];
                     }
                     return response()->json(compact('data'));
@@ -53,15 +52,14 @@ class SimpananController extends Controller
                         $data[] = [
                             'no' => $no++,
                             'kode_simpanan'  => $value->kode_simpanan,
-                            'tanggal'        => $value->tanggal,
+                            'tanggal'        => date('d-m-Y', strtotime($value->tanggal)),
                             'jenis_simpanan' => 'Simpanan Wajib',
                             'nama_anggota'   => $value->anggota->nama_anggota,
                             'nominal'        => 'Rp. ' . number_format($value->nominal, 2, ',', '.'),
                             'status'         => ($value->status == 0) ? '<span class="badge bg-danger">Belum Bayar</span>' : '<span class="badge bg-success">Sudah Bayar</span>',
                             'keterangan'     => $value->keterangan == null ? '-' : $value->keterangan,
                             'action'         => '<a href="' . route('data.print', $value->id) . '" class="btn btn-light btn-sm"><i class="fas fa-print"></i>&nbsp; Cetak</a>
-                                                &nbsp; <a href="#" class="btn btn-warning btn-sm"><i class="far fa-edit"></i>&nbsp; Edit</a>
-                                                &nbsp; <a href="#mymodal" data-remote="' . route('data.modal', $value->id) . '" data-toggle="modal" data-target="#mymodal" class="btn btn-danger btn-sm"><i class="far fa-trash-alt"></i>&nbsp; Hapus</a>',
+                                                &nbsp; <a href="#" class="btn btn-warning btn-sm"><i class="far fa-edit"></i>&nbsp; Edit</a>'
                         ];
                     }
                     return response()->json(compact('data'));
@@ -74,15 +72,14 @@ class SimpananController extends Controller
                         $data[] = [
                             'no' => $no++,
                             'kode_simpanan'  => $value->kode_simpanan,
-                            'tanggal'        => $value->tanggal,
+                            'tanggal'        => date('d-m-Y', strtotime($value->tanggal)),
                             'jenis_simpanan' => 'Simpanan Sukarela',
                             'nama_anggota'   => $value->anggota->nama_anggota,
                             'nominal'        => 'Rp. ' . number_format($value->nominal, 2, ',', '.'),
                             'status'         => ($value->status == 0) ? '<span class="badge bg-danger">Belum Bayar</span>' : '<span class="badge bg-success">Sudah Bayar</span>',
                             'keterangan'     => $value->keterangan == null ? '-' : $value->keterangan,
                             'action'         => '<a href="' . route('data.print', $value->id) . '" class="btn btn-light btn-sm"><i class="fas fa-print"></i>&nbsp; Cetak</a>
-                                                &nbsp; <a href="#" class="btn btn-warning btn-sm"><i class="far fa-edit"></i>&nbsp; Edit</a>
-                                                &nbsp; <a href="#mymodal" data-remote="' . route('data.modal', $value->id) . '" data-toggle="modal" data-target="#mymodal" class="btn btn-danger btn-sm"><i class="far fa-trash-alt"></i>&nbsp; Hapus</a>',
+                                                &nbsp; <a href="#" class="btn btn-warning btn-sm"><i class="far fa-edit"></i>&nbsp; Edit</a>'
                         ];
                     }
                     return response()->json(compact('data'));
@@ -104,15 +101,14 @@ class SimpananController extends Controller
                         $data[] = [
                             'no' => $no++,
                             'kode_simpanan'  => $value->kode_simpanan,
-                            'tanggal'        => $value->tanggal,
+                            'tanggal'        => date('d-m-Y', strtotime($value->tanggal)),
                             'jenis_simpanan' => $jenis,
                             'nama_anggota'   => $value->anggota->nama_anggota,
                             'nominal'        => 'Rp. ' . number_format($value->nominal, 2, ',', '.'),
                             'status'         => ($value->status == 0) ? '<span class="badge bg-danger">Belum Bayar</span>' : '<span class="badge bg-success">Sudah Bayar</span>',
                             'keterangan'     => $value->keterangan == null ? '-' : $value->keterangan,
                             'action'         => '<a href="' . route('data.print', $value->id) . '" class="btn btn-light btn-sm"><i class="fas fa-print"></i>&nbsp; Cetak</a>
-                                                &nbsp; <a href="' . route('data.edit', $value->id) . '" class="btn btn-warning btn-sm"><i class="far fa-edit"></i>&nbsp; Edit</a>
-                                                &nbsp; <a href="#mymodal" data-remote="' . route('data.modal', $value->id) . '" data-toggle="modal" data-target="#mymodal" class="btn btn-danger btn-sm"><i class="far fa-trash-alt"></i>&nbsp; Hapus</a>',
+                                                &nbsp; <a href="' . route('data.edit', $value->id) . '" class="btn btn-warning btn-sm"><i class="far fa-edit"></i>&nbsp; Edit</a>'
                         ];
                     }
                     return response()->json(compact('data'));
@@ -145,8 +141,11 @@ class SimpananController extends Controller
      */
     public function store(Request $request)
     {
-        $id = Simpanan::orderBy('id', 'DESC')->first();
-        
+        $id = Simpanan::select('id')->orderBy('id', 'DESC')->first();
+        if ($id == null) {
+            $id = 0;
+        }
+
         $data = $request->all();
 
         $data['kode_simpanan'] = 'SMP-' . str_replace('-', '', $request->tanggal) . '-' . str_pad($id->id + 1, 4, '0', STR_PAD_LEFT);
@@ -198,8 +197,6 @@ class SimpananController extends Controller
 
         $data = $request->all();
 
-        $data['nominal'] = str_replace('.', '', $request->nominal);
-
         $simpanan->update($data);
 
         return redirect()->route('data.index')->with([
@@ -215,13 +212,13 @@ class SimpananController extends Controller
      */
     public function destroy($id)
     {
-        $simpanan = Simpanan::findOrFail($id);
+        // $simpanan = Simpanan::findOrFail($id);
 
-        $simpanan->delete();
+        // $simpanan->delete();
 
-        return redirect()->route('data.index')->with([
-            'success' => 'Simpanan anggota berhasil dihapus'
-        ]);
+        // return redirect()->route('data.index')->with([
+        //     'success' => 'Simpanan anggota berhasil dihapus'
+        // ]);
     }
 
     public function print($id) 

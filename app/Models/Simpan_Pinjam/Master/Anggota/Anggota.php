@@ -2,6 +2,7 @@
 
 namespace App\Models\Simpan_Pinjam\Master\Anggota;
 
+use App\Models\Simpan_Pinjam\Pinjaman\Pinjaman;
 use App\Models\Simpan_Pinjam\Simpanan\Saldo;
 use App\Models\Simpan_Pinjam\Simpanan\Simpanan;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -27,5 +28,10 @@ class Anggota extends Model
     public function saldo()
     {
         return $this->hasOne(Saldo::class, 'id_anggota');
+    }
+
+    public function pinjaman()
+    {
+        return $this->hasMany(Pinjaman::class, 'id_anggota');
     }
 }

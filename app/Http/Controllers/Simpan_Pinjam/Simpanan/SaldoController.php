@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Simpan_Pinjam\Master\Simpanan;
+namespace App\Http\Controllers\Simpan_Pinjam\Simpanan;
 
 use App\Http\Controllers\Controller;
 use App\Models\Simpan_Pinjam\Simpanan\Saldo;

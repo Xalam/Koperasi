@@ -53,7 +53,7 @@
                                     <span class="input-group-text">Rp</span>
                                 </div>
                                 <input type="text" class="form-control" placeholder="Masukkan jumlah nominal" id="nominal"
-                                    name="nominal" value="{{ $simpanan->nominal }}">
+                                    value="{{ $simpanan->nominal }}" disabled>
                             </div>
                         </div>
                         <div class="form-group">

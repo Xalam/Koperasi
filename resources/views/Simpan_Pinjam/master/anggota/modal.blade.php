@@ -6,12 +6,13 @@
 </div>
 <div class="modal-body">
     <p>Apakah Anda yakin ingin menghapus anggota <br> <strong>"{{ $anggota->nama_anggota }}"</strong> ?</p>
+    <span class="text-sm text-danger">(Semua transaksi dari yang bersangkutan akan terhapus!)</span>
 </div>
 <form action="{{ route('anggota.destroy', $anggota->id) }}" method="POST">
     @csrf
     @method('delete')
     <div class="modal-footer">
         <button type="button" class="btn btn-light" data-dismiss="modal">Tidak</button>
-        <button type="submit" class="btn btn-primary">Yakin</button>
+        <button type="submit" class="btn btn-danger">Hapus</button>
     </div>
 </form>

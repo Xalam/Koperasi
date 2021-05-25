@@ -78,6 +78,18 @@
                                 <p>Saldo Simpanan</p>
                             </a>
                         </li>
+                        <li class="nav-item">
+                            <a href="{{ route('tarik-saldo.index') }}" class="nav-link {{ request()->is('simpan-pinjam/simpanan/tarik-saldo*') ? ' active' : '' }}">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>Permintaan Penarikan</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{{ route('tarik-saldo.history') }}" class="nav-link {{ request()->is('simpan-pinjam/simpanan/riwayat*') ? ' active' : '' }}">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>Riwayat Penarikan</p>
+                            </a>
+                        </li>
                     </ul>
                 </li>
                 <li class="nav-item {{ request()->is('simpan-pinjam/pinjaman*') ? ' menu-open' : '' }}">
@@ -90,29 +102,15 @@
                     </a>
                     <ul class="nav nav-treeview">
                         <li class="nav-item">
-                            <a href="#" class="nav-link {{ request()->is('simpan-pinjam/pinjaman/pokok*') ? ' active' : '' }}">
+                            <a href="{{ route('pengajuan.index') }}" class="nav-link {{ request()->is('simpan-pinjam/pinjaman/pengajuan*') ? ' active' : '' }}">
                                 <i class="far fa-circle nav-icon"></i>
-                                <p>Simpanan Pokok
-                                    <i class="right fas fa-angle-left"></i>
-                                </p>
+                                <p>Pengajuan Pinjaman</p>
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="l" class="nav-link {{ request()->is('simpan-pinjam/pinjaman/wajib*') ? ' active' : '' }}">
+                            <a href="l" class="nav-link {{ request()->is('simpan-pinjam/pinjaman/angsuran*') ? ' active' : '' }}">
                                 <i class="far fa-circle nav-icon"></i>
-                                <p>Simpanan Wajib</p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="" class="nav-link {{ request()->is('simpan-pinjam/pinjaman/sukarela*') ? ' active' : '' }}">
-                                <i class="far fa-circle nav-icon"></i>
-                                <p>Simpanan Sukarela</p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="" class="nav-link {{ request()->is('simpan-pinjam/pinjaman/daftar*') ? ' active' : '' }}">
-                                <i class="far fa-circle nav-icon"></i>
-                                <p>Daftar Simpanan</p>
+                                <p>Angsuran</p>
                             </a>
                         </li>
                     </ul>

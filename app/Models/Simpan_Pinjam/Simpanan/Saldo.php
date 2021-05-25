@@ -21,7 +21,13 @@ class Saldo extends Model
         return $this->belongsTo(Anggota::class, 'id_anggota', 'id');
     }
 
-    public function masuk() {
+    public function masuk()
+    {
         return $this->hasMany(Simpanan::class, 'id_anggota');
+    }
+
+    public function keluar()
+    {
+        return $this->hasMany(SaldoTarik::class, 'id_saldo');
     }
 }

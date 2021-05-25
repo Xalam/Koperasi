@@ -141,12 +141,29 @@ Route::prefix('simpan-pinjam')->group(function () {
 
     #Simpanan
     Route::prefix('simpanan')->group(function () {
-        Route::resource('data', 'Simpan_Pinjam\Master\Simpanan\SimpananController');
-        Route::get('data/cetak/{id}', 'Simpan_Pinjam\Master\Simpanan\SimpananController@print')->name('data.print');
-        Route::get('data/cetak/show/{id}', 'Simpan_Pinjam\Master\Simpanan\SimpananController@print_show')->name('data.print-show');
-        Route::get('data/cetak/modal/{id}', 'Simpan_Pinjam\Master\Simpanan\SimpananController@modal')->name('data.modal');
-        Route::post('data/store-all', 'Simpan_Pinjam\Master\Simpanan\SimpananController@store_all')->name('data.store-all');
+        Route::resource('data', 'Simpan_Pinjam\Simpanan\SimpananController');
+        Route::get('data/cetak/{id}', 'Simpan_Pinjam\Simpanan\SimpananController@print')->name('data.print');
+        Route::get('data/cetak/show/{id}', 'Simpan_Pinjam\Simpanan\SimpananController@print_show')->name('data.print-show');
+        Route::get('data/cetak/modal/{id}', 'Simpan_Pinjam\Simpanan\SimpananController@modal')->name('data.modal');
+        Route::post('data/store-all', 'Simpan_Pinjam\Simpanan\SimpananController@store_all')->name('data.store-all');
 
-        Route::resource('saldo', 'Simpan_Pinjam\Master\Simpanan\SaldoController');
+        Route::resource('saldo', 'Simpan_Pinjam\Simpanan\SaldoController');
+
+        Route::get('riwayat', 'Simpan_Pinjam\Simpanan\TarikSaldoController@history')->name('tarik-saldo.history');
+        Route::get('riwayat/cetak/{id}', 'Simpan_Pinjam\Simpanan\TarikSaldoController@print')->name('tarik-saldo.print');
+        Route::get('riwayat/cetak/show/{id}', 'Simpan_Pinjam\Simpanan\TarikSaldoController@print_show')->name('tarik-saldo.print-show');
+        Route::resource('tarik-saldo', 'Simpan_Pinjam\Simpanan\TarikSaldoController');
+        Route::get('tarik-saldo/modal/{id}', 'Simpan_Pinjam\Simpanan\TarikSaldoController@modal')->name('tarik-saldo.konfirmasi');
+    });
+
+    #Pinjaman
+    Route::prefix('pinjaman')->group(function () {
+        Route::resource('pengajuan', 'Simpan_Pinjam\Pinjaman\PengajuanController');
+
+        Route::get('pengajuan/konfirmasi/{id}', 'Simpan_Pinjam\Pinjaman\PengajuanController@konfirmasi')->name('pengajuan.konfirmasi');
+        Route::get('pengajuan/cetak/{id}', 'Simpan_Pinjam\Pinjaman\PengajuanController@print')->name('pengajuan.print');
+        Route::get('pengajuan/cetak/show/{id}', 'Simpan_Pinjam\Pinjaman\PengajuanController@print_show')->name('pengajuan.print-show'); 
+        Route::get('pengajuan/modal/{id}', 'Simpan_Pinjam\Pinjaman\PengajuanController@modal')->name('pengajuan.modal');  
+        
     });
 });

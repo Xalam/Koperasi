@@ -19,9 +19,8 @@
     <div class="wrapper">
         <!-- Main content -->
         <section class="invoice">
-            <!-- title row -->
             <div class="row">
-                <div class="col-12">
+                <div class="col-12">        
                     <!-- Main content -->
                     <div class="invoice p-3 mb-3">
                         <!-- title row -->
@@ -30,7 +29,7 @@
                                 <h4>
                                     <img src="{{ asset('assets/dist/img/logo-koperasi.png') }}" alt="Primkop Logo" class="brand-image img-circle elevation-1" style="max-height: 30px;">
                                         Primkop Polrestabes Semarang
-                                    <small class="float-right">Tanggal: {{ date('d-m-Y', strtotime($simpanan->tanggal)) }}</small>
+                                    <small class="float-right">Tanggal: {{ date('d-m-Y', strtotime($tarikSaldo->tanggal)) }}</small>
                                 </h4>
                             </div>
                             <!-- /.col -->
@@ -51,16 +50,15 @@
                             <div class="col-sm-4 invoice-col">
                                 To
                                 <address>
-                                    <strong>{{ $simpanan->anggota->nama_anggota }}</strong><br>
-                                    {{ $simpanan->anggota->alamat }}<br>
-                                    Whatsapp: {{ $simpanan->anggota->no_wa }}<br>
-                                    Email: {{ $simpanan->anggota->email }}
+                                    <strong>{{ $tarikSaldo->saldo->anggota->nama_anggota }}</strong><br>
+                                    {{ $tarikSaldo->saldo->anggota->alamat }}<br>
+                                    Whatsapp: {{ $tarikSaldo->saldo->anggota->no_wa }}<br>
+                                    Email: {{ $tarikSaldo->saldo->anggota->email }}
                                 </address>
                             </div>
                             <!-- /.col -->
                             <div class="col-sm-4 invoice-col">
-                                <b>Simpanan No# {{ $simpanan->kode_simpanan }}</b><br>
-                                <b>Kode Anggota: {{ $simpanan->anggota->kd_anggota }}</b>
+                                <b>Kode Anggota: {{ $tarikSaldo->saldo->anggota->kd_anggota }}</b>
                             </div>
                             <!-- /.col -->
                         </div>
@@ -73,23 +71,13 @@
                                     <thead>
                                         <tr>
                                             <th>No</th>
-                                            <th>Jumlah Simpanan</th>
-                                            <th>Jenis Simpanan</th>
+                                            <th>Jumlah Penarikan</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         <tr>
                                             <td>1</td>
-                                            <td>{{ number_format($simpanan->nominal, 2, ',', '.') }}</td>
-                                            <td>
-                                                @if ($simpanan->jenis_simpanan == 1)
-                                                    Simpanan Pokok
-                                                @elseif ($simpanan->jenis_simpanan == 2)
-                                                    Simpanan Wajib
-                                                @else
-                                                    Simpanan Sukarela
-                                                @endif
-                                            </td>
+                                            <td>{{ number_format($tarikSaldo->nominal, 2, ',', '.') }}</td>
                                         </tr>
                                     </tbody>
                                 </table>
@@ -101,11 +89,7 @@
                         <div class="row">
                             <!-- accepted payments column -->
                             <div class="col-6">
-                                <p class="lead">Keterangan:</p>
         
-                                <p class="text-muted well well-sm shadow-none" style="margin-top: 10px;">
-                                    {{ $simpanan->keterangan }}
-                                </p>
                             </div>
                             <!-- /.col -->
                             <div class="col-6">
@@ -113,11 +97,7 @@
                                     <table class="table">
                                         <tr>
                                             <th style="width:50%">Total:</th>
-                                            <td>Rp. {{ number_format($simpanan->nominal, 2, ',', '.') }}</td>
-                                        </tr>
-                                        <tr>
-                                            <th style="width:50%">Pembayaran:</th>
-                                            <td>{{ ($simpanan->status == 0) ? 'BELUM LUNAS' : 'LUNAS' }}</td>
+                                            <td>Rp. {{ number_format($tarikSaldo->nominal, 2, ',', '.') }}</td>
                                         </tr>
                                     </table>
                                 </div>
@@ -127,16 +107,12 @@
                     </div>
                 </div>
             </div>
-            <!-- /.row -->
         </section>
-        <!-- /.content -->
     </div>
-    <!-- ./wrapper -->
-    <!-- Page specific script -->
+
     <script>
         window.addEventListener("load", window.print());
         
     </script>
 </body>
-
 </html>
