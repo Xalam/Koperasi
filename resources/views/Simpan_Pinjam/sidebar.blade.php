@@ -108,7 +108,7 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="l" class="nav-link {{ request()->is('simpan-pinjam/pinjaman/angsuran*') ? ' active' : '' }}">
+                            <a href="{{ route('angsuran.index') }}" class="nav-link {{ request()->is('simpan-pinjam/pinjaman/angsuran*') ? ' active' : '' }}">
                                 <i class="far fa-circle nav-icon"></i>
                                 <p>Angsuran</p>
                             </a>

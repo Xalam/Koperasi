@@ -57,7 +57,7 @@ class PengajuanController extends Controller
                             'nama'          => $value->anggota->nama_anggota,
                             'nominal'       => 'Rp. ' . number_format($value->nominal_pinjaman, 2, ',', '.'),
                             'status'        => '<span class="badge badge-success">Disetujui</span>&nbsp;' . (($value->lunas == 1) ? '<span class="badge badge-success">Lunas</span>' : '<span class="badge badge-danger">Belum Lunas</span>'),
-                            'action'          => '<a href="' . route('pengajuan.print', $value->id) . '" class="btn btn-light btn-sm"><i class="fas fa-print"></i>&nbsp; Cetak</a>'
+                            'action'        => '<a href="' . route('pengajuan.print', $value->id) . '" class="btn btn-light btn-sm"><i class="fas fa-print"></i>&nbsp; Cetak</a>'
                         ];
                     }
                     return response()->json(compact('data'));
@@ -88,9 +88,11 @@ class PengajuanController extends Controller
      */
     public function store(Request $request)
     {
-        $id = Pinjaman::select('id')->orderBy('id', 'DESC')->first();
-        if ($id == null) {
-            $id = 0;
+        $check = Pinjaman::select('id')->orderBy('id', 'DESC')->first();
+        if ($check == null) {
+            $id = 1;
+        } else {
+            $id = $check->id + 1;
         }
 
         $nominal = str_replace('.', '', $request->nominal_pinjaman);
@@ -99,7 +101,7 @@ class PengajuanController extends Controller
         $totalPinjaman = $nominal + ($nominal * ($request->bunga / 100) * ($request->tenor / 12));
 
         #Rumus Angsuran
-        $angsuran = ($nominal + $totalPinjaman) / $request->tenor;
+        $angsuran = $totalPinjaman / $request->tenor;
         
         if ($request->biaya_admin == null) {
             $biaya_admin = 0;
@@ -124,7 +126,7 @@ class PengajuanController extends Controller
                 ]);
             } else {
                 $pinjaman = new Pinjaman();
-                $pinjaman->kode_pinjaman    = 'PNJ-' . str_replace('-', '', $request->tanggal) . '-' . str_pad($id->id + 1, 4, '0', STR_PAD_LEFT);
+                $pinjaman->kode_pinjaman    = 'PNJ-' . str_replace('-', '', $request->tanggal) . '-' . str_pad($id, 4, '0', STR_PAD_LEFT);
                 $pinjaman->id_anggota       = $request->id_anggota;
                 $pinjaman->tanggal          = $request->tanggal;
                 $pinjaman->nominal_pinjaman = (int) $nominal;
@@ -141,7 +143,7 @@ class PengajuanController extends Controller
             }
         } else {
             $pinjaman = new Pinjaman();
-            $pinjaman->kode_pinjaman    = 'PNJ-' . str_replace('-', '', $request->tanggal) . '-' . str_pad($id->id + 1, 4, '0', STR_PAD_LEFT);
+            $pinjaman->kode_pinjaman    = 'PNJ-' . str_replace('-', '', $request->tanggal) . '-' . str_pad($id, 4, '0', STR_PAD_LEFT);
             $pinjaman->id_anggota       = $request->id_anggota;
             $pinjaman->tanggal          = $request->tanggal;
             $pinjaman->nominal_pinjaman = (int) $nominal;

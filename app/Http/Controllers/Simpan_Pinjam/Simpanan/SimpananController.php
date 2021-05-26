@@ -141,14 +141,16 @@ class SimpananController extends Controller
      */
     public function store(Request $request)
     {
-        $id = Simpanan::select('id')->orderBy('id', 'DESC')->first();
-        if ($id == null) {
-            $id = 0;
+        $check = Simpanan::select('id')->orderBy('id', 'DESC')->first();
+        if ($check == null) {
+            $id = 1;
+        } else {
+            $id = $check->id + 1;
         }
 
         $data = $request->all();
 
-        $data['kode_simpanan'] = 'SMP-' . str_replace('-', '', $request->tanggal) . '-' . str_pad($id->id + 1, 4, '0', STR_PAD_LEFT);
+        $data['kode_simpanan'] = 'SMP-' . str_replace('-', '', $request->tanggal) . '-' . str_pad($id, 4, '0', STR_PAD_LEFT);
         $data['nominal'] = str_replace('.', '', $request->nominal);
 
         Simpanan::create($data);
