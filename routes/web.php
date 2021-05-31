@@ -170,4 +170,9 @@ Route::prefix('simpan-pinjam')->group(function () {
         Route::get('angsuran/cetak/show/{id}', 'Simpan_Pinjam\Pinjaman\AngsuranController@print_show')->name('angsuran.print-show');
         Route::get('angsuran/konfirmasi/{id}', 'Simpan_Pinjam\Pinjaman\AngsuranController@konfirmasi')->name('angsuran.konfirmasi');
     });
+
+    #Laporan
+    Route::prefix('laporan')->group(function () {
+        Route::resource('jurnal', 'Simpan_Pinjam\Laporan\JurnalUmumController');
+    });
 });

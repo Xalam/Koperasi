@@ -150,7 +150,7 @@ class SimpananController extends Controller
 
         $data = $request->all();
 
-        $data['kode_simpanan'] = 'SMP-' . str_replace('-', '', $request->tanggal) . '-' . str_pad($id, 4, '0', STR_PAD_LEFT);
+        $data['kode_simpanan'] = 'SMP-' . str_replace('-', '', $request->tanggal) . '-' . str_pad($id, 6, '0', STR_PAD_LEFT);
         $data['nominal'] = str_replace('.', '', $request->nominal);
 
         Simpanan::create($data);

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Simpan_Pinjam\Master\Anggota;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\Simpan_Pinjam\Master\Anggota\Anggota;
+use App\Models\Simpan_Pinjam\Pinjaman\Pinjaman;
 use App\Models\Simpan_Pinjam\Simpanan\Saldo;
 use App\Models\Simpan_Pinjam\Simpanan\SaldoTarik;
 use App\Models\Simpan_Pinjam\Simpanan\Simpanan;
@@ -270,6 +271,13 @@ class AnggotaController extends Controller
             Saldo::where('id_anggota', $id)->delete();
             SaldoTarik::where('id_saldo', $saldo->id)->delete();
         }
+
+        #Hapus pinjaman
+        $pinjaman = new Pinjaman();
+        $pinjaman->where('id_anggota', $id)->delete();
+
+        #Hapus angsuran
+        
 
         return redirect()->route('anggota.index')->with([
             'success' => 'Data anggota berhasil dihapus'

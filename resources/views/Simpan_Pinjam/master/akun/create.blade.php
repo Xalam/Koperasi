@@ -21,7 +21,7 @@
                 <div class="card-header">
                     <h3 class="card-title">Tambah Akun</h3>
                 </div>
-                <div class="card-body">
+                <div class="card-body col-md-6 mx-auto">
                     <form action="{{ route('akun.store') }}" role="form" method="post" enctype="multipart/form-data"
                         autocomplete="off">
                         @csrf

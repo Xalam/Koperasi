@@ -86,7 +86,7 @@ class AngsuranController extends Controller
         }
 
         $angsuran = new Angsuran();
-        $angsuran->kode_angsuran    = 'ASN-' . str_replace('-', '', date('Y-m-d')) . '-' . str_pad($id, 4, '0', STR_PAD_LEFT);
+        $angsuran->kode_angsuran    = 'ASN-' . str_replace('-', '', date('Y-m-d')) . '-' . str_pad($id, 6, '0', STR_PAD_LEFT);
         $angsuran->id_pinjaman      = $request->id_pinjaman;
         $angsuran->tanggal          = date('Y-m-d');
         $angsuran->nominal_angsuran = $pinjamanUpdate->nominal_angsuran;

@@ -26,7 +26,7 @@ class AkunController extends Controller
             foreach ($akun as $key => $value) {
                 $data[] = [
                     'no' => $no++,
-                    'kode_akun' => 'AKN.' . $value->kode_akun,
+                    'kode_akun' => $value->kode_akun,
                     'nama_akun' => $value->nama_akun,
                     'saldo'     => 'Rp. ' . number_format($value->saldo, 2, ',', '.'),
                     'action' => '<a href="'. route('akun.edit', $value->id) . '" class="btn btn-warning btn-sm"><i class="far fa-edit"></i>&nbsp; Edit</a>

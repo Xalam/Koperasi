@@ -23,7 +23,7 @@
                 <div class="card-header">
                     <h3 class="card-title">Tambah Anggota</h3>
                 </div>
-                <div class="card-body">
+                <div class="card-body col-md-6 mx-auto">
                     <form action="{{ route('anggota.store') }}" role="form" method="post" enctype="multipart/form-data"
                         autocomplete="off">
                         @csrf
@@ -74,7 +74,7 @@
                         </div>
                         <div class="form-group">
                             <label>Tanggal Lahir</label>
-                            <div class="input-group date col-md-6" id="tanggal-lahir" data-target-input="nearest">
+                            <div class="input-group date" id="tanggal-lahir" data-target-input="nearest">
                                 <input type="text" class="form-control datetimepicker-input" data-target="#tanggal-lahir" name="tanggal_lahir"/>
                                 <div class="input-group-append" data-target="#tanggal-lahir" data-toggle="datetimepicker">
                                     <div class="input-group-text"><i class="fa fa-calendar"></i></div>
@@ -166,7 +166,7 @@
                         </div>
                         <div class="form-group">
                             <label for="input-foto">Upload Foto</label>
-                            <div class="input-group col-md-6">
+                            <div class="input-group">
                                 <div class="custom-file">
                                     <input type="file" class="custom-file-input" id="input-foto" name="foto">
                                     <label class="custom-file-label" for="input-foto">Pilih file</label>

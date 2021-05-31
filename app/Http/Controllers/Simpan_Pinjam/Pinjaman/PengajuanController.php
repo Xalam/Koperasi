@@ -126,7 +126,7 @@ class PengajuanController extends Controller
                 ]);
             } else {
                 $pinjaman = new Pinjaman();
-                $pinjaman->kode_pinjaman    = 'PNJ-' . str_replace('-', '', $request->tanggal) . '-' . str_pad($id, 4, '0', STR_PAD_LEFT);
+                $pinjaman->kode_pinjaman    = 'PNJ-' . str_replace('-', '', $request->tanggal) . '-' . str_pad($id, 6, '0', STR_PAD_LEFT);
                 $pinjaman->id_anggota       = $request->id_anggota;
                 $pinjaman->tanggal          = $request->tanggal;
                 $pinjaman->nominal_pinjaman = (int) $nominal;
@@ -143,7 +143,7 @@ class PengajuanController extends Controller
             }
         } else {
             $pinjaman = new Pinjaman();
-            $pinjaman->kode_pinjaman    = 'PNJ-' . str_replace('-', '', $request->tanggal) . '-' . str_pad($id, 4, '0', STR_PAD_LEFT);
+            $pinjaman->kode_pinjaman    = 'PNJ-' . str_replace('-', '', $request->tanggal) . '-' . str_pad($id, 6, '0', STR_PAD_LEFT);
             $pinjaman->id_anggota       = $request->id_anggota;
             $pinjaman->tanggal          = $request->tanggal;
             $pinjaman->nominal_pinjaman = (int) $nominal;

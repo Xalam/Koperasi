@@ -115,8 +115,8 @@
                         </li>
                     </ul>
                 </li>
-                <li class="nav-item">
-                    <a href="#" class="nav-link">
+                <li class="nav-item {{ request()->is('simpan-pinjam/laporan*') ? ' menu-open' : '' }}">
+                    <a href="#" class="nav-link {{ request()->is('simpan-pinjam/laporan*') ? ' active' : '' }}">
                         <i class="nav-icon fas fa-copy"></i>
                         <p>
                             Laporan
@@ -124,6 +124,18 @@
                         </p>
                     </a>
                     <ul class="nav nav-treeview">
+                        <li class="nav-item">
+                            <a href="{{ route('jurnal.index') }}" class="nav-link {{ request()->is('simpan-pinjam/laporan/jurnal*') ? ' active' : '' }}">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>Jurnal Umum</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="" class="nav-link {{ request()->is('simpan-pinjam/pinjaman/buku*') ? ' active' : '' }}">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>Buku Besar</p>
+                            </a>
+                        </li>
                         <li class="nav-item">
                             <a href="pages/UI/general.html" class="nav-link">
                                 <i class="far fa-circle nav-icon"></i>
