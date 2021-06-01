@@ -131,7 +131,7 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="" class="nav-link {{ request()->is('simpan-pinjam/pinjaman/buku*') ? ' active' : '' }}">
+                            <a href="" class="nav-link {{ request()->is('simpan-pinjam/laporan/buku*') ? ' active' : '' }}">
                                 <i class="far fa-circle nav-icon"></i>
                                 <p>Buku Besar</p>
                             </a>
@@ -149,7 +149,7 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="pages/UI/icons.html" class="nav-link">
+                            <a href="{{ route('data-anggota.index') }}" class="nav-link {{ request()->is('simpan-pinjam/laporan/anggota*') ? ' active' : '' }}">
                                 <i class="far fa-circle nav-icon"></i>
                                 <p>Data Anggota</p>
                             </a>
