@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Simpan Pinjam | Laporan Data Anggota</title>
+    <title>Simpan Pinjam | Laporan Simpanan</title>
 
     <!-- Google Font: Source Sans Pro -->
     <link rel="stylesheet"
@@ -19,16 +19,8 @@
         <!-- Main content -->
         <div class="row no-print">
             <div class="col-12">
-                <a href="{{ route('data-anggota.index') }}" class="btn btn-default" style="margin: 10px;"><i></i> Kembali</a>
+                <a href="{{ route('lap-simpanan.index') }}" class="btn btn-default" style="margin: 10px;"><i></i> Kembali</a>
             </div>
-        </div>
-        <div class="row">
-            <div class="col-12">
-                <h4>
-                    <small class="float-right">Tanggal Cetak: {{ date('d-m-Y') }}</small>
-                </h4>
-            </div>
-            <!-- /.col -->
         </div>
         <div class="row" style="margin: 15px;">
             <img src="{{ asset('assets/dist/img/logo-koperasi.png') }}" alt="Primkop Logo" style="width: 80px; height: 80px;" class="brand-image img-circle elevation-2"
@@ -45,7 +37,7 @@
             
         </div>
         <div class="text-center">
-            <h3><b>Laporan Data Anggota</b></h3><br>
+            <h3><b>Laporan Simpanan Anggota</b></h3><br>
             <h3 style="margin-top: -30px; margin-bottom: 20px;"><b>Primer Koperasi Polrestabes Semarang</b></h3>
         </div>
         <!-- Table row -->
@@ -55,33 +47,33 @@
                     <thead>
                         <tr>
                             <th>No</th>
-                            <th>Kode Anggota</th>
-                            <th>Nama Anggota</th>
-                            <th>Gender</th>
-                            <th>Agama</th>
-                            <th>TTL</th>
-                            <th>Alamat</th>
-                            <th>No HP</th>
-                            <th>No WA</th>
-                            <th>Jabatan</th>
+                            <th>Kode Simpanan</th>
+                            <th>Tanggal Simpan</th>
+                            <th>Anggota</th>
+                            <th>Jenis Simpanan</th>
+                            <th>Jumlah Simpan</th>
                         </tr>
                     </thead>
                     <tbody>
                         @php
                             $no = 1;
                         @endphp
-                        @foreach ($anggota as $ang)
+                        @foreach ($simpanan as $sim)
                             <tr>
                             <td>{{ $no++ }}</td>
-                            <td>{{ $ang->kd_anggota }}</td>
-                            <td>{{ $ang->nama_anggota }}</td>
-                            <td>{{ $ang->jenis_kelamin }}</td>
-                            <td>{{ $ang->agama }}</td>
-                            <td>{{ $ang->tempat_lahir .', '. date('d-m-Y', strtotime($ang->tanggal_lahir))  }}</td>
-                            <td>{{ $ang->alamat }}</td>
-                            <td>{{ $ang->no_hp }}</td>
-                            <td>{{ $ang->no_wa }}</td>
-                            <td>{{ $ang->jabatan }}</td>
+                            <td>{{ $sim->kode_simpanan }}</td>
+                            <td>{{ date('d-m-Y', strtotime($sim->tanggal)) }}</td>
+                            <td>{{ $sim->anggota->kd_anggota . ' / ' . $sim->anggota->nama_anggota }}</td>
+                            <td>
+                                @if ($sim->jenis_simpanan == 1)
+                                    Simpanan Pokok
+                                @elseif ($sim->jenis_simpanan == 2)
+                                    Simpanan Wajib
+                                @else
+                                    Simpanan Sukarela
+                                @endif
+                            </td>
+                            <td>Rp. {{ number_format($sim->nominal, 2, ',', '.') }}</td>
                         </tr>
                         @endforeach
                     </tbody>

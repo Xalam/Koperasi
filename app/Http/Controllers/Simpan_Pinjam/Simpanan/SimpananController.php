@@ -258,7 +258,7 @@ class SimpananController extends Controller
         for ($i = 0; $i < $count; $i++) {
             $id = Simpanan::orderBy('id', 'DESC')->first();
             Simpanan::create([
-                'kode_simpanan'  => 'SMP-' . str_replace('-', '', $request->tanggal) . '-' . str_pad($id->id + 1, 4, '0', STR_PAD_LEFT),
+                'kode_simpanan'  => 'SMP-' . str_replace('-', '', $request->tanggal) . '-' . str_pad($id->id + 1, 6, '0', STR_PAD_LEFT),
                 'id_anggota'     => $anggota[$i],
                 'tanggal'        => $request->tanggal,
                 'jenis_simpanan' => 2,

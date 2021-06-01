@@ -137,7 +137,7 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="pages/UI/general.html" class="nav-link">
+                            <a href="{{ route('lap-simpanan.index') }}" class="nav-link {{ request()->is('simpan-pinjam/laporan/simpanan*') ? ' active' : '' }}">
                                 <i class="far fa-circle nav-icon"></i>
                                 <p>Simpanan</p>
                             </a>
