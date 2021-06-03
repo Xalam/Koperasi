@@ -27,6 +27,14 @@
                         <div class="row">
                             <div class="col-12">
                                 <h4>
+                                    <small class="float-right" style="font-size: 10pt;">Tanggal Cetak: {{ date('d-m-Y H:i:s') }}</small>
+                                </h4>
+                            </div>
+                            <!-- /.col -->
+                        </div>
+                        <div class="row">
+                            <div class="col-12">
+                                <h4>
                                     <img src="{{ asset('assets/dist/img/logo-koperasi.png') }}" alt="Primkop Logo"
                                         class="brand-image img-circle elevation-1" style="max-height: 30px;">
                                     Primkop Polrestabes Semarang

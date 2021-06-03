@@ -2,7 +2,7 @@
 
 @section('title', 'Laporan')
 
-@section('content_header', 'Laporan Simpanan')
+@section('content_header', 'Laporan Pinjaman')
 
     @push('style')
 
@@ -10,7 +10,7 @@
 
 @section('breadcrumb')
     <li class="breadcrumb-item"><a href="#">Laporan</a></li>
-    <li class="breadcrumb-item active">Cetak Laporan Simpanan</li>
+    <li class="breadcrumb-item active">Cetak Laporan Pinjaman</li>
 @endsection
 
 @section('content_main')
@@ -26,9 +26,9 @@
                 <!-- title row -->
                 <div class="row no-print">
                     <div class="col-12">
-                        <a href="{{ route('lap-simpanan.print-show', $anggota->id) }}" rel="noopener" target="_blank" class="btn btn-info float-right"><i
+                        <a href="{{ route('lap-pinjaman.print-show', $anggota->id) }}" rel="noopener" target="_blank" class="btn btn-info float-right"><i
                                 class="fas fa-print"></i> Print</a>
-                        <a href="{{ route('lap-simpanan.index') }}" class="btn btn-default float-right" style="margin-right: 5px;"><i></i> Kembali</a>
+                        <a href="{{ route('lap-pinjaman.index') }}" class="btn btn-default float-right" style="margin-right: 5px;"><i></i> Kembali</a>
                     </div>
                 </div><br>
                 <div class="row" style="margin: 15px;">
@@ -45,7 +45,7 @@
                         </div>
                 </div>
                 <div class="text-center">
-                    <h3><b>Laporan Simpanan Anggota</b></h3><br>
+                    <h3><b>Laporan Pinjaman Anggota</b></h3><br>
                     <h3 style="margin-top: -30px; margin-bottom: 20px;"><b>Primer Koperasi Polrestabes Semarang</b></h3>
                 </div>
                 <div>
@@ -61,31 +61,33 @@
                             <thead>
                                 <tr>
                                     <th>No</th>
-                                    <th>Kode Simpanan</th>
-                                    <th>Tanggal Simpan</th>
-                                    <th>Jenis Simpanan</th>
-                                    <th>Jumlah Simpan</th>
+                                    <th>Kode Pinjaman</th>
+                                    <th>Tanggal Pinjaman</th>
+                                    <th>Anggota</th>
+                                    <th>Pokok Pinjaman (Rp)</th>
+                                    <th>Jangka Waktu (Bulan)</th>
+                                    <th>Sisa Angsuran (Bulan)</th>
+                                    <th>Angsuran Pokok (Rp)</th>
+                                    <th>Angsuran Bunga (Rp)</th>
+                                    <th>Jumlah Angsuran (Rp)</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 @php
                                     $no = 1;
                                 @endphp
-                                @foreach ($simpanan as $sim)
-                                    <tr>
+                                @foreach ($pinjaman as $pin)
+                                <tr>
                                     <td>{{ $no++ }}</td>
-                                    <td>{{ $sim->kode_simpanan }}</td>
-                                    <td>{{ date('d-m-Y', strtotime($sim->tanggal)) }}</td>
-                                    <td>
-                                        @if ($sim->jenis_simpanan == 1)
-                                            Simpanan Pokok
-                                        @elseif ($sim->jenis_simpanan == 2)
-                                            Simpanan Wajib
-                                        @else
-                                            Simpanan Sukarela
-                                        @endif
-                                    </td>
-                                    <td>Rp. {{ number_format($sim->nominal, 2, ',', '.') }}</td>
+                                    <td>{{ $pin->kode_pinjaman }}</td>
+                                    <td>{{ date('d-m-Y', strtotime($pin->tanggal)) }}</td>
+                                    <td>{{ $pin->anggota->kd_anggota . ' / ' . $pin->anggota->nama_anggota }}</td>
+                                    <td>{{ number_format($pin->nominal_pinjaman, 2, ',', '.') }}</td>
+                                    <td>{{ $pin->tenor }}</td>
+                                    <td>{{ $pin->tenor - $pin->angsuran_ke }}</td>
+                                    <td>{{ number_format($pin->nominal_pinjaman / $pin->tenor, 2, ',', '.') }}</td>
+                                    <td>{{ number_format(($pin->total_pinjaman - $pin->nominal_pinjaman) / $pin->tenor, 2, ',', '.') }}</td>
+                                    <td>{{ number_format($pin->nominal_angsuran, 2, ',', '.') }}</td>
                                 </tr>
                                 @endforeach
                             </tbody>

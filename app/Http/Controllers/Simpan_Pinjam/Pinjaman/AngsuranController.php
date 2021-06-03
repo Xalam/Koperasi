@@ -3,9 +3,11 @@
 namespace App\Http\Controllers\Simpan_Pinjam\Pinjaman;
 
 use App\Http\Controllers\Controller;
+use App\Models\Simpan_Pinjam\Master\Anggota\Anggota;
 use App\Models\Simpan_Pinjam\Pinjaman\Angsuran;
 use App\Models\Simpan_Pinjam\Pinjaman\Pinjaman;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class AngsuranController extends Controller
 {
@@ -16,8 +18,10 @@ class AngsuranController extends Controller
      */
     public function index()
     {
-        $angsuran = Angsuran::with('pinjaman')->get();
-
+        $angsuran = Angsuran::with('pinjaman')->whereIn('id', function($q) {
+                        $q->select(DB::raw('MAX(id) FROM tb_angsuran'))->groupBy('id_pinjaman');
+                    })->get();
+        
         if (request()->ajax()) {
             $data = [];
             $no   = 1;
@@ -157,14 +161,20 @@ class AngsuranController extends Controller
 
         if ($pinjaman->get()->count() > 0) {
 
-            if ($pinjaman->where('lunas', 0)->get()->count() > 0) {
+            if ($pinjaman->where('status', 1)->get()->count() > 0) {
+                if ($pinjaman->where('lunas', 0)->get()->count() > 0) {
 
-                $data = $pinjaman->firstOrFail();
-
-                return view('simpan_pinjam.pinjaman.angsuran.bayar', compact('data'));
+                    $data = $pinjaman->firstOrFail();
+    
+                    return view('simpan_pinjam.pinjaman.angsuran.bayar', compact('data'));
+                } else {
+                    return redirect()->route('angsuran.index')->with([
+                        'error' => 'Kode pinjaman sudah lunas'
+                    ]);
+                }
             } else {
                 return redirect()->route('angsuran.index')->with([
-                    'error' => 'Kode pinjaman sudah lunas'
+                    'error' => 'Kode pinjaman belum disetujui'
                 ]);
             }
         } else {

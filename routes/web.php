@@ -182,5 +182,11 @@ Route::prefix('simpan-pinjam')->group(function () {
         Route::post('simpanan/show', 'Simpan_Pinjam\Laporan\LaporanSimpananController@show')->name('lap-simpanan.show');
         Route::get('simpanan/cetak/all', 'Simpan_Pinjam\Laporan\LaporanSimpananController@print_all')->name('lap-simpanan.print-all');
         Route::get('simpanan/cetak/show/{id}', 'Simpan_Pinjam\Laporan\LaporanSimpananController@print_show')->name('lap-simpanan.print-show');
+        
+        Route::get('pinjaman', 'Simpan_Pinjam\Laporan\LaporanPinjamanController@index')->name('lap-pinjaman.index');
+        Route::post('pinjaman/show', 'Simpan_Pinjam\Laporan\LaporanPinjamanController@show')->name('lap-pinjaman.show');
+        Route::get('pinjaman/cetak/all', 'Simpan_Pinjam\Laporan\LaporanPinjamanController@print_all')->name('lap-pinjaman.print-all');
+        Route::get('pinjaman/cetak/show/{id}', 'Simpan_Pinjam\Laporan\LaporanPinjamanController@print_show')->name('lap-pinjaman.print-show');
+
     });
 });

@@ -25,7 +25,7 @@
         <div class="row">
             <div class="col-12">
                 <h4>
-                    <small class="float-right">Tanggal Cetak: {{ date('d-m-Y') }}</small>
+                    <small class="float-right">Tanggal Cetak: {{ date('d-m-Y H:i:s') }}</small>
                 </h4>
             </div>
             <!-- /.col -->
