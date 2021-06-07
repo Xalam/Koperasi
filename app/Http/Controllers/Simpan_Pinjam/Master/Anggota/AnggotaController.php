@@ -81,6 +81,7 @@ class AnggotaController extends Controller
             'username'      => 'required|unique:tb_anggota',
             'password'      => 'required|min:8',
             'foto'          => 'required|image|mimes:jpg,png,jpeg|max:5120',
+            'gaji'          => 'required',
         ];
 
         $messages = [
@@ -100,7 +101,8 @@ class AnggotaController extends Controller
             'password.min'          => 'Password minimal 8 karakter',
             'foto.required'         => 'File foto wajib diunggah',
             'foto.image'            => 'File foto harus berbentuk jpg atau png',
-            'foto.max'              => 'Ukuran file foto maksimal 5mb'
+            'foto.max'              => 'Ukuran file foto maksimal 5mb',
+            'gaji.required'         => 'Gaji wajib diisi'
 
         ];
         
@@ -117,13 +119,15 @@ class AnggotaController extends Controller
 
         $extension = $request->file('foto')->extension();
         $imageName = $user . '.' . $extension;
-        Storage::putFileAs('foto', $request->file('foto'), $imageName);
+        //Storage::putFileAs('foto', $request->file('foto'), $imageName);
 
         $request->foto->move(public_path('storage/foto'), $imageName);
 
         $data['kd_anggota'] = $kode_anggota;
         $data['foto'] = $imageName;
         $data['password'] = Hash::make($data['password']);
+
+        $data['gaji']  = str_replace('.', '', $request->gaji);
 
         Anggota::create($data);
 
@@ -191,6 +195,7 @@ class AnggotaController extends Controller
             'no_wa'         => 'required',
             'jabatan'       => 'required',
             'foto'          => 'image|mimes:jpg,png,jpeg|max:5120',
+            'gaji'          => 'required'
         ];
 
         $messages = [
@@ -202,8 +207,8 @@ class AnggotaController extends Controller
             'no_wa.required'        => 'No whatsapp wajib diisi',
             'jabatan.required'      => 'Jabatan wajib diisi',
             'foto.image'            => 'File foto harus berbentuk jpg atau png',
-            'foto.max'              => 'Ukuran file foto maksimal 5mb'
-
+            'foto.max'              => 'Ukuran file foto maksimal 5mb',
+            'gaji.required'         => 'Gaji wajib diisi'
         ];
         
         $validator = Validator::make($request->all(), $rules, $messages);
@@ -238,7 +243,9 @@ class AnggotaController extends Controller
         } else {
             $data['password'] = Hash::make($data['password']);
         }
-        
+
+        $data['gaji']  = str_replace('.', '', $request->gaji);
+
         $anggota->update($data);
 
         return redirect()->route('anggota.index')->with([

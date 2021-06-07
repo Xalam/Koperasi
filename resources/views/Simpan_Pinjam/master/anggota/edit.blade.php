@@ -4,11 +4,12 @@
 
 @section('content_header', 'Edit Anggota')
 
-@push('style')
-    <link rel="stylesheet" href="{{ asset('assets/plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css') }}">
-    <link rel="stylesheet" href="{{ asset('assets/plugins/select2/css/select2.min.css') }}">
-    <link rel="stylesheet" href="{{ asset('assets/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css') }}">
-@endpush
+    @push('style')
+        <link rel="stylesheet"
+            href="{{ asset('assets/plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css') }}">
+        <link rel="stylesheet" href="{{ asset('assets/plugins/select2/css/select2.min.css') }}">
+        <link rel="stylesheet" href="{{ asset('assets/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css') }}">
+    @endpush
 
 @section('breadcrumb')
     <li class="breadcrumb-item"><a href="#">Master</a></li>
@@ -19,24 +20,25 @@
 @section('content_main')
     <div class="row">
         <div class="col-md-12">
-            <div class="card card-warning">
+            <div class="card card-warning card-outline">
                 <div class="card-header">
                     <h3 class="card-title">Edit Anggota</h3>
                 </div>
                 <div class="card-body col-md-6 mx-auto">
-                    <form action="{{ route('anggota.update', $anggota->id) }}" role="form" method="post" enctype="multipart/form-data"
-                        autocomplete="off">
+                    <form action="{{ route('anggota.update', $anggota->id) }}" role="form" method="post"
+                        enctype="multipart/form-data" autocomplete="off">
                         @csrf
                         @method('put')
                         <div class="form-group">
                             <label for="kode-anggota">Kode Anggota</label>
                             <input type="text" class="form-control" id="kode-anggota" name="kd_anggota"
-                                placeholder="Masukkan nama anggota" disabled value="{{ old('kd_anggota') ? old('kd_anggota') : $anggota->kd_anggota }}">
+                                disabled value="{{ old('kd_anggota') ? old('kd_anggota') : $anggota->kd_anggota }}">
                         </div>
                         <div class="form-group">
                             <label for="nama-anggota">Nama Anggota</label>
                             <input type="text" class="form-control" id="nama-anggota" name="nama_anggota"
-                                placeholder="Masukkan nama anggota" value="{{ old('nama_anggota') ? old('nama_anggota') : $anggota->nama_anggota }}">
+                                placeholder="Nama anggota"
+                                value="{{ old('nama_anggota') ? old('nama_anggota') : $anggota->nama_anggota }}">
                             @if ($errors->has('nama_anggota'))
                                 <span class="text-danger">{{ $errors->first('nama_anggota') }}</span>
                             @endif
@@ -44,8 +46,8 @@
                         <div class="form-group">
                             <label for="pria">Jenis Kelamin</label>
                             <div class="custom-control custom-radio">
-                                <input class="custom-control-input" type="radio" id="radio-pria" name="jenis_kelamin" 
-                                value="Pria" {{ $anggota->jenis_kelamin == 'Pria' ? ' checked' : '' }}>
+                                <input class="custom-control-input" type="radio" id="radio-pria" name="jenis_kelamin"
+                                    value="Pria" {{ $anggota->jenis_kelamin == 'Pria' ? ' checked' : '' }}>
                                 <label for="radio-pria" class="custom-control-label">Pria</label>
                             </div>
                             <div class="custom-control custom-radio">
@@ -63,22 +65,24 @@
                                 <option {{ $anggota->agama == 'Katolik' ? 'selected="selected"' : '' }} value="Katolik">Katolik</option>
                                 <option {{ $anggota->agama == 'Hindu' ? 'selected="selected"' : '' }} value="Hindu">Hindu</option>
                                 <option {{ $anggota->agama == 'Buddha' ? 'selected="selected"' : '' }} value="Buddha">Buddha</option>
-                                <option {{ $anggota->agama == 'Khonghucu' ? 'selected="selected"' : '' }} value="Khonghucu">Khonghucu</option>
+                                <option {{ $anggota->agama == 'Khonghucu' ? 'selected="selected"' : '' }}value="Khonghucu">Khonghucu</option>
                             </select>
                         </div>
                         <div class="form-group">
                             <label for="tempat-lahir">Tempat Lahir</label>
                             <input type="text" class="form-control" id="tempat-lahir" name="tempat_lahir"
-                                placeholder="Masukkan tempat lahir" value="{{ old('tempat_lahir') ? old('tempat_lahir') : $anggota->tempat_lahir }}">
-                                @if ($errors->has('tempat_lahir'))
+                                placeholder="Tempat lahir"
+                                value="{{ old('tempat_lahir') ? old('tempat_lahir') : $anggota->tempat_lahir }}">
+                            @if ($errors->has('tempat_lahir'))
                                 <span class="text-danger">{{ $errors->first('tempat_lahir') }}</span>
                             @endif
                         </div>
                         <div class="form-group">
                             <label>Tanggal Lahir</label>
                             <div class="input-group date" id="tanggal-lahir" data-target-input="nearest">
-                                <input type="text" class="form-control datetimepicker-input" data-target="#tanggal-lahir" name="tanggal_lahir" 
-                                value="{{ old('tanggal_lahir') ? old('tanggal_lahir') : $anggota->tanggal_lahir }}"/>
+                                <input type="text" class="form-control datetimepicker-input" data-target="#tanggal-lahir"
+                                    name="tanggal_lahir"
+                                    value="{{ old('tanggal_lahir') ? old('tanggal_lahir') : $anggota->tanggal_lahir }}" placeholder="Tanggal lahir"/>
                                 <div class="input-group-append" data-target="#tanggal-lahir" data-toggle="datetimepicker">
                                     <div class="input-group-text"><i class="fa fa-calendar"></i></div>
                                 </div>
@@ -86,8 +90,8 @@
                         </div>
                         <div class="form-group">
                             <label for="alamat">Alamat</label>
-                            <input type="text" class="form-control" id="alamat" name="alamat" placeholder="Masukkan alamat" 
-                            value="{{ old('alamat') ? old('alamat') : $anggota->alamat }}">
+                            <input type="text" class="form-control" id="alamat" name="alamat" placeholder="Alamat"
+                                value="{{ old('alamat') ? old('alamat') : $anggota->alamat }}">
                             @if ($errors->has('alamat'))
                                 <span class="text-danger">{{ $errors->first('alamat') }}</span>
                             @endif
@@ -99,8 +103,8 @@
                                 <div class="input-group-prepend">
                                     <span class="input-group-text"><i class="fas fa-phone"></i></span>
                                 </div>
-                                <input type="text" class="form-control" data-inputmask-placeholder="" data-inputmask='"mask": "99999999999[999]"' data-mask name="no_hp"
-                                value="{{ old('no_hp') ? old('no_hp') : $anggota->no_hp }}">
+                                <input type="text" class="form-control number" placeholder="No Handphone" name="no_hp"
+                                    value="{{ old('no_hp') ? old('no_hp') : $anggota->no_hp }}">
                             </div>
                             @if ($errors->has('no_hp'))
                                 <span class="text-danger">{{ $errors->first('no_hp') }}</span>
@@ -113,8 +117,8 @@
                                 <div class="input-group-prepend">
                                     <span class="input-group-text"><i class="fab fa-whatsapp"></i></span>
                                 </div>
-                                <input type="text" class="form-control" data-inputmask-placeholder="" data-inputmask='"mask": "99999999999[999]"' data-mask name="no_wa"
-                                value="{{ old('no_wa') ? old('no_wa') : $anggota->no_wa }}">
+                                <input type="text" class="form-control number" placeholder="No Whatsapp" name="no_wa"
+                                    value="{{ $anggota->no_wa }}">
                             </div>
                             @if ($errors->has('no_wa'))
                                 <span class="text-danger">{{ $errors->first('no_wa') }}</span>
@@ -129,28 +133,32 @@
                         </div>
                         <div class="form-group">
                             <label for="jabatan">Jabatan</label>
-                            <input type="text" class="form-control" id="jabatan" name="jabatan" placeholder="Masukkan jabatan"
-                            value="{{ old('jabatan') ? old('jabatan') : $anggota->jabatan }}">
+                            <input type="text" class="form-control" id="jabatan" name="jabatan"
+                                placeholder="Masukkan jabatan"
+                                value="{{ old('jabatan') ? old('jabatan') : $anggota->jabatan }}">
                             @if ($errors->has('jabatan'))
                                 <span class="text-danger">{{ $errors->first('jabatan') }}</span>
                             @endif
                         </div>
                         <div class="form-group">
                             <label for="email">Email</label>
-                            <input type="email" class="form-control" id="email" name="email" placeholder="Masukkan email"
-                            value="{{ old('email') ? old('email') : $anggota->email }}" disabled>
+                            <input type="email" class="form-control" id="email" name="email" placeholder="Email"
+                                value="{{ old('email') ? old('email') : $anggota->email }}" disabled>
                         </div>
                         <div class="form-group">
                             <label for="username">Username (NRP)</label>
-                            <input type="text" class="form-control" placeholder="Masukkan Nomor Registrasi Pokok" name="username"
-                            value="{{ old('username') ? old('username') : $anggota->username }}" disabled>
+                            <input type="text" class="form-control number" placeholder="Nomor Registrasi Pokok"
+                                name="username" value="{{ old('username') ? old('username') : $anggota->username }}"
+                                disabled>
                         </div>
                         <div class="form-group">
                             <label for="password">Password Baru (boleh dikosongkan)</label>
                             <div class="input-group" id="password">
-                                <input type="password" class="form-control" name="password" placeholder="Masukkan password baru">
+                                <input type="password" class="form-control" name="password"
+                                    placeholder="Password baru">
                                 <div class="input-group-append">
-                                    <a href="" class="input-group-text"><i class="fas fa-eye-slash" aria-hidden="true"></i></a>
+                                    <a href="" class="input-group-text"><i class="fas fa-eye-slash"
+                                            aria-hidden="true"></i></a>
                                 </div>
                             </div>
                             @if ($errors->has('password'))
@@ -167,16 +175,39 @@
                                 <option {{ $anggota->role == 'simpan_pinjam' ? 'selected="selected"' : '' }} value="simpan_pinjam">Unit Simpan Pinjam</option>
                             </select>
                         </div>
+                        <div class="row cal-gaji">
+                            <div class="form-group col-md-6">
+                                <label>Gaji</label>
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text">Rp</span>
+                                    </div>
+                                    <input type="text" class="form-control" placeholder="Gaji" id="gaji" name="gaji"
+                                        value="{{ $anggota->gaji }}">
+                                </div>
+                                @if ($errors->has('gaji'))
+                                    <span class="text-danger">{{ $errors->first('gaji') }}</span>
+                                @endif
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label>Limit</label>
+                                <input type="text" class="form-control" placeholder="Limit" id="limit" disabled
+                                    value="{{ old('limit_gaji') ? old('limit_gaji') : $anggota->limit_gaji }}">
+                                <input type="hidden" name="limit_gaji" id="limit-gaji"
+                                    value="{{ $anggota->limit_gaji }}">
+                            </div>
+                        </div>
                         <div class="form-group">
                             <label for="input-foto">Upload Foto Baru</label>
                             <div class="input-group">
                                 <div class="custom-file">
                                     <input type="file" class="custom-file-input" id="input-foto" name="foto"
-                                    value="{{ old('foto') }}">
+                                        value="{{ old('foto') }}">
                                     <label class="custom-file-label" for="input-foto">Pilih file</label>
                                 </div>
                             </div>
-                            <img id="preview-foto" src="https://www.riobeauty.co.uk/images/product_image_not_found.gif" alt="Preview Image" style="max-height: 150px; margin-top: 10px">
+                            <img id="preview-foto" src="https://www.riobeauty.co.uk/images/product_image_not_found.gif"
+                                alt="Preview Image" style="max-height: 150px; margin-top: 10px">
                             @if ($errors->has('foto'))
                                 <span class="text-danger">{{ $errors->first('foto') }}</span>
                             @endif
@@ -191,6 +222,7 @@
 @endsection
 
 @push('before-script')
+    <script src="{{ asset('assets/plugins/jquery-mask/jquery.mask.min.js') }}"></script>
     <script src="{{ asset('assets/plugins/select2/js/select2.full.min.js') }}"></script>
     <script src="{{ asset('assets/plugins/moment/moment.min.js') }}"></script>
     <script src="{{ asset('assets/plugins/inputmask/jquery.inputmask.min.js') }}"></script>
@@ -204,7 +236,9 @@
                 format: 'YYYY-MM-DD'
             });
 
-            $('[data-mask]').inputmask();
+            $('#gaji').mask('#.##0', {
+                reverse: true
+            });
 
             $('.select2').select2();
 
@@ -212,12 +246,40 @@
                 event.preventDefault();
                 if ($('#password input').attr("type") == "text") {
                     $('#password input').attr('type', 'password');
-                    $('#password i').addClass( "fa-eye-slash" );
-                    $('#password i').removeClass( "fa-eye" );
+                    $('#password i').addClass("fa-eye-slash");
+                    $('#password i').removeClass("fa-eye");
                 } else if ($('#password input').attr("type") == "password") {
                     $('#password input').attr('type', 'text');
-                    $('#password i').removeClass( "fa-eye-slash" );
-                    $('#password i').addClass( "fa-eye" );
+                    $('#password i').removeClass("fa-eye-slash");
+                    $('#password i').addClass("fa-eye");
+                }
+            });
+
+            $('.cal-gaji').keyup(function() {
+                let gaji = $('#gaji').val();
+                let newGaji = 0;
+
+                if (gaji != null) {
+                    newGaji = gaji.split('.').join("");
+                }
+
+                let result = 2 / 3 * newGaji;
+                $('#limit').attr('value', formatMoney(result));
+                $('#limit-gaji').attr('value', (result.toFixed(2)));
+            });
+
+            function formatMoney(n) {
+                return new Intl.NumberFormat("id-ID", {
+                    style: "currency",
+                    currency: "IDR"
+                }).format(n);
+            }
+
+            $('input.number').keyup(function(event) {
+                if (event.which !== 8 && event.which !== 0 && event.which < 48 || event.which > 57) {
+                    $(this).val(function(index, value) {
+                        return value.replace(/\D/g, "");
+                    });
                 }
             });
 
@@ -225,11 +287,11 @@
 
             $('#input-foto').change(function() {
                 let reader = new FileReader();
-                reader.onload = (e) => { 
-                    $('#preview-foto').attr('src', e.target.result); 
+                reader.onload = (e) => {
+                    $('#preview-foto').attr('src', e.target.result);
                 }
-         
-                reader.readAsDataURL(this.files[0]); 
+
+                reader.readAsDataURL(this.files[0]);
             });
         })
 

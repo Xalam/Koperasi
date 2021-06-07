@@ -245,4 +245,14 @@ class PengajuanController extends Controller
 
         return view('simpan_pinjam.pinjaman.pengajuan.modal-delete', compact('pinjaman'));
     }
+
+    public function limit(Request $request)
+    {
+        $anggota = Anggota::select('limit_gaji')->where('id', $request->id)->first();
+        $data = array(
+            'limit' => $anggota->limit_gaji
+        );
+
+        return response()->json($data);
+    }
 }

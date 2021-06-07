@@ -19,7 +19,7 @@
 @section('content_main')
     <div class="row">
         <div class="col-md-12">
-            <div class="card card-primary">
+            <div class="card card-primary card-outline">
                 <div class="card-header">
                     <h3 class="card-title">Tambah Anggota</h3>
                 </div>
@@ -34,7 +34,7 @@
                         <div class="form-group">
                             <label for="nama-anggota">Nama Anggota</label>
                             <input type="text" class="form-control" id="nama-anggota" name="nama_anggota"
-                                placeholder="Masukkan nama anggota">
+                                placeholder="Nama anggota">
                             @if ($errors->has('nama_anggota'))
                                 <span class="text-danger">{{ $errors->first('nama_anggota') }}</span>
                             @endif
@@ -67,7 +67,7 @@
                         <div class="form-group">
                             <label for="tempat-lahir">Tempat Lahir</label>
                             <input type="text" class="form-control" id="tempat-lahir" name="tempat_lahir"
-                                placeholder="Masukkan tempat lahir">
+                                placeholder="Tempat lahir">
                                 @if ($errors->has('tempat_lahir'))
                                 <span class="text-danger">{{ $errors->first('tempat_lahir') }}</span>
                             @endif
@@ -75,7 +75,7 @@
                         <div class="form-group">
                             <label>Tanggal Lahir</label>
                             <div class="input-group date" id="tanggal-lahir" data-target-input="nearest">
-                                <input type="text" class="form-control datetimepicker-input" data-target="#tanggal-lahir" name="tanggal_lahir"/>
+                                <input type="text" class="form-control datetimepicker-input" data-target="#tanggal-lahir" name="tanggal_lahir" placeholder="Tanggal lahir"/>
                                 <div class="input-group-append" data-target="#tanggal-lahir" data-toggle="datetimepicker">
                                     <div class="input-group-text"><i class="fa fa-calendar"></i></div>
                                 </div>
@@ -83,7 +83,7 @@
                         </div>
                         <div class="form-group">
                             <label for="alamat">Alamat</label>
-                            <input type="text" class="form-control" id="alamat" name="alamat" placeholder="Masukkan alamat">
+                            <input type="text" class="form-control" id="alamat" name="alamat" placeholder="Alamat">
                             @if ($errors->has('alamat'))
                                 <span class="text-danger">{{ $errors->first('alamat') }}</span>
                             @endif
@@ -95,7 +95,7 @@
                                 <div class="input-group-prepend">
                                     <span class="input-group-text"><i class="fas fa-phone"></i></span>
                                 </div>
-                                <input type="text" class="form-control" data-inputmask-placeholder="" data-inputmask='"mask": "99999999999[999]"' data-mask name="no_hp">
+                                <input type="text" class="form-control number" placeholder="No Handphone" name="no_hp">
                             </div>
                             @if ($errors->has('no_hp'))
                                 <span class="text-danger">{{ $errors->first('no_hp') }}</span>
@@ -108,7 +108,7 @@
                                 <div class="input-group-prepend">
                                     <span class="input-group-text"><i class="fab fa-whatsapp"></i></span>
                                 </div>
-                                <input type="text" class="form-control" data-inputmask-placeholder="" data-inputmask='"mask": "99999999999[999]"' data-mask name="no_wa">
+                                <input type="text" class="form-control number" placeholder="No Whatsapp" name="no_wa">
                             </div>
                             @if ($errors->has('no_wa'))
                                 <span class="text-danger">{{ $errors->first('no_wa') }}</span>
@@ -123,21 +123,21 @@
                         </div>
                         <div class="form-group">
                             <label for="jabatan">Jabatan</label>
-                            <input type="text" class="form-control" id="jabatan" name="jabatan" placeholder="Masukkan jabatan">
+                            <input type="text" class="form-control" id="jabatan" name="jabatan" placeholder="Jabatan">
                             @if ($errors->has('jabatan'))
                                 <span class="text-danger">{{ $errors->first('jabatan') }}</span>
                             @endif
                         </div>
                         <div class="form-group">
                             <label for="email">Email</label>
-                            <input type="email" class="form-control" id="email" name="email" placeholder="Masukkan email">
+                            <input type="email" class="form-control" id="email" name="email" placeholder="Email">
                             @if ($errors->has('email'))
                                 <span class="text-danger">{{ $errors->first('email') }}</span>
                             @endif
                         </div>
                         <div class="form-group">
                             <label for="username">Username (NRP)</label>
-                            <input type="text" class="form-control" data-inputmask='"mask": "99999999"' data-mask placeholder="Masukkan Nomor Registrasi Pokok" name="username">
+                            <input type="text" class="form-control number" placeholder="Nomor Registrasi Pokok" name="username">
                             @if ($errors->has('username'))
                                 <span class="text-danger">{{ $errors->first('username') }}</span>
                             @endif
@@ -145,7 +145,7 @@
                         <div class="form-group">
                             <label for="password">Password</label>
                             <div class="input-group" id="password">
-                                <input type="password" class="form-control" name="password" placeholder="Masukkan password">
+                                <input type="password" class="form-control" name="password" placeholder="Password">
                                 <div class="input-group-append">
                                     <a href="" class="input-group-text"><i class="fas fa-eye-slash" aria-hidden="true"></i></a>
                                 </div>
@@ -163,6 +163,27 @@
                                 <option value="ketua_koperasi">Ketua Koperasi</option>
                                 <option value="simpan_pinjam">Unit Simpan Pinjam</option>
                             </select>
+                        </div>
+                        <div class="row cal-gaji">
+                            <div class="form-group col-md-6">
+                                <label>Gaji</label>
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text">Rp</span>
+                                    </div>
+                                    <input type="text" class="form-control" placeholder="Gaji" id="gaji"
+                                        name="gaji">
+                                </div>
+                                @if ($errors->has('gaji'))
+                                    <span class="text-danger">{{ $errors->first('gaji') }}</span>
+                                @endif
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label>Limit</label>
+                                <input type="text" class="form-control" placeholder="Limit" id="limit"
+                                        disabled>
+                                <input type="hidden" name="limit_gaji" id="limit-gaji">
+                            </div>
                         </div>
                         <div class="form-group">
                             <label for="input-foto">Upload Foto</label>
@@ -187,6 +208,7 @@
 @endsection
 
 @push('before-script')
+    <script src="{{ asset('assets/plugins/jquery-mask/jquery.mask.min.js') }}"></script>
     <script src="{{ asset('assets/plugins/select2/js/select2.full.min.js') }}"></script>
     <script src="{{ asset('assets/plugins/moment/moment.min.js') }}"></script>
     <script src="{{ asset('assets/plugins/inputmask/jquery.inputmask.min.js') }}"></script>
@@ -200,7 +222,17 @@
                 format: 'YYYY-MM-DD'
             });
 
-            $('[data-mask]').inputmask();
+            $('#gaji').mask('#.##0', {
+                reverse: true
+            });
+
+            $('input.number').keyup(function(event) {
+                if (event.which !== 8 && event.which !== 0 && event.which < 48 || event.which > 57) {
+                    $(this).val(function(index, value) {
+                        return value.replace(/\D/g, "");
+                    });
+                }
+            });
 
             $('.select2').select2();
 
@@ -216,6 +248,23 @@
                     $('#password i').addClass( "fa-eye" );
                 }
             });
+
+            $('.cal-gaji').keyup(function() {
+                let gaji = $('#gaji').val();
+                let newGaji = 0;
+
+                if (gaji != null) {
+                    newGaji = gaji.split('.').join("");
+                }
+
+                let result = 2 / 3 * newGaji;
+                $('#limit').attr('value', formatMoney(result));
+                $('#limit-gaji').attr('value', (result.toFixed(2)));
+            });
+
+            function formatMoney(n) {
+                return new Intl.NumberFormat("id-ID", { style: "currency", currency: "IDR" }).format(n);
+            }
 
             $('input[name="jenis_kelamin"]:checked').val();
 

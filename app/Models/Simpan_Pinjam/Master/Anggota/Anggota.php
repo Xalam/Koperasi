@@ -17,7 +17,7 @@ class Anggota extends Model
     protected $fillable = [
         'kd_anggota', 'nama_anggota', 'jenis_kelamin', 'agama', 'tempat_lahir',
         'tanggal_lahir', 'alamat', 'no_hp', 'no_wa', 'foto', 'status', 'jabatan', 
-        'email', 'username', 'password', 'role'
+        'email', 'username', 'password', 'role', 'gaji', 'limit_gaji'
     ];
 
     public function simpanan() 

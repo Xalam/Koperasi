@@ -31,6 +31,8 @@ class CreateAnggotaTable extends Migration
             $table->string('username');
             $table->string('password');
             $table->string('role')->default('anggota')->comment('Hak akses pengguna');
+            $table->double('gaji')->default(0);
+            $table->double('limit_gaji')->default(0);
             $table->timestamps();
         });
     }

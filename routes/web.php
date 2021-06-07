@@ -164,6 +164,7 @@ Route::prefix('simpan-pinjam')->group(function () {
         Route::get('pengajuan/cetak/{id}', 'Simpan_Pinjam\Pinjaman\PengajuanController@print')->name('pengajuan.print');
         Route::get('pengajuan/cetak/show/{id}', 'Simpan_Pinjam\Pinjaman\PengajuanController@print_show')->name('pengajuan.print-show'); 
         Route::get('pengajuan/modal/{id}', 'Simpan_Pinjam\Pinjaman\PengajuanController@modal')->name('pengajuan.modal');  
+        Route::post('pengajuan/limit', 'Simpan_Pinjam\Pinjaman\PengajuanController@limit')->name('pengajuan.limit');
         
         Route::resource('angsuran', 'Simpan_Pinjam\Pinjaman\AngsuranController');
         Route::post('angsuran/bayar', 'Simpan_Pinjam\Pinjaman\AngsuranController@bayar')->name('angsuran.bayar');
