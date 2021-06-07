@@ -256,9 +256,16 @@ class SimpananController extends Controller
         $count = $anggota->count();
         
         for ($i = 0; $i < $count; $i++) {
-            $id = Simpanan::orderBy('id', 'DESC')->first();
+            $check = Simpanan::orderBy('id', 'DESC')->first();
+
+            if ($check == null) {
+                $id = 1;
+            } else {
+                $id = $check->id + 1;
+            }
+
             Simpanan::create([
-                'kode_simpanan'  => 'SMP-' . str_replace('-', '', $request->tanggal) . '-' . str_pad($id->id + 1, 6, '0', STR_PAD_LEFT),
+                'kode_simpanan'  => 'SMP-' . str_replace('-', '', $request->tanggal) . '-' . str_pad($id, 6, '0', STR_PAD_LEFT),
                 'id_anggota'     => $anggota[$i],
                 'tanggal'        => $request->tanggal,
                 'jenis_simpanan' => 2,

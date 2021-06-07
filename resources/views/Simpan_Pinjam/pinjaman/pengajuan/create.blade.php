@@ -72,7 +72,7 @@
                             </div>
                         </div>
                         <div class="form-group">
-                            <label for="tenor">Jangka Waktu (Dalam Bulan)</label>
+                            <label for="tenor">Jangka Waktu (x)</label>
                             <input type="number" class="form-control" name="tenor" id="tenor" placeholder="Jangka Waktu" min="1">
                         </div>
                         <div class="form-group">

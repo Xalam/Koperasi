@@ -113,6 +113,12 @@
                                 <p>Angsuran</p>
                             </a>
                         </li>
+                        <li class="nav-item">
+                            <a href="{{ route('tempo.index') }}" class="nav-link {{ request()->is('simpan-pinjam/pinjaman/tempo*') ? ' active' : '' }}">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>Angsuran Jatuh Tempo</p>
+                            </a>
+                        </li>
                     </ul>
                 </li>
                 <li class="nav-item {{ request()->is('simpan-pinjam/laporan*') ? ' menu-open' : '' }}">

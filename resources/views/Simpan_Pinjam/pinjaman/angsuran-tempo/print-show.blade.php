@@ -81,15 +81,19 @@
                                     <thead>
                                         <tr>
                                             <th>Kode Pinjaman</th>
-                                            <th>Nominal Pinjaman</th>
-                                            <th>Jangka Waktu</th>
+                                            <th>Pokok Pinjaman</th>
+                                            <th>Angsuran#</th>
+                                            <th>Tenor</th>
+                                            <th>Sisa Tenor</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         <tr>
                                             <td>{{ $angsuran->pinjaman->kode_pinjaman }}</td>
                                             <td>{{ number_format($angsuran->pinjaman->nominal_pinjaman, 2, ',', '.') }}</td>
-                                            <td>{{ $angsuran->pinjaman->tenor }} Bulan</td>
+                                            <td>{{ number_format($angsuran->nominal_angsuran, 2, ',', '.') }}</td>
+                                            <td>{{ $angsuran->pinjaman->tenor }}x</td>
+                                            <td>{{ $angsuran->sisa_bayar }}x</td>
                                         </tr>
                                     </tbody>
                                 </table>
@@ -101,7 +105,8 @@
                         <div class="row">
                             <!-- accepted payments column -->
                             <div class="col-6">
-
+                                <b>Keterangan</b><br>
+                                <span>{{ $angsuran->keterangan }}</span>
                             </div>
                             <!-- /.col -->
                             <div class="col-6">
@@ -121,8 +126,21 @@
                                             </td>
                                         </tr>
                                         <tr>
-                                            <th style="width:50%">Jumlah#</th>
-                                            <td>Rp. {{ number_format($angsuran->nominal_angsuran, 2, ',', '.') }}</td>
+                                            <th style="width:50%">Potongan</th>
+                                            <td>Rp. {{ number_format($angsuran->potongan, 2, ',', '.') }}</td>
+                                        </tr>
+                                        <tr>
+                                            <th style="width:50%">Jumlah Bayar Lunas</th>
+                                            <td>
+                                                @php
+                                                    $potongan = $angsuran->potongan;
+                                                    $ang      = $angsuran->nominal_angsuran;
+                                                    $tenor    = $angsuran->pinjaman->tenor;
+                                                    $ang_ke   = $angsuran->pinjaman->angsuran_ke;
+                                                    
+                                                    $result   = ($ang * ($tenor - $ang_ke)) - $potongan;
+                                                @endphp
+                                                Rp. {{ number_format($result, 2, ',', '.') }}</td>
                                         </tr>
                                     </table>
                                 </div>
@@ -134,7 +152,7 @@
                         <!-- this row will not appear when printing -->
                         <div class="row no-print">
                             <div class="col-12">
-                                <a href="{{ route('angsuran.index') }}" class="btn btn-light float-right" style="margin-right: 5px;"><i></i> Kembali</a>
+                                <a href="{{ route('tempo.index') }}" class="btn btn-light float-right" style="margin-right: 5px;"><i></i> Kembali</a>
                             </div>
                         </div>
                     </div>

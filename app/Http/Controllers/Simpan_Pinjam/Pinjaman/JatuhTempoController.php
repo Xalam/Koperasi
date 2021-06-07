@@ -3,13 +3,12 @@
 namespace App\Http\Controllers\Simpan_Pinjam\Pinjaman;
 
 use App\Http\Controllers\Controller;
-use App\Models\Simpan_Pinjam\Master\Anggota\Anggota;
 use App\Models\Simpan_Pinjam\Pinjaman\Angsuran;
 use App\Models\Simpan_Pinjam\Pinjaman\Pinjaman;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
-class AngsuranController extends Controller
+class JatuhTempoController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -18,10 +17,10 @@ class AngsuranController extends Controller
      */
     public function index()
     {
-        $angsuran = Angsuran::with('pinjaman')->whereIn('id', function($q) {
-                        $q->select(DB::raw('MAX(id) FROM tb_angsuran'))->groupBy('id_pinjaman');
-                    })->get();
-        
+        $angsuran = Angsuran::with('pinjaman')->whereIn('id', function ($q) {
+            $q->select(DB::raw('MAX(id) FROM tb_angsuran'))->groupBy('id_pinjaman');
+        })->get();
+
         if (request()->ajax()) {
             $data = [];
             $no   = 1;
@@ -34,15 +33,15 @@ class AngsuranController extends Controller
                     'nama'          => $value->pinjaman->anggota->nama_anggota,
                     'nominal'       => 'Rp. ' . number_format($value->nominal_angsuran, '2', ',', '.'),
                     'angsuran'      => $value->pinjaman->angsuran_ke,
-                    'status'        => (($value->status == 0) ? '<a href="#modalKonfirmasi" data-remote="' . route('angsuran.konfirmasi', $value->id) . '" 
-                                       data-toggle="modal" data-target="#modalKonfirmasi" class="btn btn-primary btn-sm"><i class="far fa-plus-square"></i>&nbsp; Proses</a>' :
-                                       '<span class="badge badge-success">Disetujui</span>') . (($value->lunas == 1) ? '<span class="badge badge-success">Lunas</span>' : ''),
-                    'action'        => (($value->status == 1) ? '<a href="' . route('angsuran.print-show', $value->id) . '" class="btn btn-light btn-sm"><i class="fas fa-print"></i>&nbsp; Cetak</a>' : '')
+                    'status'        => (($value->status == 0) ? '<a href="#modalKonfirmasi" data-remote="' . route('tempo.konfirmasi', $value->id) . '" 
+                           data-toggle="modal" data-target="#modalKonfirmasi" class="btn btn-primary btn-sm"><i class="far fa-plus-square"></i>&nbsp; Proses</a>' :
+                        '<span class="badge badge-success">Disetujui</span>') . (($value->lunas == 1) ? '<span class="badge badge-success">Lunas</span>' : ''),
+                    'action'        => (($value->status == 1) ? '<a href="' . route('tempo.print-show', $value->id) . '" class="btn btn-light btn-sm"><i class="fas fa-print"></i>&nbsp; Cetak</a>' : '')
                 ];
             }
             return response()->json(compact('data'));
         }
-        return view('simpan_pinjam.pinjaman.angsuran.angsuran');
+        return view('simpan_pinjam.pinjaman.angsuran-tempo.index');
     }
 
     /**
@@ -67,10 +66,7 @@ class AngsuranController extends Controller
         $pinjamanUpdate = Pinjaman::findOrFail($request->id_pinjaman);
 
         $pinjamanUpdate->angsuran_ke = $pinjamanUpdate->angsuran_ke += 1;
-
-        if ($pinjamanUpdate->tenor == $pinjamanUpdate->angsuran_ke) {
-            $pinjamanUpdate->lunas = 1;
-        }
+        $pinjamanUpdate->lunas = 1;
 
         $pinjamanUpdate->update();
 
@@ -82,26 +78,21 @@ class AngsuranController extends Controller
             $id = $check->id + 1;
         }
 
-        #Sisa Angsuran
-        $sisaAngsuran = $pinjamanUpdate->total_pinjaman - ($pinjamanUpdate->nominal_angsuran * $pinjamanUpdate->angsuran_ke);
-
-        if ($sisaAngsuran < 0) {
-            $sisaAngsuran = 0;
-        }
-
         $angsuran = new Angsuran();
         $angsuran->kode_angsuran    = 'ASN-' . str_replace('-', '', date('Y-m-d')) . '-' . str_pad($id, 6, '0', STR_PAD_LEFT);
         $angsuran->id_pinjaman      = $request->id_pinjaman;
-        $angsuran->tanggal          = date('Y-m-d');
+        $angsuran->tanggal          = $request->tanggal;
         $angsuran->nominal_angsuran = $pinjamanUpdate->nominal_angsuran;
-        $angsuran->sisa_angsuran    = $sisaAngsuran;
-        $angsuran->sisa_bayar       = $pinjamanUpdate->tenor - $pinjamanUpdate->angsuran_ke;
+        $angsuran->sisa_angsuran    = 0;
+        $angsuran->sisa_bayar       = 0;
+        $angsuran->potongan         = str_replace('.', '', $request->potongan);
         $angsuran->status           = 1;
-        $angsuran->lunas            = $pinjamanUpdate->lunas;
+        $angsuran->lunas            = 1;
+        $angsuran->keterangan       = $request->keterangan;
         $angsuran->save();
 
         return redirect()->route('angsuran.index')->with([
-            'success' => 'Berhasil membayar angsuran'
+            'success' => 'Berhasil melunasi angsuran'
         ]);
     }
 
@@ -141,7 +132,7 @@ class AngsuranController extends Controller
         $angsuran->status = $request->status;
         $angsuran->update();
 
-        return redirect()->route('angsuran.index');
+        return redirect()->route('tempo.index');
     }
 
     /**
@@ -166,19 +157,19 @@ class AngsuranController extends Controller
 
                     $data = $pinjaman->firstOrFail();
     
-                    return view('simpan_pinjam.pinjaman.angsuran.bayar', compact('data'));
+                    return view('simpan_pinjam.pinjaman.angsuran-tempo.bayar', compact('data'));
                 } else {
-                    return redirect()->route('angsuran.index')->with([
+                    return redirect()->route('tempo.index')->with([
                         'error' => 'Kode pinjaman sudah lunas'
                     ]);
                 }
             } else {
-                return redirect()->route('angsuran.index')->with([
+                return redirect()->route('tempo.index')->with([
                     'error' => 'Kode pinjaman belum disetujui'
                 ]);
             }
         } else {
-            return redirect()->route('angsuran.index')->with([
+            return redirect()->route('tempo.index')->with([
                 'error' => 'Kode pinjaman tidak ditemukan'
             ]);
         }
@@ -188,13 +179,13 @@ class AngsuranController extends Controller
     {
         $angsuran = Angsuran::findOrFail($id);
 
-        return view('simpan_pinjam.pinjaman.angsuran.print-show', compact('angsuran'));
+        return view('simpan_pinjam.pinjaman.angsuran-tempo.print-show', compact('angsuran'));
     }
 
     public function konfirmasi($id)
     {
         $angsuran = Angsuran::findOrFail($id);
 
-        return view('simpan_pinjam.pinjaman.angsuran.modal', compact('angsuran'));
+        return view('simpan_pinjam.pinjaman.angsuran-tempo.modal', compact('angsuran'));
     }
 }
