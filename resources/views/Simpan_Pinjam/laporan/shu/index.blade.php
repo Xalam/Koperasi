@@ -162,54 +162,27 @@
                             output += '<tr>';
                             output += '<td  class="text-center">' + data.data[count].kode_akun + '</td>';
                             output += '<td>' + data.data[count].nama_akun + '</td>';
-                            output += '<td class="text-right">' + deb + '</td>'
-                            output += '<td class="text-right">' + kre + '</td></tr>';
+                            output += '<td class="text-right">' + formatMoney(deb) + '</td>'
+                            output += '<td class="text-right">' + formatMoney(kre) + '</td></tr>';
                             
                         }
 
                         foot += '<tr>';
                         foot += '<td colspan="2"><b>Saldo</b></td>';
-                        foot += '<td class="text-right"><b>' + data.total_debet + '</b></td>';
-                        foot += '<td class="text-right"><b>' + data.total_kredit + '</b></td></tr>';
+                        foot += '<td class="text-right"><b>' + formatMoney(data.total_debet) + '</b></td>';
+                        foot += '<td class="text-right"><b>' + formatMoney(data.total_kredit) + '</b></td></tr>';
                         foot += '<tr>';
                         foot += '<td colspan="3"><b>Laba</b></td>';
-                        foot += '<td class="text-right"><b>' + data.laba + '</b></td></tr>';
+                        foot += '<td class="text-right"><b>' + formatMoney(data.laba) + '</b></td></tr>';
 
                         $('tbody').html(output);
                         $('tfoot').html(foot);
                     }
                 });
-                // $('#table-shu').DataTable({
-                //     "processing": true,
-                //     "serverSide": true,
-                //     "deferRender": true,
-                //     "ajax": {
-                //         url: "{{ route('shu.show-data') }}",
-                //         type: "POST",
-                //         data: {
-                //             start_date:start_date, end_date:end_date, _token:_token
-                //         },
-                //     },
-                //     "columnDefs": [
-                //         {
-                //             "targets": 0,
-                //             "className": "text-center"
-                //         },
-                //     ],
-                //     "columns": [{
-                //             data: 'kode'
-                //         },
-                //         {
-                //             data: 'nama_akun'
-                //         },
-                //         {
-                //             data: 'debet'
-                //         },
-                //         {
-                //             data: 'kredit'
-                //         }
-                //     ]
-                // });
+
+                function formatMoney(n) {
+                    return new Intl.NumberFormat("id-ID").format(n);
+                }
             }
 
             $('#reservation').daterangepicker({

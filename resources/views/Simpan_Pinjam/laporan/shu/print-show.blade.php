@@ -19,7 +19,7 @@
         <!-- Main content -->
         <div class="row no-print">
             <div class="col-12">
-                <a href="{{ route('jurnal.index') }}" class="btn btn-default" style="margin: 10px;"><i></i> Kembali</a>
+                <a href="{{ route('shu.index') }}" class="btn btn-default" style="margin: 10px;"><i></i> Kembali</a>
             </div>
         </div>
         <div class="invoice p-3 mb-3">
@@ -46,12 +46,12 @@
                     </div>
             </div>
             <div class="text-center">
-                <h3><b>Laporan Jurnal Umum</b></h3><br>
+                <h3><b>Laporan Sisa Hasil Usaha</b></h3><br>
                 <h3 style="margin-top: -30px; margin-bottom: 20px;"><b>Primer Koperasi Polrestabes Semarang</b></h3>
             </div>
             <div>
                 <address>
-                    Tanggal : {{ $reqStart }} / {{ $reqEnd }}
+                    Tanggal : {{ $startDate }} / {{ $endDate }}
                 </address>
             </div>
             <!-- Table row -->
@@ -60,10 +60,6 @@
                     <table class="table table-striped">
                         <thead>
                             <tr>
-                                <th class="text-center">No</th>
-                                <th class="text-center">Tanggal</th>
-                                <th class="text-center">Kode Jurnal</th>
-                                <th class="text-center">Keterangan</th>
                                 <th class="text-center">Kode Akun</th>
                                 <th class="text-center">Nama Akun</th>
                                 <th class="text-center">Debet (Rp)</th>
@@ -71,22 +67,39 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @php
-                                $no = 1;
-                            @endphp
-                            @foreach ($jurnal as $jur)
+                            @foreach ($data as $shu)
                             <tr>
-                                <td class="text-center">{{ $no++ }}</td>
-                                <td class="text-center">{{ date('d-m-Y', strtotime($jur->tanggal)) }}</td>
-                                <td class="text-center">{{ $jur->kode_jurnal }}</td>
-                                <td>{{ $jur->keterangan }}</td>
-                                <td class="text-center">{{ $jur->akun->kode_akun }}</td>
-                                <td>{{ $jur->akun->nama_akun }}</td>
-                                <td class="text-right">{{ number_format($jur->debet, 2, ',', '.') }}</td>
-                                <td class="text-right">{{ number_format($jur->kredit, 2, ',', '.') }}</td>
+                                <td class="text-center">{{ $shu->kode_akun }}</td>
+                                <td>{{ $shu->nama_akun }}</td>
+                                <td class="text-right"> 
+                                    @if($shu->debet == null)
+                                        0
+                                    @else
+                                        {{ number_format($shu->debet, 2, ',', '.') }}
+                                    @endif
+                                </td>
+                                <td class="text-right">
+                                    @if($shu->kredit == null)
+                                        0
+                                    @else
+                                        {{ number_format($shu->kredit, 2, ',', '.') }}
+                                    @endif
+                                </td>
                             </tr>
                             @endforeach
                         </tbody>
+                        <tfoot>
+                            <tr>
+                                <td colspan="2" class="text-center"><b>Saldo</b></td>
+                                <td class="text-right"><b>{{ number_format($total_debet, 2, ',', '.') }}</b></td>
+                                <td class="text-right"><b>{{ number_format($total_kredit, 2, ',', '.') }}</b></td>
+                            </tr>
+                            <tr>
+                                <td colspan="2" class="text-center"><b>Laba</b></td>
+                                <td></td>
+                                <td class="text-right"><b>{{ number_format($laba, 2, ',', '.') }}</b></td>
+                            </tr>
+                        </tfoot>
                     </table>
                 </div>
                 <!-- /.col -->
@@ -95,7 +108,7 @@
 
     </div>
     <script>
-        window.addEventListener("load", window.print());
+        // window.addEventListener("load", window.print());
 
     </script>
 </body>
