@@ -45,7 +45,7 @@ class SaldoController extends Controller
             }
             return response()->json(compact('data'));
         }
-        return view('simpan_pinjam.simpanan.saldo.saldo');
+        return view('Simpan_Pinjam.simpanan.saldo.saldo');
     }
 
     /**

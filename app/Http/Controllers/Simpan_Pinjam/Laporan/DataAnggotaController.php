@@ -31,13 +31,13 @@ class DataAnggotaController extends Controller
             }
             return response()->json(compact('data'));
         }
-        return view('simpan_pinjam.laporan.anggota.index');
+        return view('Simpan_Pinjam.laporan.anggota.index');
     }
 
     public function print_show()
     {
         $anggota = Anggota::get();
 
-        return view('simpan_pinjam.laporan.anggota.print-show', compact('anggota'));
+        return view('Simpan_Pinjam.laporan.anggota.print-show', compact('anggota'));
     }
 }

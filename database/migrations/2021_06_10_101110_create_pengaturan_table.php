@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateJurnalTable extends Migration
+class CreatePengaturanTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,14 +13,10 @@ class CreateJurnalTable extends Migration
      */
     public function up()
     {
-        Schema::create('tb_jurnal', function (Blueprint $table) {
+        Schema::create('tb_pengaturan', function (Blueprint $table) {
             $table->id();
-            $table->string('kode_jurnal');
-            $table->integer('id_akun');
-            $table->date('tanggal');
-            $table->string('keterangan');
-            $table->double('debet');
-            $table->double('kredit');
+            $table->string('nama');
+            $table->string('angka');
             $table->timestamps();
         });
     }
@@ -32,6 +28,6 @@ class CreateJurnalTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('tb_jurnal');
+        Schema::dropIfExists('tb_pengaturan');
     }
 }

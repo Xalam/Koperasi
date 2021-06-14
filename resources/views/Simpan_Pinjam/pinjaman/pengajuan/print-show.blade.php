@@ -50,7 +50,7 @@
                                 From
                                 <address>
                                     <strong>Primkop Polrestabes Semarang</strong><br>
-                                    Jl. Kaligarang No.1A, Petompon<br>
+                                    Jl. Kaligarang No.1A, Barusari<br>
                                     Semarang<br>
                                     Phone: 0895-2458-3818<br>
                                     Email: -
@@ -73,7 +73,9 @@
                             <!-- /.col -->
                         </div>
                         <!-- /.row -->
-
+                        <div class="row">
+                            Lembar : <b>Pengajuan Pinjaman</b>
+                        </div>
                         <!-- Table row -->
                         <div class="row">
                             <div class="col-12 table-responsive">
@@ -83,8 +85,7 @@
                                             <th>No</th>
                                             <th>Nominal Pinjaman</th>
                                             <th>Jangka Waktu</th>
-                                            <th>Bunga per Tahun</th>
-                                            <th>Total</th>
+                                            <th>Bunga</th>
                                             <th>Angsuran</th>
                                         </tr>
                                     </thead>
@@ -92,9 +93,8 @@
                                         <tr>
                                             <td>1</td>
                                             <td>{{ number_format($pinjaman->nominal_pinjaman, 2, ',', '.') }}</td>
-                                            <td>{{ $pinjaman->tenor }} Bulan</td>
+                                            <td>{{ $pinjaman->tenor }} x</td>
                                             <td>{{ $pinjaman->bunga }} %</td>
-                                            <td>{{ number_format($pinjaman->total_pinjaman, 2, ',', '.') }}</td>
                                             <td>{{ number_format($pinjaman->nominal_angsuran, 2, ',', '.') }}</td>
                                         </tr>
                                     </tbody>
@@ -117,6 +117,14 @@
                                             <th style="width:50%">Nominal Pinjaman:</th>
                                             <td>Rp. {{ number_format($pinjaman->nominal_pinjaman, 2, ',', '.') }}
                                             </td>
+                                        </tr>
+                                        <tr>
+                                            <th style="width:50%">Biaya Provisi:</th>
+                                            <td>Rp. {{ number_format($pinjaman->biaya_provisi, 2, ',', '.') }}</td>
+                                        </tr>
+                                        <tr>
+                                            <th style="width:50%">Biaya Asuransi:</th>
+                                            <td>Rp. {{ number_format($pinjaman->biaya_asuransi, 2, ',', '.') }}</td>
                                         </tr>
                                         <tr>
                                             <th style="width:50%">Biaya Administrasi:</th>

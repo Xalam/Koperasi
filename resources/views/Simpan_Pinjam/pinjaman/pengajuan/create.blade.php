@@ -9,6 +9,8 @@
         href="{{ asset('assets/plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/plugins/select2/css/select2.min.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css') }}">
+    <!-- SweetAlert2 -->
+    <link rel="stylesheet" href="{{ asset('assets/plugins/sweetalert2-theme-bootstrap-4/bootstrap-4.min.css') }}">
 @endpush
 
 @section('breadcrumb')
@@ -70,18 +72,26 @@
                                 @endif
                             </div>
                             <div class="form-group">
-                                <label>Bunga % Per Tahun</label>
-                                <div class="input-group">
-                                    <input type="text" class="form-control" placeholder="Dalam Persen %" id="bunga"
-                                        name="bunga">
-                                    <div class="input-group-append">
-                                        <span class="input-group-text">%</span>
-                                    </div>
-                                </div>
+                                <label>Bunga</label>
+                                <select class="form-control select2" style="width: 100%;" name="bunga" id="bunga">
+                                    <option selected="selected" value="">Pilih bunga</option>
+                                    @foreach ($expBunga as $bunga)
+                                        <option value="{{ $bunga }}">{{ $bunga }} %
+                                        </option>
+                                    @endforeach
+                                </select>
+                                <input type="text" id="hide-bunga" hidden>
                             </div>
                             <div class="form-group">
-                                <label for="tenor">Jangka Waktu (x)</label>
-                                <input type="text" class="form-control number" name="tenor" id="tenor" placeholder="Jangka Waktu" min="1">
+                                <label>Jangka Waktu (x)</label>
+                                <select class="form-control select2" style="width: 100%;" name="tenor" id="tenor">
+                                    <option selected="selected" value="">Pilih jangka waktu</option>
+                                    @foreach ($expTenor as $tenor)
+                                        <option value="{{ $tenor }}">{{ $tenor }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                                <input type="text" id="hide-tenor" hidden>
                             </div>
                             <div class="form-group">
                                 <label>Angsuran</label>
@@ -90,8 +100,20 @@
                                 </div>
                                 <span id="danger-limit" style="visibility: hidden;" class="text-danger text-sm">Angsuran tidak boleh melebihi limit</span>
                             </div>
+                            <div class="form-group" style="margin-top: -15px;">
+                                <label>Biaya Provisi</label>
+                                <div class="input-group">
+                                    <input type="text" class="form-control" placeholder="Biaya provisi" id="biaya-provisi" name="biaya_provisi" disabled>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label>Biaya Asuransi</label>
+                                <div class="input-group">
+                                    <input type="text" class="form-control" placeholder="Biaya asuransi" id="biaya-asuransi" name="biaya_asuransi" disabled>
+                                </div>
+                            </div>
                         </div>
-                        <div class="form-group" style="margin-top: -10px;">
+                        <div class="form-group">
                             <label>Biaya Administrasi</label>
                             <div class="input-group">
                                 <div class="input-group-prepend">
@@ -119,6 +141,8 @@
     <!-- jquery-validation -->
     <script src="{{ asset('assets/plugins/jquery-validation/jquery.validate.min.js') }}"></script>
     <script src="{{ asset('assets/plugins/jquery-validation/additional-methods.min.js') }}"></script>
+    <!-- SweetAlert2 -->
+    <script src="{{ asset('assets/plugins/sweetalert2/sweetalert2.min.js') }}"></script>
 @endpush
 
 @section('script')
@@ -201,10 +225,17 @@
                 })
             });
 
-            $('.cal-angsuran').keyup(function() {
+            $("#bunga").change(function(){
+                $('#hide-bunga').attr('value', $(this).val());
+            });
+            $("#tenor").change(function(){
+                $('#hide-tenor').attr('value', $(this).val());
+            });
+
+            $('.cal-angsuran').change(function() {
                 let jumPinjaman = $('#nominal').val();
-                let bunga = $('#bunga').val();
-                let tenor = $('#tenor').val();
+                let bunga = $('#hide-bunga').val();
+                let tenor = $('#hide-tenor').val();
                 let limit = $('#limit-gaji').val();
                 
                 let newJumPinjaman = 0;
@@ -224,8 +255,7 @@
                     newTenor = parseFloat(tenor);
                 }
 
-                let calBunga = newJumPinjaman + (newJumPinjaman * (newBunga / 100) * (newTenor / 12));
-                let result = calBunga / newTenor;
+                let result = (newJumPinjaman / newTenor) + (newJumPinjaman * (newBunga / 100));
 
                 if (result > newLimit) {
                     document.getElementById('danger-limit').style.visibility = 'visible';
@@ -235,7 +265,42 @@
                     document.getElementById('btn-angsuran').disabled = false;
                 }
 
-                $('#angsuran').attr('value', formatMoney(result));
+                // Ratusan
+                let intNumber = result.toFixed(0);
+                let ratusanSub = intNumber.toString().substring(intNumber.length - 3, intNumber.length);
+                let ratusan = parseInt(ratusanSub);
+                let bulat = intNumber - ratusan;
+                let newRatusan = 0;
+
+                if (ratusan > 0 && ratusan <= 100) {
+                    newRatusan = 100;
+                } else if(ratusan > 100 && ratusan <= 200) {
+                    $newRatusan = 200;
+                } else if(ratusan > 200 && ratusan <= 300) {
+                    newRatusan = 300;
+                } else if(ratusan > 300 && ratusan <= 400) {
+                    newRatusan = 400;
+                } else if(ratusan > 400 && ratusan <= 500) {
+                    newRatusan = 500;
+                } else if(ratusan > 500 && ratusan <= 600) {
+                    newRatusan = 600;
+                } else if(ratusan > 600 && ratusan <= 700) {
+                    newRatusan = 700;
+                } else if(ratusan > 700 && ratusan <= 800) {
+                    newRatusan = 800;
+                } else if(ratusan > 800 && ratusan <= 900) {
+                    newRatusan = 900;
+                } else if(ratusan > 900 && ratusan <= 999) {
+                    newRatusan = 1000;
+                } else {
+                    newRatusan = ratusan;
+                }
+
+                uang = bulat + newRatusan;
+
+                $('#angsuran').attr('value', formatMoney(uang));
+                $('#biaya-provisi').attr('value', formatMoney(newJumPinjaman * parseFloat('{{ $prov }}') / 100));
+                $('#biaya-asuransi').attr('value', formatMoney(newJumPinjaman * parseFloat('{{ $asur }}') / 100));
             });
 
             function formatMoney(n) {
@@ -255,11 +320,11 @@
 
     @if (session()->has('error'))
     <script>
-        $(document).Toasts('create', {
-            class: 'bg-warning',
-            title: 'Peringatan!',
-            subtitle: '',
-            body: "{{ session()->get('error') }}"
+        Swal.fire({
+            title: 'Error!',
+            text: '{{ session()->get('error') }}',
+            icon: 'error',
+            confirmButtonText: 'OK'
         })
     </script>
     @endif

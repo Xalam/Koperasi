@@ -28,7 +28,7 @@
                         @method('put')
                         <div class="form-group">
                             <label for="kode-akun">Kode Akun</label>
-                            <input type="text" class="form-control" id="kode-akun" name="kode_akun"
+                            <input type="text" class="form-control number" id="kode-akun" name="kode_akun"
                                 placeholder="Masukkan kode akun" value="{{ $akun->kode_akun }}">
                             @if ($errors->has('kode_akun'))
                                 <span class="text-danger">{{ $errors->first('kode_akun') }}</span>
@@ -71,7 +71,15 @@
 @section('script')
     <script>
         $(function() {
-            $('#saldo').mask('#.##0', { reverse: true });
+            $('#saldo').mask('#.##0,00', { reverse: true });
+
+            $('input.number').keyup(function(event) {
+                if (event.which !== 8 && event.which !== 0 && event.which < 48 || event.which > 57) {
+                    $(this).val(function(index, value) {
+                        return value.replace(/\D/g, "");
+                    });
+                }
+            });
         })
     </script>
 @endsection

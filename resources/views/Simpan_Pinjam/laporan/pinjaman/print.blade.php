@@ -37,7 +37,7 @@
                         <div style="margin-left: 15px;">
                             <h3><b>Primkop Polrestabes Semarang</b></h3>
                             <address>
-                                Jl. Kaligarang No.1A, Petompon<br>
+                                Jl. Kaligarang No.1A, Barusari<br>
                                 Semarang<br>
                                 Phone: 0895-2458-3818<br>
                                 Email: -

@@ -17,7 +17,7 @@ class SimpananController extends Controller
      */
     public function index()
     {
-        $simpanan   = Simpanan::with('anggota')->get();
+        $simpanan   = Simpanan::with('anggota')->orderBy('id', 'DESC')->get();
         $pokok      = $simpanan->where('jenis_simpanan', 1);
         $wajib      = $simpanan->where('jenis_simpanan', 2);
         $sukarela   = $simpanan->where('jenis_simpanan', 3);
@@ -116,7 +116,7 @@ class SimpananController extends Controller
             }
             
         }
-        return view('simpan_pinjam.simpanan.simpanan');
+        return view('Simpan_Pinjam.simpanan.simpanan');
     }
 
     /**
@@ -181,7 +181,7 @@ class SimpananController extends Controller
     {
         $simpanan = Simpanan::with('anggota')->findOrFail($id);
 
-        return view('simpan_pinjam.simpanan.edit')->with([
+        return view('Simpan_Pinjam.simpanan.edit')->with([
             'simpanan' => $simpanan
         ]);
     }
@@ -227,7 +227,7 @@ class SimpananController extends Controller
     {
         $simpanan = Simpanan::with('anggota')->findOrFail($id);
 
-        return view('simpan_pinjam.simpanan.print')->with([
+        return view('Simpan_Pinjam.simpanan.print')->with([
             'simpanan' => $simpanan
         ]);
     }
@@ -236,7 +236,7 @@ class SimpananController extends Controller
     {
         $simpanan = Simpanan::with('anggota')->findOrFail($id);
 
-        return view('simpan_pinjam.simpanan.print-show')->with([
+        return view('Simpan_Pinjam.simpanan.print-show')->with([
             'simpanan' => $simpanan
         ]);
     }
@@ -245,7 +245,7 @@ class SimpananController extends Controller
     {
         $simpanan = Simpanan::findOrFail($id);
 
-        return view('simpan_pinjam.simpanan.modal')->with([
+        return view('Simpan_Pinjam.simpanan.modal')->with([
             'simpanan' => $simpanan
         ]);
     }

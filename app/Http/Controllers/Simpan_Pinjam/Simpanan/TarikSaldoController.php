@@ -16,7 +16,7 @@ class TarikSaldoController extends Controller
      */
     public function index()
     {
-        $tarikSaldo = SaldoTarik::with('saldo.anggota')->get();
+        $tarikSaldo = SaldoTarik::with('saldo.anggota')->orderBy('id', 'DESC')->get();
         $permintaanMasuk = $tarikSaldo->where('status', 0);
         $permintaanProses = $tarikSaldo->where('status', 1);
 
@@ -59,7 +59,7 @@ class TarikSaldoController extends Controller
                     break;
             }
         }
-        return view('simpan_pinjam.simpanan.tarik-saldo.tarik-saldo');
+        return view('Simpan_Pinjam.simpanan.tarik-saldo.tarik-saldo');
     }
 
     /**
@@ -151,7 +151,7 @@ class TarikSaldoController extends Controller
     {
         $tarikSaldo = SaldoTarik::findOrFail($id);
 
-        return view('simpan_pinjam.simpanan.tarik-saldo.modal', compact('tarikSaldo'));
+        return view('Simpan_Pinjam.simpanan.tarik-saldo.modal', compact('tarikSaldo'));
     }
 
     public function history()
@@ -175,20 +175,20 @@ class TarikSaldoController extends Controller
             return response()->json(compact('data'));
         }
 
-        return view('simpan_pinjam.simpanan.tarik-saldo.riwayat');
+        return view('Simpan_Pinjam.simpanan.tarik-saldo.riwayat');
     }
 
     public function print($id)
     {
         $tarikSaldo = SaldoTarik::with('saldo.anggota')->findOrFail($id);
 
-        return view('simpan_pinjam.simpanan.tarik-saldo.print', compact('tarikSaldo'));
+        return view('Simpan_Pinjam.simpanan.tarik-saldo.print', compact('tarikSaldo'));
     }
 
     public function print_show($id)
     {
         $tarikSaldo = SaldoTarik::with('saldo.anggota')->findOrFail($id);
 
-        return view('simpan_pinjam.simpanan.tarik-saldo.print-show', compact('tarikSaldo'));
+        return view('Simpan_Pinjam.simpanan.tarik-saldo.print-show', compact('tarikSaldo'));
     }
 }

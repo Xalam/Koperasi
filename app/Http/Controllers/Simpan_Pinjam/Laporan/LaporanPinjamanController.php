@@ -14,7 +14,7 @@ class LaporanPinjamanController extends Controller
     {
         $anggota = Anggota::get();
 
-        return view('simpan_pinjam.laporan.pinjaman.index', compact('anggota'));
+        return view('Simpan_Pinjam.laporan.pinjaman.index', compact('anggota'));
     }
 
     public function show(Request $request)
@@ -22,14 +22,14 @@ class LaporanPinjamanController extends Controller
         $pinjaman = Pinjaman::where('id_anggota', $request->id_anggota)->get();
         $anggota = Anggota::findOrFail($request->id_anggota);
 
-        return view('simpan_pinjam.laporan.pinjaman.print', compact('pinjaman', 'anggota'));
+        return view('Simpan_Pinjam.laporan.pinjaman.print', compact('pinjaman', 'anggota'));
     }
 
     public function print_all()
     {
         $pinjaman = Pinjaman::get();
 
-        return view('simpan_pinjam.laporan.pinjaman.print-all', compact('pinjaman'));
+        return view('Simpan_Pinjam.laporan.pinjaman.print-all', compact('pinjaman'));
     }
 
     public function print_show($id)
@@ -37,6 +37,6 @@ class LaporanPinjamanController extends Controller
         $pinjaman = Pinjaman::where('id_anggota', $id)->get();
         $anggota = Anggota::findOrFail($id);
 
-        return view('simpan_pinjam.laporan.pinjaman.print-show', compact('pinjaman', 'anggota'));
+        return view('Simpan_Pinjam.laporan.pinjaman.print-show', compact('pinjaman', 'anggota'));
     }
 }

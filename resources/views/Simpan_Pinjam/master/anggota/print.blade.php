@@ -1,7 +1,7 @@
 @extends('simpan_pinjam.layout')
 
 @section('content_header')
-    <a href="{{ route('anggota.show', $anggota->id) }}" class="btn btn-light">Kembali</a>
+    <a href="{{ route('anggota.show', $anggota->id) }}" class="btn btn-default">Kembali</a>
 @endsection
 
 @section('content_main')
@@ -10,7 +10,7 @@
         <div class="card card-primary card-outline">
             <div class="card-body box-profile">
                 <div class="text-center">
-                    <img src="{{ asset('assets/dist/img/default-150x150.png') }}" class="img-circle" alt="User Image" style="height: 30px; margin-bottom: 20px;">
+                    <img src="{{ asset('assets/dist/img/logo-koperasi.png') }}" class="img-circle" alt="User Image" style="height: 30px; margin-bottom: 10px;">
                     <b>Primkop Polrestabes Semarang</b>
                 </div>
                 <h4 class="text-center text-primary">Data Anggota</h4>
@@ -26,7 +26,7 @@
                         <span>Kode Anggota</span> <b class="float-right">{{ $anggota->kd_anggota }}</b>
                     </li>
                     <li class="list-group-item">
-                        <span>Jenis Kelamin</span> <b class="float-right">{{ $anggota->jenis_kelamin }}</b>
+                        <span>Nama</span> <b class="float-right">{{ $anggota->nama_anggota }}</b>
                     </li>
                     <li class="list-group-item">
                         <span>Tempat dan Tanggal Lahir</span> <b class="float-right">{{ $anggota->tempat_lahir . ', ' . $anggota->tanggal_lahir }}</b>
@@ -72,5 +72,5 @@
 @endsection
 
 @section('script')
-    {{-- <script>window.addEventListener("load", window.print());</script> --}}
+    <script>window.addEventListener("load", window.print());</script>
 @endsection

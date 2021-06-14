@@ -3,7 +3,10 @@
 namespace App\Http\Controllers\Simpan_Pinjam\Pinjaman;
 
 use App\Http\Controllers\Controller;
+use App\Models\Simpan_Pinjam\Laporan\JurnalUmum;
+use App\Models\Simpan_Pinjam\Master\Akun\Akun;
 use App\Models\Simpan_Pinjam\Master\Anggota\Anggota;
+use App\Models\Simpan_Pinjam\Pengaturan\Pengaturan;
 use App\Models\Simpan_Pinjam\Pinjaman\Pinjaman;
 use Illuminate\Http\Request;
 
@@ -16,7 +19,7 @@ class PengajuanController extends Controller
      */
     public function index()
     {   
-        $pinjaman = Pinjaman::with('anggota')->get();
+        $pinjaman = Pinjaman::with('anggota')->orderBy('id', 'DESC')->get();
         $pinjamanWaiting = $pinjaman->where('status', 0);
         $pinjamanAccept  = $pinjaman->where('status', 1);
 
@@ -56,7 +59,7 @@ class PengajuanController extends Controller
                             'tanggal'       => date('d-m-Y', strtotime($value->tanggal)),
                             'nama'          => $value->anggota->nama_anggota,
                             'nominal'       => 'Rp. ' . number_format($value->nominal_pinjaman, 2, ',', '.'),
-                            'status'        => '<span class="badge badge-success">Disetujui</span>&nbsp;' . (($value->lunas == 1) ? '<span class="badge badge-success">Lunas</span>' : '<span class="badge badge-danger">Belum Lunas</span>'),
+                            'status'        => (($value->lunas == 1) ? '<span class="badge badge-success">Lunas</span>' : '<span class="badge badge-danger">Belum Lunas</span>'),
                             'action'        => '<a href="' . route('pengajuan.print', $value->id) . '" class="btn btn-light btn-sm"><i class="fas fa-print"></i>&nbsp; Cetak</a>'
                         ];
                     }
@@ -65,7 +68,7 @@ class PengajuanController extends Controller
                     break; 
             }
         }
-        return view('simpan_pinjam.pinjaman.pengajuan.pengajuan');
+        return view('Simpan_Pinjam.pinjaman.pengajuan.pengajuan');
     }
 
     /**
@@ -75,9 +78,21 @@ class PengajuanController extends Controller
      */
     public function create()
     {
-        $anggota = Anggota::get();
+        $anggota     = Anggota::get();
+        $bunga       = Pengaturan::where('id', 1)->first();
+        $tenor       = Pengaturan::where('id', 2)->first();
+        $provisi     = Pengaturan::where('id', 3)->first();
+        $asuransi    = Pengaturan::where('id', 4)->first();
 
-        return view('simpan_pinjam.pinjaman.pengajuan.create', compact('anggota'));
+        $expBunga    = explode(" ", $bunga->angka);
+        $expTenor    = explode(" ", $tenor->angka);
+        $expProvisi  = explode(" ", $provisi->angka);
+        $expAsuransi = explode(" ", $asuransi->angka);
+
+        $prov        = $expProvisi[0];
+        $asur        = $expAsuransi[0];
+
+        return view('Simpan_Pinjam.pinjaman.pengajuan.create', compact('anggota', 'expBunga', 'expTenor', 'prov', 'asur'));
     }
 
     /**
@@ -98,11 +113,57 @@ class PengajuanController extends Controller
         $nominal = str_replace('.', '', $request->nominal_pinjaman);
 
         #Rumus Bunga
-        $totalPinjaman = $nominal + ($nominal * ($request->bunga / 100) * ($request->tenor / 12));
-
-        #Rumus Angsuran
-        $angsuran = $totalPinjaman / $request->tenor;
+        $totalPinjaman = $nominal + (($nominal * ($request->bunga / 100)) * $request->tenor);
         
+        #Rumus Angsuran
+        $angsuran = ($nominal / $request->tenor) + ($nominal * ($request->bunga / 100));
+        
+        $intNumber = (int) $angsuran;
+
+        $ratusan = substr($intNumber, -3);
+
+        $bulat = $intNumber - $ratusan;
+        $newRatusan = 0;
+
+        if ($ratusan > 0 && $ratusan <= 100) {
+            $newRatusan = 100;
+        } else if($ratusan > 100 && $ratusan <= 200) {
+            $newRatusan = 200;
+        } else if($ratusan > 200 && $ratusan <= 300) {
+            $newRatusan = 300;
+        } else if($ratusan > 300 && $ratusan <= 400) {
+            $newRatusan = 400;
+        } else if($ratusan > 400 && $ratusan <= 500) {
+            $newRatusan = 500;
+        } else if($ratusan > 500 && $ratusan <= 600) {
+            $newRatusan = 600;
+        } else if($ratusan > 600 && $ratusan <= 700) {
+            $newRatusan = 700;
+        } else if($ratusan > 700 && $ratusan <= 800) {
+            $newRatusan = 800;
+        } else if($ratusan > 800 && $ratusan <= 900) {
+            $newRatusan = 900;
+        } else if($ratusan > 900 && $ratusan <= 999) {
+            $newRatusan = 1000;
+        } else {
+            $newRatusan = $ratusan;
+        }
+
+        $uangAngsuran = $bulat + $newRatusan;
+
+        #Biaya Provisi & Asuransi
+        $provisi     = Pengaturan::where('id', 3)->first();
+        $asuransi    = Pengaturan::where('id', 4)->first();
+        
+        $expProvisi  = explode(" ", $provisi->angka);
+        $expAsuransi = explode(" ", $asuransi->angka);
+
+        $prov        = $expProvisi[0];
+        $asur        = $expAsuransi[0];
+
+        $countProv   = ($prov / 100) * $nominal;
+        $countAsur   = ($asur / 100) * $nominal;
+
         if ($request->biaya_admin == null) {
             $biaya_admin = 0;
         } else {
@@ -125,15 +186,18 @@ class PengajuanController extends Controller
                     'error' => 'Pinjaman sebelumnya belum lunas'
                 ]);
             } else {
+                #Simpan Pinjaman
                 $pinjaman = new Pinjaman();
                 $pinjaman->kode_pinjaman    = 'PNJ-' . str_replace('-', '', $request->tanggal) . '-' . str_pad($id, 6, '0', STR_PAD_LEFT);
                 $pinjaman->id_anggota       = $request->id_anggota;
                 $pinjaman->tanggal          = $request->tanggal;
-                $pinjaman->nominal_pinjaman = (int) $nominal;
+                $pinjaman->nominal_pinjaman = $nominal;
                 $pinjaman->bunga            = $request->bunga;
                 $pinjaman->tenor            = $request->tenor;
                 $pinjaman->total_pinjaman   = $totalPinjaman;
-                $pinjaman->nominal_angsuran = round($angsuran, 2);
+                $pinjaman->nominal_angsuran = $uangAngsuran;
+                $pinjaman->biaya_provisi    = $countProv;
+                $pinjaman->biaya_asuransi   = $countAsur;
                 $pinjaman->biaya_admin      = $biaya_admin;
                 $pinjaman->save();
 
@@ -142,15 +206,18 @@ class PengajuanController extends Controller
                 ]);
             }
         } else {
+            #Simpan Pinjaman
             $pinjaman = new Pinjaman();
             $pinjaman->kode_pinjaman    = 'PNJ-' . str_replace('-', '', $request->tanggal) . '-' . str_pad($id, 6, '0', STR_PAD_LEFT);
             $pinjaman->id_anggota       = $request->id_anggota;
             $pinjaman->tanggal          = $request->tanggal;
-            $pinjaman->nominal_pinjaman = (int) $nominal;
+            $pinjaman->nominal_pinjaman = $nominal;
             $pinjaman->bunga            = $request->bunga;
             $pinjaman->tenor            = $request->tenor;
             $pinjaman->total_pinjaman   = $totalPinjaman;
-            $pinjaman->nominal_angsuran = round($angsuran, 2);
+            $pinjaman->nominal_angsuran = $uangAngsuran;
+            $pinjaman->biaya_provisi    = $countProv;
+            $pinjaman->biaya_asuransi   = $countAsur;
             $pinjaman->biaya_admin      = $biaya_admin;
             $pinjaman->save();
 
@@ -170,7 +237,7 @@ class PengajuanController extends Controller
     {
         $data = Pinjaman::with('anggota')->findOrFail($id);
 
-        return view('simpan_pinjam.pinjaman.pengajuan.show', compact('data'));
+        return view('Simpan_Pinjam.pinjaman.pengajuan.show', compact('data'));
     }
 
     /**
@@ -195,8 +262,107 @@ class PengajuanController extends Controller
     {
         $pinjaman = Pinjaman::findOrFail($id);
 
+        //Input Jurnal Umum
+        #Check Akun
+        $checkAkunKas        = Akun::where('kode_akun', 1101)->first();
+        $checkAkunPiutang    = Akun::where('kode_akun', 1121)->first();
+        $checkAkunPendapatan = Akun::where('kode_akun', 4101)->first();
+        $checkAkunAsuransi   = Akun::where('kode_akun', 2115)->first();
+        
+        if ($checkAkunKas == null) {
+            $idKas = 0;
+        } else {
+            $idKas = $checkAkunKas->id;
+        }
+
+        if ($checkAkunPiutang == null) {
+            $idPiutang = 0;
+        } else {
+            $idPiutang = $checkAkunPiutang->id;
+        }
+
+        if ($checkAkunPendapatan == null) {
+            $idPendapatan = 0;
+        } else {
+            $idPendapatan = $checkAkunPendapatan->id;
+        }
+
+        if ($checkAkunAsuransi == null) {
+            $idAsuransi = 0;
+        } else {
+            $idAsuransi = $checkAkunAsuransi->id;
+        }
+
+        #Check Jurnal
+        $checkJurnal = JurnalUmum::select('*')->orderBy('id', 'DESC')->first();
+        if ($checkJurnal == null) {
+            $idJurnal = 1;
+        } else {
+            $substrKode = substr($checkJurnal->kode_jurnal, 3);
+            $idJurnal   = $substrKode + 1;
+        }
+
         $pinjaman->status = $request->status;
+        $pinjaman->kode_jurnal = 'JU-' . str_pad($idJurnal, 6, '0', STR_PAD_LEFT);
         $pinjaman->update();
+
+        $kodePinjaman = Pinjaman::where('id', $id)->first();
+
+        #Simpan Dana Asuransi
+        $jurnal = new JurnalUmum();
+        $jurnal-> kode_jurnal   = 'JU-' . str_pad($idJurnal, 6, '0', STR_PAD_LEFT);
+        $jurnal->id_akun        = $idAsuransi;
+        $jurnal->tanggal        = date('Y-m-d');
+        $jurnal->keterangan     = 'Pinjaman ( ' . $kodePinjaman->kode_pinjaman . ' )';
+        $jurnal->debet          = 0;
+        $jurnal->kredit         = $kodePinjaman->biaya_asuransi;
+        $jurnal->save();
+
+        $akun = Akun::findOrFail($idAsuransi);
+        $akun->saldo = $akun->saldo - $kodePinjaman->biaya_asuransi;
+        $akun->update();
+
+        #Simpan Jurnal Pendapatan
+        $jurnal = new JurnalUmum();
+        $jurnal-> kode_jurnal   = 'JU-' . str_pad($idJurnal, 6, '0', STR_PAD_LEFT);
+        $jurnal->id_akun        = $idPendapatan;
+        $jurnal->tanggal        = date('Y-m-d');
+        $jurnal->keterangan     = 'Pinjaman ( ' . $kodePinjaman->kode_pinjaman . ' )';
+        $jurnal->debet          = 0;
+        $jurnal->kredit         = $kodePinjaman->biaya_admin;
+        $jurnal->save(); 
+
+        $akun = Akun::findOrFail($idPendapatan);
+        $akun->saldo = $akun->saldo - $kodePinjaman->biaya_admin;
+        $akun->update();
+
+        #Simpan Jurnal Kas
+        $jurnal = new JurnalUmum();
+        $jurnal-> kode_jurnal   = 'JU-' . str_pad($idJurnal, 6, '0', STR_PAD_LEFT);
+        $jurnal->id_akun        = $idKas;
+        $jurnal->tanggal        = date('Y-m-d');
+        $jurnal->keterangan     = 'Pinjaman ( ' . $kodePinjaman->kode_pinjaman . ' )';
+        $jurnal->debet          = 0;
+        $jurnal->kredit         = $kodePinjaman->nominal_pinjaman - $kodePinjaman->biaya_asuransi - $kodePinjaman->biaya_admin;
+        $jurnal->save();
+
+        $akun = Akun::findOrFail($idKas);
+        $akun->saldo = $akun->saldo - ($kodePinjaman->nominal_pinjaman - $kodePinjaman->biaya_admin);
+        $akun->update();
+
+        #Simpan Jurnal Piutang
+        $jurnal = new JurnalUmum();
+        $jurnal-> kode_jurnal   = 'JU-' . str_pad($idJurnal, 6, '0', STR_PAD_LEFT);
+        $jurnal->id_akun        = $idPiutang;
+        $jurnal->tanggal        = date('Y-m-d');
+        $jurnal->keterangan     = 'Pinjaman ( ' . $kodePinjaman->kode_pinjaman . ' )';
+        $jurnal->debet          = $kodePinjaman->nominal_pinjaman;
+        $jurnal->kredit         = 0;
+        $jurnal->save();
+
+        $akun = Akun::findOrFail($idPiutang);
+        $akun->saldo = $akun->saldo + $kodePinjaman->nominal_pinjaman;
+        $akun->update();
 
         return redirect()->route('pengajuan.index');
     }
@@ -222,28 +388,28 @@ class PengajuanController extends Controller
     {
         $pinjaman = Pinjaman::findOrFail($id);
 
-        return view('simpan_pinjam.pinjaman.pengajuan.modal', compact('pinjaman'));
+        return view('Simpan_Pinjam.pinjaman.pengajuan.modal', compact('pinjaman'));
     }
 
     public function print($id)
     {
         $pinjaman = Pinjaman::findOrFail($id);
 
-        return view('simpan_pinjam.pinjaman.pengajuan.print', compact('pinjaman'));
+        return view('Simpan_Pinjam.pinjaman.pengajuan.print', compact('pinjaman'));
     }
 
     public function print_show($id)
     {
         $pinjaman = Pinjaman::findOrFail($id);
 
-        return view('simpan_pinjam.pinjaman.pengajuan.print-show', compact('pinjaman'));
+        return view('Simpan_Pinjam.pinjaman.pengajuan.print-show', compact('pinjaman'));
     }
 
     public function modal($id)
     {
         $pinjaman = Pinjaman::findOrFail($id);
 
-        return view('simpan_pinjam.pinjaman.pengajuan.modal-delete', compact('pinjaman'));
+        return view('Simpan_Pinjam.pinjaman.pengajuan.modal-delete', compact('pinjaman'));
     }
 
     public function limit(Request $request)

@@ -29,14 +29,14 @@ class JurnalUmumController extends Controller
                     'keterangan' => $value->keterangan,
                     'kode_akun'  => $value->akun->kode_akun,
                     'nama_akun'  => $value->akun->nama_akun,
-                    'debet'      => number_format($value->debet, 0, '', '.'),
-                    'kredit'     => number_format($value->kredit, 0, '', '.')
+                    'debet'      => number_format($value->debet, 2, ',', '.'),
+                    'kredit'     => number_format($value->kredit, 2, ',', '.')
                 ];
             }
             return response()->json(compact('data'));
         }
 
-        return view('simpan_pinjam.laporan.jurnal-umum.index');
+        return view('Simpan_Pinjam.laporan.jurnal-umum.index');
     }
 
     /**
@@ -48,7 +48,7 @@ class JurnalUmumController extends Controller
     {
         $akun = Akun::get();
 
-        return view('simpan_pinjam.laporan.jurnal-umum.create', compact('akun'));
+        return view('Simpan_Pinjam.laporan.jurnal-umum.create', compact('akun'));
     }
 
     /**
@@ -123,5 +123,23 @@ class JurnalUmumController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    public function print_show(Request $request)
+    {
+        $reqStart  = $request->start_date;
+        $reqEnd    = $request->end_date;
+
+        if ($request->start_date != null & $request->end_date != null) {
+            
+            $startDate = date('Y-m-d', strtotime($request->start_date));
+            $endDate   = date('Y-m-d', strtotime($request->end_date));
+
+            $jurnal = JurnalUmum::whereBetween('tanggal', [$startDate, $endDate])->orderBy('id', 'DESC')->get();
+            return view('Simpan_Pinjam.laporan.jurnal-umum.print-show', compact('jurnal', 'reqStart', 'reqEnd'));
+        } else {
+            $jurnal = JurnalUmum::orderBy('id', 'DESC')->get();
+            return view('Simpan_Pinjam.laporan.jurnal-umum.print-show', compact('jurnal', 'reqStart', 'reqEnd'));
+        }
     }
 }

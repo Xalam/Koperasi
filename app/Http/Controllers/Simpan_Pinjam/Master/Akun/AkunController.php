@@ -36,7 +36,7 @@ class AkunController extends Controller
 
             return response()->json(compact('data'));
         }
-        return view('simpan_pinjam.master.akun.akun')->with([
+        return view('Simpan_Pinjam.master.akun.akun')->with([
             'total' => $total
         ]);
     }
@@ -48,7 +48,7 @@ class AkunController extends Controller
      */
     public function create()
     {
-        return view('simpan_pinjam.master.akun.create');
+        return view('Simpan_Pinjam.master.akun.create');
     }
 
     /**
@@ -80,7 +80,8 @@ class AkunController extends Controller
         }
 
         $data = $request->all();
-        $data['saldo'] = str_replace('.', '', $request->saldo);
+        $clean = str_replace('.', '', $request->saldo);
+        $data['saldo'] = str_replace(',', '.', $clean);
 
         Akun::create($data);
 
@@ -110,7 +111,7 @@ class AkunController extends Controller
     {
         $akun = Akun::findOrFail($id);
 
-        return view('simpan_pinjam.master.akun.edit')->with([
+        return view('Simpan_Pinjam.master.akun.edit')->with([
             'akun' => $akun
         ]);
     }
@@ -148,7 +149,8 @@ class AkunController extends Controller
 
         $data = $request->all();
 
-        $data['saldo'] = str_replace('.', '', $request->saldo);
+        $clean = str_replace('.', '', $request->saldo);
+        $data['saldo'] = str_replace(',', '.', $clean);
 
         $akun->update($data);
 
@@ -178,7 +180,7 @@ class AkunController extends Controller
     {
         $akun = Akun::findOrFail($id);
 
-        return view('simpan_pinjam.master.akun.modal')->with([
+        return view('Simpan_Pinjam.master.akun.modal')->with([
             'akun' => $akun
         ]);
     }

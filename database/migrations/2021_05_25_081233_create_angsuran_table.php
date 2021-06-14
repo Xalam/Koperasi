@@ -25,6 +25,7 @@ class CreateAngsuranTable extends Migration
             $table->integer('status')->default(0)->comment('0 = Waiting, 1 = Accept');
             $table->integer('lunas')->default(0)->comment('0 = Belum Lunas, 1 = Lunas');
             $table->string('keterangan')->nullable();
+            $table->string('kode_jurnal')->nullable();
             $table->timestamps();
         });
     }

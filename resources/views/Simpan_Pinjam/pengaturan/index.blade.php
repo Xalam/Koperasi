@@ -1,8 +1,8 @@
 @extends('simpan_pinjam.layout')
 
-@section('title', 'Pinjaman')
+@section('title', 'Pengaturan')
 
-@section('content_header', 'Angsuran Pinjaman')
+@section('content_header', 'Daftar Pengaturan')
 
 @push('style')
     <!-- DataTables -->
@@ -10,56 +10,29 @@
     <link rel="stylesheet" href="{{ asset('assets/plugins/datatables-responsive/css/responsive.bootstrap4.min.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/plugins/datatables-buttons/css/buttons.bootstrap4.min.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/plugins/toastr/toastr.min.css') }}">
-    <!-- SweetAlert2 -->
-    <link rel="stylesheet" href="{{ asset('assets/plugins/sweetalert2-theme-bootstrap-4/bootstrap-4.min.css') }}">
 @endpush
 
 @section('breadcrumb')
-    <li class="breadcrumb-item"><a href="#">Pinjaman</a></li>
-    <li class="breadcrumb-item active">Angsuran Pinjaman</li>
+    <li class="breadcrumb-item"><a href="#">Pengaturan</a></li>
+    <li class="breadcrumb-item active">Daftar Pengaturan</li>
 @endsection
 
 @section('content_main')
 
     <div class="row">
         <div class="col-12">
-            <div class="card card-outline card-primary">
-                <div class="card-header">
-                    <form action="{{ route('angsuran.bayar') }}" method="post" enctype="multipart/form-data">
-                        <div class="row float-right">
-                            <b>Masukkan Nomor Pinjaman&nbsp;</b> 
-                            <div class="input-group">
-                                @csrf
-                                <input type="search" class="form-control form-control-sm" name="kode_bayar" id="kode-bayar" placeholder="Nomor Pinjaman">
-                                <div class="input-group-append">
-                                    <button type="submit" class="btn btn-sm btn-default"><i class="fa fa-search"></i></button>
-                                </div>   
-                            </div>
-                        </div>
-                    </form>
-                </div>    
-            </div>
-        </div>
-    </div>
-
-    <div class="row">
-        <div class="col-12">
             <div class="card">
                 <div class="card-header">
-                    <h3 class="card-title">Angsuran Pinjaman</h3>
+                    <h3 class="card-title">Daftar Pengaturan</h3>
+                    {{-- <a href="{{ route('list.create') }}" class="btn btn-sm btn-primary float-right">Tambah Akun</a> --}}
                 </div>
                 <div class="card-body">
-                    <table id="table-angsuran" class="table table-bordered table-hover">
+                    <table id="table-pengaturan" class="table table-bordered table-hover">
                         <thead>
                             <tr>
                                 <th>No</th>
-                                <th>Kode Pinjaman</th>
-                                <th>Kode Anggota</th>
-                                <th>Tanggal</th>
-                                <th>Nama Anggota</th>
-                                <th>Nominal Angsuran</th>
-                                <th>Angsuran ke -</th>
-                                <th width="10%">Status</th>
+                                <th>Nama</th>
+                                <th>Angka</th>
                                 <th>Aksi</th>
                             </tr>
                         </thead>
@@ -77,50 +50,31 @@
     <script src="{{ asset('assets/plugins/datatables-responsive/js/dataTables.responsive.min.js') }}"></script>
     <script src="{{ asset('assets/plugins/datatables-responsive/js/responsive.bootstrap4.min.js') }}"></script>
     <script src="{{ asset('assets/plugins/toastr/toastr.min.js') }}"></script>
-    <!-- SweetAlert2 -->
-    <script src="{{ asset('assets/plugins/sweetalert2/sweetalert2.min.js') }}"></script>   
 
     <script>
         $(function() {
-            $('#table-angsuran').DataTable({
+            $('#table-pengaturan').DataTable({
                 "paging": true,
                 "lengthChange": true,
                 "searching": true,
                 "ordering": true,
                 "info": true,
-                "autoWidth": true,
+                "autoWidth": false,
                 "responsive": true,
-                "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]],
                 "deferRender": true,
-                "ajax": {
-                    url: "{{ route('angsuran.index') }}"
-                },
+                "ajax": "{{ route('list.index') }}",
                 "columns": [{
                         data: 'no'
-                    },
-                    {
-                        data: 'kode'
-                    },
-                    {
-                        data: 'kode_anggota'
-                    },
-                    {
-                        data: 'tanggal'
                     },
                     {
                         data: 'nama'
                     },
                     {
-                        data: 'nominal'
+                        data: 'angka'
                     },
                     {
-                        data: 'angsuran'
-                    },
-                    {
-                        data: 'status'
-                    },
-                    {
-                        data: 'action'
+                        data: 'action',
+                        orderable: false
                     }
                 ]
             });
@@ -131,24 +85,12 @@
     @if (session()->has('success'))
         <script>
             toastr.success("{{ session()->get('success') }}");
-
         </script>
-    @endif
-    
-    @if (session()->has('error'))
-    <script>
-        Swal.fire({
-            title: 'Error!',
-            text: '{{ session()->get('error') }}',
-            icon: 'error',
-            confirmButtonText: 'OK'
-        })
-    </script>
     @endif
 
     <script>
         jQuery(document).ready(function($) {
-            $('#modalKonfirmasi').on('show.bs.modal', function(e) {
+            $('#mymodal').on('show.bs.modal', function(e) {
                 var button = $(e.relatedTarget);
                 var modal = $(this);
 
@@ -158,7 +100,7 @@
 
     </script>
 
-    <div class="modal" id="modalKonfirmasi" tabindex="-1" role="dialog">
+    <div class="modal" id="mymodal" tabindex="-1" role="dialog">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
@@ -173,4 +115,5 @@
             </div>
         </div>
     </div>
+
 @endsection

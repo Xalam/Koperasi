@@ -180,6 +180,7 @@ Route::prefix('simpan-pinjam')->group(function () {
     #Laporan
     Route::prefix('laporan')->group(function () {
         Route::resource('jurnal', 'Simpan_Pinjam\Laporan\JurnalUmumController');
+        Route::post('jurnal/cetak', 'Simpan_Pinjam\Laporan\JurnalUmumController@print_show')->name('jurnal.print-show');
 
         Route::get('anggota', 'Simpan_Pinjam\Laporan\DataAnggotaController@index')->name('data-anggota.index');
         Route::get('anggota/cetak/show', 'Simpan_Pinjam\Laporan\DataAnggotaController@print_show')->name('data-anggota.print-show');
@@ -194,5 +195,14 @@ Route::prefix('simpan-pinjam')->group(function () {
         Route::get('pinjaman/cetak/all', 'Simpan_Pinjam\Laporan\LaporanPinjamanController@print_all')->name('lap-pinjaman.print-all');
         Route::get('pinjaman/cetak/show/{id}', 'Simpan_Pinjam\Laporan\LaporanPinjamanController@print_show')->name('lap-pinjaman.print-show');
 
+        Route::get('shu', 'Simpan_Pinjam\Laporan\SHUController@index')->name('shu.index');
+        Route::post('shu/cetak', 'Simpan_Pinjam\Laporan\SHUController@print_show')->name('shu.print-show');
+        Route::post('shu/show', 'Simpan_Pinjam\Laporan\SHUController@show_data')->name('shu.show-data');
+    });
+
+    #Pengaturan
+    Route::prefix('pengaturan')->group(function () {
+        Route::resource('list', 'Simpan_Pinjam\Pengaturan\PengaturanController');
+        // Route::get('list/modal/{id}', 'Simpan_Pinjam\Pengaturan\PengaturanController@modal')->name('list.modal');
     });
 });

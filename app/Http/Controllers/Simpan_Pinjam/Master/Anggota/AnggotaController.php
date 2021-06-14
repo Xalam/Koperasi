@@ -46,7 +46,7 @@ class AnggotaController extends Controller
             }
             return response()->json(compact('data'));
         }
-        return view('simpan_pinjam.master.anggota.anggota');
+        return view('Simpan_Pinjam.master.anggota.anggota');
     }
 
     /**
@@ -56,7 +56,7 @@ class AnggotaController extends Controller
      */
     public function create()
     {   
-        return view('simpan_pinjam.master.anggota.create');
+        return view('Simpan_Pinjam.master.anggota.create');
     }
 
     /**
@@ -69,41 +69,13 @@ class AnggotaController extends Controller
     {
         #Insert data Anggota
         $rules = [
-            'kd_anggota'  => 'max:255',
-            'nama_anggota'  => 'required',
-            'tempat_lahir'  => 'required', 
-            'tanggal_lahir' => 'required',
-            'alamat'        => 'required|max:255',
-            'no_hp'         => 'required', 
-            'no_wa'         => 'required',
-            'jabatan'       => 'required',
-            'email'         => 'required|email|unique:tb_anggota',
-            'username'      => 'required|unique:tb_anggota',
-            'password'      => 'required|min:8',
-            'foto'          => 'required|image|mimes:jpg,png,jpeg|max:5120',
-            'gaji'          => 'required',
+            'email'         => 'unique:tb_anggota',
+            'username'      => 'unique:tb_anggota',
         ];
 
         $messages = [
-            'nama_anggota.required' => 'Nama wajib diisi',
-            'tempat_lahir.required' => 'Tempat lahir wajib diisi',
-            'alamat.required'       => 'Alamat wajib diisi',
-            'alamat.max'            => 'Alamat terlalu panjang',
-            'no_hp.required'        => 'No handphone wajib diisi',
-            'no_wa.required'        => 'No whatsapp wajib diisi',
-            'jabatan.required'      => 'Jabatan wajib diisi',
-            'email.required'        => 'Email wajib diisi',
-            'email.email'           => 'Email tidak valid',
             'email.unique'          => 'Email sudah terdaftar',
-            'username.required'     => 'Username wajib diisi',
             'username.unique'       => 'Username sudah terdaftar',
-            'password.required'     => 'Password wajib diisi',
-            'password.min'          => 'Password minimal 8 karakter',
-            'foto.required'         => 'File foto wajib diunggah',
-            'foto.image'            => 'File foto harus berbentuk jpg atau png',
-            'foto.max'              => 'Ukuran file foto maksimal 5mb',
-            'gaji.required'         => 'Gaji wajib diisi'
-
         ];
         
         $validator = Validator::make($request->all(), $rules, $messages);
@@ -127,7 +99,8 @@ class AnggotaController extends Controller
         $data['foto'] = $imageName;
         $data['password'] = Hash::make($data['password']);
 
-        $data['gaji']  = str_replace('.', '', $request->gaji);
+        $clean = str_replace('.', '', $request->gaji);
+        $data['gaji'] = str_replace(',', '.', $clean);
 
         Anggota::create($data);
 
@@ -155,7 +128,7 @@ class AnggotaController extends Controller
     {
         $anggota = Anggota::findOrFail($id);
         
-        return view('simpan_pinjam.master.anggota.show')->with([
+        return view('Simpan_Pinjam.master.anggota.show')->with([
             'anggota' => $anggota
         ]);
     }
@@ -170,7 +143,7 @@ class AnggotaController extends Controller
     {
         $anggota = Anggota::findOrFail($id);
         
-        return view('simpan_pinjam.master.anggota.edit')->with([
+        return view('Simpan_Pinjam.master.anggota.edit')->with([
             'anggota' => $anggota
         ]);
     }
@@ -186,39 +159,6 @@ class AnggotaController extends Controller
     {
         $anggota = Anggota::findOrFail($id);
 
-        $rules = [
-            'nama_anggota'  => 'required',
-            'tempat_lahir'  => 'required', 
-            'tanggal_lahir' => 'required',
-            'alamat'        => 'required|max:255',
-            'no_hp'         => 'required', 
-            'no_wa'         => 'required',
-            'jabatan'       => 'required',
-            'foto'          => 'image|mimes:jpg,png,jpeg|max:5120',
-            'gaji'          => 'required'
-        ];
-
-        $messages = [
-            'nama_anggota.required' => 'Nama wajib diisi',
-            'tempat_lahir.required' => 'Tempat lahir wajib diisi',
-            'alamat.required'       => 'Alamat wajib diisi',
-            'alamat.max'            => 'Alamat terlalu panjang',
-            'no_hp.required'        => 'No handphone wajib diisi',
-            'no_wa.required'        => 'No whatsapp wajib diisi',
-            'jabatan.required'      => 'Jabatan wajib diisi',
-            'foto.image'            => 'File foto harus berbentuk jpg atau png',
-            'foto.max'              => 'Ukuran file foto maksimal 5mb',
-            'gaji.required'         => 'Gaji wajib diisi'
-        ];
-        
-        $validator = Validator::make($request->all(), $rules, $messages);
-        
-        if ($validator->fails()) {
-            return redirect()->back()->withErrors($validator)->withInput($request->all());
-        }
-
-        // dd($anggota->password);
-        // exit;
         $data = $request->all();
         
         $user = $anggota->username;
@@ -226,13 +166,13 @@ class AnggotaController extends Controller
         if ($request->foto == null) {
             $anggota->foto == $anggota->foto;
         } else {
-            Storage::delete('foto/' . $anggota->foto);
+            //Storage::delete('foto/' . $anggota->foto);
             File::delete('storage/foto/' . $anggota->foto);
 
             $extension = $request->file('foto')->extension();
             $imageName = $user . '.' . $extension;
             
-            Storage::putFileAs('foto', $request->file('foto'), $imageName);
+            //Storage::putFileAs('foto', $request->file('foto'), $imageName);
             $request->foto->move(public_path('storage/foto'), $imageName);
 
             $data['foto'] = $imageName;
@@ -244,7 +184,8 @@ class AnggotaController extends Controller
             $data['password'] = Hash::make($data['password']);
         }
 
-        $data['gaji']  = str_replace('.', '', $request->gaji);
+        $clean = str_replace('.', '', $request->gaji);
+        $data['gaji'] = str_replace(',', '.', $clean);
 
         $anggota->update($data);
 
@@ -295,7 +236,7 @@ class AnggotaController extends Controller
     {
         $anggota = Anggota::findOrFail($id);
 
-        return view('simpan_pinjam.master.anggota.modal')->with([
+        return view('Simpan_Pinjam.master.anggota.modal')->with([
             'anggota' => $anggota
         ]);
     }
@@ -304,7 +245,7 @@ class AnggotaController extends Controller
     {
         $anggota = Anggota::findOrFail($id);
 
-        return view('simpan_pinjam.master.anggota.print')->with([
+        return view('Simpan_Pinjam.master.anggota.print')->with([
             'anggota' => $anggota
         ]);
     }

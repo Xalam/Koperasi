@@ -25,7 +25,7 @@
                     <h3 class="card-title">Edit Anggota</h3>
                 </div>
                 <div class="card-body col-md-6 mx-auto">
-                    <form action="{{ route('anggota.update', $anggota->id) }}" role="form" method="post"
+                    <form id="form-anggota-edit" action="{{ route('anggota.update', $anggota->id) }}" role="form" method="post"
                         enctype="multipart/form-data" autocomplete="off">
                         @csrf
                         @method('put')
@@ -227,6 +227,9 @@
     <script src="{{ asset('assets/plugins/moment/moment.min.js') }}"></script>
     <script src="{{ asset('assets/plugins/inputmask/jquery.inputmask.min.js') }}"></script>
     <script src="{{ asset('assets/plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js') }}"></script>
+    <!-- jquery-validation -->
+    <script src="{{ asset('assets/plugins/jquery-validation/jquery.validate.min.js') }}"></script>
+    <script src="{{ asset('assets/plugins/jquery-validation/additional-methods.min.js') }}"></script>
 @endpush
 
 @section('script')
@@ -236,7 +239,7 @@
                 format: 'YYYY-MM-DD'
             });
 
-            $('#gaji').mask('#.##0', {
+            $('#gaji').mask('#.##0,00', {
                 reverse: true
             });
 
@@ -292,6 +295,82 @@
                 }
 
                 reader.readAsDataURL(this.files[0]);
+            });
+
+            $.validator.addMethod('filesize', function (value, element, param) {
+                return this.optional(element) || (element.files[0].size <= param)
+            },'Ukuran file tidak boleh lebih dari 2mb'); 
+
+            $.validator.setDefaults({
+                submitHandler: function () {
+                    form.submit();
+                }
+            });
+
+            $('#form-anggota-edit').validate({
+                rules: {
+                    nama_anggota: {
+                        required: true
+                    },
+                    agama: {
+                        required: true
+                    },
+                    tempat_lahir: {
+                        required: true
+                    },
+                    tanggal_lahir: {
+                        required: true
+                    },
+                    alamat: {
+                        required: true
+                    },
+                    no_hp: {
+                        required: true
+                    },
+                    no_wa: {
+                        required: true
+                    },
+                    jabatan: {
+                        required: true
+                    },
+                    password: {
+                        minlength: 8
+                    },
+                    gaji: {
+                        required: true
+                    },
+                    foto: {
+                        extension: "jpg,jpeg,png",
+                        filesize: 2,
+                    },
+                },
+                messages: {
+                    nama_anggota: "Nama Anggota wajib diisi",
+                    agama: "Agama wajib diisi",
+                    tempat_lahir: "Tempat lahir wajib diisi",
+                    tanggal_lahir: "Tanggal lahir wajib diisi",
+                    alamat: "Alamat wajib diisi",
+                    no_hp: "No Handphone wajib diisi",
+                    no_wa: "No Whatsapp wajib diisi",
+                    jabatan: "Jabatan wajib diisi",
+                    password: "Password minimal 8 karakter",
+                    gaji: "Gaji wajib diisi",
+                    foto: {
+                        extension: "Gunakan file berformat .jpg atau .jpeg atau png",
+                        filesize: "Ukuran file maksimal 2mb"
+                    }
+                },
+                errorElement: 'span',
+                errorPlacement: function(error, element) {
+                    error.addClass('invalid-feedback');
+                    element.closest('.form-group').append(error);
+                },
+                highlight: function(element, errorClass, validClass) {
+                    $(element).addClass('is-invalid');
+                },
+                unhighlight: function(element, errorClass, validClass) {
+                    $(element).removeClass('is-invalid');
+                }
             });
         })
 

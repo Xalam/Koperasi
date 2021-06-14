@@ -14,7 +14,7 @@ class DashboardController extends Controller
 
         $count_anggota = $anggota->count();
 
-        return view('simpan_pinjam.dashboard.dashboard')->with([
+        return view('Simpan_Pinjam.dashboard.dashboard')->with([
             'count_anggota' => $count_anggota
         ]);
     }

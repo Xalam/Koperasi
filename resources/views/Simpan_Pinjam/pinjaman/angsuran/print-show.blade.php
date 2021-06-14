@@ -50,7 +50,7 @@
                                 From
                                 <address>
                                     <strong>Primkop Polrestabes Semarang</strong><br>
-                                    Jl. Kaligarang No.1A, Petompon<br>
+                                    Jl. Kaligarang No.1A, Barusari<br>
                                     Semarang<br>
                                     Phone: 0895-2458-3818<br>
                                     Email: -
@@ -73,7 +73,9 @@
                             <!-- /.col -->
                         </div>
                         <!-- /.row -->
-
+                        <div class="row">
+                            Lembar : <b>Bukti Angsuran</b>
+                        </div>
                         <!-- Table row -->
                         <div class="row">
                             <div class="col-12 table-responsive">
@@ -83,13 +85,15 @@
                                             <th>Kode Pinjaman</th>
                                             <th>Nominal Pinjaman</th>
                                             <th>Jangka Waktu</th>
+                                            <th>Bunga</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         <tr>
                                             <td>{{ $angsuran->pinjaman->kode_pinjaman }}</td>
                                             <td>{{ number_format($angsuran->pinjaman->nominal_pinjaman, 2, ',', '.') }}</td>
-                                            <td>{{ $angsuran->pinjaman->tenor }} Bulan</td>
+                                            <td>{{ $angsuran->pinjaman->tenor }} x</td>
+                                            <td>{{ $angsuran->pinjaman->bunga }} %</td>
                                         </tr>
                                     </tbody>
                                 </table>
@@ -134,7 +138,7 @@
                         <!-- this row will not appear when printing -->
                         <div class="row no-print">
                             <div class="col-12">
-                                <a href="{{ route('angsuran.index') }}" class="btn btn-light float-right" style="margin-right: 5px;"><i></i> Kembali</a>
+                                <a href="{{ route('angsuran.index') }}" class="btn btn-default float-right" style="margin-right: 5px;"><i></i> Kembali</a>
                             </div>
                         </div>
                     </div>

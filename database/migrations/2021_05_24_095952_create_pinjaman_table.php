@@ -18,15 +18,18 @@ class CreatePinjamanTable extends Migration
             $table->string('kode_pinjaman');
             $table->integer('id_anggota');
             $table->date('tanggal');
-            $table->integer('nominal_pinjaman');
+            $table->double('nominal_pinjaman');
             $table->double('bunga');
             $table->integer('tenor');
             $table->double('total_pinjaman');
             $table->double('nominal_angsuran');
             $table->integer('angsuran_ke')->default(0);
+            $table->double('biaya_provisi')->default(0);
+            $table->double('biaya_asuransi')->default(0);
             $table->integer('biaya_admin')->default(0);
             $table->integer('lunas')->default(0)->comment('0 = Belum Lunas, 1 = Lunas');
             $table->integer('status')->default(0)->comment('0 = Waiting, 1 = Acc');
+            $table->string('kode_jurnal')->nullable();
             $table->timestamps();
         });
     }

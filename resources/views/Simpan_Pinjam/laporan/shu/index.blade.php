@@ -2,7 +2,7 @@
 
 @section('title', 'Laporan')
 
-@section('content_header', 'Jurnal Umum')
+@section('content_header', 'Sisa Hasil Usaha')
 
     @push('style')
         <!-- DataTables -->
@@ -18,7 +18,7 @@
 
 @section('breadcrumb')
     <li class="breadcrumb-item"><a href="#">Laporan</a></li>
-    <li class="breadcrumb-item active">Jurnal Umum</li>
+    <li class="breadcrumb-item active">Sisa Hasil Usaha</li>
 @endsection
 
 @section('content_main')
@@ -40,7 +40,7 @@
                             </div>
                         </div>
                         <div class="col-6 text-right" style="margin-top: 12px;">
-                            <form action="{{ route('jurnal.print-show') }}" method="post" enctype="multipart/form-data">
+                            <form action="{{ route('shu.print-show') }}" method="post" enctype="multipart/form-data">
                                 @csrf
                                 <input type="text" class="form-control form-control-sm" name="start_date" id="start-date" hidden>
                                 <input type="text" class="form-control form-control-sm" name="end_date" id="end-date" hidden>
@@ -57,24 +57,34 @@
         <div class="col-12">
             <div class="card">
                 <div class="card-header">
-                    <h3 class="card-title">Jurnal Umum</h3>
-                    <a href="{{ route('jurnal.create') }}" class="btn btn-sm btn-primary float-right">Tambah Jurnal</a>
+                    <h3 class="card-title">Sisa Hasil Usaha</h3>
                 </div>
                 <div class="card-body">
-                    <table id="table-jurnal" class="table table-bordered table-hover">
+                    <table id="table-shu" class="table table-bordered table-hover">
                         <thead>
                             <tr>
-                                <th>No</th>
-                                <th>Tanggal</th>
-                                <th>Kode Jurnal</th>
-                                <th class="text-center">Keterangan</th>
-                                <th>Kode Akun</th>
+                                <th class="text-center">Kode Akun</th>
                                 <th class="text-center">Nama Akun</th>
                                 <th class="text-center">Debet (Rp)</th>
                                 <th class="text-center">Kredit (Rp)</th>
                             </tr>
                         </thead>
+                        <tbody>
+
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <td colspan="2"><b>Saldo</b></td>
+                                <td><b>0</b></td>
+                                <td><b>0</b></td>
+                            </tr>
+                            <tr>
+                                <td colspan="3"><b>Laba</b></td>
+                                <td><b>0</b></td>
+                            </tr>
+                        </tfoot>
                     </table>
+                    {{ csrf_field() }}
                 </div>
             </div>
         </div>
@@ -121,67 +131,86 @@
         }
 
         $(function() {
-            var table = $('#table-jurnal').DataTable({
-                "lengthMenu": [
-                    [10, 25, 50, -1],
-                    [10, 25, 50, "All"]
-                ],
-                "deferRender": true,
-                "ajax": {
-                    url: "{{ route('jurnal.index') }}"
-                },
-                "columnDefs": [
+            let _token = $('input[name="_token"]').val();
+
+            filter_table();
+
+            function filter_table(start_date = '', end_date = '') {
+                $.ajax({
+                    url:"{{ route('shu.show-data') }}",
+                    method:"POST",
+                    data:{start_date:start_date, end_date:end_date, _token:_token},
+                    dataType:"json",
+                    success:function(data)
                     {
-                        "targets": 0,
-                        "className": "text-center"
-                    },
-                    {
-                        "targets": 1,
-                        "className": "text-center"
-                    },
-                    {
-                        "targets": 2,
-                        "className": "text-center"
-                    },
-                    {
-                        "targets": 4,
-                        "className": "text-center"
-                    },
-                    {
-                        "targets": 6,
-                        "className": "text-right"
-                    },
-                    {
-                        "targets": 7,
-                        "className": "text-right"
-                    },
-                ],
-                "columns": [{
-                        data: 'no'
-                    },
-                    {
-                        data: 'tanggal'
-                    },
-                    {
-                        data: 'kode'
-                    },
-                    {
-                        data: 'keterangan'
-                    },
-                    {
-                        data: 'kode_akun'
-                    },
-                    {
-                        data: 'nama_akun'
-                    },
-                    {
-                        data: 'debet'
-                    },
-                    {
-                        data: 'kredit'
+                        let output = '';
+                        let foot = '';
+
+                        for (let count = 0; count < data.data.length; count++)
+                        {
+                            let deb = 0;
+                            let kre = 0;
+
+                            if (data.data[count].debet != null) {
+                                deb = data.data[count].debet;
+                            }
+
+                            if (data.data[count].kredit != null) {
+                                kre = data.data[count].kredit;
+                            }
+
+                            output += '<tr>';
+                            output += '<td  class="text-center">' + data.data[count].kode_akun + '</td>';
+                            output += '<td>' + data.data[count].nama_akun + '</td>';
+                            output += '<td class="text-right">' + deb + '</td>'
+                            output += '<td class="text-right">' + kre + '</td></tr>';
+                            
+                        }
+
+                        foot += '<tr>';
+                        foot += '<td colspan="2"><b>Saldo</b></td>';
+                        foot += '<td class="text-right"><b>' + data.total_debet + '</b></td>';
+                        foot += '<td class="text-right"><b>' + data.total_kredit + '</b></td></tr>';
+                        foot += '<tr>';
+                        foot += '<td colspan="3"><b>Laba</b></td>';
+                        foot += '<td class="text-right"><b>' + data.laba + '</b></td></tr>';
+
+                        $('tbody').html(output);
+                        $('tfoot').html(foot);
                     }
-                ]
-            });
+                });
+                // $('#table-shu').DataTable({
+                //     "processing": true,
+                //     "serverSide": true,
+                //     "deferRender": true,
+                //     "ajax": {
+                //         url: "{{ route('shu.show-data') }}",
+                //         type: "POST",
+                //         data: {
+                //             start_date:start_date, end_date:end_date, _token:_token
+                //         },
+                //     },
+                //     "columnDefs": [
+                //         {
+                //             "targets": 0,
+                //             "className": "text-center"
+                //         },
+                //     ],
+                //     "columns": [{
+                //             data: 'kode'
+                //         },
+                //         {
+                //             data: 'nama_akun'
+                //         },
+                //         {
+                //             data: 'debet'
+                //         },
+                //         {
+                //             data: 'kredit'
+                //         }
+                //     ]
+                // });
+            }
 
             $('#reservation').daterangepicker({
                 autoUpdateInput: false
@@ -192,7 +221,8 @@
                 start_date=picker.startDate.format('DD-MM-YYYY');
                 end_date=picker.endDate.format('DD-MM-YYYY');
                 $.fn.dataTableExt.afnFiltering.push(DateFilterFunction);
-                table.draw();
+                filter_table(start_date, end_date);
+                // table.draw();
                 $('#start-date').attr('value', start_date);
                 $('#end-date').attr('value', end_date);
             });
@@ -202,10 +232,13 @@
                 start_date='';
                 end_date='';
                 $.fn.dataTable.ext.search.splice($.fn.dataTable.ext.search.indexOf(DateFilterFunction, 1));
-                table.draw();
+                filter_table(start_date, end_date);
+                // table.draw();
                 $('#start-date').attr('value', start_date);
                 $('#end-date').attr('value', end_date);
             });
+
+
         });
 
     </script>

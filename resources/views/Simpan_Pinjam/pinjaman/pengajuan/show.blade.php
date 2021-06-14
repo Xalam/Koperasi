@@ -19,11 +19,15 @@
         <dt class="col-sm-4">Bunga</dt>
         <dd class="col-sm-8">: &nbsp;{{ $data->bunga }} %</dd>
         <dt class="col-sm-4">Jangka Waktu</dt>
-        <dd class="col-sm-8">: &nbsp;{{ $data->tenor }} Bulan</dd>
+        <dd class="col-sm-8">: &nbsp;{{ $data->tenor }} x</dd>
         <dt class="col-sm-4">Total Pinjaman</dt>
         <dd class="col-sm-8">: &nbsp;Rp {{ number_format($data->total_pinjaman, 2, ',', '.') }}</dd>
         <dt class="col-sm-4">Angsuran</dt>
         <dd class="col-sm-8">: &nbsp;Rp {{ number_format($data->nominal_angsuran, 2, ',', '.') }}</dd>
+        <dt class="col-sm-4">Biaya Provisi</dt>
+        <dd class="col-sm-8">: &nbsp;Rp {{ number_format($data->biaya_provisi, 2, ',', '.') }}</dd>
+        <dt class="col-sm-4">Biaya Asuransi</dt>
+        <dd class="col-sm-8">: &nbsp;Rp {{ number_format($data->biaya_asuransi, 2, ',', '.') }}</dd>
         <dt class="col-sm-4">Biaya Administrasi</dt>
         <dd class="col-sm-8">: &nbsp;Rp {{ number_format($data->biaya_admin, 2, ',', '.') }}</dd>
     </dl>

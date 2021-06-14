@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Simpan Pinjam | Laporan Simpanan</title>
+    <title>Simpan Pinjam | Laporan Jurnal Umum</title>
 
     <!-- Google Font: Source Sans Pro -->
     <link rel="stylesheet"
@@ -19,7 +19,7 @@
         <!-- Main content -->
         <div class="row no-print">
             <div class="col-12">
-                <a href="{{ route('lap-pinjaman.index') }}" class="btn btn-default" style="margin: 10px;"><i></i> Kembali</a>
+                <a href="{{ route('jurnal.index') }}" class="btn btn-default" style="margin: 10px;"><i></i> Kembali</a>
             </div>
         </div>
         <div class="invoice p-3 mb-3">
@@ -46,13 +46,12 @@
                     </div>
             </div>
             <div class="text-center">
-                <h3><b>Laporan Pinjaman Anggota</b></h3><br>
+                <h3><b>Laporan Jurnal Umum</b></h3><br>
                 <h3 style="margin-top: -30px; margin-bottom: 20px;"><b>Primer Koperasi Polrestabes Semarang</b></h3>
             </div>
             <div>
                 <address>
-                    Kode Anggota: {{ $anggota->kd_anggota }} <br>
-                    Nama Anggota: {{ $anggota->nama_anggota }}
+                    Tanggal : {{ $reqStart }} / {{ $reqEnd }}
                 </address>
             </div>
             <!-- Table row -->
@@ -61,34 +60,30 @@
                     <table class="table table-striped">
                         <thead>
                             <tr>
-                                <th>No</th>
-                                <th>Kode Pinjaman</th>
-                                <th>Tanggal Pinjaman</th>
-                                <th>Anggota</th>
-                                <th>Pokok Pinjaman (Rp)</th>
-                                <th>Jangka Waktu (Bulan)</th>
-                                <th>Sisa Angsuran (Bulan)</th>
-                                <th>Angsuran Pokok (Rp)</th>
-                                <th>Angsuran Bunga (Rp)</th>
-                                <th>Jumlah Angsuran (Rp)</th>
+                                <th class="text-center">No</th>
+                                <th class="text-center">Tanggal</th>
+                                <th class="text-center">Kode Jurnal</th>
+                                <th class="text-center">Keterangan</th>
+                                <th class="text-center">Kode Akun</th>
+                                <th class="text-center">Nama Akun</th>
+                                <th class="text-center">Debet (Rp)</th>
+                                <th class="text-center">Kredit (Rp)</th>
                             </tr>
                         </thead>
                         <tbody>
                             @php
                                 $no = 1;
                             @endphp
-                            @foreach ($pinjaman as $pin)
+                            @foreach ($jurnal as $jur)
                             <tr>
-                                <td>{{ $no++ }}</td>
-                                <td>{{ $pin->kode_pinjaman }}</td>
-                                <td>{{ date('d-m-Y', strtotime($pin->tanggal)) }}</td>
-                                <td>{{ $pin->anggota->kd_anggota . ' / ' . $pin->anggota->nama_anggota }}</td>
-                                <td>{{ number_format($pin->nominal_pinjaman, 2, ',', '.') }}</td>
-                                <td>{{ $pin->tenor }}</td>
-                                <td>{{ $pin->tenor - $pin->angsuran_ke }}</td>
-                                <td>{{ number_format($pin->nominal_pinjaman / $pin->tenor, 2, ',', '.') }}</td>
-                                <td>{{ number_format(($pin->total_pinjaman - $pin->nominal_pinjaman) / $pin->tenor, 2, ',', '.') }}</td>
-                                <td>{{ number_format($pin->nominal_angsuran, 2, ',', '.') }}</td>
+                                <td class="text-center">{{ $no++ }}</td>
+                                <td class="text-center">{{ date('d-m-Y', strtotime($jur->tanggal)) }}</td>
+                                <td class="text-center">{{ $jur->kode_jurnal }}</td>
+                                <td>{{ $jur->keterangan }}</td>
+                                <td class="text-center">{{ $jur->akun->kode_akun }}</td>
+                                <td>{{ $jur->akun->nama_akun }}</td>
+                                <td class="text-right">{{ number_format($jur->debet, 2, ',', '.') }}</td>
+                                <td class="text-right">{{ number_format($jur->kredit, 2, ',', '.') }}</td>
                             </tr>
                             @endforeach
                         </tbody>
@@ -100,7 +95,7 @@
 
     </div>
     <script>
-        window.addEventListener("load", window.print());
+        // window.addEventListener("load", window.print());
 
     </script>
 </body>

@@ -30,9 +30,9 @@
                                     <th>Kode Anggota</th>
                                     <th>Nama Anggota</th>
                                     <th>Pokok Pinjaman</th>
-                                    <th>Angsuran#</th>
-                                    <th>Tenor</th>
-                                    <th>Sisa Tenor</th>
+                                    <th>Bunga</th>
+                                    <th>Jangka Waktu</th>
+                                    <th>Sisa </th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -41,9 +41,9 @@
                                     <td>{{ $data->anggota->kd_anggota }}</td>
                                     <td>{{ $data->anggota->nama_anggota }}</td>
                                     <td>Rp. {{ number_format($data->nominal_pinjaman, 2, ',', '.') }}</td>
-                                    <td>Rp. {{ number_format($data->nominal_angsuran, 2, ',', '.') }}</td>
-                                    <td>{{ $data->tenor }}</td>
-                                    <td>{{ $data->tenor - $data->angsuran_ke }}</td>
+                                    <td>{{ $data->bunga }} %</td>
+                                    <td>{{ $data->tenor }} x</td>
+                                    <td>{{ $data->tenor - $data->angsuran_ke }} x</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -79,12 +79,9 @@
                                 <tr>
                                     <th style="width:50%">Potongan</th>
                                     <td>
-                                        <div class="input-group cal-potongan">
-                                            <div class="input-group-prepend">
-                                                <span class="input-group-text">Rp</span>
-                                            </div>
-                                            <input type="text" class="form-control" placeholder="Potongan" id="potongan"
-                                                name="potongan">
+                                        <div class="input-group">
+                                            <input type="text" class="form-control" placeholder="Potongan" id="potongan" disabled>
+                                            <input type="text" class="form-control" name="potongan" id="hide-potongan" hidden>
                                         </div>
                                     </td>
                                 </tr>
@@ -112,7 +109,7 @@
                     <div class="col-12">
                             <input type="hidden" name="id_pinjaman" value="{{ $data->id }}">
                             <button class="btn btn-info float-right"><i class="fas fa-credit-card"></i>&nbsp; Bayar</button>
-                        <a href="{{ route('angsuran.index') }}" class="btn btn-light float-right"
+                        <a href="{{ route('angsuran.index') }}" class="btn btn-default float-right"
                             style="margin-right: 5px;"><i></i> Kembali</a>
                     </div>
                 </div>
@@ -135,30 +132,18 @@
 @section('script')
     <script>
         $(function() {
-            let bayarAngsuran = @php echo($data->nominal_angsuran); @endphp;
+            let bayarAngsuran = @php echo($data->nominal_pinjaman / $data->tenor); @endphp;
             let tenorAngsuran = @php echo($data->tenor - $data->angsuran_ke); @endphp;
+            let bunga = @php echo($data->nominal_pinjaman * ($data->bunga / 100)); @endphp;
+            let totalBayar = (bayarAngsuran * tenorAngsuran) + bunga;
+            let potongan = bunga * tenorAngsuran;
 
-            let totalBayar = bayarAngsuran * tenorAngsuran;
             $('#total-bayar').attr('value', formatMoney(totalBayar));
-
-            $('.cal-potongan').keyup(function() {
-                let potongan = $('#potongan').val();
-                let newPotongan = 0;
-
-                if (potongan != null) {
-                    newPotongan = potongan.split('.').join("");
-                }
-
-                let result = totalBayar - newPotongan;
-                $('#total-bayar').attr('value', formatMoney(result));
-            });
+            $('#hide-potongan').attr('value', potongan);
+            $('#potongan').attr('value', formatMoney(potongan))
 
             $('#tanggal').datetimepicker({
                 format: 'YYYY-MM-DD'
-            });
-
-            $('#potongan').mask('#.##0', {
-                reverse: true
             });
 
             $('#form-angsuran').validate({

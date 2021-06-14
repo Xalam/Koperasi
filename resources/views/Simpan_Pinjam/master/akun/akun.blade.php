@@ -32,8 +32,8 @@
                             <tr>
                                 <th>No</th>
                                 <th>Kode Akun</th>
-                                <th>Nama Akun</th>
-                                <th>Saldo</th>
+                                <th class="text-center">Nama Akun</th>
+                                <th class="text-center">Saldo</th>
                                 <th>Aksi</th>
                             </tr>
                         </thead>
@@ -59,6 +59,7 @@
 
     <script>
         $(function() {
+            
             $('#table-akun').DataTable({
                 "paging": true,
                 "lengthChange": true,
@@ -68,6 +69,23 @@
                 "autoWidth": false,
                 "responsive": true,
                 "deferRender": true,
+                "columnDefs": [
+                {
+                    "targets": 3,
+                    "className": "text-right"
+                },
+                {
+                  "targets": 0,
+                  "className": "text-center",
+                },
+                {
+                  "targets": 4,
+                  "className": "text-center",
+                },
+                {
+                  "targets": 1,
+                  "className": "text-center",
+                }],
                 "ajax": "{{ route('akun.index') }}",
                 "columns": [{
                         data: 'no'

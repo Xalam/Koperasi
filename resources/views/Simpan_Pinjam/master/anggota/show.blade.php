@@ -51,7 +51,7 @@
                             </a>
                         </li>
                     </ul>
-                    <a href="{{ route('anggota.index') }}" class="btn btn-light">Kembali</a>
+                    <a href="{{ route('anggota.index') }}" class="btn btn-default">Kembali</a>
                     <a href="{{ route('anggota.print', $anggota->id) }}" class="btn btn-danger float-right">Cetak</a>
                 </div>
                 <!-- /.card-body -->

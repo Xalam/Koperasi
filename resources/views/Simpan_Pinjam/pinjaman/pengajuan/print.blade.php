@@ -41,7 +41,7 @@
                         From
                         <address>
                             <strong>Primkop Polrestabes Semarang</strong><br>
-                            Jl. Kaligarang No.1A, Petompon<br>
+                            Jl. Kaligarang No.1A, Barusari<br>
                             Semarang<br>
                             Phone: 0895-2458-3818<br>
                             Email: -
@@ -74,8 +74,7 @@
                                     <th>No</th>
                                     <th>Nominal Pinjaman</th>
                                     <th>Jangka Waktu</th>
-                                    <th>Bunga per Tahun</th>
-                                    <th>Total</th>
+                                    <th>Bunga</th>
                                     <th>Angsuran</th>
                                 </tr>
                             </thead>
@@ -83,9 +82,8 @@
                                 <tr>
                                     <td>1</td>
                                     <td>{{ number_format($pinjaman->nominal_pinjaman, 2, ',', '.') }}</td>
-                                    <td>{{ $pinjaman->tenor }} Bulan</td>
+                                    <td>{{ $pinjaman->tenor }} x</td>
                                     <td>{{ $pinjaman->bunga }} %</td>
-                                    <td>{{ number_format($pinjaman->total_pinjaman, 2, ',', '.') }}</td>
                                     <td>{{ number_format($pinjaman->nominal_angsuran, 2, ',', '.') }}</td>
                                 </tr>
                             </tbody>
@@ -109,6 +107,14 @@
                                     <td>Rp. {{ number_format($pinjaman->nominal_pinjaman, 2, ',', '.') }}</td>
                                 </tr>
                                 <tr>
+                                    <th style="width:50%">Biaya Provisi:</th>
+                                    <td>Rp. {{ number_format($pinjaman->biaya_provisi, 2, ',', '.') }}</td>
+                                </tr>
+                                <tr>
+                                    <th style="width:50%">Biaya Asuransi:</th>
+                                    <td>Rp. {{ number_format($pinjaman->biaya_asuransi, 2, ',', '.') }}</td>
+                                </tr>
+                                <tr>
                                     <th style="width:50%">Biaya Administrasi:</th>
                                     <td>Rp. {{ number_format($pinjaman->biaya_admin, 2, ',', '.') }}</td>
                                 </tr>
@@ -124,7 +130,7 @@
                     <div class="col-12">
                         <a href="{{ route('pengajuan.print-show', $pinjaman->id) }}" rel="noopener" target="_blank" class="btn btn-info float-right"><i
                                 class="fas fa-print"></i> Print</a>
-                        <a href="{{ route('pengajuan.index') }}" class="btn btn-light float-right" style="margin-right: 5px;"><i></i> Kembali</a>
+                        <a href="{{ route('pengajuan.index') }}" class="btn btn-default float-right" style="margin-right: 5px;"><i></i> Kembali</a>
                     </div>
                 </div>
             </div>

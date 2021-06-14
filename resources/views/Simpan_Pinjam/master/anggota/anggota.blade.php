@@ -32,12 +32,12 @@
                             <tr>
                                 <th>No</th>
                                 <th>Kode Anggota</th>
-                                <th>Nama Anggota</th>
-                                <th>TTL</th>
+                                <th class="text-center">Nama Anggota</th>
+                                <th class="text-center">TTL</th>
                                 <th>Jenis Kelamin</th>
                                 <th>Agama</th>
-                                <th>Alamat</th>
-                                <th>No Whatsapp</th>
+                                <th class="text-center">Alamat</th>
+                                <th class="text-center">No Whatsapp</th>
                                 <th>Aksi</th>
                             </tr>
                         </thead>
@@ -68,6 +68,32 @@
                 "responsive": true,
                 "deferRender": true,
                 "ajax": "{{ route('anggota.index') }}",
+                "columnDefs": [
+                    {
+                        "targets": 0,
+                        "className": "text-center"
+                    },
+                    {
+                        "targets": 1,
+                        "className": "text-center"
+                    },
+                    {
+                        "targets": 3,
+                        "className": "text-center"
+                    },
+                    {
+                        "targets": 4,
+                        "className": "text-center"
+                    },
+                    {
+                        "targets": 5,
+                        "className": "text-center"
+                    },
+                    {
+                        "targets": 8,
+                        "className": "text-center"
+                    },
+                ],
                 "columns": [{
                         data: 'no'
                     },

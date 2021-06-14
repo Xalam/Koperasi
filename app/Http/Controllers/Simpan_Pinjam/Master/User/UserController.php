@@ -8,11 +8,11 @@ use Illuminate\Http\Request;
 class UserController extends Controller
 {
     public function login() {
-        return view('simpan_pinjam.login');
+        return view('Simpan_Pinjam.login');
     }
 
     public function anggota() {
         
-        return view('simpan_pinjam.master.anggota.anggota');
+        return view('Simpan_Pinjam.master.anggota.anggota');
     }
 }
