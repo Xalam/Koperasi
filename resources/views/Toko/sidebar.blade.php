@@ -1,10 +1,10 @@
-<a id="show-sidebar" class="btn btn-small btn-dark" style="z-index: 100;" href="#">
+<a id="show-sidebar" class="btn btn-sm" style="z-index: 100;" href="#">
     <i class="fas fa-bars" aria-hidden="true"></i>
 </a>
 <nav id="sidebar" class="sidebar-wrapper">
     <div class="sidebar-content">
         <div class="sidebar-brand">
-            <a href="/">Menu</a>
+            <a href="/" class="font-2">Primkop Polrestabes Semarang</a>
             <div id="close-sidebar">
                 <i class="fas fa-times" aria-hidden="true"></i>
             </div>
@@ -36,6 +36,9 @@
                             <li><a href="/toko/transaksi/penjualan">Penjualan</a></li>
                             <li><a href="/toko/transaksi/pembelian">Pembelian</a></li>
                             <li><a href="/toko/transaksi/retur-pembelian">Retur Pembelian</a></li>
+                            <li><a href="/toko/transaksi/hutang">Hutang</a></li>
+                            <li><a href="/toko/transaksi/piutang">Piutang</a></li>
+                            <li><a href="/toko/transaksi/jurnal">Jurnal</a></li>
                         </ul>
                     </div>
                 </li>

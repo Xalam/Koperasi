@@ -6,12 +6,14 @@ $('[name="kode_pelanggan"]').change(function () {
             data.forEach(x => {
                 $('[name="alamat"]').val(x.alamat);
                 $('[name="telepon"]').val(x.telepon);
+                $('[name="wa"]').val(x.wa);
             });
         });
     } else {
         $('[name="nama_pelanggan"]').val("");
         $('[name="alamat"]').val("");
         $('[name="telepon"]').val("");
+        $('[name="wa"]').val("");
     }
 });
 
@@ -23,11 +25,13 @@ $('[name="nama_pelanggan"]').change(function () {
             data.forEach(x => {
                 $('[name="alamat"]').val(x.alamat);
                 $('[name="telepon"]').val(x.telepon);
+                $('[name="wa"]').val(x.wa);
             });
         });
     } else {
         $('[name="kode_pelanggan"]').val("");
         $('[name="alamat"]').val("");
         $('[name="telepon"]').val("");
+        $('[name="wa"]').val("");
     }
 });

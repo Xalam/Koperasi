@@ -10,6 +10,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
     <link href="https://use.fontawesome.com/releases/v5.15.3/css/all.css" rel="stylesheet">
 
+    <link rel="stylesheet" href="{{ asset('bootstrap 5/dist/css/bootstrap.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/sidebar.css') }}">
     <link rel="stylesheet" href="{{ asset('css/style.css') }}">
     <link rel="stylesheet" href="{{ asset('css/normalize.css') }}">
 
@@ -20,15 +22,18 @@
 <body class="background-login">
     <div class='container-login align-item-center'>
         <div class="card-login">
-            <h4 class="text-center">Salepropos</h4>
-            <hr class="color-grey">
+            <h4 class="text-center card-header p-3">Salepropos</h4>
             <div class="card-body">
-                {!! Form::open(['url' => 'login']) !!}
-                {!! Form::label(null, 'Username', ['class' => 'font-3 font-weight-bold']) !!}
-                {!! Form::text(null, null, ['class' => 'font-3 mb-4 p-1', 'placeholder' => 'Input Username', 'required']) !!}
-                {!! Form::label(null, 'Password', ['class' => 'font-3 font-weight-bold']) !!}
-                {!! Form::password(null, ['class' => 'font-3 p-1', 'placeholder' => 'Input Password', 'required']) !!}
-                {!! Form::submit('Login', ['class' => 'btn btn-small btn-primary mt-5']) !!}
+                {!! Form::open(['url' => '']) !!}
+                {!! Form::label(null, 'Username', ['class' => 'font-3 fw-bold']) !!}
+                {!! Form::text(null, null, ['class' => 'font-3 mb-2 form-control form-control-sm', 'placeholder' =>
+                'Input Username', 'required']) !!}
+                {!! Form::label(null, 'Password', ['class' => 'font-3 fw-bold']) !!}
+                {!! Form::password(null, ['class' => 'font-3 form-control form-control-sm', 'placeholder' => 'Input Password', 'required']) !!}
+                <div class="d-grid gap-2 mt-2">
+                    <a href="/" class="btn btn-small btn-primary">Login</a>
+                    <!-- {!! Form::submit('Login', ['class' => 'btn btn-small btn-primary']) !!} -->
+                </div>
                 {!! Form::close() !!}
             </div>
         </div>

@@ -91,9 +91,12 @@
   }
 
   #show-sidebar {
+    color: white;
+    background-color: #001933;
+    border-color: #001933;
     position: fixed;
     left: 0;
-    top: 60px;
+    top: 85px;
     border-radius: 0 4px 4px 0px;
     width: 30px;
     transition-delay: 0.3s;

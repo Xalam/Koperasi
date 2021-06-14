@@ -13,4 +13,18 @@ class DataSupplierController extends Controller
                             ->orderBy('nama')
                             ->get();
     }
+
+    public function dataReturSupplier($id) {
+        return SupplierModel::select('supplier.nama')
+                            ->join('pembelian', 'pembelian.id_supplier', '=', 'supplier.id')
+                            ->where('pembelian.id', $id)
+                            ->get();
+    }
+
+    public function dataHutangSupplier($id) {
+        return SupplierModel::select('supplier.nama AS nama', 'supplier.kode AS kode')
+                            ->join('pembelian', 'pembelian.id_supplier', '=', 'supplier.id')
+                            ->where('pembelian.id', $id)
+                            ->get();
+    }
 }

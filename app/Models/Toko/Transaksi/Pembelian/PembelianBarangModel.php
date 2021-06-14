@@ -9,12 +9,13 @@ class PembelianBarangModel extends Model
 {
     use HasFactory;
 
-    protected $table = 'pembelian_barang';
+    protected $table = 'detail_beli';
 
     protected $fillable = [
         'nomor',
         'id_barang',
         'jumlah',
+        'harga_satuan',
         'total_harga',
         'submited'
     ];

@@ -3,12 +3,14 @@
 namespace App\Http\Controllers\Toko\Transaksi\Pembelian;
 
 use App\Http\Controllers\Controller;
+use App\Models\Toko\Master\Akun\AkunModel;
 use Illuminate\Http\Request;
 
 use App\Models\Toko\Master\Barang\BarangModel;
 use App\Models\Toko\Transaksi\PembayaranModel;
 use App\Models\Toko\Transaksi\Pembelian\PembelianBarangModel;
 use App\Models\Toko\Master\Supplier\SupplierModel;
+use App\Models\Toko\Transaksi\Hutang\HutangModel;
 use App\Models\Toko\Transaksi\Pembelian\PembelianModel;
 use Carbon\Carbon;
 
@@ -59,12 +61,12 @@ class PembelianController extends Controller
     }
 
     public function show($nomor) {
-        $barang_pembelian = PembelianBarangModel::where('pembelian_barang.nomor', $nomor)
-                                    ->join('barang', 'barang.id', '=', 'pembelian_barang.id_barang')
-                                    ->select('pembelian_barang.nomor AS nomor_pembelian', 'pembelian_barang.jumlah AS jumlah_barang',
-                                            'pembelian_barang.total_harga AS total_harga', 'pembelian_barang.id_barang AS id_barang',
+        $barang_pembelian = PembelianBarangModel::where('detail_beli.nomor', $nomor)
+                                    ->join('barang', 'barang.id', '=', 'detail_beli.id_barang')
+                                    ->select('detail_beli.nomor AS nomor_pembelian', 'detail_beli.jumlah AS jumlah_barang',
+                                            'detail_beli.total_harga AS total_harga', 'detail_beli.id_barang AS id_barang',
                                             'barang.kode AS kode_barang', 'barang.nama AS nama_barang', 
-                                            'barang.harga_beli AS harga_beli')
+                                            'detail_beli.harga_satuan AS harga_satuan')
                                     ->get();
 
         $supplier_pembelian = PembelianModel::where('pembelian.nomor', $nomor)
@@ -82,7 +84,9 @@ class PembelianController extends Controller
                                         ->where('id_barang', $request->id_barang)->first();
 
         if ($barang) {
-            PembelianBarangModel::where('id_barang', $request->id_barang)->update([
+            PembelianBarangModel::where('nomor', $request->nomor)
+                                ->where('id_barang', $request->id_barang)->update([
+                'harga_satuan' => ($barang->total_harga + ($request->jumlah * $request->harga_satuan)) / ($barang->jumlah + $request->jumlah), 
                 'jumlah' => $barang->jumlah + $request->jumlah, 
                 'total_harga' => $barang->total_harga + $request->total_harga
                 ]);
@@ -100,21 +104,55 @@ class PembelianController extends Controller
 
         $data_barang = PembelianBarangModel::where('nomor', $nomor)->get();
 
+
         foreach ($data_barang as $data) {
             $barang = BarangModel::where('id', $data->id_barang)->first();
 
             BarangModel::where('id', $data->id_barang)->update([
+                'hpp' => ($barang->stok * $barang->hpp + $data->total_harga) / ($barang->stok + $data->jumlah),
                 'stok' => $barang->stok + $data->jumlah]);
         }
 
         $data_pembelian = PembelianModel::where('nomor', $nomor)->first();
 
         if ($request->input('pembayaran') == 2) {
+            $persediaan = AkunModel::where('kode', 1131)->first()->debit;
+            $kas = AkunModel::where('kode', 1102)->first()->debit;
+
+            AkunModel::where('kode', 1131)->update([
+                'debit' => $persediaan + $request->input('jumlah_harga')
+            ]);
+
+            AkunModel::where('kode', 1102)->update([
+                'debit' => $kas - $request->input('jumlah_harga')
+            ]);
+
             $jumlah_bayar = $request->input('jumlah_bayar');
             $jumlah_kembalian = $request->input('jumlah_kembalian');
+
         } else {
+            $persediaan = AkunModel::where('kode', 1131)->first()->debit;
+            $hutang = AkunModel::where('kode', 2101)->first()->kredit;
+
+            AkunModel::where('kode', 1131)->update([
+                'debit' => $persediaan + $request->input('jumlah_harga')
+            ]);
+
+            AkunModel::where('kode', 2101)->update([
+                'kredit' => $hutang + $request->input('jumlah_harga')
+            ]);
             $jumlah_bayar = 0;
             $jumlah_kembalian = 0;
+
+            $tanggal = Carbon::parse($request->input('tanggal'))->format('y-m-d');
+
+            HutangModel::create([
+                'nomor_beli' => $request->input('nomor'),
+                'id_supplier' => $request->input('kode_supplier'),
+                'jumlah_hutang' => $request->input('jumlah_harga'),
+                'jatuh_tempo' => Carbon::parse($tanggal)->addDays($request->input('tempo')),
+                'sisa_hutang' => $request->input('jumlah_harga')
+            ]);
         }
 
         if (!$data_pembelian) {

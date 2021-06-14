@@ -20,4 +20,20 @@ class AkunController extends Controller
 
         return redirect('/toko/master/akun');
     }
+
+    public function update(Request $request) {
+        AkunModel::where('id', $request->id)->update($request->all());
+
+        $akun = AkunModel::where('id', $request->id)->first();
+
+        return response()->json(['code' => 200, 'akun' => $akun]);
+    }
+
+    public function delete(Request $request) {
+        AkunModel::where('id', $request->id)->delete();
+
+        $akun = AkunModel::where('id', $request->id)->first();
+
+        return response()->json(['code' => 200, 'akun' => $akun]);
+    }
 }

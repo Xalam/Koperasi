@@ -2,31 +2,40 @@
 
 @section('main')
 <div class="card m-6">
+    <p class="card-header bg-light">Laporan Pembelian</p>
     <div class="card-body">
         {!! Form::open( ['url' => '/toko/laporan/pembelian', 'method' => 'GET']) !!}
-        <div class="row align-item-center mb-1">
-            {!! Form::label(null, 'Laporan Pembelian', ['class' => 'col-3 font-weight-bold']) !!}
+        <div class="row-lg align-item-center mb-2">
+            {!! Form::label(null, 'Tanggal Awal', ['class' => 'col-lg-2']) !!}
+            {!! Form::date('tanggal_awal', (isset($tanggal_awal) ? $tanggal_awal : null), ['class' => 'col-lg-2
+            form-control form-control-sm', 'required']) !!}
+            {!! Form::label(null, '-', ['class' => 'offset-lg-1 col-lg-1']) !!}
+            {!! Form::label(null, 'Tanggal Akhir', ['class' => 'col-lg-2']) !!}
+            {!! Form::date('tanggal_akhir', (isset($tanggal_akhir) ? $tanggal_akhir : null), ['class' => 'col-lg-2
+            form-control form-control-sm']) !!}
         </div>
-        <div class="row align-item-center mb-1">
-            {!! Form::label(null, 'Tanggal Awal', ['class' => 'col-3']) !!}
-            {!! Form::date('tanggal_awal', (isset($tanggal_awal) ? $tanggal_awal : null), ['class' => 'col-4']) !!}
-            {!! Form::label(null, '-', ['class' => 'offset-5 col-1']) !!}
-            {!! Form::label(null, 'Tanggal Akhir', ['class' => 'col-3']) !!}
-            {!! Form::date('tanggal_akhir', (isset($tanggal_akhir) ? $tanggal_akhir : null), ['class' => 'col-4']) !!}
+        <div class="row-lg align-item-center mb-2">
+            {!! Form::label(null, 'Type Pembayaran', ['class' => 'col-lg-2']) !!}
+            {!! Form::select('type_pembayaran', $pembayaran, (isset($type_pembayaran) ? $type_pembayaran : null),
+            ['class' => 'col-lg-4 form-select form-select-sm']) !!}
         </div>
-        <div class="row align-item-center mb-1">
-            {!! Form::label(null, 'Type Pembayaran', ['class' => 'col-5']) !!}
-            {!! Form::select('type_pembayaran', $pembayaran, (isset($type_pembayaran) ? $type_pembayaran : null), ['class' => 'col-8']) !!}
-        </div>
-        <div class="row align-item-center mb-1">
-            {!! Form::submit('Cek', ['class' => 'btn btn-primary btn-small']) !!}
+        <div class="d-grid gap-2">
+            {!! Form::submit('Cek', ['class' => 'btn btn-primary btn-sm']) !!}
         </div>
         {!! Form::close() !!}
-        <hr>
-        @if (isset($laporan_pembelian) && count($laporan_pembelian) > 0)
+    </div>
+</div>
+
+<div class="card m-6">
+    @if (isset($laporan_pembelian) && count($laporan_pembelian) > 0)
+    <p class="card-header bg-light">Daftar {{$pembayaran[$type_pembayaran]}}</p>
+    @else
+    <p class="card-header bg-light">Daftar </p>
+    @endif
+    <div class="card-body">
         <div class="table-responsive">
-            <table class="table table-striped table-bordered table-hover">
-                <thead class="text-center text-nowrap">
+            <table id="table-data" class="table table-striped table-bordered table-hover nowrap">
+                <thead class="text-center">
                     <tr>
                         <th>No</th>
                         <th>Kode Barang</th>
@@ -36,7 +45,8 @@
                         <th>Total Harga</th>
                     </tr>
                 </thead>
-                <tbody class="text-wrap">
+                @if (isset($laporan_pembelian) && count($laporan_pembelian) > 0)
+                <tbody>
                     @php
                     $i = 1 + 1 * ($laporan_pembelian->currentPage() - 1);
                     @endphp
@@ -53,11 +63,6 @@
                     @endforeach
                 </tbody>
             </table>
-            @if(empty($search))
-            {{ $laporan_pembelian->appends(['dari' => $tanggal_awal, 'sampai' => $tanggal_akhir])->links() }}
-            @else
-            {{ $laporan_pembelian->appends(['dari' => $tanggal_awal, 'sampai' => $tanggal_akhir, 'search' => $search])->links() }}
-            @endif
         </div>
         @endif
     </div>

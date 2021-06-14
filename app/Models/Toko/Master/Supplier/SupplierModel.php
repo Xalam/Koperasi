@@ -15,6 +15,11 @@ class SupplierModel extends Model
         'kode',
         'nama',
         'alamat',
-        'telepon'
+        'telepon',
+        'wa',
+        'jarak',
+        'email',
+        'keterangan',
+        'tempo'
     ];
 }

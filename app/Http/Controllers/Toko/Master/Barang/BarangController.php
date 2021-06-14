@@ -20,4 +20,20 @@ class BarangController extends Controller
         
         return redirect('/toko/master/barang');
     }
+
+    public function update(Request $request) {
+        BarangModel::where('id', $request->id)->update($request->all());
+
+        $barang = BarangModel::where('id', $request->id)->first();
+
+        return response()->json(['code' => 200, 'barang' => $barang]);
+    }
+
+    public function delete(Request $request) {
+        BarangModel::where('id', $request->id)->delete();
+
+        $barang = BarangModel::where('id', $request->id)->first();
+
+        return response()->json(['code' => 200, 'barang' => $barang]);
+    }
 }

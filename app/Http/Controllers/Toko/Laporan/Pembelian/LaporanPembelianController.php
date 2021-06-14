@@ -24,22 +24,22 @@ class LaporanPembelianController extends Controller
 
         if ($tanggal_awal && !$tanggal_akhir) {
             if ($type_pembayaran > 0) {
-                $laporan_pembelian = PembelianModel::where('tanggal', '>=', $tanggal_awal)
+                $laporan_pembelian = PembelianModel::where('pembelian.tanggal', '>=', $tanggal_awal)
                                                     ->where('pembayaran', '=', $type_pembayaran)
-                                                    ->join('pembelian_barang', 'pembelian_barang.nomor', '=', 'pembelian.nomor')
-                                                    ->join('barang', 'barang.id', '=', 'pembelian_barang.id_barang')
+                                                    ->join('detail_beli', 'detail_beli.nomor', '=', 'pembelian.nomor')
+                                                    ->join('barang', 'barang.id', '=', 'detail_beli.id_barang')
                                                     ->select('barang.kode AS kode', 'barang.nama AS nama',
-                                                            'barang.harga_jual AS harga_jual', 'pembelian_barang.jumlah AS jumlah', 
-                                                            DB::raw('SUM(pembelian_barang.total_harga) AS total_harga'))
+                                                            'barang.harga_jual AS harga_jual', DB::raw('SUM(detail_beli.jumlah) AS jumlah'), 
+                                                            DB::raw('SUM(detail_beli.total_harga) AS total_harga'))
                                                     ->groupBy('barang.kode')
                                                     ->paginate(10);
             } else {
-                $laporan_pembelian = PembelianModel::where('tanggal', '>=', $tanggal_awal)
-                                                    ->join('pembelian_barang', 'pembelian_barang.nomor', '=', 'pembelian.nomor')
-                                                    ->join('barang', 'barang.id', '=', 'pembelian_barang.id_barang')
+                $laporan_pembelian = PembelianModel::where('pembelian.tanggal', '>=', $tanggal_awal)
+                                                    ->join('detail_beli', 'detail_beli.nomor', '=', 'pembelian.nomor')
+                                                    ->join('barang', 'barang.id', '=', 'detail_beli.id_barang')
                                                     ->select('barang.kode AS kode', 'barang.nama AS nama',
-                                                            'barang.harga_jual AS harga_jual', 'pembelian_barang.jumlah AS jumlah', 
-                                                            DB::raw('SUM(pembelian_barang.total_harga) AS total_harga'))
+                                                            'barang.harga_jual AS harga_jual', DB::raw('SUM(detail_beli.jumlah) AS jumlah'), 
+                                                            DB::raw('SUM(detail_beli.total_harga) AS total_harga'))
                                                     ->groupBy('barang.kode')
                                                     ->paginate(10);
             }
@@ -47,22 +47,22 @@ class LaporanPembelianController extends Controller
             return view ('toko.laporan.pembelian.index', compact('laporan_pembelian', 'pembayaran', 'tanggal_awal', 'tanggal_akhir', 'type_pembayaran'));
         } else if (!$tanggal_awal && $tanggal_akhir) {
             if ($type_pembayaran > 0) {
-                $laporan_pembelian = PembelianModel::where('tanggal', '<=', $tanggal_akhir)
+                $laporan_pembelian = PembelianModel::where('pembelian.tanggal', '<=', $tanggal_akhir)
                                                     ->where('pembayaran', '=', $type_pembayaran)
-                                                    ->join('pembelian_barang', 'pembelian_barang.nomor', '=', 'pembelian.nomor')
-                                                    ->join('barang', 'barang.id', '=', 'pembelian_barang.id_barang')
+                                                    ->join('detail_beli', 'detail_beli.nomor', '=', 'pembelian.nomor')
+                                                    ->join('barang', 'barang.id', '=', 'detail_beli.id_barang')
                                                     ->select('barang.kode AS kode', 'barang.nama AS nama',
-                                                            'barang.harga_jual AS harga_jual', 'pembelian_barang.jumlah AS jumlah', 
-                                                            DB::raw('SUM(pembelian_barang.total_harga) AS total_harga'))
+                                                            'barang.harga_jual AS harga_jual', DB::raw('SUM(detail_beli.jumlah) AS jumlah'), 
+                                                            DB::raw('SUM(detail_beli.total_harga) AS total_harga'))
                                                     ->groupBy('barang.kode')
                                                     ->paginate(10);
             } else {
-                $laporan_pembelian = PembelianModel::where('tanggal', '<=', $tanggal_akhir)
-                                                    ->join('pembelian_barang', 'pembelian_barang.nomor', '=', 'pembelian.nomor')
-                                                    ->join('barang', 'barang.id', '=', 'pembelian_barang.id_barang')
+                $laporan_pembelian = PembelianModel::where('pembelian.tanggal', '<=', $tanggal_akhir)
+                                                    ->join('detail_beli', 'detail_beli.nomor', '=', 'pembelian.nomor')
+                                                    ->join('barang', 'barang.id', '=', 'detail_beli.id_barang')
                                                     ->select('barang.kode AS kode', 'barang.nama AS nama',
-                                                            'barang.harga_jual AS harga_jual', 'pembelian_barang.jumlah AS jumlah', 
-                                                            DB::raw('SUM(pembelian_barang.total_harga) AS total_harga'))
+                                                            'barang.harga_jual AS harga_jual', DB::raw('SUM(detail_beli.jumlah) AS jumlah'), 
+                                                            DB::raw('SUM(detail_beli.total_harga) AS total_harga'))
                                                     ->groupBy('barang.kode')
                                                     ->paginate(10);
             }
@@ -70,22 +70,22 @@ class LaporanPembelianController extends Controller
             return view ('toko.laporan.pembelian.index', compact('laporan_pembelian', 'pembayaran', 'tanggal_awal', 'tanggal_akhir', 'type_pembayaran'));
         } else if ($tanggal_awal && $tanggal_akhir) {
             if ($type_pembayaran > 0) {
-                $laporan_pembelian = PembelianModel::whereBetween('tanggal', [$tanggal_awal, $tanggal_akhir])
+                $laporan_pembelian = PembelianModel::whereBetween('pembelian.tanggal', [$tanggal_awal, $tanggal_akhir])
                                                     ->where('pembayaran', '=', $type_pembayaran)
-                                                    ->join('pembelian_barang', 'pembelian_barang.nomor', '=', 'pembelian.nomor')
-                                                    ->join('barang', 'barang.id', '=', 'pembelian_barang.id_barang')
+                                                    ->join('detail_beli', 'detail_beli.nomor', '=', 'pembelian.nomor')
+                                                    ->join('barang', 'barang.id', '=', 'detail_beli.id_barang')
                                                     ->select('barang.kode AS kode', 'barang.nama AS nama',
-                                                            'barang.harga_jual AS harga_jual', 'pembelian_barang.jumlah AS jumlah', 
-                                                            DB::raw('SUM(pembelian_barang.total_harga) AS total_harga'))
+                                                            'barang.harga_jual AS harga_jual', DB::raw('SUM(detail_beli.jumlah) AS jumlah'), 
+                                                            DB::raw('SUM(detail_beli.total_harga) AS total_harga'))
                                                     ->groupBy('barang.kode')
                                                     ->paginate(10);
             } else {
-                $laporan_pembelian = PembelianModel::whereBetween('tanggal', [$tanggal_awal, $tanggal_akhir])
-                                                    ->join('pembelian_barang', 'pembelian_barang.nomor', '=', 'pembelian.nomor')
-                                                    ->join('barang', 'barang.id', '=', 'pembelian_barang.id_barang')
+                $laporan_pembelian = PembelianModel::whereBetween('pembelian.tanggal', [$tanggal_awal, $tanggal_akhir])
+                                                    ->join('detail_beli', 'detail_beli.nomor', '=', 'pembelian.nomor')
+                                                    ->join('barang', 'barang.id', '=', 'detail_beli.id_barang')
                                                     ->select('barang.kode AS kode', 'barang.nama AS nama',
-                                                            'barang.harga_jual AS harga_jual', 'pembelian_barang.jumlah AS jumlah', 
-                                                            DB::raw('SUM(pembelian_barang.total_harga) AS total_harga'))
+                                                            'barang.harga_jual AS harga_jual', DB::raw('SUM(detail_beli.jumlah) AS jumlah'), 
+                                                            DB::raw('SUM(detail_beli.total_harga) AS total_harga'))
                                                     ->groupBy('barang.kode')
                                                     ->paginate(10);
             }

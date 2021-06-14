@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Toko\Transaksi\Penjualan;
 
 use App\Http\Controllers\Controller;
+use App\Models\Toko\Master\Akun\AkunModel;
 use App\Models\Toko\Master\Barang\BarangModel;
 use App\Models\Toko\Master\Pelanggan\PelangganModel;
 use App\Models\Toko\Transaksi\PembayaranModel;
@@ -56,12 +57,12 @@ class PenjualanController extends Controller
     }
 
     public function show($nomor) {
-        $barang_penjualan = PenjualanBarangModel::where('penjualan_barang.nomor', $nomor)
-                                    ->join('barang', 'barang.id', '=', 'penjualan_barang.id_barang')
-                                    ->select('penjualan_barang.nomor AS nomor_penjualan', 'penjualan_barang.jumlah AS jumlah_barang',
-                                            'penjualan_barang.total_harga AS total_harga', 'penjualan_barang.id_barang AS id_barang',
+        $barang_penjualan = PenjualanBarangModel::where('detail_jual.nomor', $nomor)
+                                    ->join('barang', 'barang.id', '=', 'detail_jual.id_barang')
+                                    ->select('detail_jual.nomor AS nomor_penjualan', 'detail_jual.jumlah AS jumlah_barang',
+                                            'detail_jual.total_harga AS total_harga', 'detail_jual.id_barang AS id_barang',
                                             'barang.kode AS kode_barang', 'barang.nama AS nama_barang', 
-                                            'barang.harga_beli AS harga_beli')
+                                            'barang.harga_jual AS harga_jual')
                                     ->get();
 
         $pelanggan_penjualan = PenjualanModel::where('penjualan.nomor', $nomor)
@@ -106,10 +107,54 @@ class PenjualanController extends Controller
 
         $data_penjualan = PenjualanModel::where('nomor', $nomor)->first();
 
-        if ($request->input('pembayaran') == 0) {
+        if ($request->input('pembayaran') == 2) {
+            $kas = AkunModel::where('kode', 1102)->first()->debit;
+            $pendapatan = AkunModel::where('kode', 4102)->first()->kredit;
+
+            AkunModel::where('kode', 1102)->update([
+                'debit' => $kas + $request->input('jumlah_harga')
+            ]);
+
+            AkunModel::where('kode', 4102)->update([
+                'kredit' => $pendapatan + $request->input('jumlah_harga')
+            ]);
+
+            $persediaan = AkunModel::where('kode', 1131)->first()->debit;
+            $hpp = AkunModel::where('kode', 5101)->first()->debit;
+
+            AkunModel::where('kode', 1131)->update([
+                'debit' => $persediaan - $request->input('jumlah_harga')
+            ]);
+
+            AkunModel::where('kode', 5101)->update([
+                'debit' => $hpp + $request->input('jumlah_harga')
+            ]);
+
             $jumlah_bayar = $request->input('jumlah_bayar');
             $jumlah_kembalian = $request->input('jumlah_kembalian');
         } else {
+            $piutang = AkunModel::where('kode', 1122)->first()->debit;
+            $pendapatan = AkunModel::where('kode', 4102)->first()->kredit;
+
+            AkunModel::where('kode', 1122)->update([
+                'debit' => $piutang + $request->input('jumlah_harga')
+            ]);
+
+            AkunModel::where('kode', 4102)->update([
+                'kredit' => $pendapatan + $request->input('jumlah_harga')
+            ]);
+
+            $persediaan = AkunModel::where('kode', 1131)->first()->debit;
+            $hpp = AkunModel::where('kode', 5101)->first()->debit;
+
+            AkunModel::where('kode', 1131)->update([
+                'debit' => $persediaan - $request->input('jumlah_harga')
+            ]);
+
+            AkunModel::where('kode', 5101)->update([
+                'debit' => $hpp + $request->input('jumlah_harga')
+            ]);
+
             $jumlah_bayar = 0;
             $jumlah_kembalian = 0;
         }
