@@ -11,6 +11,8 @@
         <link rel="stylesheet" href="{{ asset('assets/plugins/select2/css/select2.min.css') }}">
         <link rel="stylesheet" href="{{ asset('assets/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css') }}">
         <link rel="stylesheet" href="{{ asset('assets/plugins/toastr/toastr.min.css') }}">
+        <!-- SweetAlert2 -->
+        <link rel="stylesheet" href="{{ asset('assets/plugins/sweetalert2-theme-bootstrap-4/bootstrap-4.min.css') }}">
     @endpush
 
 @section('breadcrumb')
@@ -60,6 +62,8 @@
     <!-- jquery-validation -->
     <script src="{{ asset('assets/plugins/jquery-validation/jquery.validate.min.js') }}"></script>
     <script src="{{ asset('assets/plugins/jquery-validation/additional-methods.min.js') }}"></script>
+    <!-- SweetAlert2 -->
+    <script src="{{ asset('assets/plugins/sweetalert2/sweetalert2.min.js') }}"></script>
 
     <script>
 
@@ -106,11 +110,11 @@
 
     @if (session()->has('error'))
         <script>
-            $(document).Toasts('create', {
-                class: 'bg-warning',
+            Swal.fire({
                 title: 'Peringatan!',
-                subtitle: '',
-                body: "{{ session()->get('error') }}"
+                text: '{{ session()->get('error') }}',
+                icon: 'warning',
+                confirmButtonText: 'OK'
             })
 
         </script>

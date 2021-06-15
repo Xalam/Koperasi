@@ -21,7 +21,13 @@ class LaporanSimpananController extends Controller
         $simpanan = Simpanan::where('id_anggota', $request->id_anggota)->get();
         $anggota = Anggota::findOrFail($request->id_anggota);
 
-        return view('Simpan_Pinjam.laporan.simpanan.print', compact('simpanan', 'anggota'));
+        if (sizeof($simpanan) == 0) {
+            return redirect()->route('lap-simpanan.index')->with([
+                'error' => 'Belum terdapat simpanan'
+            ]);
+        } else {
+            return view('Simpan_Pinjam.laporan.simpanan.print', compact('simpanan', 'anggota'));
+        }
     }
 
     public function print_all()

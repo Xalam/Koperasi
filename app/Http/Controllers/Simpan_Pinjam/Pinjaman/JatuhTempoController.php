@@ -144,10 +144,6 @@ class JatuhTempoController extends Controller
             $jurnal->kredit         = round(($kodeAngsuran->pinjaman->total_pinjaman - $kodeAngsuran->pinjaman->nominal_pinjaman) / $kodeAngsuran->pinjaman->tenor, 2);
             $jurnal->save();
 
-            $akun = Akun::findOrFail($idPendapatan);
-            $akun->saldo = $akun->saldo - (round(($kodeAngsuran->pinjaman->total_pinjaman - $kodeAngsuran->pinjaman->nominal_pinjaman) / $kodeAngsuran->pinjaman->tenor, 2));
-            $akun->update();
-
             #Simpan Jurnal Piutang
             $jurnal = new JurnalUmum();
             $jurnal-> kode_jurnal   = 'JU-' . str_pad($idJurnal, 6, '0', STR_PAD_LEFT);
@@ -158,10 +154,6 @@ class JatuhTempoController extends Controller
             $jurnal->kredit         = round($kodeAngsuran->pinjaman->nominal_pinjaman / $kodeAngsuran->pinjaman->tenor, 2);
             $jurnal->save();
 
-            $akun = Akun::findOrFail($idPiutang);
-            $akun->saldo = $akun->saldo - (round($kodeAngsuran->pinjaman->nominal_pinjaman / $kodeAngsuran->pinjaman->tenor, 2));
-            $akun->update();
-
             #Simpan Jurnal Kas
             $jurnal = new JurnalUmum();
             $jurnal-> kode_jurnal   = 'JU-' . str_pad($idJurnal, 6, '0', STR_PAD_LEFT);
@@ -171,10 +163,6 @@ class JatuhTempoController extends Controller
             $jurnal->debet          = $kodeAngsuran->nominal_angsuran;
             $jurnal->kredit         = 0;
             $jurnal->save();
-
-            $akun = Akun::findOrFail($idKas);
-            $akun->saldo = $akun->saldo + $kodeAngsuran->nominal_angsuran;
-            $akun->update();
         }
 
         return redirect()->route('angsuran.index')->with([
@@ -264,10 +252,6 @@ class JatuhTempoController extends Controller
         $jurnal->kredit         = round(($kodeAngsuran->pinjaman->total_pinjaman - $kodeAngsuran->pinjaman->nominal_pinjaman) / $kodeAngsuran->pinjaman->tenor, 2);
         $jurnal->save();
 
-        $akun = Akun::findOrFail($idPendapatan);
-        $akun->saldo = $akun->saldo - (round(($kodeAngsuran->pinjaman->total_pinjaman - $kodeAngsuran->pinjaman->nominal_pinjaman) / $kodeAngsuran->pinjaman->tenor, 2));
-        $akun->update();
-
         #Simpan Jurnal Piutang
         $jurnal = new JurnalUmum();
         $jurnal-> kode_jurnal   = 'JU-' . str_pad($idJurnal, 6, '0', STR_PAD_LEFT);
@@ -278,10 +262,6 @@ class JatuhTempoController extends Controller
         $jurnal->kredit         = round($kodeAngsuran->pinjaman->nominal_pinjaman / $kodeAngsuran->pinjaman->tenor, 2);
         $jurnal->save();
 
-        $akun = Akun::findOrFail($idPiutang);
-        $akun->saldo = $akun->saldo - (round($kodeAngsuran->pinjaman->nominal_pinjaman / $kodeAngsuran->pinjaman->tenor, 2));
-        $akun->update();
-
         #Simpan Jurnal Kas
         $jurnal = new JurnalUmum();
         $jurnal-> kode_jurnal   = 'JU-' . str_pad($idJurnal, 6, '0', STR_PAD_LEFT);
@@ -291,10 +271,6 @@ class JatuhTempoController extends Controller
         $jurnal->debet          = $kodeAngsuran->nominal_angsuran;
         $jurnal->kredit         = 0;
         $jurnal->save();
-
-        $akun = Akun::findOrFail($idKas);
-        $akun->saldo = $akun->saldo + $kodeAngsuran->nominal_angsuran;
-        $akun->update();
 
         return redirect()->route('tempo.index');
     }

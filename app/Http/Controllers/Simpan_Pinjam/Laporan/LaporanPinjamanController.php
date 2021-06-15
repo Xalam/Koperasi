@@ -21,8 +21,14 @@ class LaporanPinjamanController extends Controller
     {
         $pinjaman = Pinjaman::where('id_anggota', $request->id_anggota)->get();
         $anggota = Anggota::findOrFail($request->id_anggota);
-
-        return view('Simpan_Pinjam.laporan.pinjaman.print', compact('pinjaman', 'anggota'));
+        
+        if (sizeof($pinjaman) == 0) {
+            return redirect()->route('lap-pinjaman.index')->with([
+                'error' => 'Belum terdapat pinjaman'
+            ]);
+        } else {
+            return view('Simpan_Pinjam.laporan.pinjaman.print', compact('pinjaman', 'anggota'));
+        }
     }
 
     public function print_all()

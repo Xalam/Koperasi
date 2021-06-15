@@ -137,7 +137,7 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="" class="nav-link {{ request()->is('simpan-pinjam/laporan/buku*') ? ' active' : '' }}">
+                            <a href="{{ route('buku-besar.index') }}" class="nav-link {{ request()->is('simpan-pinjam/laporan/buku-besar*') ? ' active' : '' }}">
                                 <i class="far fa-circle nav-icon"></i>
                                 <p>Buku Besar</p>
                             </a>

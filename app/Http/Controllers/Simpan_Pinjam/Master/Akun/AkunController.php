@@ -28,7 +28,7 @@ class AkunController extends Controller
                     'no' => $no++,
                     'kode_akun' => $value->kode_akun,
                     'nama_akun' => $value->nama_akun,
-                    'saldo'     => 'Rp. ' . number_format($value->saldo, 2, ',', '.'),
+                    'saldo'     => number_format($value->saldo, 2, ',', '.'),
                     'action' => '<a href="'. route('akun.edit', $value->id) . '" class="btn btn-warning btn-sm"><i class="far fa-edit"></i>&nbsp; Edit</a>
                     &nbsp; <a href="#mymodal" data-remote="' . route('akun.modal', $value->id) . '" data-toggle="modal" data-target="#mymodal" class="btn btn-danger btn-sm"><i class="far fa-trash-alt"></i>&nbsp; Hapus</a>',
                 ];

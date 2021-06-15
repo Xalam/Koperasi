@@ -17,7 +17,7 @@
 @section('content_main')
     <div class="row">
         <div class="col-md-12">
-            <div class="card card-warning">
+            <div class="card card-warning card-outline">
                 <div class="card-header">
                     <h3 class="card-title">Edit Akun</h3>
                 </div>
@@ -55,7 +55,7 @@
                                 <span class="text-danger">{{ $errors->first('saldo') }}</span>
                             @endif
                         </div>
-                        <a href="{{ route('akun.index') }}" class="btn btn-light">Kembali</a>&nbsp;
+                        <a href="{{ route('akun.index') }}" class="btn btn-default">Kembali</a>&nbsp;
                         <button type="submit" class="btn btn-primary">Ubah</button>
                     </form>
                 </div>
@@ -66,12 +66,17 @@
 
 @push('before-script')
     <script src="{{ asset('assets/plugins/jquery-mask/jquery.mask.min.js') }}"></script>
+    <script src="{{ asset('assets/plugins/jquery-maskmoney/jquery.maskMoney.js') }}"></script>
 @endpush
 
 @section('script')
     <script>
         $(function() {
-            $('#saldo').mask('#.##0,00', { reverse: true });
+            $('#saldo').maskMoney({ 
+                allowNegative: true,
+                thousands:'.',
+                decimal: ','     
+            });
 
             $('input.number').keyup(function(event) {
                 if (event.which !== 8 && event.which !== 0 && event.which < 48 || event.which > 57) {

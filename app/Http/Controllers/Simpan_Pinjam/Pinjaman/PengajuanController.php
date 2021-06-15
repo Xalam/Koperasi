@@ -318,10 +318,6 @@ class PengajuanController extends Controller
         $jurnal->kredit         = $kodePinjaman->biaya_asuransi;
         $jurnal->save();
 
-        $akun = Akun::findOrFail($idAsuransi);
-        $akun->saldo = $akun->saldo - $kodePinjaman->biaya_asuransi;
-        $akun->update();
-
         #Simpan Jurnal Pendapatan
         $jurnal = new JurnalUmum();
         $jurnal-> kode_jurnal   = 'JU-' . str_pad($idJurnal, 6, '0', STR_PAD_LEFT);
@@ -331,10 +327,6 @@ class PengajuanController extends Controller
         $jurnal->debet          = 0;
         $jurnal->kredit         = $kodePinjaman->biaya_admin;
         $jurnal->save(); 
-
-        $akun = Akun::findOrFail($idPendapatan);
-        $akun->saldo = $akun->saldo - $kodePinjaman->biaya_admin;
-        $akun->update();
 
         #Simpan Jurnal Kas
         $jurnal = new JurnalUmum();
@@ -346,10 +338,6 @@ class PengajuanController extends Controller
         $jurnal->kredit         = $kodePinjaman->nominal_pinjaman - $kodePinjaman->biaya_asuransi - $kodePinjaman->biaya_admin;
         $jurnal->save();
 
-        $akun = Akun::findOrFail($idKas);
-        $akun->saldo = $akun->saldo - ($kodePinjaman->nominal_pinjaman - $kodePinjaman->biaya_admin);
-        $akun->update();
-
         #Simpan Jurnal Piutang
         $jurnal = new JurnalUmum();
         $jurnal-> kode_jurnal   = 'JU-' . str_pad($idJurnal, 6, '0', STR_PAD_LEFT);
@@ -359,10 +347,6 @@ class PengajuanController extends Controller
         $jurnal->debet          = $kodePinjaman->nominal_pinjaman;
         $jurnal->kredit         = 0;
         $jurnal->save();
-
-        $akun = Akun::findOrFail($idPiutang);
-        $akun->saldo = $akun->saldo + $kodePinjaman->nominal_pinjaman;
-        $akun->update();
 
         return redirect()->route('pengajuan.index');
     }

@@ -33,7 +33,7 @@
                                 <th>No</th>
                                 <th>Kode Akun</th>
                                 <th class="text-center">Nama Akun</th>
-                                <th class="text-center">Saldo</th>
+                                <th class="text-center">Saldo Awal (Rp)</th>
                                 <th>Aksi</th>
                             </tr>
                         </thead>
