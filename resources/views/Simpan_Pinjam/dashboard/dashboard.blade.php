@@ -4,13 +4,17 @@
 
 @section('content_header', 'Dashboard')
 
+@section('breadcrumb')
+    <span id="ct"></span>
+@endsection
+
 @section('style')
 
 @endsection
 
 @section('content_main')
     <div class="row">
-        <div class="col-lg-3 col-6">
+        <div class="col-lg-4 col-6">
             <!-- small box -->
             <div class="small-box bg-info">
                 <div class="inner">
@@ -21,58 +25,190 @@
                 <div class="icon">
                     <i class="ion ion-person-add"></i>
                 </div>
-                <a href="{{ route('anggota.index') }}" class="small-box-footer">Info lebih <i class="fas fa-arrow-circle-right"></i></a>
+                <a href="{{ route('anggota.index') }}" class="small-box-footer">Info lebih <i
+                        class="fas fa-arrow-circle-right"></i></a>
             </div>
         </div>
         <!-- ./col -->
-        <div class="col-lg-3 col-6">
+        <div class="col-lg-4 col-6">
             <!-- small box -->
             <div class="small-box bg-success">
                 <div class="inner">
-                    <h3>53<sup style="font-size: 20px">%</sup></h3>
+                    <h3>Rp. {{ number_format($count_pinjaman, 2, ',', '.') }}</h3>
 
-                    <p>Bounce Rate</p>
+                    <p>Total Pinjaman</p>
                 </div>
                 <div class="icon">
-                    <i class="ion ion-stats-bars"></i>
+                    <i class="ion ion-cash"></i>
                 </div>
-                <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+                <a href="{{ route('pengajuan.index') }}" class="small-box-footer">Info lebih <i
+                        class="fas fa-arrow-circle-right"></i></a>
             </div>
         </div>
         <!-- ./col -->
-        <div class="col-lg-3 col-6">
+        <div class="col-lg-4 col-6">
             <!-- small box -->
-            <div class="small-box bg-warning">
+            <div class="small-box bg-maroon">
                 <div class="inner">
-                    <h3>44</h3>
+                    <h3>Rp. {{ number_format($count_simpanan, 2, ',','.') }}</h3>
 
-                    <p>User Registrations</p>
+                    <p>Total Simpanan</p>
                 </div>
                 <div class="icon">
-                    <i class="ion ion-person-add"></i>
+                    <i class="ion ion-card"></i>
                 </div>
-                <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+                <a href="{{ route('data.index') }}" class="small-box-footer">Info lebih <i class="fas fa-arrow-circle-right"></i></a>
             </div>
         </div>
         <!-- ./col -->
-        <div class="col-lg-3 col-6">
+        {{-- <div class="col-lg-3 col-6">
             <!-- small box -->
             <div class="small-box bg-danger">
                 <div class="inner">
-                    <h3>65</h3>
+                    <h3>Rp. {{ number_format($count_laba, 2, ',','.') }}</h3>
 
-                    <p>Unique Visitors</p>
+                    <p>Laba</p>
                 </div>
                 <div class="icon">
                     <i class="ion ion-pie-graph"></i>
                 </div>
-                <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+                <a href="{{ route('shu.index') }}" class="small-box-footer">Info lebih <i class="fas fa-arrow-circle-right"></i></a>
+            </div>
+        </div> --}}
+        <!-- ./col -->
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header border-0">
+                    <h3 class="card-title">
+                        Grafik Laba ({{ date('Y') }})
+                    </h3>
+                </div>
+                <div class="card-body">
+                    <canvas class="chart" id="line-chart"
+                        style="min-height: 250px; height: 300px; max-height: 300px; max-width: 100%;"></canvas>
+                </div>
             </div>
         </div>
-        <!-- ./col -->
     </div>
 @endsection
 
-@section('script')
+@push('before-script')
+    <!-- ChartJS -->
+    <script src="{{ asset('assets/plugins/chart.js/Chart.min.js') }}"></script>
+    <!-- Sparkline -->
+    <script src="{{ asset('assets/plugins/sparklines/sparkline.js') }}"></script>
+@endpush
 
+@section('script')
+    <script>
+        function display_c() {
+            let refresh = 1000; // Refresh rate in milli seconds
+            mytime = setTimeout('display_ct()', refresh);
+        }
+
+        function display_ct() {
+            let x = new Date()
+            // date part ///
+            let month = x.getMonth() + 1;
+            let day = x.getDate();
+            let year = x.getFullYear();
+            if (month < 10) {
+                month = '0' + month;
+            }
+            if (day < 10) {
+                day = '0' + day;
+            }
+            let x3 = day + '-' + month + '-' + year;
+
+            // time part //
+            let hour = x.getHours();
+            let minute = x.getMinutes();
+            let second = x.getSeconds();
+            if (hour < 10) {
+                hour = '0' + hour;
+            }
+            if (minute < 10) {
+                minute = '0' + minute;
+            }
+            if (second < 10) {
+                second = '0' + second;
+            }
+            let cx3 = x3 + ' ' + hour + ':' + minute + ':' + second
+
+            document.getElementById('ct').innerHTML = cx3;
+            display_c();
+        }
+
+        $(function() {
+            window.onload = display_ct();
+
+            var salesGraphChartCanvas = $('#line-chart').get(0).getContext('2d');
+
+            var salesGraphChartData = {
+                labels: [
+                    @for ($i = 0; $i < sizeof($monthly); $i++)
+                        '{{ date("F Y", strtotime($monthly[$i]["month"])) }}',
+                    @endfor
+                ],
+                datasets: [{
+                    label: 'Laba',
+                    fill: false,
+                    borderWidth: 2,
+                    lineTension: 0,
+                    spanGaps: true,
+                    borderColor: '#058DC7',
+                    pointRadius: 3,
+                    pointHoverRadius: 7,
+                    pointColor: '#007bff',
+                    pointBackgroundColor: '#007bff',
+                    data: [
+                        @for ($i = 0; $i < sizeof($monthly); $i++)
+                            {{ $monthly[$i]['laba'] }},
+                        @endfor
+                    ]
+                }]
+            }
+
+            var salesGraphChartOptions = {
+                maintainAspectRatio: false,
+                responsive: true,
+                legend: {
+                    display: false,
+                },
+                scales: {
+                    xAxes: [{
+                        ticks: {
+                            fontColor: '#000000',
+                        },
+                        gridLines: {
+                            display: false,
+                            color: '#f0f0ff',
+                            drawBorder: false,
+                        }
+                    }],
+                    yAxes: [{
+                        ticks: {
+                            stepSize: 100000,
+                            fontColor: '#000000',
+                        },
+                        gridLines: {
+                            display: true,
+                            color: '#f0f0ff',
+                            drawBorder: false,
+                        }
+                    }]
+                }
+            }
+
+            // This will get the first returned node in the jQuery collection.
+            var salesGraphChart = new Chart(salesGraphChartCanvas, {
+                type: 'line',
+                data: salesGraphChartData,
+                options: salesGraphChartOptions
+            })
+        });
+
+    </script>
 @endsection
