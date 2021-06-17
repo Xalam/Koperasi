@@ -52,7 +52,7 @@
             <div>
                 <address>
                     @if ($reqStart == '')
-                        Sampai Tanggal : {{ $reqEnd }}
+                        Sampai Tanggal : {{ date('d-m-Y') }}
                     @else
                         Periode : {{ $reqStart }} / {{ $reqEnd }}
                     @endif

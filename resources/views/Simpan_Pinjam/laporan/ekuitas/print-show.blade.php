@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Simpan Pinjam | Laporan Jurnal Umum</title>
+    <title>Simpan Pinjam | Laporan Perubahan Ekuitas</title>
 
     <!-- Google Font: Source Sans Pro -->
     <link rel="stylesheet"
@@ -19,7 +19,7 @@
         <!-- Main content -->
         <div class="row no-print">
             <div class="col-12">
-                <a href="{{ route('shu.index') }}" class="btn btn-default" style="margin: 10px;"><i></i> Kembali</a>
+                <a href="{{ route('ekuitas.index') }}" class="btn btn-default" style="margin: 10px;"><i></i> Kembali</a>
             </div>
         </div>
         <div class="invoice p-3 mb-3">
@@ -46,15 +46,15 @@
                     </div>
             </div>
             <div class="text-center">
-                <h3><b>Laporan Sisa Hasil Usaha</b></h3><br>
+                <h3><b>Laporan Perubahan Ekuitas</b></h3><br>
                 <h3 style="margin-top: -30px; margin-bottom: 20px;"><b>Primer Koperasi Polrestabes Semarang</b></h3>
             </div>
             <div>
                 <address>
-                    @if ($startDate == '')
-                        Sampai Tanggal : {{ date('d-m-Y') }}
+                    @if (isset($reqStart) && isset($reqEnd))
+                        Periode : {{ $reqStart }} / {{ $reqEnd }}   
                     @else
-                        Periode : {{ $startDate }} / {{ $endDate }}
+                        Sampai Tanggal : {{ date('d-m-Y') }}
                     @endif
                 </address>
             </div>
@@ -64,46 +64,40 @@
                     <table class="table table-striped">
                         <thead>
                             <tr>
-                                <th class="text-center">Kode Akun</th>
-                                <th class="text-center">Nama Akun</th>
-                                <th class="text-center">Debet (Rp)</th>
-                                <th class="text-center">Kredit (Rp)</th>
+                                <th class="text-center">Keterangan</th>
+                                @foreach ($akun as $a)
+                                    <th class="text-center">{{ $a->nama_akun }}</th>
+                                @endforeach
+                                <th class="text-center">Total (Rp)</th>
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach ($data as $shu)
                             <tr>
-                                <td class="text-center">{{ $shu->kode_akun }}</td>
-                                <td>{{ $shu->nama_akun }}</td>
-                                <td class="text-right"> 
-                                    @if($shu->debet == null)
-                                        0
-                                    @else
-                                        {{ number_format($shu->debet, 2, ',', '.') }}
-                                    @endif
-                                </td>
-                                <td class="text-right">
-                                    @if($shu->kredit == null)
-                                        0
-                                    @else
-                                        {{ number_format($shu->kredit, 2, ',', '.') }}
-                                    @endif
-                                </td>
+                                <td>Saldo Awal</td>
+                                @foreach ($akun as $a)
+                                    <td class="text-right">{{ number_format($a->saldo, 2, ',', '.') }}</td>
+                                @endforeach
+                                <td class="text-right">{{ number_format($totalSaldo, 2, ',', '.') }}</td>
                             </tr>
-                            @endforeach
+                            <tr>
+                                <td>Penambahan</td>
+                                @foreach ($penambahan as $plus)
+                                    <td class="text-right">{{ number_format($plus, 2, ',', '.') }}</td>
+                                @endforeach
+                            </tr>
+                            <tr>
+                                <td>Pengurangan</td>
+                                @foreach ($pengurangan as $min)
+                                    <td class="text-right">{{ number_format($min, 2, ',', '.') }}</td>
+                                @endforeach
+                            </tr>
+                            <tr>
+                                <td>Saldo Akhir</td>
+                                @foreach ($saldoAkhir as $sal)
+                                    <td class="text-right">{{ number_format($sal, 2, ',', '.') }}</td>
+                                @endforeach
+                            </tr>
                         </tbody>
-                        <tfoot>
-                            <tr>
-                                <td colspan="2" class="text-center"><b>Saldo</b></td>
-                                <td class="text-right"><b>{{ number_format($total_debet, 2, ',', '.') }}</b></td>
-                                <td class="text-right"><b>{{ number_format($total_kredit, 2, ',', '.') }}</b></td>
-                            </tr>
-                            <tr>
-                                <td colspan="2" class="text-center"><b>Laba</b></td>
-                                <td></td>
-                                <td class="text-right"><b>{{ number_format($laba, 2, ',', '.') }}</b></td>
-                            </tr>
-                        </tfoot>
                     </table>
                 </div>
                 <!-- /.col -->

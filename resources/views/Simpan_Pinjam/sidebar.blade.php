@@ -167,7 +167,7 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="pages/UI/icons.html" class="nav-link">
+                            <a href="{{ route('ekuitas.index') }}" class="nav-link {{ request()->is('simpan-pinjam/laporan/ekuitas*') ? ' active' : '' }}">
                                 <i class="far fa-circle nav-icon"></i>
                                 <p>Perubahan Ekuitas</p>
                             </a>

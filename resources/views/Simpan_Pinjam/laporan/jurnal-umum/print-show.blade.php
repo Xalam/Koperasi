@@ -51,7 +51,11 @@
             </div>
             <div>
                 <address>
-                    Tanggal : {{ $reqStart }} / {{ $reqEnd }}
+                    @if ($reqStart == '')
+                        Sampai Tanggal : {{ date('d-m-Y') }}
+                    @else
+                        Periode : {{ $reqStart }} / {{ $reqEnd }}
+                    @endif
                 </address>
             </div>
             <!-- Table row -->
