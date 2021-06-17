@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Simpan_Pinjam\Master\Anggota;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\Simpan_Pinjam\Master\Anggota\Anggota;
+use App\Models\Simpan_Pinjam\Pengaturan\Pengaturan;
 use App\Models\Simpan_Pinjam\Pinjaman\Pinjaman;
 use App\Models\Simpan_Pinjam\Simpanan\Saldo;
 use App\Models\Simpan_Pinjam\Simpanan\SaldoTarik;
@@ -56,7 +57,13 @@ class AnggotaController extends Controller
      */
     public function create()
     {   
-        return view('Simpan_Pinjam.master.anggota.create');
+        $simWajib    = Pengaturan::where('id', 5)->first();
+        
+        $expWajib    = explode(" ", $simWajib->angka);
+
+        $wajib        = $expWajib[0];
+
+        return view('Simpan_Pinjam.master.anggota.create', compact('wajib'));
     }
 
     /**

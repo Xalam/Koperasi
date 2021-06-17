@@ -257,10 +257,14 @@
                 let newGaji = 0;
 
                 if (gaji != null) {
-                    newGaji = gaji.split('.').join("");
+                    let cleanDot = gaji.split('.').join("");
+                    let cleanComa = cleanDot.split(',').join(".");
+                    newGaji = cleanComa;
                 }
 
-                let result = 2 / 3 * newGaji;
+                let simWajib = @php echo($wajib); @endphp;
+                
+                let result = 2 / 3 * newGaji - simWajib;
                 $('#limit').attr('value', formatMoney(result));
                 $('#limit-gaji').attr('value', (result.toFixed(2)));
             });
