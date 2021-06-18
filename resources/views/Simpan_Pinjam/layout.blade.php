@@ -27,9 +27,9 @@
 <body class="hold-transition sidebar-mini layout-fixed sidebar-mini-xs layout-footer-fixed">
     <div class="wrapper">
 
-        @include('simpan_pinjam.navbar')
+        @include('Simpan_Pinjam.navbar')
 
-        @include('simpan_pinjam.sidebar')
+        @include('Simpan_Pinjam.sidebar')
 
         <!-- Content Wrapper. Contains page content -->
         <div class="content-wrapper">

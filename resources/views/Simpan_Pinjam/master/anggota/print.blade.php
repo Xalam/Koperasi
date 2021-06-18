@@ -1,4 +1,4 @@
-@extends('simpan_pinjam.layout')
+@extends('Simpan_Pinjam.layout')
 
 @section('content_header')
     <a href="{{ route('anggota.show', $anggota->id) }}" class="btn btn-default">Kembali</a>

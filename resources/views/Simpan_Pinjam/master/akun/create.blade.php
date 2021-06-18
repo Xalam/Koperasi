@@ -1,4 +1,4 @@
-@extends('simpan_pinjam.layout')
+@extends('Simpan_Pinjam.layout')
 
 @section('title', 'Akun')
 
