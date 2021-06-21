@@ -43,7 +43,7 @@
                             @endif
                         </div>
                         <div class="form-group">
-                            <label>Saldo Akun</label>
+                            <label>Saldo Awal</label>
 
                             <div class="input-group">
                                 <div class="input-group-prepend">

@@ -207,6 +207,10 @@ Route::prefix('simpan-pinjam')->group(function () {
         Route::get('ekuitas', 'Simpan_Pinjam\Laporan\EkuitasController@index')->name('ekuitas.index');
         Route::post('ekuiats/show', 'Simpan_Pinjam\Laporan\EkuitasController@show_data')->name('ekuitas.show-data');
         Route::post('ekuitas/cetak', 'Simpan_Pinjam\Laporan\EkuitasController@print_show')->name('ekuitas.print-show');
+
+        Route::get('keuangan', 'Simpan_Pinjam\Laporan\KeuanganController@index')->name('keuangan.index');
+        Route::post('keuangan/show', 'Simpan_Pinjam\Laporan\KeuanganController@show_data')->name('keuangan.show-data');
+        Route::post('keuangan/cetak', 'Simpan_Pinjam\Laporan\KeuanganController@print_show')->name('keuangan.print-show');
     });
 
     #Pengaturan

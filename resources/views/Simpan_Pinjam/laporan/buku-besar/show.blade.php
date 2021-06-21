@@ -29,7 +29,7 @@
                 <input type="text" class="form-control form-control-sm" name="id_akun" id="id-akun" value="{{ $akun->id }}" hidden>
                 <input type="text" class="form-control form-control-sm" name="start_date" id="start-date" value="{{ (isset($reqStart)) ? $reqStart : '' }}" hidden>
                 <input type="text" class="form-control form-control-sm" name="end_date" id="end-date" value="{{ (isset($reqEnd)) ? $reqEnd : '' }}" hidden>
-                <button type="submit" id="btn-cetak" class="btn btn-sm btn-info"><i class="fas fa-print"></i>&nbsp;Cetak</button>
+                <button type="submit" id="btn-cetak" class="btn btn-info"><i class="fas fa-print"></i>&nbsp;Cetak</button>
             </form>
         </div>
     </div>

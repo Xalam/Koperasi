@@ -22,6 +22,7 @@ class CreateSimpananTable extends Migration
             $table->integer('nominal');
             $table->string('keterangan')->nullable();
             $table->integer('status')->comment('0 = waiting, 1 = sukses')->default(0);
+            $table->string('kode_jurnal')->nullable();
             $table->timestamps();
         });
     }

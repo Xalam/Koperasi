@@ -173,7 +173,7 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="pages/UI/icons.html" class="nav-link">
+                            <a href="{{ route('keuangan.index') }}" class="nav-link {{ request()->is('simpan-pinjam/laporan/keuangan*') ? ' active' : '' }}">
                                 <i class="far fa-circle nav-icon"></i>
                                 <p>Posisi Keuangan</p>
                             </a>
