@@ -128,7 +128,7 @@ class SimpananController extends Controller
     {
         $anggota = Anggota::get();
 
-        return view('simpan_pinjam.simpanan.create')->with([
+        return view('Simpan_Pinjam.simpanan.create')->with([
             'anggota' => $anggota
         ]);
     }

@@ -43,7 +43,7 @@ class EkuitasController extends Controller
             $idPokok, $idWajib, $idInkoppol, $idDinas, $idSimsus, $idCadangan, $idResiko, $idSHU
         );
 
-        $akunSaldo = array($idPokok->saldo, $idWajib->saldo, $idInkoppol->saldo, $idDinas->saldo, $idSimsus->saldo, $idCadangan->saldo, $idResiko->saldo, $idSHU->saldo, $totalSaldo);
+        $akunSaldo = array($idPokok->saldo * -1, $idWajib->saldo * -1, $idInkoppol->saldo * -1, $idDinas->saldo * -1, $idSimsus->saldo * -1, $idCadangan->saldo * -1, $idResiko->saldo * -1, $idSHU->saldo * -1, $totalSaldo * -1);
 
         if ($request->start_date == '' && $request->end_date == '') {
             // $jurnal = Akun::selectRaw('tb_akun.nama_akun, SUM(tb_jurnal.debet) as debet, SUM(tb_jurnal.kredit) as kredit')->leftJoin('tb_jurnal', function($join){
@@ -70,13 +70,13 @@ class EkuitasController extends Controller
             $shuKredit = $shu->sum('kredit');
             $shuDebet = $shu->sum('debet');
 
-            $totalPengurangan   = $pokok->kredit + $wajib->kredit + $inkoppol->kredit + $dinas->kredit +
+            $totalPenambahan   = $pokok->kredit + $wajib->kredit + $inkoppol->kredit + $dinas->kredit +
                                   $simsus->kredit + $cadangan->kredit + $resiko->kredit + $shuKredit;
-            $totalPenambahan    = $pokok->debet + $wajib->debet + $inkoppol->debet + $dinas->debet +
+            $totalPengurangan  = $pokok->debet + $wajib->debet + $inkoppol->debet + $dinas->debet +
                                   $simsus->debet + $cadangan->debet + $resiko->debet + $shuDebet;
 
-            $pengurangan = array($pokok->kredit, $wajib->kredit, $inkoppol->kredit, $dinas->kredit, $simsus->kredit, $cadangan->kredit, $resiko->kredit, $shuKredit, $totalPengurangan);
-            $penambahan  = array($pokok->debet, $wajib->debet, $inkoppol->debet, $dinas->debet, $simsus->debet, $cadangan->debet, $resiko->debet, $shuDebet, $totalPenambahan);
+            $penambahan   = array($pokok->kredit, $wajib->kredit, $inkoppol->kredit, $dinas->kredit, $simsus->kredit, $cadangan->kredit, $resiko->kredit, $shuKredit, $totalPenambahan);
+            $pengurangan  = array($pokok->debet, $wajib->debet, $inkoppol->debet, $dinas->debet, $simsus->debet, $cadangan->debet, $resiko->debet, $shuDebet, $totalPengurangan);
 
             for ($i = 0; $i < sizeof($akunSaldo); $i++) {
                 array_push($saldoAkhir, $akunSaldo[$i] - $pengurangan[$i] + $penambahan[$i]);
@@ -109,13 +109,13 @@ class EkuitasController extends Controller
             $shuKredit = $shu->sum('kredit');
             $shuDebet = $shu->sum('debet');
 
-            $totalPengurangan   = $pokok->kredit + $wajib->kredit + $inkoppol->kredit + $dinas->kredit +
+            $totalPenambahan   = $pokok->kredit + $wajib->kredit + $inkoppol->kredit + $dinas->kredit +
                                   $simsus->kredit + $cadangan->kredit + $resiko->kredit + $shuKredit;
-            $totalPenambahan    = $pokok->debet + $wajib->debet + $inkoppol->debet + $dinas->debet +
+            $totalPengurangan  = $pokok->debet + $wajib->debet + $inkoppol->debet + $dinas->debet +
                                   $simsus->debet + $cadangan->debet + $resiko->debet + $shuDebet;
 
-            $pengurangan = array($pokok->kredit, $wajib->kredit, $inkoppol->kredit, $dinas->kredit, $simsus->kredit, $cadangan->kredit, $resiko->kredit, $shuKredit, $totalPengurangan);
-            $penambahan  = array($pokok->debet, $wajib->debet, $inkoppol->debet, $dinas->debet, $simsus->debet, $cadangan->debet, $resiko->debet, $shuDebet, $totalPenambahan);
+            $penambahan   = array($pokok->kredit, $wajib->kredit, $inkoppol->kredit, $dinas->kredit, $simsus->kredit, $cadangan->kredit, $resiko->kredit, $shuKredit, $totalPenambahan);
+            $pengurangan  = array($pokok->debet, $wajib->debet, $inkoppol->debet, $dinas->debet, $simsus->debet, $cadangan->debet, $resiko->debet, $shuDebet, $totalPengurangan);
 
             for ($i = 0; $i < sizeof($akunSaldo); $i++) {
                 array_push($saldoAkhir, $akunSaldo[$i] - $pengurangan[$i] + $penambahan[$i]);
@@ -154,7 +154,7 @@ class EkuitasController extends Controller
             $idPokok, $idWajib, $idInkoppol, $idDinas, $idSimsus, $idCadangan, $idResiko, $idSHU
         );
 
-        $akunSaldo = array($idPokok->saldo, $idWajib->saldo, $idInkoppol->saldo, $idDinas->saldo, $idSimsus->saldo, $idCadangan->saldo, $idResiko->saldo, $idSHU->saldo, $totalSaldo);
+        $akunSaldo = array($idPokok->saldo * -1, $idWajib->saldo * -1, $idInkoppol->saldo * -1, $idDinas->saldo, $idSimsus->saldo * -1, $idCadangan->saldo * -1, $idResiko->saldo * -1, $idSHU->saldo * -1, $totalSaldo * -1);
 
         $reqStart   = $request->start_date;
         $reqEnd     = $request->end_date;
@@ -179,13 +179,13 @@ class EkuitasController extends Controller
             $shuKredit = $shu->sum('kredit');
             $shuDebet = $shu->sum('debet');
 
-            $totalPengurangan   = $pokok->kredit + $wajib->kredit + $inkoppol->kredit + $dinas->kredit +
+            $totalPenambahan   = $pokok->kredit + $wajib->kredit + $inkoppol->kredit + $dinas->kredit +
                                   $simsus->kredit + $cadangan->kredit + $resiko->kredit + $shuKredit;
-            $totalPenambahan    = $pokok->debet + $wajib->debet + $inkoppol->debet + $dinas->debet +
+            $totalPengurangan  = $pokok->debet + $wajib->debet + $inkoppol->debet + $dinas->debet +
                                   $simsus->debet + $cadangan->debet + $resiko->debet + $shuDebet;
 
-            $pengurangan = array($pokok->kredit, $wajib->kredit, $inkoppol->kredit, $dinas->kredit, $simsus->kredit, $cadangan->kredit, $resiko->kredit, $shuKredit, $totalPengurangan);
-            $penambahan  = array($pokok->debet, $wajib->debet, $inkoppol->debet, $dinas->debet, $simsus->debet, $cadangan->debet, $resiko->debet, $shuDebet, $totalPenambahan);
+            $penambahan   = array($pokok->kredit, $wajib->kredit, $inkoppol->kredit, $dinas->kredit, $simsus->kredit, $cadangan->kredit, $resiko->kredit, $shuKredit, $totalPenambahan);
+            $pengurangan  = array($pokok->debet, $wajib->debet, $inkoppol->debet, $dinas->debet, $simsus->debet, $cadangan->debet, $resiko->debet, $shuDebet, $totalPengurangan);
 
             for ($i = 0; $i < sizeof($akunSaldo); $i++) {
                 array_push($saldoAkhir, $akunSaldo[$i] - $pengurangan[$i] + $penambahan[$i]);
@@ -217,13 +217,13 @@ class EkuitasController extends Controller
             $shuKredit = $shu->sum('kredit');
             $shuDebet = $shu->sum('debet');
 
-            $totalPengurangan   = $pokok->kredit + $wajib->kredit + $inkoppol->kredit + $dinas->kredit +
+            $totalPenambahan   = $pokok->kredit + $wajib->kredit + $inkoppol->kredit + $dinas->kredit +
                                   $simsus->kredit + $cadangan->kredit + $resiko->kredit + $shuKredit;
-            $totalPenambahan    = $pokok->debet + $wajib->debet + $inkoppol->debet + $dinas->debet +
+            $totalPengurangan  = $pokok->debet + $wajib->debet + $inkoppol->debet + $dinas->debet +
                                   $simsus->debet + $cadangan->debet + $resiko->debet + $shuDebet;
 
-            $pengurangan = array($pokok->kredit, $wajib->kredit, $inkoppol->kredit, $dinas->kredit, $simsus->kredit, $cadangan->kredit, $resiko->kredit, $shuKredit, $totalPengurangan);
-            $penambahan  = array($pokok->debet, $wajib->debet, $inkoppol->debet, $dinas->debet, $simsus->debet, $cadangan->debet, $resiko->debet, $shuDebet, $totalPenambahan);
+            $penambahan   = array($pokok->kredit, $wajib->kredit, $inkoppol->kredit, $dinas->kredit, $simsus->kredit, $cadangan->kredit, $resiko->kredit, $shuKredit, $totalPenambahan);
+            $pengurangan  = array($pokok->debet, $wajib->debet, $inkoppol->debet, $dinas->debet, $simsus->debet, $cadangan->debet, $resiko->debet, $shuDebet, $totalPengurangan);
 
             for ($i = 0; $i < sizeof($akunSaldo); $i++) {
                 array_push($saldoAkhir, $akunSaldo[$i] - $pengurangan[$i] + $penambahan[$i]);

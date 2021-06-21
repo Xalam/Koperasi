@@ -127,8 +127,8 @@
                         <div class="form-group">
                             <label>Status Pernikahan</label>
                             <select class="form-control select2" style="width: 100%;" name="status">
-                                <option selected="selected" value="belum_kawin">Belum Menikah</option>
-                                <option value="kawin">Menikah</option>
+                                <option {{ $anggota->status == 'belum_kawin' ? 'selected="selected"' : '' }} value="belum_kawin">Belum Menikah</option>
+                                <option {{ $anggota->status == 'kawin' ? 'selected="selected"' : '' }} value="kawin">Menikah</option>
                             </select>
                         </div>
                         <div class="form-group">
@@ -183,7 +183,7 @@
                                         <span class="input-group-text">Rp</span>
                                     </div>
                                     <input type="text" class="form-control" placeholder="Gaji" id="gaji" name="gaji"
-                                        value="{{ $anggota->gaji }}">
+                                        value="{{ number_format($anggota->gaji, 2, ',', '.') }}">
                                 </div>
                                 @if ($errors->has('gaji'))
                                     <span class="text-danger">{{ $errors->first('gaji') }}</span>
@@ -192,7 +192,7 @@
                             <div class="form-group col-md-6">
                                 <label>Limit</label>
                                 <input type="text" class="form-control" placeholder="Limit" id="limit" disabled
-                                    value="{{ old('limit_gaji') ? old('limit_gaji') : $anggota->limit_gaji }}">
+                                    value="{{ old('limit_gaji') ? old('limit_gaji') : 'Rp ' . number_format($anggota->limit_gaji, 2, ',', '.') }}">
                                 <input type="hidden" name="limit_gaji" id="limit-gaji"
                                     value="{{ $anggota->limit_gaji }}">
                             </div>
@@ -263,10 +263,14 @@
                 let newGaji = 0;
 
                 if (gaji != null) {
-                    newGaji = gaji.split('.').join("");
+                    let cleanDot = gaji.split('.').join("");
+                    let cleanComa = cleanDot.split(',').join(".");
+                    newGaji = cleanComa;
                 }
 
-                let result = 2 / 3 * newGaji;
+                let simWajib = @php echo($wajib); @endphp;
+                
+                let result = 2 / 3 * newGaji - simWajib;
                 $('#limit').attr('value', formatMoney(result));
                 $('#limit-gaji').attr('value', (result.toFixed(2)));
             });

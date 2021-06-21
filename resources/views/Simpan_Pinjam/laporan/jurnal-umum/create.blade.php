@@ -24,58 +24,50 @@
                 <div class="card-header">
                     <h3 class="card-title">Tambah Jurnal Umum</h3>
                 </div>
-                <div class="card-body col-md-8 mx-auto">
-                    <form id="form-jurnal" action="{{ route('jurnal.store') }}" role="form" method="post">
+                <div class="card-body">
+                    <form action="{{ route('jurnal.store') }}" role="form" method="POST">
                         @csrf
-                        <input type="text" class="form-control" name="kode_jurnal" placeholder="Masukkan kode" hidden>
-                        <div class="form-group">
-                            <label>Tanggal</label>
-                            <div class="input-group date" id="tanggal" data-target-input="nearest">
-                                <input type="text" class="form-control datetimepicker-input" data-target="#tanggal"
-                                    name="tanggal" placeholder="Tanggal"/>
-                                <div class="input-group-append" data-target="#tanggal" data-toggle="datetimepicker">
-                                    <div class="input-group-text"><i class="fa fa-calendar"></i></div>
-                                </div>
-                            </div>
+                        <p style="margin-bottom: 5px;" class="text-right">Klik "Tambah Jurnal" untuk menambahkan jurnal</p>
+                        <div class="form-group text-right">
+                            <button type="button" name="add" id="add" class="btn btn-sm btn-success">
+                                <i class="fas fa-plus-circle"></i>&nbsp; Tambah Jurnal
+                            </button>
                         </div>
-                        <div class="form-group">
-                            <label for="keterangan">Keterangan</label>
-                            <input type="text" class="form-control" name="keterangan" id="keterangan" placeholder="Keterangan">
+                        <div class="table-responsive">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th width="25%">Keterangan</th>
+                                        <th width="25%">Nama Akun</th>
+                                        <th width="20%">Debet</th>
+                                        <th width="20%">Kredit</th>
+                                        <th width="10%">&nbsp;</th>
+                                    </tr>
+                                </thead>
+
+                                <tbody id="lists">
+
+                                </tbody>
+                                <tfoot>
+                                    <tr>
+                                        <th colspan="3">Balance</th>
+                                        {{-- <td>
+                                            <input type="number" id="cal-debet" class="form-control" disabled>
+                                        </td>
+                                        <td>
+                                            <input type="number" id="cal-kredit" class="form-control" disabled>
+                                        </td> --}}
+                                        <td>
+                                            <input type="number" id="cal-balance" class="form-control" disabled>
+                                        </td>
+                                    </tr>
+                                </tfoot>
+                            </table>
                         </div>
-                        <div class="row">
-                            <div class="form-group col-md-6">
-                                <label>Nama Akun</label>
-                                <select class="form-control select2" style="width: 100%;" name="id_akun">
-                                    <option selected="selected" value="">Pilih akun</option>
-                                    @foreach ($akun as $a)
-                                        <option value="{{ $a->id }}">{{ $a->kode_akun . ' - ' . $a->nama_akun }}
-                                        </option>
-                                    @endforeach
-                                </select>
-                            </div>
-                            <div class="form-group col-md-3">
-                                <label>Debet</label>
-                                <div class="input-group">
-                                    <div class="input-group-prepend">
-                                        <span class="input-group-text">Rp</span>
-                                    </div>
-                                    <input type="text" class="form-control" placeholder="Debet" id="debet"
-                                        name="debet">
-                                </div>
-                            </div>
-                            <div class="form-group col-md-3">
-                                <label>Kredit</label>
-                                <div class="input-group">
-                                    <div class="input-group-prepend">
-                                        <span class="input-group-text">Rp</span>
-                                    </div>
-                                    <input type="text" class="form-control" placeholder="Kredit" id="kredit"
-                                        name="kredit">
-                                </div>
-                            </div>
+                        <div class="text-right">
+                            <a href="{{ route('jurnal.index') }}" class="btn btn-default">Kembali</a>
+                            <button type="submit" class="btn btn-primary" id="btn-submit">Simpan</button>
                         </div>
-                        <a href="{{ route('jurnal.index') }}" class="btn btn-light">Kembali</a>&nbsp;
-                        <button type="submit" class="btn btn-primary">Simpan</button>
                     </form>
                 </div>
             </div>
@@ -92,67 +84,109 @@
     <!-- jquery-validation -->
     <script src="{{ asset('assets/plugins/jquery-validation/jquery.validate.min.js') }}"></script>
     <script src="{{ asset('assets/plugins/jquery-validation/additional-methods.min.js') }}"></script>
+
+    <script src="{{ asset('assets/plugins/jquery-maskmoney/jquery.maskMoney.js') }}"></script>
 @endpush
 
 @section('script')
     <script>
         $(function() {
-            $('#debet').mask('#.##0', {
-                reverse: true
-            });
-
-            $('#kredit').mask('#.##0', {
-                reverse: true
-            });
-
             $('#tanggal').datetimepicker({
                 format: 'YYYY-MM-DD'
             });
 
-            $('.select2').select2();
+            function formatMoney(n) {
+                return new Intl.NumberFormat("id-ID", { style: "currency", currency: "IDR" }).format(n);
+            }
 
-            $.validator.setDefaults({
-                submitHandler: function () {
-                    form.submit();
-                }
+            let array = [];
+            let count = 0;
+            $('#add').click(function(){
+                count += 1;
+                array.push(count);
+                $('#lists').append(
+                    '<tr class="list">' +
+                        '<input type="hidden" name="rows[]" value="' + count + '">'+
+                        '<td><input type="text" name="keterangan[]" id="keterangan' + count + '" required class="form-control"></td>' +
+                        '<td width="200">' +
+                            '<select name="id_akun[]" id="id-akun' + count + '" required class="form-control">' +
+                                '<option value="">Pilih akun</option>' +
+                                @foreach($akun as $a)
+                                    '<option value="{{ $a->id }}">{{ $a->kode_akun . ' - ' . $a->nama_akun }}</option>' +
+                                @endforeach
+                            '</select></td>' +
+                        '<td>'+
+                            '<div class="input-group mb-3">'+
+                                '<div class="input-group-prepend">'+
+                                    '<span class="input-group-text">Rp</span>'+
+                                '</div>'+
+                                '<input type="text" name="debet[]" id="debet' + count + '" class="form-control deb">'+
+                            '</div>'+
+                        '</td>' +
+                        '<td>'+
+                            '<div class="input-group mb-3">'+
+                                '<div class="input-group-prepend">'+
+                                    '<span class="input-group-text">Rp</span>'+
+                                '</div>'+
+                                '<input type="text" name="kredit[]" id="kredit' + count + '" class="form-control kre">'+
+                            '</div>'+
+                        '</td>' +
+                        '<td><button type="button" id="remove' + count + '" class="btn btn-danger btn-flat btn-sm" data-remove="' + count + '"><i class="fa fa-times"></i></button></td>' +
+                    '</tr>'
+                );
+                $('#remove' + count).on('click', function (e) {
+					if (e.type == 'click') {
+						array.splice(array.indexOf($(this).data('remove')), 1);
+						$(this).parents(".list").fadeOut();
+						$(this).parents(".list").remove();
+					}
+				});
+                
+                $('#id-akun' + count).select2();
+
+                $('#debet' + count).maskMoney({ 
+                    allowNegative: true,
+                    thousands:'.',
+                    decimal: ','     
+                });
+
+                $('#kredit' + count).maskMoney({ 
+                    allowNegative: true,
+                    thousands:'.',
+                    decimal: ','     
+                });
             });
 
-            $('#form-jurnal').validate({
-                rules: {
-                    tanggal: {
-                        required: true
-                    },
-                    keterangan: {
-                        required: true
-                    },
-                    debet: {
-                        required: true
-                    },
-                    kredit: {
-                        required: true
-                    },
-                    id_akun: {
-                        required: true
-                    },
-                },
-                messages: {
-                    tanggal: "Tanggal wajib diisi",
-                    keterangan: "Keterangan wajib diisi",
-                    debet: "Debet wajib diisi",
-                    kredit: "Kredit wajib diisi",
-                    id_akun: "Nama Akun wajib diisi",
-                },
-                errorElement: 'span',
-                errorPlacement: function(error, element) {
-                    error.addClass('invalid-feedback');
-                    element.closest('.form-group').append(error);
-                },
-                highlight: function(element, errorClass, validClass) {
-                    $(element).addClass('is-invalid');
-                },
-                unhighlight: function(element, errorClass, validClass) {
-                    $(element).removeClass('is-invalid');
+            document.getElementById('btn-submit').disabled = true;
+            
+            $('#lists').on('keyup', function() {
+                let kredit = 0;
+                let debet = 0;
+
+                $('.kre').each(function(){
+                    let cleanDot = $(this).val().split('.').join("");
+                    let cleanComa = cleanDot.split(',').join(".");
+
+                    kredit += Number(cleanComa);
+                });
+
+                $('.deb').each(function(){
+                    let cleanDot = $(this).val().split('.').join("");
+                    let cleanComa = cleanDot.split(',').join(".");
+
+                    debet += Number(cleanComa);
+                });
+
+                // $('#cal-kredit').val(kredit);
+                // $('#cal-debet').val(debet);
+                $('#cal-balance').val(debet-kredit);
+
+                if (debet - kredit == 0) {
+                    document.getElementById('btn-submit').disabled = false;
+                } else {
+                    document.getElementById('btn-submit').disabled = true;
                 }
+                
             });
         })
 

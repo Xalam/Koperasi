@@ -75,9 +75,9 @@
                             <tr>
                                 <td>Saldo Awal</td>
                                 @foreach ($akun as $a)
-                                    <td class="text-right">{{ number_format($a->saldo, 2, ',', '.') }}</td>
+                                    <td class="text-right">{{ number_format($a->saldo * -1, 2, ',', '.') }}</td>
                                 @endforeach
-                                <td class="text-right">{{ number_format($totalSaldo, 2, ',', '.') }}</td>
+                                <td class="text-right">{{ number_format($totalSaldo * -1, 2, ',', '.') }}</td>
                             </tr>
                             <tr>
                                 <td>Penambahan</td>

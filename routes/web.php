@@ -181,6 +181,7 @@ Route::prefix('simpan-pinjam')->group(function () {
     Route::prefix('laporan')->group(function () {
         Route::resource('jurnal', 'Simpan_Pinjam\Laporan\JurnalUmumController');
         Route::post('jurnal/cetak', 'Simpan_Pinjam\Laporan\JurnalUmumController@print_show')->name('jurnal.print-show');
+        Route::get('jurnal/{id}', 'Simpan_Pinjam\Laporan\JurnalUmumController@modal')->name('jurnal.modal');
 
         Route::get('anggota', 'Simpan_Pinjam\Laporan\DataAnggotaController@index')->name('data-anggota.index');
         Route::get('anggota/cetak/show', 'Simpan_Pinjam\Laporan\DataAnggotaController@print_show')->name('data-anggota.print-show');

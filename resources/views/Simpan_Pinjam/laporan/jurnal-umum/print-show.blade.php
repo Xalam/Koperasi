@@ -46,7 +46,7 @@
                     </div>
             </div>
             <div class="text-center">
-                <h3><b>Laporan Jurnal Umum</b></h3><br>
+                <h3><b>Jurnal Umum</b></h3><br>
                 <h3 style="margin-top: -30px; margin-bottom: 20px;"><b>Primer Koperasi Polrestabes Semarang</b></h3>
             </div>
             <div>

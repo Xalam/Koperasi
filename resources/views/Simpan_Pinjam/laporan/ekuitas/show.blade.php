@@ -49,7 +49,7 @@
                     </div>
                 </div>
                 <div class="card-body">
-                    <table id="table-buku" class="table table-bordered table-hover">
+                    <table id="table-ekuitas" class="table table-bordered table-hover">
                         <thead>
                             <tr>
                                 <th class="text-center">Keterangan</th>
@@ -63,9 +63,9 @@
                             <tr>
                                 <td>Saldo Awal</td>
                                 @foreach ($akun as $a)
-                                    <td class="text-right">{{ number_format($a->saldo, 2, ',', '.') }}</td>
+                                    <td class="text-right">{{ number_format($a->saldo * -1, 2, ',', '.') }}</td>
                                 @endforeach
-                                <td class="text-right">{{ number_format($totalSaldo, 2, ',', '.') }}</td>
+                                <td class="text-right">{{ number_format($totalSaldo * -1, 2, ',', '.') }}</td>
                             </tr>
                             <tr>
                                 <td>Penambahan</td>
@@ -107,7 +107,13 @@
     <script>
 
         $(function() {
-            
+            $('#table-ekuitas').DataTable({
+                "paging": false,
+                "ordering": false,
+                "scrollX": true,
+                "searching": false,
+                "lengthChange": false
+            });
         });
 
     </script>

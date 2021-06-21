@@ -93,77 +93,74 @@ class JatuhTempoController extends Controller
         $angsuran->keterangan       = $request->keterangan;
         $angsuran->save();
 
-        $angsuranStatus = Angsuran::where('id', 'DESC')->first();
-        if ($angsuranStatus->status == 1) {
-            //Input Jurnal Umum
-            #Check Akun
-            $checkAkunKas        = Akun::where('kode_akun', 1101)->first();
-            $checkAkunPiutang    = Akun::where('kode_akun', 1121)->first();
-            $checkAkunPendapatan = Akun::where('kode_akun', 4101)->first();
-            
-            if ($checkAkunKas == null) {
-                $idKas = 0;
-            } else {
-                $idKas = $checkAkunKas->id;
-            }
-
-            if ($checkAkunPiutang == null) {
-                $idPiutang = 0;
-            } else {
-                $idPiutang = $checkAkunPiutang->id;
-            }
-
-            if ($checkAkunPendapatan == null) {
-                $idPendapatan = 0;
-            } else {
-                $idPendapatan = $checkAkunPendapatan->id;
-            }
-
-            #Check Jurnal
-            $checkJurnal = JurnalUmum::select('*')->orderBy('id', 'DESC')->first();
-            if ($checkJurnal == null) {
-                $idJurnal = 1;
-            } else {
-                $substrKode = substr($checkJurnal->kode_jurnal, 3);
-                $idJurnal   = $substrKode + 1;
-            }
-
-            $angsuran->status = $request->status;
-            $angsuran->kode_jurnal = 'JU-' . str_pad($idJurnal, 6, '0', STR_PAD_LEFT);
-            $angsuran->update();
-
-            $kodeAngsuran = Angsuran::where('id', $id)->first();
-
-            #Simpan Jurnal Pendapatan
-            $jurnal = new JurnalUmum();
-            $jurnal-> kode_jurnal   = 'JU-' . str_pad($idJurnal, 6, '0', STR_PAD_LEFT);
-            $jurnal->id_akun        = $idPendapatan;
-            $jurnal->tanggal        = date('Y-m-d');
-            $jurnal->keterangan     = 'Angsuran ( ' . $kodeAngsuran->kode_angsuran . ' )';
-            $jurnal->debet          = 0;
-            $jurnal->kredit         = round(($kodeAngsuran->pinjaman->total_pinjaman - $kodeAngsuran->pinjaman->nominal_pinjaman) / $kodeAngsuran->pinjaman->tenor, 2);
-            $jurnal->save();
-
-            #Simpan Jurnal Piutang
-            $jurnal = new JurnalUmum();
-            $jurnal-> kode_jurnal   = 'JU-' . str_pad($idJurnal, 6, '0', STR_PAD_LEFT);
-            $jurnal->id_akun        = $idPiutang;
-            $jurnal->tanggal        = date('Y-m-d');
-            $jurnal->keterangan     = 'Angsuran ( ' . $kodeAngsuran->kode_angsuran . ' )';
-            $jurnal->debet          = 0;
-            $jurnal->kredit         = round($kodeAngsuran->pinjaman->nominal_pinjaman / $kodeAngsuran->pinjaman->tenor, 2);
-            $jurnal->save();
-
-            #Simpan Jurnal Kas
-            $jurnal = new JurnalUmum();
-            $jurnal-> kode_jurnal   = 'JU-' . str_pad($idJurnal, 6, '0', STR_PAD_LEFT);
-            $jurnal->id_akun        = $idKas;
-            $jurnal->tanggal        = date('Y-m-d');
-            $jurnal->keterangan     = 'Angsuran ( ' . $kodeAngsuran->kode_angsuran . ' )';
-            $jurnal->debet          = $kodeAngsuran->nominal_angsuran;
-            $jurnal->kredit         = 0;
-            $jurnal->save();
+        //Input Jurnal Umum
+        #Check Akun
+        $checkAkunKas        = Akun::where('kode_akun', 1101)->first();
+        $checkAkunPiutang    = Akun::where('kode_akun', 1121)->first();
+        $checkAkunPendapatan = Akun::where('kode_akun', 4101)->first();
+        
+        if ($checkAkunKas == null) {
+            $idKas = 0;
+        } else {
+            $idKas = $checkAkunKas->id;
         }
+
+        if ($checkAkunPiutang == null) {
+            $idPiutang = 0;
+        } else {
+            $idPiutang = $checkAkunPiutang->id;
+        }
+
+        if ($checkAkunPendapatan == null) {
+            $idPendapatan = 0;
+        } else {
+            $idPendapatan = $checkAkunPendapatan->id;
+        }
+
+        #Check Jurnal
+        $checkJurnal = JurnalUmum::select('*')->orderBy('id', 'DESC')->first();
+        if ($checkJurnal == null) {
+            $idJurnal = 1;
+        } else {
+            $substrKode = substr($checkJurnal->kode_jurnal, 3);
+            $idJurnal   = $substrKode + 1;
+        }
+
+        $angsuran->status = $request->status;
+        $angsuran->kode_jurnal = 'JU-' . str_pad($idJurnal, 6, '0', STR_PAD_LEFT);
+        $angsuran->update();
+
+        $kodeAngsuran = Angsuran::orderBy('id', 'DESC')->first();
+
+        #Simpan Jurnal Pendapatan
+        $jurnal = new JurnalUmum();
+        $jurnal-> kode_jurnal   = 'JU-' . str_pad($idJurnal, 6, '0', STR_PAD_LEFT);
+        $jurnal->id_akun        = $idPendapatan;
+        $jurnal->tanggal        = date('Y-m-d');
+        $jurnal->keterangan     = 'Angsuran ( ' . $kodeAngsuran->kode_angsuran . ' )';
+        $jurnal->debet          = 0;
+        $jurnal->kredit         = round(($kodeAngsuran->pinjaman->total_pinjaman - $kodeAngsuran->pinjaman->nominal_pinjaman) / $kodeAngsuran->pinjaman->tenor, 2);
+        $jurnal->save();
+
+        #Simpan Jurnal Piutang
+        $jurnal = new JurnalUmum();
+        $jurnal-> kode_jurnal   = 'JU-' . str_pad($idJurnal, 6, '0', STR_PAD_LEFT);
+        $jurnal->id_akun        = $idPiutang;
+        $jurnal->tanggal        = date('Y-m-d');
+        $jurnal->keterangan     = 'Angsuran ( ' . $kodeAngsuran->kode_angsuran . ' )';
+        $jurnal->debet          = 0;
+        $jurnal->kredit         = round($kodeAngsuran->pinjaman->nominal_pinjaman / $kodeAngsuran->pinjaman->tenor, 2);
+        $jurnal->save();
+
+        #Simpan Jurnal Kas
+        $jurnal = new JurnalUmum();
+        $jurnal-> kode_jurnal   = 'JU-' . str_pad($idJurnal, 6, '0', STR_PAD_LEFT);
+        $jurnal->id_akun        = $idKas;
+        $jurnal->tanggal        = date('Y-m-d');
+        $jurnal->keterangan     = 'Angsuran ( ' . $kodeAngsuran->kode_angsuran . ' )';
+        $jurnal->debet          = $kodeAngsuran->nominal_angsuran;
+        $jurnal->kredit         = 0;
+        $jurnal->save();
 
         return redirect()->route('angsuran.index')->with([
             'success' => 'Berhasil melunasi angsuran'

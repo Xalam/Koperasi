@@ -19,8 +19,8 @@ class CreateJurnalTable extends Migration
             $table->integer('id_akun');
             $table->date('tanggal');
             $table->string('keterangan');
-            $table->double('debet');
-            $table->double('kredit');
+            $table->double('debet')->default(0);
+            $table->double('kredit')->default(0);
             $table->timestamps();
         });
     }

@@ -30,7 +30,9 @@ class JurnalUmumController extends Controller
                     'kode_akun'  => $value->akun->kode_akun,
                     'nama_akun'  => $value->akun->nama_akun,
                     'debet'      => number_format($value->debet, 2, ',', '.'),
-                    'kredit'     => number_format($value->kredit, 2, ',', '.')
+                    'kredit'     => number_format($value->kredit, 2, ',', '.'),
+                    'action'     => '<a href="'. route('jurnal.edit', $value->id) . '" class="btn btn-warning btn-sm"><i class="far fa-edit"></i>&nbsp; Edit</a>
+                                    &nbsp; <a href="#mymodalJurnal" data-remote="' . route('jurnal.modal', $value->id) . '" data-toggle="modal" data-target="#mymodalJurnal" class="btn btn-danger btn-sm"><i class="far fa-trash-alt"></i>&nbsp; Hapus</a>'
                 ];
             }
             return response()->json(compact('data'));
@@ -59,8 +61,6 @@ class JurnalUmumController extends Controller
      */
     public function store(Request $request)
     {
-        $data = $request->all();
-
         #Kode Jurnal
         $check = JurnalUmum::select('*')->orderBy('id', 'DESC')->first();
         if ($check == null) {
@@ -68,12 +68,23 @@ class JurnalUmumController extends Controller
         } else {
             $id = $check->id + 1;
         }
+        
+        if (count($request->rows) > 0) {
+            for ($i = 0; $i < count($request->rows); $i++) {
 
-        $data['kode_jurnal'] = 'JU-' . str_pad($id, 6, '0', STR_PAD_LEFT);
-        $data['debet']       = str_replace('.', '', $request->debet);
-        $data['kredit']      = str_replace('.', '', $request->kredit);
+                $cleanDebet[$i]  = str_replace('.', '', $request->debet[$i]);
+                $cleanKredit[$i] = str_replace('.', '', $request->kredit[$i]);
 
-        JurnalUmum::create($data);
+                JurnalUmum::create([
+                    'kode_jurnal' => 'JU-' . str_pad($id, 6, '0', STR_PAD_LEFT),
+                    'id_akun'     => $request->id_akun[$i],
+                    'tanggal'     => date('Y-m-d'),
+                    'keterangan'  => $request->keterangan[$i],
+                    'debet'       => str_replace(',', '.', $cleanDebet[$i]),
+                    'kredit'      => str_replace(',', '.', $cleanKredit[$i])
+                ]);
+            }
+        }
 
         return redirect()->route('jurnal.index')->with([
             'success' => 'Berhasil menambahkan jurnal'
@@ -99,7 +110,10 @@ class JurnalUmumController extends Controller
      */
     public function edit($id)
     {
-        //
+        $jurnal = JurnalUmum::findOrFail($id);
+        $akun = Akun::get();
+
+        return view('Simpan_Pinjam.laporan.jurnal-umum.edit', compact('akun', 'jurnal'));
     }
 
     /**
@@ -111,7 +125,20 @@ class JurnalUmumController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $jurnal = JurnalUmum::findOrFail($id);
+
+        $data = $request->all();
+
+        $cleanKredit = str_replace('.', '', $request->kredit);
+        $cleanDebet = str_replace('.', '', $request->debet);
+        $data['kredit'] = str_replace(',', '.', $cleanKredit);
+        $data['debet'] = str_replace(',', '.', $cleanDebet);
+
+        $jurnal->update($data);
+
+        return redirect()->route('jurnal.index')->with([
+            'success' => 'Berhasil mengubah data jurnal'
+        ]);
     }
 
     /**
@@ -122,7 +149,13 @@ class JurnalUmumController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $jurnal = JurnalUmum::findOrFail($id);
+
+        $jurnal->delete();
+
+        return redirect()->route('jurnal.index')->with([
+            'success' => 'Jurnal berhasil dihapus'
+        ]);
     }
 
     public function print_show(Request $request)
@@ -141,5 +174,14 @@ class JurnalUmumController extends Controller
             $jurnal = JurnalUmum::orderBy('id', 'DESC')->get();
             return view('Simpan_Pinjam.laporan.jurnal-umum.print-show', compact('jurnal', 'reqStart', 'reqEnd'));
         }
+    }
+
+    public function modal($id)
+    {
+        $jurnal = JurnalUmum::findOrFail($id);
+
+        return view('Simpan_Pinjam.laporan.jurnal-umum.modal')->with([
+            'jurnal' => $jurnal
+        ]);
     }
 }

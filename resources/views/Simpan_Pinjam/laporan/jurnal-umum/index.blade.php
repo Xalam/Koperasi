@@ -72,6 +72,7 @@
                                 <th class="text-center">Nama Akun</th>
                                 <th class="text-center">Debet (Rp)</th>
                                 <th class="text-center">Kredit (Rp)</th>
+                                <th>Aksi</th>
                             </tr>
                         </thead>
                     </table>
@@ -126,6 +127,7 @@
                     [10, 25, 50, -1],
                     [10, 25, 50, "All"]
                 ],
+                "scrollX": true,
                 "deferRender": true,
                 "ajax": {
                     url: "{{ route('jurnal.index') }}"
@@ -155,6 +157,10 @@
                         "targets": 7,
                         "className": "text-right"
                     },
+                    {
+                        "targets": 8,
+                        "className": "text-center"
+                    },
                 ],
                 "columns": [{
                         data: 'no'
@@ -179,6 +185,9 @@
                     },
                     {
                         data: 'kredit'
+                    },
+                    {
+                        data: 'action'
                     }
                 ]
             });
@@ -228,4 +237,32 @@
 
         </script>
     @endif
+
+    <script>
+        jQuery(document).ready(function($) {
+            $('#mymodalJurnal').on('show.bs.modal', function(e) {
+                var button = $(e.relatedTarget);
+                var modal = $(this);
+
+                modal.find('.modal-content').load(button.data("remote"));
+            });
+        });
+
+    </script>
+
+    <div class="modal" id="mymodalJurnal" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Konfirmasi</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <i class="fa fa-spinner fa-spin"></i>
+                </div>
+            </div>
+        </div>
+    </div>
 @endsection

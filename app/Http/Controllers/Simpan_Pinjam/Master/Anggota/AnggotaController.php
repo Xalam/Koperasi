@@ -149,10 +149,14 @@ class AnggotaController extends Controller
     public function edit($id)
     {
         $anggota = Anggota::findOrFail($id);
+
+        $simWajib    = Pengaturan::where('id', 5)->first();
         
-        return view('Simpan_Pinjam.master.anggota.edit')->with([
-            'anggota' => $anggota
-        ]);
+        $expWajib    = explode(" ", $simWajib->angka);
+
+        $wajib        = $expWajib[0];
+        
+        return view('Simpan_Pinjam.master.anggota.edit', compact('anggota', 'wajib'));
     }
 
     /**
