@@ -137,6 +137,10 @@ Route::prefix('simpan-pinjam')->group(function () {
 
         Route::resource('akun', 'Simpan_Pinjam\Master\Akun\AkunController');
         Route::get('akun/modal/{id}', 'Simpan_Pinjam\Master\Akun\AkunController@modal')->name('akun.modal');
+
+        Route::resource('admin', 'Simpan_Pinjam\Master\User\UserController');
+        Route::get('admin/modal/{id}', 'Simpan_Pinjam\Master\User\UserController@modal')->name('admin.modal');
+        
     });
 
     #Simpanan

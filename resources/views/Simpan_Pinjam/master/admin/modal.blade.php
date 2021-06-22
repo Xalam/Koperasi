@@ -5,9 +5,9 @@
     </button>
 </div>
 <div class="modal-body">
-    <p>Apakah Anda ingin menghapus akun <br> <strong>"{{ $akun->nama_akun }}"</strong> ?</p>
+    <p>Apakah Anda ingin menghapus <strong>"{{ $users->name }}"</strong> ?</p>
 </div>
-<form action="{{ route('akun.destroy', $akun->id) }}" method="POST">
+<form action="{{ route('admin.destroy', $users->id) }}" method="POST">
     @csrf
     @method('delete')
     <div class="modal-footer">
