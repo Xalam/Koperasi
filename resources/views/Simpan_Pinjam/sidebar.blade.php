@@ -14,7 +14,7 @@
                 <img src="{{ asset('assets/dist/img/user2-160x160.jpg') }}" class="img-circle elevation-2" alt="User Image">
             </div>
             <div class="info">
-                <a href="#" class="d-block">Admin</a>
+                <a href="#" class="d-block">{{ auth()->user()->name }}</a>
             </div>
         </div>
 
@@ -29,6 +29,7 @@
                     </a>
                 </li>
                 <li class="nav-item {{ request()->is('simpan-pinjam/master*') ? ' menu-open' : '' }}">
+                    @if (auth()->user()->role != 'bendahara_pusat')
                     <a href="#" class="nav-link {{ request()->is('simpan-pinjam/master*') ? ' active' : '' }}">
                         <i class="nav-icon fas fa-book"></i>
                         <p>
@@ -36,27 +37,35 @@
                             <i class="fas fa-angle-left right"></i>
                         </p>
                     </a>
+                    @endif
                     <ul class="nav nav-treeview">
+                        @if (auth()->user()->role == 'bendahara' || auth()->user()->role == 'ketua_koperasi' || auth()->user()->role == 'admin')
                         <li class="nav-item">
                             <a href="{{ route('akun.index') }}" class="nav-link {{ request()->is('simpan-pinjam/master/akun*') ? ' active' : '' }}">
                                 <i class="far fa-circle nav-icon"></i>
                                 <p>Akun</p>
                             </a>
                         </li>
+                        @endif
+                        @if (auth()->user()->role == 'simpan_pinjam' || auth()->user()->role == 'ketua_koperasi' || auth()->user()->role == 'admin')
                         <li class="nav-item">
                             <a href="{{ route('anggota.index') }}" class="nav-link {{ request()->is('simpan-pinjam/master/anggota*') ? ' active' : '' }}">
                                 <i class="far fa-circle nav-icon"></i>
                                 <p>Anggota</p>
                             </a>
                         </li>
+                        @endif
+                        @if (auth()->user()->role == 'admin')
                         <li class="nav-item">
                             <a href="{{ route('admin.index') }}" class="nav-link {{ request()->is('simpan-pinjam/master/admin*') ? ' active' : '' }}">
                                 <i class="far fa-circle nav-icon"></i>
                                 <p>Administrator</p>
                             </a>
                         </li>
+                        @endif
                     </ul>
                 </li>
+                @if (auth()->user()->role == 'simpan_pinjam' || auth()->user()->role == 'ketua_koperasi' || auth()->user()->role == 'admin')
                 <li class="nav-item {{ request()->is('simpan-pinjam/simpanan*') ? ' menu-open' : '' }}">
                     <a href="#" class="nav-link {{ request()->is('simpan-pinjam/simpanan*') ? ' active' : '' }}">
                         <i class="nav-icon fas fa-wallet"></i>
@@ -92,6 +101,8 @@
                         </li>
                     </ul>
                 </li>
+                @endif
+                @if (auth()->user()->role == 'simpan_pinjam' || auth()->user()->role == 'ketua_koperasi' || auth()->user()->role == 'admin')
                 <li class="nav-item {{ request()->is('simpan-pinjam/pinjaman*') ? ' menu-open' : '' }}">
                     <a href="#" class="nav-link {{ request()->is('simpan-pinjam/pinjaman*') ? ' active' : '' }}">
                         <i class="nav-icon fas fa-hand-holding-usd"></i>
@@ -121,6 +132,7 @@
                         </li>
                     </ul>
                 </li>
+                @endif
                 <li class="nav-item {{ request()->is('simpan-pinjam/laporan*') ? ' menu-open' : '' }}">
                     <a href="#" class="nav-link {{ request()->is('simpan-pinjam/laporan*') ? ' active' : '' }}">
                         <i class="nav-icon fas fa-copy"></i>
@@ -130,12 +142,14 @@
                         </p>
                     </a>
                     <ul class="nav nav-treeview">
+                        @if (auth()->user()->role != 'simpan_pinjam')
                         <li class="nav-item">
                             <a href="{{ route('jurnal.index') }}" class="nav-link {{ request()->is('simpan-pinjam/laporan/jurnal*') ? ' active' : '' }}">
                                 <i class="far fa-circle nav-icon"></i>
                                 <p>Jurnal Umum</p>
                             </a>
                         </li>
+                        @endif
                         <li class="nav-item">
                             <a href="{{ route('buku-besar.index') }}" class="nav-link {{ request()->is('simpan-pinjam/laporan/buku-besar*') ? ' active' : '' }}">
                                 <i class="far fa-circle nav-icon"></i>

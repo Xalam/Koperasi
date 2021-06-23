@@ -123,9 +123,4 @@ class UserController extends Controller
 
         return view('Simpan_Pinjam.master.admin.modal', compact('users'));
     }
-
-    public function login()
-    {
-        return view('Simpan_Pinjam.login');
-    }
 }

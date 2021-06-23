@@ -9,7 +9,7 @@ class User extends Model
 {
     use HasFactory;
 
-    protected $table = 'tb_users';
+    protected $table = 'users';
 
     protected $fillable = ['name', 'username', 'password', 'role'];
 }

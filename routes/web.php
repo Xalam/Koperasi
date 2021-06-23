@@ -1,8 +1,6 @@
 <?php
 
 use App\Http\Controllers\Simpan_Pinjam\Dashboard\DashboardController;
-use App\Http\Controllers\Simpan_Pinjam\Master\Anggota\AnggotaController;
-use App\Http\Controllers\Simpan_Pinjam\Master\User\UserController;
 use App\Http\Controllers\Toko\DataBarangController;
 use App\Http\Controllers\Toko\DataSupplierController;
 use Illuminate\Support\Facades\Route;
@@ -121,13 +119,22 @@ Route::group(['prefix' => 'toko'], function () {
 });
 
 //SIMPAN PINJAM
-Route::prefix('simpan-pinjam')->group(function () {
+Route::prefix('simpan-pinjam')->group(function (){
+    #Login
+    Route::get('login', 'Simpan_Pinjam\Auth\LoginController@login')->name('login');
+    Route::post('postlogin', 'Simpan_Pinjam\Auth\LoginController@post_login')->name('post-login');
+    Route::get('logout', 'Simpan_Pinjam\Auth\LoginController@logout')->name('logout');
+
+    Route::get('/', function () {
+        return redirect()->route('login');
+    });
+});
+
+//checkrole:admin,bendahara,bendahara_pusat,ketua_koperasi,simpan_pinjam
+Route::group(['prefix' => 'simpan-pinjam', 'middleware' => ['auth', 'checkrole:admin,bendahara,bendahara_pusat,ketua_koperasi,simpan_pinjam']], function () {
 
     #Dashboard
     Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
-
-    #Login
-    Route::get('login', [UserController::class, 'login'])->name('login');
 
     #Master
     Route::prefix('master')->group(function () {
@@ -138,7 +145,7 @@ Route::prefix('simpan-pinjam')->group(function () {
         Route::resource('akun', 'Simpan_Pinjam\Master\Akun\AkunController');
         Route::get('akun/modal/{id}', 'Simpan_Pinjam\Master\Akun\AkunController@modal')->name('akun.modal');
 
-        Route::resource('admin', 'Simpan_Pinjam\Master\User\UserController');
+        Route::resource('admin', 'Simpan_Pinjam\Master\User\UserController')->middleware('checkrole:admin');
         Route::get('admin/modal/{id}', 'Simpan_Pinjam\Master\User\UserController@modal')->name('admin.modal');
         
     });

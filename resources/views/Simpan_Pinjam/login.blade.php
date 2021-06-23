@@ -16,6 +16,8 @@
     <link rel="stylesheet" href="{{ asset('assets/plugins/icheck-bootstrap/icheck-bootstrap.min.css') }}">
     <!-- Theme style -->
     <link rel="stylesheet" href="{{ asset('assets/dist/css/adminlte.min.css') }}">
+    <!-- SweetAlert2 -->
+    <link rel="stylesheet" href="{{ asset('assets/plugins/sweetalert2-theme-bootstrap-4/bootstrap-4.min.css') }}">
 
     <style>
         :root {
@@ -160,15 +162,16 @@
                             <h5 class="text-center or"><b>Silahkan Login</b></h5>
                             <div class="line"></div>
                         </div>
-                        <form class="form-signin">
+                        <form action="{{ route('post-login') }}" class="form-signin" method="POST" role="form">
+                            @csrf
                             <div class="form-label-group">
-                                <input type="text" id="input-username" class="form-control" placeholder="Username"
+                                <input type="text" id="input-username" name="username" class="form-control" placeholder="Username"
                                     required>
                                 <label for="input-username">Username</label>
                             </div>
 
                             <div class="form-label-group">
-                                <input type="password" id="input-password" class="form-control"
+                                <input type="password" id="input-password" name="password" class="form-control"
                                     placeholder="Password" required>
                             <label for="input-password">Password</label>
                             </div>
@@ -188,6 +191,20 @@
     <script src="{{ asset('assets/plugins/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
     <!-- AdminLTE App -->
     <script src="{{ asset('assets/dist/js/adminlte.min.js') }}"></script>
+    <!-- SweetAlert2 -->
+    <script src="{{ asset('assets/plugins/sweetalert2/sweetalert2.min.js') }}"></script>
+
+    @if (session()->has('error'))
+    <script>
+        Swal.fire({
+            title: 'Error!',
+            text: '{{ session()->get('error') }}',
+            icon: 'error',
+            confirmButtonText: 'OK'
+        })
+    </script>
+    @endif
+
 </body>
 
 </html>
