@@ -20,11 +20,11 @@
 @section('content_main')
     <div class="row">
         <div class="col-md-12">
-            <div class="card card-warning">
+            <div class="card card-warning card-outline">
                 <div class="card-header">
                     <h3 class="card-title">Edit Simpanan</h3>
                 </div>
-                <div class="card-body">
+                <div class="card-body mx-auto col-md-6">
                     <form id="form-data" action="{{ route('data.update', $simpanan->id) }}" role="form" method="post" autocomplete="off">
                         @csrf
                         @method('put')
@@ -38,9 +38,9 @@
                         </div>
                         <div class="form-group">
                             <label>Tanggal</label>
-                            <div class="input-group date col-md-6" id="tanggal" data-target-input="nearest">
+                            <div class="input-group date" id="tanggal" data-target-input="nearest">
                                 <input type="text" class="form-control datetimepicker-input" data-target="#tanggal"
-                                    name="tanggal" value="{{ $simpanan->tanggal }}"/>
+                                    name="tanggal" value="{{ $simpanan->tanggal }}" placeholder="Tanggal"/>
                                 <div class="input-group-append" data-target="#tanggal" data-toggle="datetimepicker">
                                     <div class="input-group-text"><i class="fa fa-calendar"></i></div>
                                 </div>

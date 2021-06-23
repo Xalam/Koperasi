@@ -14,7 +14,7 @@ class Simpanan extends Model
 
     protected $fillable = [
         'kode_simpanan', 'id_anggota', 'tanggal', 'jenis_simpanan', 'nominal', 'keterangan',
-        'status'
+        'status', 'kode_jurnal'
     ];
 
     public function anggota() 

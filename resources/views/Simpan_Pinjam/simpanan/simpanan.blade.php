@@ -43,10 +43,10 @@
                                 <th>Kode Simpanan</th>
                                 <th>Tanggal Simpan</th>
                                 <th>Jenis Simpanan</th>
-                                <th>Nama Anggota</th>
-                                <th>Nominal Setoran</th>
+                                <th class="text-center">Nama Anggota</th>
+                                <th class="text-center">Nominal Setoran</th>
                                 <th>Status Bayar</th>
-                                <th>Keterangan</th>
+                                <th class="text-center">Keterangan</th>
                                 <th>Aksi</th>
                             </tr>
                         </thead>
@@ -77,6 +77,35 @@
                 "responsive": true,
                 "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]],
                 "deferRender": true,
+                "columnDefs": [
+                {
+                  "targets": 0,
+                  "className": "text-center",
+                },
+                {
+                  "targets": 1,
+                  "className": "text-center",
+                },
+                {
+                  "targets": 2,
+                  "className": "text-center",
+                },
+                {
+                  "targets": 3,
+                  "className": "text-center",
+                },
+                {
+                  "targets": 5,
+                  "className": "text-right",
+                },
+                {
+                  "targets": 6,
+                  "className": "text-center",
+                },
+                {
+                  "targets": 8,
+                  "className": "text-center",
+                }],
                 "ajax": {
                     url: "{{ route('data.index') }}"
                 },
@@ -133,11 +162,34 @@
 
                 modal.find('.modal-content').load(button.data("remote"));
             });
+
+            $('#modalKonfirmasi').on('show.bs.modal', function(e) {
+                var button = $(e.relatedTarget);
+                var modal = $(this);
+
+                modal.find('.modal-content').load(button.data("remote"));
+            });
         });
 
     </script>
 
     <div class="modal" id="mymodal" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Konfirmasi</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <i class="fa fa-spinner fa-spin"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" id="modalKonfirmasi" tabindex="-1" role="dialog">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">

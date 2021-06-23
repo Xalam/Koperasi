@@ -20,7 +20,7 @@
 @section('content_main')
     <div class="row">
         <div class="col-md-12">
-            <div class="card card-primary collapsed-card">
+            <div class="card card-primary collapsed-card card-outline">
                 <div class="card-header">
                     <h3 class="card-title">Tambah Simpanan</h3>
                     <div class="card-tools">
@@ -28,7 +28,7 @@
                         </button>
                     </div>
                 </div>
-                <div class="card-body">
+                <div class="card-body col-md-6 mx-auto">
                     <form id="form-data" action="{{ route('data.store') }}" role="form" method="post" autocomplete="off">
                         @csrf
                         <input type="text" class="form-control" name="kode_simpanan" id="kode_simpanan" placeholder="Masukkan kode" hidden>
@@ -44,9 +44,9 @@
                         </div>
                         <div class="form-group">
                             <label>Tanggal</label>
-                            <div class="input-group date col-md-6" id="tanggal" data-target-input="nearest">
+                            <div class="input-group date" id="tanggal" data-target-input="nearest">
                                 <input type="text" class="form-control datetimepicker-input" data-target="#tanggal"
-                                    name="tanggal" />
+                                    name="tanggal" placeholder="Tanggal"/>
                                 <div class="input-group-append" data-target="#tanggal" data-toggle="datetimepicker">
                                     <div class="input-group-text"><i class="fa fa-calendar"></i></div>
                                 </div>
@@ -94,7 +94,7 @@
 
     <div class="row">
         <div class="col-md-12">
-            <div class="card card-success collapsed-card">
+            <div class="card card-success collapsed-card card-outline">
                 <div class="card-header">
                     <h3 class="card-title">Tambah Simpanan Wajib (Semua Anggota)</h3>
                     <div class="card-tools">
@@ -102,14 +102,14 @@
                         </button>
                     </div>
                 </div>
-                <div class="card-body">
+                <div class="card-body col-md-6 mx-auto">
                     <form id="form-data-setor" action="{{ route('data.store-all') }}" role="form" method="post" autocomplete="off">
                         @csrf
                         <div class="form-group">
                             <label>Tanggal Setor</label>
-                            <div class="input-group date col-md-6" id="tanggal-setor" data-target-input="nearest">
+                            <div class="input-group date" id="tanggal-setor" data-target-input="nearest">
                                 <input type="text" class="form-control datetimepicker-input" data-target="#tanggal-setor"
-                                    name="tanggal" />
+                                    name="tanggal" placeholder="Tanggal"/>
                                 <div class="input-group-append" data-target="#tanggal-setor" data-toggle="datetimepicker">
                                     <div class="input-group-text"><i class="fa fa-calendar"></i></div>
                                 </div>
@@ -125,13 +125,13 @@
                                     name="nominal">
                             </div>
                         </div>
-                        <div class="form-group">
+                        {{-- <div class="form-group">
                             <label>Pembayaran</label>
                             <select class="form-control select2" style="width: 100%;" name="status">
                                 <option selected="selected" value="0">Belum Bayar</option>
                                 <option value="1">Sudah Bayar</option>
                             </select>
-                        </div>
+                        </div> --}}
                         <div class="form-group">
                             <label for="keterangan">Keterangan</label>
                             <input type="text" class="form-control" name="keterangan" id="keterangan-setor" placeholder="Masukkan keterangan">

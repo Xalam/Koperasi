@@ -17,7 +17,7 @@ class SaldoController extends Controller
     public function index()
     {
         $saldo      = Saldo::with('anggota')->get();
-        $totalSaldo = Simpanan::selectRaw('SUM(nominal) as total_simpanan, id_anggota')->groupBy('id_anggota')->where('status', 1)->pluck('total_simpanan', 'id_anggota');
+        //$totalSaldo = Simpanan::selectRaw('SUM(nominal) as total_simpanan, id_anggota')->groupBy('id_anggota')->where('status', 1)->pluck('total_simpanan', 'id_anggota');
         // echo($totalSaldo->toArray());
         // exit;
 
@@ -26,21 +26,21 @@ class SaldoController extends Controller
             $no   = 1;
 
             foreach ($saldo as $key => $value) {
-                $showSaldo = 0;
-                if (isset($totalSaldo[$value->id_anggota])) {
-                    $showSaldo = $totalSaldo[$value->id_anggota];
-                } else {
-                    $showSaldo;
-                }
+                // $showSaldo = 0;
+                // if (isset($totalSaldo[$value->id_anggota])) {
+                //     $showSaldo = $totalSaldo[$value->id_anggota];
+                // } else {
+                //     $showSaldo;
+                // }
 
                 #Update saldo
-                Saldo::where('id_anggota', $value->id_anggota)->update(['saldo' => $showSaldo]);
+                //Saldo::where('id_anggota', $value->id_anggota)->update(['saldo' => $showSaldo]);
 
                 $data[] = [
                     'no'    => $no++,
                     'kode'  => $value->anggota->kd_anggota,
                     'nama'  => $value->anggota->nama_anggota,
-                    'saldo' => 'Rp. ' . number_format($showSaldo, 2, ',', '.'),
+                    'saldo' => 'Rp. ' . number_format($value->saldo, 2, ',', '.'),
                 ];
             }
             return response()->json(compact('data'));

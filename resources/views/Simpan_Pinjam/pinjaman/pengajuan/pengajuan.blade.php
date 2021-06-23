@@ -34,9 +34,9 @@
                                 <th>Kode Pinjaman</th>
                                 <th>Kode Anggota</th>
                                 <th>Tanggal</th>
-                                <th>Nama Anggota</th>
-                                <th>Nominal Pinjaman</th>
-                                <th>Status Acc</th>
+                                <th class="text-right">Nama Anggota</th>
+                                <th class="text-right">Nominal Pinjaman</th>
+                                <th width="10%">Status Acc</th>
                                 <th>Aksi</th>
                             </tr>
                         </thead>
@@ -60,8 +60,8 @@
                                 <th>Kode Pinjaman</th>
                                 <th>Kode Anggota</th>
                                 <th>Tanggal</th>
-                                <th>Nama Anggota</th>
-                                <th>Nominal Pinjaman</th>
+                                <th class="text-right">Nama Anggota</th>
+                                <th class="text-right">Nominal Pinjaman</th>
                                 <th width="10%">Status</th>
                                 <th>Aksi</th>
                             </tr>
@@ -93,6 +93,35 @@
                 "responsive": true,
                 "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]],
                 "deferRender": true,
+                "columnDefs": [
+                {
+                  "targets": 0,
+                  "className": "text-center",
+                },
+                {
+                  "targets": 1,
+                  "className": "text-center",
+                },
+                {
+                  "targets": 2,
+                  "className": "text-center",
+                },
+                {
+                  "targets": 3,
+                  "className": "text-center",
+                },
+                {
+                  "targets": 5,
+                  "className": "text-right",
+                },
+                {
+                  "targets": 6,
+                  "className": "text-center",
+                },
+                {
+                  "targets": 7,
+                  "className": "text-center",
+                }],
                 "ajax": {
                     url: "{{ route('pengajuan.index') }}?type=waiting"
                 },
@@ -133,6 +162,35 @@
                 "responsive": true,
                 "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]],
                 "deferRender": true,
+                "columnDefs": [
+                {
+                  "targets": 0,
+                  "className": "text-center",
+                },
+                {
+                  "targets": 1,
+                  "className": "text-center",
+                },
+                {
+                  "targets": 2,
+                  "className": "text-center",
+                },
+                {
+                  "targets": 3,
+                  "className": "text-center",
+                },
+                {
+                  "targets": 5,
+                  "className": "text-right",
+                },
+                {
+                  "targets": 6,
+                  "className": "text-center",
+                },
+                {
+                  "targets": 7,
+                  "className": "text-center",
+                }],
                 "ajax": {
                     url: "{{ route('pengajuan.index') }}?type=accept"
                 },

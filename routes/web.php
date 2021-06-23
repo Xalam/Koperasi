@@ -157,6 +157,7 @@ Route::group(['prefix' => 'simpan-pinjam', 'middleware' => ['auth', 'checkrole:a
         Route::get('data/cetak/show/{id}', 'Simpan_Pinjam\Simpanan\SimpananController@print_show')->name('data.print-show');
         Route::get('data/cetak/modal/{id}', 'Simpan_Pinjam\Simpanan\SimpananController@modal')->name('data.modal');
         Route::post('data/store-all', 'Simpan_Pinjam\Simpanan\SimpananController@store_all')->name('data.store-all');
+        Route::get('data/konfirmasi/{id}', 'Simpan_Pinjam\Simpanan\SimpananController@konfirmasi')->name('data.konfirmasi');
 
         Route::resource('saldo', 'Simpan_Pinjam\Simpanan\SaldoController');
 

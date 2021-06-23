@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Simpan_Pinjam\Simpanan;
 
 use App\Http\Controllers\Controller;
+use App\Models\Simpan_Pinjam\Laporan\JurnalUmum;
+use App\Models\Simpan_Pinjam\Master\Akun\Akun;
 use App\Models\Simpan_Pinjam\Master\Anggota\Anggota;
 use App\Models\Simpan_Pinjam\Simpanan\Saldo;
 use App\Models\Simpan_Pinjam\Simpanan\Simpanan;
@@ -36,10 +38,12 @@ class SimpananController extends Controller
                             'jenis_simpanan' => 'Simpanan Pokok',
                             'nama_anggota'   => $value->anggota->nama_anggota,
                             'nominal'        => 'Rp. ' . number_format($value->nominal, 2, ',', '.'),
-                            'status'         => ($value->status == 0) ? '<span class="badge bg-danger">Belum Bayar</span>' : '<span class="badge bg-success">Sudah Bayar</span>',
+                            'status'         => ($value->status == 0) ? '<a href="#modalKonfirmasi" data-remote="' . route('data.konfirmasi', $value->id) . '" 
+                                                data-toggle="modal" data-target="#modalKonfirmasi" class="btn btn-info btn-sm">
+                                                <i class="far fa-plus-square"></i>&nbsp; Proses</a>' : '<span class="badge bg-success">Sudah Bayar</span>',
                             'keterangan'     => $value->keterangan == null ? '-' : $value->keterangan,
-                            'action'         => '<a href="' . route('data.print', $value->id) . '" class="btn btn-light btn-sm"><i class="fas fa-print"></i>&nbsp; Cetak</a>
-                                                &nbsp; <a href="#" class="btn btn-warning btn-sm"><i class="far fa-edit"></i>&nbsp; Edit</a>'
+                            'action'         => ($value->status == 0) ? '<a href="#mymodal" data-remote="' . route('data.modal', $value->id) . '" data-toggle="modal" data-target="#mymodal" class="btn btn-danger btn-sm"><i class="far fa-trash-alt"></i>&nbsp; Hapus</a>'
+                                                : '<a href="' . route('data.print', $value->id) . '" class="btn btn-light btn-sm"><i class="fas fa-print"></i>&nbsp; Cetak</a>'
                         ];
                     }
                     return response()->json(compact('data'));
@@ -56,10 +60,12 @@ class SimpananController extends Controller
                             'jenis_simpanan' => 'Simpanan Wajib',
                             'nama_anggota'   => $value->anggota->nama_anggota,
                             'nominal'        => 'Rp. ' . number_format($value->nominal, 2, ',', '.'),
-                            'status'         => ($value->status == 0) ? '<span class="badge bg-danger">Belum Bayar</span>' : '<span class="badge bg-success">Sudah Bayar</span>',
+                            'status'         => ($value->status == 0) ? '<a href="#modalKonfirmasi" data-remote="' . route('data.konfirmasi', $value->id) . '" 
+                                                data-toggle="modal" data-target="#modalKonfirmasi" class="btn btn-info btn-sm">
+                                                <i class="far fa-plus-square"></i>&nbsp; Proses</a>' : '<span class="badge bg-success">Sudah Bayar</span>',
                             'keterangan'     => $value->keterangan == null ? '-' : $value->keterangan,
-                            'action'         => '<a href="' . route('data.print', $value->id) . '" class="btn btn-light btn-sm"><i class="fas fa-print"></i>&nbsp; Cetak</a>
-                                                &nbsp; <a href="#" class="btn btn-warning btn-sm"><i class="far fa-edit"></i>&nbsp; Edit</a>'
+                            'action'         => ($value->status == 0) ? '<a href="#mymodal" data-remote="' . route('data.modal', $value->id) . '" data-toggle="modal" data-target="#mymodal" class="btn btn-danger btn-sm"><i class="far fa-trash-alt"></i>&nbsp; Hapus</a>'
+                                                : '<a href="' . route('data.print', $value->id) . '" class="btn btn-light btn-sm"><i class="fas fa-print"></i>&nbsp; Cetak</a>'
                         ];
                     }
                     return response()->json(compact('data'));
@@ -76,10 +82,12 @@ class SimpananController extends Controller
                             'jenis_simpanan' => 'Simpanan Sukarela',
                             'nama_anggota'   => $value->anggota->nama_anggota,
                             'nominal'        => 'Rp. ' . number_format($value->nominal, 2, ',', '.'),
-                            'status'         => ($value->status == 0) ? '<span class="badge bg-danger">Belum Bayar</span>' : '<span class="badge bg-success">Sudah Bayar</span>',
+                            'status'         => ($value->status == 0) ? '<a href="#modalKonfirmasi" data-remote="' . route('data.konfirmasi', $value->id) . '" 
+                                                data-toggle="modal" data-target="#modalKonfirmasi" class="btn btn-info btn-sm">
+                                                <i class="far fa-plus-square"></i>&nbsp; Proses</a>' : '<span class="badge bg-success">Sudah Bayar</span>',
                             'keterangan'     => $value->keterangan == null ? '-' : $value->keterangan,
-                            'action'         => '<a href="' . route('data.print', $value->id) . '" class="btn btn-light btn-sm"><i class="fas fa-print"></i>&nbsp; Cetak</a>
-                                                &nbsp; <a href="#" class="btn btn-warning btn-sm"><i class="far fa-edit"></i>&nbsp; Edit</a>'
+                            'action'         => ($value->status == 0) ? '<a href="#mymodal" data-remote="' . route('data.modal', $value->id) . '" data-toggle="modal" data-target="#mymodal" class="btn btn-danger btn-sm"><i class="far fa-trash-alt"></i>&nbsp; Hapus</a>'
+                                                : '<a href="' . route('data.print', $value->id) . '" class="btn btn-light btn-sm"><i class="fas fa-print"></i>&nbsp; Cetak</a>'
                         ];
                     }
                     return response()->json(compact('data'));
@@ -105,10 +113,12 @@ class SimpananController extends Controller
                             'jenis_simpanan' => $jenis,
                             'nama_anggota'   => $value->anggota->nama_anggota,
                             'nominal'        => 'Rp. ' . number_format($value->nominal, 2, ',', '.'),
-                            'status'         => ($value->status == 0) ? '<span class="badge bg-danger">Belum Bayar</span>' : '<span class="badge bg-success">Sudah Bayar</span>',
+                            'status'         => ($value->status == 0) ? '<a href="#modalKonfirmasi" data-remote="' . route('data.konfirmasi', $value->id) . '" 
+                                                data-toggle="modal" data-target="#modalKonfirmasi" class="btn btn-info btn-sm">
+                                                <i class="far fa-plus-square"></i>&nbsp; Proses</a>' : '<span class="badge bg-success">Sudah Bayar</span>',
                             'keterangan'     => $value->keterangan == null ? '-' : $value->keterangan,
-                            'action'         => '<a href="' . route('data.print', $value->id) . '" class="btn btn-light btn-sm"><i class="fas fa-print"></i>&nbsp; Cetak</a>
-                                                &nbsp; <a href="' . route('data.edit', $value->id) . '" class="btn btn-warning btn-sm"><i class="far fa-edit"></i>&nbsp; Edit</a>'
+                            'action'         => ($value->status == 0) ? '<a href="#mymodal" data-remote="' . route('data.modal', $value->id) . '" data-toggle="modal" data-target="#mymodal" class="btn btn-danger btn-sm"><i class="far fa-trash-alt"></i>&nbsp; Hapus</a>'
+                                                : '<a href="' . route('data.print', $value->id) . '" class="btn btn-light btn-sm"><i class="fas fa-print"></i>&nbsp; Cetak</a>'
                         ];
                     }
                     return response()->json(compact('data'));
@@ -148,13 +158,100 @@ class SimpananController extends Controller
             $id = $check->id + 1;
         }
 
+        $checkAkunKas       = Akun::where('kode_akun', 1101)->first();
+        $checkSimPokok      = Akun::where('kode_akun', 3101)->first();
+        $checkSimWajib      = Akun::where('kode_akun', 3102)->first();
+        $checkSimSukarela   = Akun::where('kode_akun', 2121)->first();
+
+        if ($checkAkunKas == null) {
+            $idKas = 0;
+        } else {
+            $idKas = $checkAkunKas->id;
+        }
+
+        if ($checkSimPokok == null) {
+            $idPokok = 0;
+        } else {
+            $idPokok = $checkSimPokok->id;
+        }
+
+        if ($checkSimWajib == null) {
+            $idWajib = 0;
+        } else {
+            $idWajib = $checkSimWajib->id;
+        }
+
+        if ($checkSimSukarela == null) {
+            $idSukarela = 0;
+        } else {
+            $idSukarela = $checkSimSukarela->id;
+        }
+
+        #Check Jurnal
+        $checkJurnal = JurnalUmum::select('*')->orderBy('id', 'DESC')->first();
+        if ($checkJurnal == null) {
+            $idJurnal = 1;
+        } else {
+            $substrKode = substr($checkJurnal->kode_jurnal, 3);
+            $idJurnal   = $substrKode + 1;
+        }
+
         $data = $request->all();
 
         $data['kode_simpanan'] = 'SMP-' . str_replace('-', '', $request->tanggal) . '-' . str_pad($id, 6, '0', STR_PAD_LEFT);
         $data['nominal'] = str_replace('.', '', $request->nominal);
+        $data['kode_jurnal'] = 'JU-' . str_pad($idJurnal, 6, '0', STR_PAD_LEFT);
 
         Simpanan::create($data);
 
+        $kodeSimpanan = Simpanan::orderBy('id', 'DESC')->first();
+
+        if ($kodeSimpanan->status == 1) {
+            #Simpan Jurnal Kas
+            $jurnal = new JurnalUmum();
+            $jurnal->kode_jurnal   = 'JU-' . str_pad($idJurnal, 6, '0', STR_PAD_LEFT);
+            $jurnal->id_akun        = $idKas;
+            $jurnal->tanggal        = date('Y-m-d');
+            $jurnal->keterangan     = 'Simpanan ( ' . $kodeSimpanan->kode_simpanan . ' )';
+            $jurnal->debet          = 0;
+            $jurnal->kredit         = $kodeSimpanan->nominal;
+            $jurnal->save();
+
+            if ($kodeSimpanan->jenis_simpanan == 1) {
+                $idSimpan = $idPokok;
+            } elseif ($kodeSimpanan->jenis_simpanan == 2) {
+                $idSimpan = $idWajib;
+            } else {
+                $idSimpan = $idSukarela;
+            }
+            #Simpan Jurnal Simpanan
+            $jurnal = new JurnalUmum();
+            $jurnal->kode_jurnal   = 'JU-' . str_pad($idJurnal, 6, '0', STR_PAD_LEFT);
+            $jurnal->id_akun        = $idSimpan;
+            $jurnal->tanggal        = date('Y-m-d');
+            $jurnal->keterangan     = 'Simpanan ( ' . $kodeSimpanan->kode_simpanan . ' )';
+            $jurnal->debet          = $kodeSimpanan->nominal;
+            $jurnal->kredit         = 0;
+            $jurnal->save();
+
+
+            #Update Saldo
+            if ($kodeSimpanan->jenis_simpanan == 3) {
+                $checkSaldo = Saldo::where('id_anggota', $kodeSimpanan->id_anggota)->first();
+
+                if ($checkSaldo == null) {
+                    $saldo = new Saldo();
+                    $saldo->create([
+                        'id_anggota' => $kodeSimpanan->id_anggota,
+                        'saldo'      => $kodeSimpanan->nominal
+                    ]);
+                } else {
+                    $checkSaldo->update([
+                        'saldo' => $checkSaldo->saldo + $kodeSimpanan->nominal
+                    ]);
+                }
+            }
+        }
         return redirect()->route('data.index')->with([
             'success' => 'Berhasil tambah penyimpanan'
         ]);
@@ -179,11 +276,11 @@ class SimpananController extends Controller
      */
     public function edit($id)
     {
-        $simpanan = Simpanan::with('anggota')->findOrFail($id);
+        // $simpanan = Simpanan::with('anggota')->findOrFail($id);
 
-        return view('Simpan_Pinjam.simpanan.edit')->with([
-            'simpanan' => $simpanan
-        ]);
+        // return view('Simpan_Pinjam.simpanan.edit')->with([
+        //     'simpanan' => $simpanan
+        // ]);
     }
 
     /**
@@ -197,13 +294,97 @@ class SimpananController extends Controller
     {
         $simpanan = Simpanan::findOrFail($id);
 
-        $data = $request->all();
+        $checkAkunKas       = Akun::where('kode_akun', 1101)->first();
+        $checkSimPokok      = Akun::where('kode_akun', 3101)->first();
+        $checkSimWajib      = Akun::where('kode_akun', 3102)->first();
+        $checkSimSukarela   = Akun::where('kode_akun', 2121)->first();
 
-        $simpanan->update($data);
+        #Check Jurnal
+        $checkJurnal = JurnalUmum::select('*')->orderBy('id', 'DESC')->first();
+        if ($checkJurnal == null) {
+            $idJurnal = 1;
+        } else {
+            $substrKode = substr($checkJurnal->kode_jurnal, 3);
+            $idJurnal   = $substrKode + 1;
+        }
 
-        return redirect()->route('data.index')->with([
-            'success' => 'Berhasil mengubah data simpanan'
-        ]);
+        if ($checkAkunKas == null) {
+            $idKas = 0;
+        } else {
+            $idKas = $checkAkunKas->id;
+        }
+
+        if ($checkSimPokok == null) {
+            $idPokok = 0;
+        } else {
+            $idPokok = $checkSimPokok->id;
+        }
+
+        if ($checkSimWajib == null) {
+            $idWajib = 0;
+        } else {
+            $idWajib = $checkSimWajib->id;
+        }
+
+        if ($checkSimSukarela == null) {
+            $idSukarela = 0;
+        } else {
+            $idSukarela = $checkSimSukarela->id;
+        }
+
+        $simpanan->status = $request->status;
+        $simpanan->kode_jurnal = 'JU-' . str_pad($idJurnal, 6, '0', STR_PAD_LEFT);
+        $simpanan->update();
+
+        $kodeSimpanan = Simpanan::where('id', $id)->first();
+
+        if ($request->status == 1) {
+            #Simpan Jurnal Kas
+            $jurnal = new JurnalUmum();
+            $jurnal->kode_jurnal   = 'JU-' . str_pad($idJurnal, 6, '0', STR_PAD_LEFT);
+            $jurnal->id_akun        = $idKas;
+            $jurnal->tanggal        = date('Y-m-d');
+            $jurnal->keterangan     = 'Simpanan ( ' . $kodeSimpanan->kode_simpanan . ' )';
+            $jurnal->debet          = 0;
+            $jurnal->kredit         = $kodeSimpanan->nominal;
+            $jurnal->save();
+
+            if ($kodeSimpanan->jenis_simpanan == 1) {
+                $idSimpan = $idPokok;
+            } elseif ($kodeSimpanan->jenis_simpanan == 2) {
+                $idSimpan = $idWajib;
+            } else {
+                $idSimpan = $idSukarela;
+            }
+            #Simpan Jurnal Simpanan
+            $jurnal = new JurnalUmum();
+            $jurnal->kode_jurnal   = 'JU-' . str_pad($idJurnal, 6, '0', STR_PAD_LEFT);
+            $jurnal->id_akun        = $idSimpan;
+            $jurnal->tanggal        = date('Y-m-d');
+            $jurnal->keterangan     = 'Simpanan ( ' . $kodeSimpanan->kode_simpanan . ' )';
+            $jurnal->debet          = $kodeSimpanan->nominal;
+            $jurnal->kredit         = 0;
+            $jurnal->save();
+
+            #Update Saldo
+            if ($kodeSimpanan->jenis_simpanan == 3) {
+                $checkSaldo = Saldo::where('id_anggota', $kodeSimpanan->id_anggota)->first();
+
+                if ($checkSaldo == null) {
+                    $saldo = new Saldo();
+                    $saldo->create([
+                        'id_anggota' => $kodeSimpanan->id_anggota,
+                        'saldo'      => $kodeSimpanan->nominal
+                    ]);
+                } else {
+                    $checkSaldo->update([
+                        'saldo' => $checkSaldo->saldo + $kodeSimpanan->nominal
+                    ]);
+                }
+            }
+        }
+
+        return redirect()->route('data.index');
     }
 
     /**
@@ -214,13 +395,13 @@ class SimpananController extends Controller
      */
     public function destroy($id)
     {
-        // $simpanan = Simpanan::findOrFail($id);
+        $simpanan = Simpanan::findOrFail($id);
 
-        // $simpanan->delete();
+        $simpanan->delete();
 
-        // return redirect()->route('data.index')->with([
-        //     'success' => 'Simpanan anggota berhasil dihapus'
-        // ]);
+        return redirect()->route('data.index')->with([
+            'success' => 'Simpanan anggota berhasil dihapus'
+        ]);
     }
 
     public function print($id) 
@@ -252,10 +433,33 @@ class SimpananController extends Controller
 
     public function store_all(Request $request) 
     {
-        $anggota  = Anggota::pluck('id');
-        $count = $anggota->count();
+        $anggota        = Anggota::pluck('id');
+        $count          = $anggota->count();
+        $checkAkunKas   = Akun::where('kode_akun', 1101)->first();
+        $checkSimWajib  = Akun::where('kode_akun', 3102)->first();
+
+        if ($checkAkunKas == null) {
+            $idKas = 0;
+        } else {
+            $idKas = $checkAkunKas->id;
+        }
+
+        if ($checkSimWajib == null) {
+            $idWajib = 0;
+        } else {
+            $idWajib = $checkSimWajib->id;
+        }
         
         for ($i = 0; $i < $count; $i++) {
+            #Check Jurnal
+            $checkJurnal = JurnalUmum::select('*')->orderBy('id', 'DESC')->first();
+            if ($checkJurnal == null) {
+                $idJurnal = 1;
+            } else {
+                $substrKode = substr($checkJurnal->kode_jurnal, 3);
+                $idJurnal   = $substrKode + 1;
+            }
+
             $check = Simpanan::orderBy('id', 'DESC')->first();
 
             if ($check == null) {
@@ -271,12 +475,42 @@ class SimpananController extends Controller
                 'jenis_simpanan' => 2,
                 'nominal'        => str_replace('.', '', $request->nominal),
                 'keterangan'     => $request->keterangan,
-                'status'         => $request->status
+                'status'         => 1,
+                'kode_jurnal'    => 'JU-' . str_pad($idJurnal, 6, '0', STR_PAD_LEFT)
             ]);
+
+            $kodeSimpanan = Simpanan::orderBy('id', 'DESC')->first();
+
+            #Simpan Jurnal Kas
+            $jurnal = new JurnalUmum();
+            $jurnal->kode_jurnal   = 'JU-' . str_pad($idJurnal, 6, '0', STR_PAD_LEFT);
+            $jurnal->id_akun        = $idKas;
+            $jurnal->tanggal        = date('Y-m-d');
+            $jurnal->keterangan     = 'Simpanan ( ' . $kodeSimpanan->kode_simpanan . ' )';
+            $jurnal->debet          = 0;
+            $jurnal->kredit         = $kodeSimpanan->nominal;
+            $jurnal->save();
+
+            #Simpan Jurnal Simpanan Wajib
+            $jurnal = new JurnalUmum();
+            $jurnal->kode_jurnal   = 'JU-' . str_pad($idJurnal, 6, '0', STR_PAD_LEFT);
+            $jurnal->id_akun        = $idWajib;
+            $jurnal->tanggal        = date('Y-m-d');
+            $jurnal->keterangan     = 'Simpanan ( ' . $kodeSimpanan->kode_simpanan . ' )';
+            $jurnal->debet          = 0;
+            $jurnal->kredit         = $kodeSimpanan->nominal;
+            $jurnal->save();
         }
 
         return redirect()->route('data.index')->with([
             'success' => 'Data simpanan wajib berhasil ditambah'
         ]);
+    }
+
+    public function konfirmasi($id)
+    {
+        $simpanan = Simpanan::findOrFail($id);
+
+        return view('Simpan_Pinjam.simpanan.modal-proses', compact('simpanan'));
     }
 }
