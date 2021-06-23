@@ -18,7 +18,7 @@ class KeuanganController extends Controller
     {
         $asetLancar         = Akun::whereIn('kode_akun', [1101, 1102, 1111, 1112, 1121, 1122, 1123, 1124, 1125, 1126, 1127, 1131, 1141])->select('id', 'nama_akun', 'saldo')->get();
         $penyertaan         = Akun::whereIn('kode_akun', [1201, 1202])->select('id', 'nama_akun', 'saldo')->get();
-        $asetTidakLancar    = Akun::whereIn('kode_akun', [1301, 1302, 1311, 1321, 1312, 1322, 1313, 1323, 1314, 1324, 1315, 1325])->select('id', 'nama_akun', 'saldo')->get();
+        $asetTidakLancar    = Akun::whereIn('kode_akun', [1301, 1302, 1311, 1321, 1312, 1322, 1313, 1323, 1314, 1324, 1315, 1325, 1316, 1326])->select('id', 'nama_akun', 'saldo')->get();
         $kewajibanPendek    = Akun::whereIn('kode_akun', [2101, 2111, 2112, 2113, 2114, 2115, 2116, 2117, 2121])->select('id', 'nama_akun', 'saldo')->get();
         $kewajibanPanjang   = Akun::whereIn('kode_akun', [2201])->select('id', 'nama_akun', 'saldo')->get();
         $ekuitas            = Akun::whereIn('kode_akun', [3101, 3102, 3111, 3112, 3113, 3121, 3122, 3131])->select('id', 'nama_akun', 'saldo')->get();
@@ -200,7 +200,7 @@ class KeuanganController extends Controller
     {
         $asetLancar         = Akun::whereIn('kode_akun', [1101, 1102, 1111, 1112, 1121, 1122, 1123, 1124, 1125, 1126, 1127, 1131, 1141])->select('id', 'nama_akun', 'saldo')->get();
         $penyertaan         = Akun::whereIn('kode_akun', [1201, 1202])->select('id', 'nama_akun', 'saldo')->get();
-        $asetTidakLancar    = Akun::whereIn('kode_akun', [1301, 1302, 1311, 1321, 1312, 1322, 1313, 1323, 1314, 1324, 1315, 1325])->select('id', 'nama_akun', 'saldo')->get();
+        $asetTidakLancar    = Akun::whereIn('kode_akun', [1301, 1302, 1311, 1321, 1312, 1322, 1313, 1323, 1314, 1324, 1315, 1325, 1316, 1326])->select('id', 'nama_akun', 'saldo')->get();
         $kewajibanPendek    = Akun::whereIn('kode_akun', [2101, 2111, 2112, 2113, 2114, 2115, 2116, 2117, 2121])->select('id', 'nama_akun', 'saldo')->get();
         $kewajibanPanjang   = Akun::whereIn('kode_akun', [2201])->select('id', 'nama_akun', 'saldo')->get();
         $ekuitas            = Akun::whereIn('kode_akun', [3101, 3102, 3111, 3112, 3113, 3121, 3122, 3131])->select('id', 'nama_akun', 'saldo')->get();
