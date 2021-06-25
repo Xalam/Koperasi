@@ -140,6 +140,12 @@
             width: 40%;
         }
 
+        .suffix {
+            margin-top: -35px;
+            float: right;
+            margin-right: 15px;
+        }
+
     </style>
 </head>
 
@@ -155,7 +161,7 @@
                         <div class="row">
                             <img src="{{ asset('assets/dist/img/logo-koperasi.png') }}" alt="Primkop Logo" class="brand-image img-circle elevation-3"
                                 style="opacity: .9; width: 60px; height: 60px;">
-                                <h5 style="margin-left: 10px; margin-top: 5px;">Primer Koperasi Polrestabes <br> Semarang</h5>
+                                <h5 style="margin-left: 25px; margin-top: 5px;" class="text-center">Primer Koperasi Polrestabes <br> Semarang</h5>
                         </div>
                         <div class="row" style="margin-bottom: 20px; margin-top: 20px;">
                             <div class="line"></div>
@@ -170,10 +176,13 @@
                                 <label for="input-username">Username</label>
                             </div>
 
-                            <div class="form-label-group">
+                            <div class="form-label-group" id="password">
                                 <input type="password" id="input-password" name="password" class="form-control"
-                                    placeholder="Password" required>
-                            <label for="input-password">Password</label>
+                                placeholder="Password" required>
+                                <div class="suffix">
+                                    <a href=""><i class="fas fa-eye-slash" aria-hidden="true"></i></a>
+                                </div>
+                                <label for="input-password">Password</label>
                             </div>
 
                             <button class="btn btn-lg btn-primary btn-block text-uppercase"
@@ -204,6 +213,23 @@
         })
     </script>
     @endif
+
+    <script>
+        $(function () {
+            $("#password a").on('click', function(event) {
+                event.preventDefault();
+                if ($('#password input').attr("type") == "text") {
+                    $('#password input').attr('type', 'password');
+                    $('#password i').addClass( "fa-eye-slash" );
+                    $('#password i').removeClass( "fa-eye" );
+                } else if ($('#password input').attr("type") == "password") {
+                    $('#password input').attr('type', 'text');
+                    $('#password i').removeClass( "fa-eye-slash" );
+                    $('#password i').addClass( "fa-eye" );
+                }
+            });
+        })
+    </script>
 
 </body>
 

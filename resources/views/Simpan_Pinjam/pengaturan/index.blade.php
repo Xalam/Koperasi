@@ -31,8 +31,8 @@
                         <thead>
                             <tr>
                                 <th>No</th>
-                                <th>Nama</th>
-                                <th>Angka</th>
+                                <th class="text-center">Nama</th>
+                                <th class="text-center">Angka</th>
                                 <th>Aksi</th>
                             </tr>
                         </thead>
@@ -41,6 +41,26 @@
             </div>
         </div>
     </div>
+
+    @if(auth()->user()->role == 'admin' || auth()->user()->role == 'ketua_koperasi')
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">Pengaturan Lainnya</div>
+                </div>
+                <div class="card-body">
+                    <div class="form-group">
+                        <p style="margin-bottom: 5px;" class="text-danger">Klik <b>"Hapus Jurnal"</b> untuk menghapus semua jurnal umum</p>
+                        <div class="form-group">
+                            <a href="#mymodal" data-remote="{{ route('list.modal-all', 1) }}" data-toggle="modal" data-target="#mymodal" class="btn btn-danger btn-sm"><i class="far fa-trash-alt"></i>&nbsp; Hapus Jurnal</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    @endif
 @endsection
 
 @section('script')
@@ -63,6 +83,16 @@
                 "responsive": true,
                 "deferRender": true,
                 "ajax": "{{ route('list.index') }}",
+                "columnDefs": [
+                    {
+                        "targets": 0,
+                        "className": "text-center"
+                    },
+                    {
+                        "targets": 3,
+                        "className": "text-center"
+                    }
+                ],
                 "columns": [{
                         data: 'no'
                     },
@@ -96,7 +126,7 @@
 
                 modal.find('.modal-content').load(button.data("remote"));
             });
-        });
+      });
 
     </script>
 

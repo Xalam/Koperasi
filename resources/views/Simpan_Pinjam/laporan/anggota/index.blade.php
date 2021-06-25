@@ -31,14 +31,14 @@
                             <tr>
                                 <th>No</th>
                                 <th>Kode Anggota</th>
-                                <th>Nama Anggota</th>
+                                <th class="text-center">Nama Anggota</th>
                                 <th>Gender</th>
                                 <th>Agama</th>
                                 <th>TTL</th>
-                                <th>Alamat</th>
+                                <th class="text-center">Alamat</th>
                                 <th>No HP</th>
                                 <th>No WA</th>
-                                <th>Jabatan</th>
+                                <th class="text-center">Jabatan</th>
                             </tr>
                         </thead>
                     </table>
@@ -69,6 +69,36 @@
                 "ajax": {
                     url: "{{ route('data-anggota.index') }}"
                 },
+                "columnDefs": [
+                    {
+                        "targets": 0,
+                        "className": "text-center"
+                    },
+                    {
+                        "targets": 1,
+                        "className": "text-center"
+                    },
+                    {
+                        "targets": 3,
+                        "className": "text-center"
+                    },
+                    {
+                        "targets": 4,
+                        "className": "text-center"
+                    },
+                    {
+                        "targets": 5,
+                        "className": "text-right"
+                    },
+                    {
+                        "targets": 7,
+                        "className": "text-right"
+                    },
+                    {
+                        "targets": 8,
+                        "className": "text-center"
+                    },
+                ],
                 "columns": [{
                         data: 'no'
                     },

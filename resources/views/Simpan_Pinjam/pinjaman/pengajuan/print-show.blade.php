@@ -114,21 +114,25 @@
                                 <div class="table-responsive">
                                     <table class="table">
                                         <tr>
-                                            <th style="width:50%">Nominal Pinjaman:</th>
-                                            <td>Rp. {{ number_format($pinjaman->nominal_pinjaman, 2, ',', '.') }}
+                                            <th style="width:50%">Nominal Pinjaman</th>
+                                            <td>: Rp. {{ number_format($pinjaman->nominal_pinjaman, 2, ',', '.') }}
                                             </td>
                                         </tr>
                                         <tr>
-                                            <th style="width:50%">Biaya Provisi:</th>
-                                            <td>Rp. {{ number_format($pinjaman->biaya_provisi, 2, ',', '.') }}</td>
+                                            <th style="width:50%">Biaya Provisi</th>
+                                            <td>: Rp. {{ number_format($pinjaman->biaya_provisi, 2, ',', '.') }}</td>
                                         </tr>
                                         <tr>
-                                            <th style="width:50%">Biaya Asuransi:</th>
-                                            <td>Rp. {{ number_format($pinjaman->biaya_asuransi, 2, ',', '.') }}</td>
+                                            <th style="width:50%">Biaya Asuransi</th>
+                                            <td>: Rp. {{ number_format($pinjaman->biaya_asuransi, 2, ',', '.') }}</td>
                                         </tr>
                                         <tr>
-                                            <th style="width:50%">Biaya Administrasi:</th>
-                                            <td>Rp. {{ number_format($pinjaman->biaya_admin, 2, ',', '.') }}</td>
+                                            <th style="width:50%">Biaya Administrasi</th>
+                                            <td>: Rp. {{ number_format($pinjaman->biaya_admin, 2, ',', '.') }}</td>
+                                        </tr>
+                                        <tr>
+                                            <th style="width:50%">Total Diterima</th>
+                                            <td>: Rp. {{ number_format($pinjaman->nominal_pinjaman - $pinjaman->biaya_provisi - $pinjaman->biaya_asuransi - $pinjaman->biaya_admin, 2, ',', '.') }}</td>
                                         </tr>
                                     </table>
                                 </div>

@@ -75,6 +75,12 @@
                                 <th>Aksi</th>
                             </tr>
                         </thead>
+                        <tfoot>
+                            <th colspan="6"><b>Total</b></th>
+                            <th class="text-right"><b>{{ number_format($debet, 2, ',', '.') }}</b></th>
+                            <th class="text-right"><b>{{ number_format($kredit, 2, ',', '.') }}</th>
+                            <th></th>
+                        </tfoot>
                     </table>
                 </div>
             </div>

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Simpan_Pinjam\Pengaturan;
 
 use App\Http\Controllers\Controller;
+use App\Models\Simpan_Pinjam\Laporan\JurnalUmum;
 use App\Models\Simpan_Pinjam\Pengaturan\Pengaturan;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -121,11 +122,12 @@ class PengaturanController extends Controller
      */
     public function destroy($id)
     {
-        $pengaturan = Pengaturan::findOrFail($id);
-        $pengaturan->delete();
+        if ($id == 152) {
+            JurnalUmum::truncate();
+        }
 
         return redirect()->route('list.index')->with([
-            'success' => 'Data pengaturan berhasil dihapus'
+            'success' => 'Berhasil menghapus seluruh jurnal'
         ]);
     }
 
@@ -134,5 +136,10 @@ class PengaturanController extends Controller
         $pengaturan = Pengaturan::findOrFail($id);
 
         return view('Simpan_Pinjam.pengaturan.modal', compact('pengaturan'));
+    }
+    
+    public function modal_all($id)
+    {
+        return view('Simpan_Pinjam.pengaturan.modal-delete');
     }
 }

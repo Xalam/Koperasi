@@ -17,6 +17,8 @@ class JurnalUmumController extends Controller
     public function index()
     {
         $jurnal = JurnalUmum::orderBy('id', 'DESC')->get();
+        $debet  = $jurnal->sum('debet');
+        $kredit = $jurnal->sum('kredit');
 
         if (request()->ajax()) {
             $data  = [];
@@ -38,7 +40,7 @@ class JurnalUmumController extends Controller
             return response()->json(compact('data'));
         }
 
-        return view('Simpan_Pinjam.laporan.jurnal-umum.index');
+        return view('Simpan_Pinjam.laporan.jurnal-umum.index', compact('debet', 'kredit'));
     }
 
     /**

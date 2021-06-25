@@ -207,16 +207,6 @@ class SimpananController extends Controller
         $kodeSimpanan = Simpanan::orderBy('id', 'DESC')->first();
 
         if ($kodeSimpanan->status == 1) {
-            #Simpan Jurnal Kas
-            $jurnal = new JurnalUmum();
-            $jurnal->kode_jurnal   = 'JU-' . str_pad($idJurnal, 6, '0', STR_PAD_LEFT);
-            $jurnal->id_akun        = $idKas;
-            $jurnal->tanggal        = date('Y-m-d');
-            $jurnal->keterangan     = 'Simpanan ( ' . $kodeSimpanan->kode_simpanan . ' )';
-            $jurnal->debet          = 0;
-            $jurnal->kredit         = $kodeSimpanan->nominal;
-            $jurnal->save();
-
             if ($kodeSimpanan->jenis_simpanan == 1) {
                 $idSimpan = $idPokok;
             } elseif ($kodeSimpanan->jenis_simpanan == 2) {
@@ -230,10 +220,19 @@ class SimpananController extends Controller
             $jurnal->id_akun        = $idSimpan;
             $jurnal->tanggal        = date('Y-m-d');
             $jurnal->keterangan     = 'Simpanan ( ' . $kodeSimpanan->kode_simpanan . ' )';
+            $jurnal->debet          = 0;
+            $jurnal->kredit         = $kodeSimpanan->nominal;
+            $jurnal->save();
+
+            #Simpan Jurnal Kas
+            $jurnal = new JurnalUmum();
+            $jurnal->kode_jurnal   = 'JU-' . str_pad($idJurnal, 6, '0', STR_PAD_LEFT);
+            $jurnal->id_akun        = $idKas;
+            $jurnal->tanggal        = date('Y-m-d');
+            $jurnal->keterangan     = 'Simpanan ( ' . $kodeSimpanan->kode_simpanan . ' )';
             $jurnal->debet          = $kodeSimpanan->nominal;
             $jurnal->kredit         = 0;
             $jurnal->save();
-
 
             #Update Saldo
             if ($kodeSimpanan->jenis_simpanan == 3) {
@@ -339,16 +338,6 @@ class SimpananController extends Controller
         $kodeSimpanan = Simpanan::where('id', $id)->first();
 
         if ($request->status == 1) {
-            #Simpan Jurnal Kas
-            $jurnal = new JurnalUmum();
-            $jurnal->kode_jurnal   = 'JU-' . str_pad($idJurnal, 6, '0', STR_PAD_LEFT);
-            $jurnal->id_akun        = $idKas;
-            $jurnal->tanggal        = date('Y-m-d');
-            $jurnal->keterangan     = 'Simpanan ( ' . $kodeSimpanan->kode_simpanan . ' )';
-            $jurnal->debet          = 0;
-            $jurnal->kredit         = $kodeSimpanan->nominal;
-            $jurnal->save();
-
             if ($kodeSimpanan->jenis_simpanan == 1) {
                 $idSimpan = $idPokok;
             } elseif ($kodeSimpanan->jenis_simpanan == 2) {
@@ -360,6 +349,16 @@ class SimpananController extends Controller
             $jurnal = new JurnalUmum();
             $jurnal->kode_jurnal   = 'JU-' . str_pad($idJurnal, 6, '0', STR_PAD_LEFT);
             $jurnal->id_akun        = $idSimpan;
+            $jurnal->tanggal        = date('Y-m-d');
+            $jurnal->keterangan     = 'Simpanan ( ' . $kodeSimpanan->kode_simpanan . ' )';
+            $jurnal->debet          = 0;
+            $jurnal->kredit         = $kodeSimpanan->nominal;
+            $jurnal->save();
+
+            #Simpan Jurnal Kas
+            $jurnal = new JurnalUmum();
+            $jurnal->kode_jurnal   = 'JU-' . str_pad($idJurnal, 6, '0', STR_PAD_LEFT);
+            $jurnal->id_akun        = $idKas;
             $jurnal->tanggal        = date('Y-m-d');
             $jurnal->keterangan     = 'Simpanan ( ' . $kodeSimpanan->kode_simpanan . ' )';
             $jurnal->debet          = $kodeSimpanan->nominal;

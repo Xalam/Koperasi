@@ -45,7 +45,7 @@
             
         </div>
         <div class="text-center">
-            <h3><b>Laporan Simpanan Anggota</b></h3><br>
+            <h3><b>Laporan Pinjaman Anggota</b></h3><br>
             <h3 style="margin-top: -30px; margin-bottom: 20px;"><b>Primer Koperasi Polrestabes Semarang</b></h3>
         </div>
         <!-- Table row -->
@@ -54,16 +54,16 @@
                 <table class="table table-striped">
                     <thead>
                         <tr>
-                            <th>No</th>
-                            <th>Kode Pinjaman</th>
-                            <th>Tanggal Pinjaman</th>
-                            <th>Anggota</th>
-                            <th>Pokok Pinjaman (Rp)</th>
-                            <th>Jangka Waktu (Bulan)</th>
-                            <th>Sisa Angsuran (Bulan)</th>
-                            <th>Angsuran Pokok (Rp)</th>
-                            <th>Angsuran Bunga (Rp)</th>
-                            <th>Jumlah Angsuran (Rp)</th>
+                            <th class="text-center">No</th>
+                            <th class="text-center">Kode Pinjaman</th>
+                            <th class="text-center">Tanggal Pinjaman</th>
+                            <th class="text-center">Anggota</th>
+                            <th class="text-center">Pokok Pinjaman (Rp)</th>
+                            <th class="text-center">Jangka Waktu (x)</th>
+                            <th class="text-center">Sisa Angsuran (x)</th>
+                            <th class="text-center">Angsuran Pokok (Rp)</th>
+                            <th class="text-center">Angsuran Bunga (Rp)</th>
+                            <th class="text-center">Jumlah Angsuran (Rp)</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -72,16 +72,16 @@
                         @endphp
                         @foreach ($pinjaman as $pin)
                         <tr>
-                            <td>{{ $no++ }}</td>
-                            <td>{{ $pin->kode_pinjaman }}</td>
-                            <td>{{ date('d-m-Y', strtotime($pin->tanggal)) }}</td>
-                            <td>{{ $pin->anggota->kd_anggota . ' / ' . $pin->anggota->nama_anggota }}</td>
-                            <td>{{ number_format($pin->nominal_pinjaman, 2, ',', '.') }}</td>
-                            <td>{{ $pin->tenor }}</td>
-                            <td>{{ $pin->tenor - $pin->angsuran_ke }}</td>
-                            <td>{{ number_format($pin->nominal_pinjaman / $pin->tenor, 2, ',', '.') }}</td>
-                            <td>{{ number_format(($pin->total_pinjaman - $pin->nominal_pinjaman) / $pin->tenor, 2, ',', '.') }}</td>
-                            <td>{{ number_format($pin->nominal_angsuran, 2, ',', '.') }}</td>
+                            <td class="text-center">{{ $no++ }}</td>
+                            <td class="text-center">{{ $pin->kode_pinjaman }}</td>
+                            <td class="text-center">{{ date('d-m-Y', strtotime($pin->tanggal)) }}</td>
+                            <td class="text-center">{{ $pin->anggota->kd_anggota . ' / ' . $pin->anggota->nama_anggota }}</td>
+                            <td class="text-right">{{ number_format($pin->nominal_pinjaman, 2, ',', '.') }}</td>
+                            <td class="text-center">{{ $pin->tenor }}</td>
+                            <td class="text-center">{{ $pin->tenor - $pin->angsuran_ke }}</td>
+                            <td class="text-right">{{ number_format($pin->nominal_pinjaman / $pin->tenor, 2, ',', '.') }}</td>
+                            <td class="text-right">{{ number_format(($pin->total_pinjaman - $pin->nominal_pinjaman) / $pin->tenor, 2, ',', '.') }}</td>
+                            <td class="text-right">{{ number_format($pin->nominal_angsuran, 2, ',', '.') }}</td>
                         </tr>
                         @endforeach
                     </tbody>

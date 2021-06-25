@@ -286,7 +286,7 @@
 
             $.validator.addMethod('filesize', function (value, element, param) {
                 return this.optional(element) || (element.files[0].size <= param)
-            },'Ukuran file tidak boleh lebih dari 2mb'); 
+            },'Ukuran file tidak boleh lebih dari 500 kb'); 
 
             $.validator.setDefaults({
                 submitHandler: function () {
@@ -337,7 +337,7 @@
                     foto: {
                         required: true,
                         extension: "jpg,jpeg,png",
-                        filesize: 2,
+                        filesize: 500000,
                     },
                 },
                 messages: {
@@ -356,7 +356,7 @@
                     foto: {
                         required: "Foto wajib diunggah",
                         extension: "Gunakan file berformat .jpg atau .jpeg atau png",
-                        filesize: "Ukuran file maksimal 2mb"
+                        filesize: "Ukuran file maksimal 500 kb"
                     }
                 },
                 errorElement: 'span',

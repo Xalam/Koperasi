@@ -55,7 +55,7 @@
                             </a>
                         </li>
                         @endif
-                        @if (auth()->user()->role == 'admin')
+                        @if (auth()->user()->role == 'admin' || auth()->user()->role == 'ketua_koperasi')
                         <li class="nav-item">
                             <a href="{{ route('admin.index') }}" class="nav-link {{ request()->is('simpan-pinjam/master/admin*') ? ' active' : '' }}">
                                 <i class="far fa-circle nav-icon"></i>
@@ -127,7 +127,7 @@
                         <li class="nav-item">
                             <a href="{{ route('tempo.index') }}" class="nav-link {{ request()->is('simpan-pinjam/pinjaman/tempo*') ? ' active' : '' }}">
                                 <i class="far fa-circle nav-icon"></i>
-                                <p>Angsuran Jatuh Tempo</p>
+                                <marquee direction="left"><span>Pelunasan Sebelum Jatuh Tempo</span></marquee>
                             </a>
                         </li>
                     </ul>
@@ -142,7 +142,7 @@
                         </p>
                     </a>
                     <ul class="nav nav-treeview">
-                        @if (auth()->user()->role != 'simpan_pinjam')
+                        @if (auth()->user()->role != 'simpan_pinjam' && auth()->user()->role != 'bendahara_pusat')
                         <li class="nav-item">
                             <a href="{{ route('jurnal.index') }}" class="nav-link {{ request()->is('simpan-pinjam/laporan/jurnal*') ? ' active' : '' }}">
                                 <i class="far fa-circle nav-icon"></i>
@@ -150,12 +150,14 @@
                             </a>
                         </li>
                         @endif
+                        @if(auth()->user()->role != 'bendahara_pusat')
                         <li class="nav-item">
                             <a href="{{ route('buku-besar.index') }}" class="nav-link {{ request()->is('simpan-pinjam/laporan/buku-besar*') ? ' active' : '' }}">
                                 <i class="far fa-circle nav-icon"></i>
                                 <p>Buku Besar</p>
                             </a>
                         </li>
+                        @endif
                         <li class="nav-item">
                             <a href="{{ route('lap-simpanan.index') }}" class="nav-link {{ request()->is('simpan-pinjam/laporan/simpanan*') ? ' active' : '' }}">
                                 <i class="far fa-circle nav-icon"></i>
@@ -174,6 +176,7 @@
                                 <p>Data Anggota</p>
                             </a>
                         </li>
+                        @if(auth()->user()->role != 'bendahara_pusat')
                         <li class="nav-item">
                             <a href="{{ route('shu.index') }}" class="nav-link {{ request()->is('simpan-pinjam/laporan/shu*') ? ' active' : '' }}">
                                 <i class="far fa-circle nav-icon"></i>
@@ -192,8 +195,10 @@
                                 <p>Posisi Keuangan</p>
                             </a>
                         </li>
+                        @endif
                     </ul>
                 </li>
+                @if(auth()->user()->role != 'bendahara_pusat')
                 <li class="nav-item {{ request()->is('simpan-pinjam/pengaturan*') ? ' menu-open' : '' }}">
                     <a href="#" class="nav-link {{ request()->is('simpan-pinjam/pengaturan*') ? ' active' : '' }}">
                         <i class="nav-icon fas fa-cog"></i>
@@ -211,6 +216,7 @@
                         </li>
                     </ul>
                 </li>
+                @endif
             </ul>
         </nav>
         <!-- /.sidebar-menu -->

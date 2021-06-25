@@ -60,8 +60,8 @@
                                 <th>Kode Pinjaman</th>
                                 <th>Kode Anggota</th>
                                 <th>Tanggal</th>
-                                <th class="text-right">Nama Anggota</th>
-                                <th class="text-right">Nominal Pinjaman</th>
+                                <th class="text-center">Nama Anggota</th>
+                                <th class="text-center">Nominal Pinjaman</th>
                                 <th width="10%">Status</th>
                                 <th>Aksi</th>
                             </tr>

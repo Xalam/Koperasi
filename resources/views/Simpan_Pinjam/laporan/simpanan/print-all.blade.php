@@ -54,12 +54,12 @@
                 <table class="table table-striped">
                     <thead>
                         <tr>
-                            <th>No</th>
-                            <th>Kode Simpanan</th>
-                            <th>Tanggal Simpan</th>
-                            <th>Anggota</th>
-                            <th>Jenis Simpanan</th>
-                            <th>Jumlah Simpan</th>
+                            <th class="text-center">No</th>
+                            <th class="text-center">Kode Simpanan</th>
+                            <th class="text-center">Tanggal Simpan</th>
+                            <th class="text-center">Anggota</th>
+                            <th class="text-center">Jenis Simpanan</th>
+                            <th class="text-center">Jumlah Simpan (Rp)</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -68,11 +68,11 @@
                         @endphp
                         @foreach ($simpanan as $sim)
                             <tr>
-                            <td>{{ $no++ }}</td>
-                            <td>{{ $sim->kode_simpanan }}</td>
-                            <td>{{ date('d-m-Y', strtotime($sim->tanggal)) }}</td>
-                            <td>{{ $sim->anggota->kd_anggota . ' / ' . $sim->anggota->nama_anggota }}</td>
-                            <td>
+                            <td class="text-center">{{ $no++ }}</td>
+                            <td class="text-center">{{ $sim->kode_simpanan }}</td>
+                            <td class="text-center">{{ date('d-m-Y', strtotime($sim->tanggal)) }}</td>
+                            <td class="text-center">{{ $sim->anggota->kd_anggota . ' / ' . $sim->anggota->nama_anggota }}</td>
+                            <td class="text-center">
                                 @if ($sim->jenis_simpanan == 1)
                                     Simpanan Pokok
                                 @elseif ($sim->jenis_simpanan == 2)
@@ -81,7 +81,7 @@
                                     Simpanan Sukarela
                                 @endif
                             </td>
-                            <td>Rp. {{ number_format($sim->nominal, 2, ',', '.') }}</td>
+                            <td class="text-right">{{ number_format($sim->nominal, 2, ',', '.') }}</td>
                         </tr>
                         @endforeach
                     </tbody>

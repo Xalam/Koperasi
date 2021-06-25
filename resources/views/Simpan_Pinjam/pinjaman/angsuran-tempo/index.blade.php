@@ -2,7 +2,7 @@
 
 @section('title', 'Pinjaman')
 
-@section('content_header', 'Angsuran Jatuh Tempo')
+@section('content_header', 'Pelunasan Sebelum Jatuh Tempo')
 
 @push('style')
     <!-- DataTables -->
@@ -16,7 +16,7 @@
 
 @section('breadcrumb')
     <li class="breadcrumb-item"><a href="#">Pinjaman</a></li>
-    <li class="breadcrumb-item active">Angsuran Jatuh Tempo</li>
+    <li class="breadcrumb-item active">Pelunasan Sebelum Jatuh Tempo</li>
 @endsection
 
 @section('content_main')
@@ -56,7 +56,7 @@
                                 <th>Kode Pinjaman</th>
                                 <th>Kode Anggota</th>
                                 <th>Tanggal</th>
-                                <th>Nama Anggota</th>
+                                <th class="text-center">Nama Anggota</th>
                                 <th class="text-center">Nominal Angsuran</th>
                                 <th class="text-center">Angsuran ke -</th>
                                 <th width="10%">Status</th>

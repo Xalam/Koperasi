@@ -193,7 +193,7 @@ Route::group(['prefix' => 'simpan-pinjam', 'middleware' => ['auth', 'checkrole:a
     Route::prefix('laporan')->group(function () {
         Route::resource('jurnal', 'Simpan_Pinjam\Laporan\JurnalUmumController');
         Route::post('jurnal/cetak', 'Simpan_Pinjam\Laporan\JurnalUmumController@print_show')->name('jurnal.print-show');
-        Route::get('jurnal/{id}', 'Simpan_Pinjam\Laporan\JurnalUmumController@modal')->name('jurnal.modal');
+        Route::get('jurnal/modal/{id}', 'Simpan_Pinjam\Laporan\JurnalUmumController@modal')->name('jurnal.modal');
 
         Route::get('anggota', 'Simpan_Pinjam\Laporan\DataAnggotaController@index')->name('data-anggota.index');
         Route::get('anggota/cetak/show', 'Simpan_Pinjam\Laporan\DataAnggotaController@print_show')->name('data-anggota.print-show');
@@ -229,5 +229,6 @@ Route::group(['prefix' => 'simpan-pinjam', 'middleware' => ['auth', 'checkrole:a
     Route::prefix('pengaturan')->group(function () {
         Route::resource('list', 'Simpan_Pinjam\Pengaturan\PengaturanController');
         // Route::get('list/modal/{id}', 'Simpan_Pinjam\Pengaturan\PengaturanController@modal')->name('list.modal');
+        Route::get('list/modal-all/{id}', 'Simpan_Pinjam\Pengaturan\PengaturanController@modal_all')->name('list.modal-all');
     });
 });

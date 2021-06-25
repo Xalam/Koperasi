@@ -131,9 +131,9 @@
                             <tr>
                                 <td><b>Total Kewajiban Jangka Pendek</b></td>
                                 @if ($sumPendek < 0)
-                                <td class="text-right">{{ number_format($sumPendek * -1, 2, ',', '.') }}</td>
+                                <td class="text-right"><b>{{ number_format($sumPendek * -1, 2, ',', '.') }}</b></td>
                                 @else
-                                <td class="text-right">{{ number_format($sumPendek, 2, ',', '.') }}</td>  
+                                <td class="text-right"><b>{{ number_format($sumPendek, 2, ',', '.') }}</b></td>  
                                 @endif
                             </tr>
                             <tr>
@@ -167,25 +167,25 @@
                             <tr>
                                 <td><b>Total Ekuitas</b></td>
                                 @if ($sumEkuitas < 0)
-                                <td class="text-right">{{ number_format($sumEkuitas * -1, 2, ',', '.') }}</td>
+                                <td class="text-right"><b>{{ number_format($sumEkuitas * -1, 2, ',', '.') }}</b></td>
                                 @else
-                                <td class="text-right">{{ number_format($sumEkuitas, 2, ',', '.') }}</td>  
+                                <td class="text-right"><b>{{ number_format($sumEkuitas, 2, ',', '.') }}</b></td>  
                                 @endif
                             </tr>
                             <tr>
                                 <td><b>SHU {{ date('Y') }}</b></td>
                                 @if ($shuTotal < 0)
-                                <td class="text-right">{{ number_format($shuTotal * -1, 2, ',', '.') }}</td>
+                                <td class="text-right"><b>{{ number_format($shuTotal * -1, 2, ',', '.') }}</b></td>
                                 @else
-                                <td class="text-right">{{ number_format($shuTotal, 2, ',', '.') }}</td>  
+                                <td class="text-right"><b>{{ number_format($shuTotal, 2, ',', '.') }}</b></td>  
                                 @endif
                             </tr>
                             <tr>
                                 <td><b>TOTAL KEWAJIBAN & EKUITAS</b></td>
                                 @if ($sumPendek + $sumPanjang + $sumEkuitas < 0)
-                                <td class="text-right">{{ number_format(($sumPendek + $sumPanjang + $sumEkuitas) * -1, 2, ',', '.') }}</td>
+                                <td class="text-right"><b>{{ number_format(($sumPendek + $sumPanjang + $sumEkuitas) * -1, 2, ',', '.') }}</b></td>
                                 @else
-                                <td class="text-right">{{ number_format($sumPendek + $sumPanjang + $sumEkuitas, 2, ',', '.') }}</td>  
+                                <td class="text-right"><b>{{ number_format($sumPendek + $sumPanjang + $sumEkuitas, 2, ',', '.') }}</b></td>  
                                 @endif
                             </tr>
                         </tbody>

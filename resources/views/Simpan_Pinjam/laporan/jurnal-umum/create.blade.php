@@ -37,10 +37,10 @@
                             <table class="table">
                                 <thead>
                                     <tr>
-                                        <th width="25%">Keterangan</th>
-                                        <th width="25%">Nama Akun</th>
-                                        <th width="20%">Debet</th>
-                                        <th width="20%">Kredit</th>
+                                        <th width="25%" class="text-center">Keterangan</th>
+                                        <th width="25%" class="text-center">Nama Akun</th>
+                                        <th width="20%" class="text-center">Debet</th>
+                                        <th width="20%" class="text-center">Kredit</th>
                                         <th width="10%">&nbsp;</th>
                                     </tr>
                                 </thead>

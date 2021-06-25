@@ -54,16 +54,16 @@
                 <table class="table table-striped">
                     <thead>
                         <tr>
-                            <th>No</th>
-                            <th>Kode Anggota</th>
-                            <th>Nama Anggota</th>
-                            <th>Gender</th>
-                            <th>Agama</th>
-                            <th>TTL</th>
-                            <th>Alamat</th>
-                            <th>No HP</th>
-                            <th>No WA</th>
-                            <th>Jabatan</th>
+                            <th class="text-center">No</th>
+                            <th class="text-center">Kode Anggota</th>
+                            <th class="text-center">Nama Anggota</th>
+                            <th class="text-center">Gender</th>
+                            <th class="text-center">Agama</th>
+                            <th class="text-center">TTL</th>
+                            <th class="text-center">Alamat</th>
+                            <th class="text-center">No HP</th>
+                            <th class="text-center">No WA</th>
+                            <th class="text-center">Jabatan</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -72,15 +72,15 @@
                         @endphp
                         @foreach ($anggota as $ang)
                             <tr>
-                            <td>{{ $no++ }}</td>
-                            <td>{{ $ang->kd_anggota }}</td>
+                            <td class="text-center">{{ $no++ }}</td>
+                            <td class="text-center">{{ $ang->kd_anggota }}</td>
                             <td>{{ $ang->nama_anggota }}</td>
-                            <td>{{ $ang->jenis_kelamin }}</td>
-                            <td>{{ $ang->agama }}</td>
-                            <td>{{ $ang->tempat_lahir .', '. date('d-m-Y', strtotime($ang->tanggal_lahir))  }}</td>
+                            <td class="text-center">{{ $ang->jenis_kelamin }}</td>
+                            <td class="text-center">{{ $ang->agama }}</td>
+                            <td class="text-center">{{ $ang->tempat_lahir .', '. date('d-m-Y', strtotime($ang->tanggal_lahir))  }}</td>
                             <td>{{ $ang->alamat }}</td>
-                            <td>{{ $ang->no_hp }}</td>
-                            <td>{{ $ang->no_wa }}</td>
+                            <td class="text-center">{{ $ang->no_hp }}</td>
+                            <td class="text-center">{{ $ang->no_wa }}</td>
                             <td>{{ $ang->jabatan }}</td>
                         </tr>
                         @endforeach
