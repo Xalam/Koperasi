@@ -65,8 +65,12 @@
                     <tbody>
                         @php
                             $no = 1;
+                            $total = 0;
                         @endphp
                         @foreach ($simpanan as $sim)
+                        @php
+                            $total += $sim->nominal;
+                        @endphp
                             <tr>
                             <td class="text-center">{{ $no++ }}</td>
                             <td class="text-center">{{ $sim->kode_simpanan }}</td>
@@ -84,6 +88,10 @@
                             <td class="text-right">{{ number_format($sim->nominal, 2, ',', '.') }}</td>
                         </tr>
                         @endforeach
+                        <tr>
+                            <td colspan="5" class="text-center"><b>Jumlah Simpanan</b></td>
+                            <td class="text-right"><b>{{ number_format($total, 2, ',', '.') }}</b></td>
+                        </tr>
                     </tbody>
                 </table>
             </div>
