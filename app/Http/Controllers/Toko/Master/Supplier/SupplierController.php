@@ -20,4 +20,20 @@ class SupplierController extends Controller
 
         return redirect('/toko/master/supplier');
     }
+
+    public function update(Request $request) {
+        SupplierModel::where('id', $request->id)->update($request->all());
+
+        $supplier = SupplierModel::where('id', $request->id)->first();
+
+        return response()->json(['code' => 200, 'supplier' => $supplier]);
+    }
+
+    public function delete(Request $request) {
+        SupplierModel::where('id', $request->id)->delete();
+
+        $supplier = SupplierModel::where('id', $request->id)->first();
+
+        return response()->json(['code' => 200, 'supplier' => $supplier]);
+    }
 }

@@ -15,6 +15,7 @@ class PelangganModel extends Model
         'kode',
         'nama',
         'alamat',
-        'telepon'
+        'telepon',
+        'wa'
     ];
 }

@@ -13,4 +13,12 @@ class DataBarangController extends Controller
                             ->orderBy('nama')
                             ->get();
     }
+
+    public function dataReturBarang($id) {
+        return BarangModel::select('barang.*')
+                            ->join('pembelian_barang', 'pembelian_barang.id_barang', '=', 'barang.id')
+                            ->join('pembelian', 'pembelian.nomor', '=', 'pembelian_barang.nomor')
+                            ->where('pembelian.id', $id)
+                            ->get();
+    }
 }

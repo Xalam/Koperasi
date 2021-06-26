@@ -20,4 +20,20 @@ class PelangganController extends Controller
 
         return redirect('/toko/master/pelanggan');
     }
+
+    public function update(Request $request) {
+        PelangganModel::where('id', $request->id)->update($request->all());
+
+        $pelanggan = PelangganModel::where('id', $request->id)->first();
+
+        return response()->json(['code' => 200, 'pelanggan' => $pelanggan]);
+    }
+
+    public function delete(Request $request) {
+        PelangganModel::where('id', $request->id)->delete();
+
+        $pelanggan = PelangganModel::where('id', $request->id)->first();
+
+        return response()->json(['code' => 200, 'pelanggan' => $pelanggan]);
+    }
 }

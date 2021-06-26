@@ -1,4 +1,4 @@
-@extends('layout')
+@extends('toko.layout')
 
 @section('main')
 <div

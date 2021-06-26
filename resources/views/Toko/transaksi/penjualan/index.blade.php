@@ -2,136 +2,316 @@
 
 @section('main')
 <div class="card m-6">
-    <div class="card-body">
-        <div class="row align-item-center mb-1">
-            {!! Form::label(null, 'Tanggal', ['class' => 'col-4']) !!}
-            {!! Form::label(null, '2021-05-03', ['class' => 'col-4']) !!}
-            {!! Form::label(null, 'No. Jual', ['class' => 'offset-6 col-4']) !!}
-            {!! Form::text(null, '0', ['class' => 'col-6']) !!}
+    <p class="card-header bg-light">Tambah Penjualan</p>
+    <div id="form" class="card-body">
+        {!! Form::open(['url' => '/toko/transaksi/penjualan/jual']) !!}
+        <div class="row-lg align-item-center mb-2">
+            {!! Form::label(null, 'Tanggal', ['class' => 'col-lg-2']) !!}
+            {!! Form::date('tanggal', null, ['class' => 'col-lg-2 form-control form-control-sm', 'required']) !!}
+            {!! Form::label(null, 'No. Jual', ['class' => 'offset-lg-2 col-lg-2']) !!}
+            {!! Form::text('nomor', null, ['class' => 'col-lg-3 form-control form-control-sm', 'readonly']) !!}
+        </div>
+        <div class="row-lg align-item-center mb-2">
+            {!! Form::label(null, 'Pelanggan', ['class' => 'col-lg-2 fw-bold']) !!}
+            <div class="w-100"></div>
+            {!! Form::label(null, 'Kode Pelanggan', ['class' => 'col-lg-2']) !!}
+            {!! Form::select('kode_pelanggan', $kode_pelanggan, null, ['class' => 'col-lg-4 form-select
+            form-select-sm', 'required']) !!}
+            {!! Form::label(null, 'Tempo', ['class' => 'offset-lg-1 col-lg-1']) !!}
+            {!! Form::number('tempo', null, ['class' => 'col-lg-1 form-control form-control-sm', 'readonly']) !!}
+        </div>
+        <div class="row-lg align-item-center mb-2">
+            {!! Form::label(null, 'Nama Pelanggan', ['class' => 'col-lg-2']) !!}
+            {!! Form::select('nama_pelanggan', $pelanggan, null, ['class' => 'col-lg-9 form-select form-select-sm',
+            'required']) !!}
+        </div>
+        <div class="row-lg align-item-center mb-2">
+            {!! Form::label(null, 'Alamat', ['class' => 'col-lg-2']) !!}
+            {!! Form::text('alamat', null, ['class' => 'col-lg-9 form-control form-control-sm', 'required']) !!}
+        </div>
+        <div class="row-lg align-item-center mb-2">
+            {!! Form::label(null, 'Nomor Telepon', ['class' => 'col-lg-2']) !!}
+            {!! Form::number('telepon', null, ['class' => 'col-lg-2 form-control form-control-sm', 'required']) !!}
+        </div>
+        <div class="row-lg align-item-center mb-2">
+            {!! Form::label(null, 'Nomor WA', ['class' => 'col-lg-2']) !!}
+            {!! Form::number('wa', null, ['class' => 'col-lg-2 form-control form-control-sm', 'required']) !!}
         </div>
         <br>
-        <div class="row align-item-center mb-1">
-            {!! Form::label(null, 'Pelanggan', ['class' => 'col-5 font-weight-bold']) !!}
-        </div>
-        <div class="row align-item-center mb-1">
-            {!! Form::label(null, 'Kode Pelanggan', ['class' => 'col-5']) !!}
-            {!! Form::select(null, ['Test01' => 'Test01', 'Test02' => 'Test02'], null, ['class' => 'col-8']) !!}
-        </div>
-        <div class="row align-item-center mb-1">
-            {!! Form::label(null, 'Nama Pelanggan', ['class' => 'col-5']) !!}
-            {!! Form::select(null, ['Pelanggan 1' => 'Pelanggan 1', 'Pelanggan 2' => 'Pelanggan 2'], null, ['class'
-            =>
-            'col-14']) !!}
-        </div>
-        <div class="row align-item-center mb-1">
-            {!! Form::label(null, 'Alamat', ['class' => 'col-5']) !!}
-            {!! Form::text(null, null, ['class' => 'col-14']) !!}
-        </div>
-        <div class="row align-item-center mb-1">
-            {!! Form::label(null, 'Phone', ['class' => 'col-5']) !!}
-            {!! Form::text(null, null, ['class' => 'col-8']) !!}
-        </div>
-        <br>
-        <div class="row align-item-center mb-1">
-            {!! Form::label(null, 'Barang', ['class' => 'font-weight-bold']) !!}
-            {!! Form::label(null, 'Pembayaran', ['class' => 'ms-2 font-weight-bold']) !!}
-        </div>
-        <div class="row align-item-center mb-1">
-            <div class="col-8">
-                {!! Form::label(null, 'Kode', ['class' => 'col-5']) !!}
-                {!! Form::text(null, null, ['class' => 'col-8']) !!}
+        <div class="row-lg mb-2">
+            <div class="col-lg-6">
+                {!! Form::label(null, 'Barang', ['class' => 'fw-bold']) !!}
+                <div class="w-100"></div>
+                {!! Form::label(null, 'Kode') !!}
+                {!! Form::select('kode_barang', $kode_barang, null, ['class' => 'col-lg-12 form-control
+                form-control-sm', 'required']) !!}
             </div>
-            <div class="offset-8 col-5 text-center">
-                <h2 class="color-danger">Rp. 1.000.000.000,-</h2>
-            </div>
-            <div class="col-5 text-center">
-                <h2 class="color-success">Rp. 1.000.000.000,-</h2>
+            <div class="col-lg-6">
+                {!! Form::label(null, 'Pembayaran', ['class' => 'fw-bold']) !!}
+                <div class="row-lg text-center">
+                    {!! Form::number('jumlah_harga', null, ['class' => 'd-none']) !!}
+                    <h3 id="jumlah-harga" class="color-danger col-lg-6">Rp. 0,-</h3>
+                    {!! Form::text('jumlah_kembalian', null, ['class' => 'd-none']) !!}
+                    <h3 id="jumlah-kembalian" class="color-success col-lg-6">Rp. 0,-</h3>
+                </div>
             </div>
         </div>
-        <div class="row align-item-center mb-1">
-            <div class="offset-50 col-4">
-                {!! Form::label(null, 'Jenis Pembayaran', ['class' => 'col-4']) !!}
-                {!! Form::select('jenis_pembayaran', ['Kredit' => 'Kredit', 'Tunai' => 'Tunai'], [], ['class' => 'col-4']) !!}
+        <div class="offset-lg-6 row-lg align-item-center mb-2">
+            <div class="col-lg-6">
+                {!! Form::label(null, 'Jenis Pembayaran') !!}
+                {!! Form::select('pembayaran', $pembayaran, [], ['class' =>
+                'col-lg-12 form-select form-select-sm']) !!}
             </div>
-            <div class="col-5 offset-5">
-                {!! Form::label('dibayar', 'Dibayar', ['class' => 'col-4 hide']) !!}
-                {!! Form::text('jumlah_bayar', null, ['class' => 'col-6 hide']) !!}
+            <div class="col-lg-6">
+                {!! Form::label('dibayar', 'Dibayar', ['class' => 'col-lg-12 d-none']) !!}
+                {!! Form::text('jumlah_bayar', null, ['class' => 'col-lg-12 form-control form-control-sm d-none']) !!}
             </div>
         </div>
         <hr class="mt-2 mb-2">
-        <div class="row align-item-center mb-2">
-            <div class="col-5">
+        <div class="row-lg align-item-center mb-2">
+            <div class="col-lg-4">
                 {!! Form::label(null, 'Nama', null) !!}
-                {!! Form::text(null, null, null) !!}
+                {!! Form::select('nama_barang', $barang, [], ['class' => 'col-lg-12 form-select form-select-sm',
+                'required']) !!}
             </div>
-            <div class="col-3 offset-3">
+            <div class="col-lg-2">
                 {!! Form::label(null, 'Sisa Stok', null) !!}
-                {!! Form::text(null, null, null) !!}
+                {!! Form::number('stok', 0, ['class' => 'col-lg-12 form-control form-control-sm']) !!}
             </div>
-            <div class="col-3 offset-4">
+            <div class="col-lg-2">
                 {!! Form::label(null, 'Harga Satuan', null) !!}
-                {!! Form::text(null, null, null) !!}
+                {!! Form::number('harga_satuan', 0, ['class' => 'col-lg-12 form-control form-control-sm']) !!}
             </div>
-            <div class="col-3 offset-4">
-                {!! Form::label(null, 'Jumlah Beli', null) !!}
-                {!! Form::text(null, null, null) !!}
+            <div class="col-lg-2">
+                {!! Form::label(null, 'Jumlah', null) !!}
+                {!! Form::number('jumlah', 0, ['class' => 'col-lg-12 form-control form-control-sm']) !!}
             </div>
-            <div class="col-3 offset-4">
+            <div class="col-lg-2">
                 {!! Form::label(null, 'Total Harga', null) !!}
-                {!! Form::text(null, null, null) !!}
+                {!! Form::number('total_harga', 0, ['class' => 'col-lg-12 form-control form-control-sm']) !!}
             </div>
         </div>
-        <div class="row align-item-center mb-1">
-            <a href="" class="btn btn-small btn-primary">Tambah</a>
+        <div class="d-grid gap-2">
+            <a id="tambah" class="btn btn-sm btn-primary">Tambah</a>
         </div>
-        <hr>
-        <div class="row align-item-center mb-1">
-            {!! Form::label(null, 'Daftar Barang', ['class' => 'col-3 font-weight-bold']) !!}
-        </div>
-        <div class="table-responsive">
-            <table class="table table-striped table-bordered table-hover">
-                <thead class="text-center text-nowrap">
+    </div>
+</div>
+
+<div class="card m-6">
+    <p class="card-header bg-light">Daftar Penjualan</p>
+    <div class="card-body">
+        <div class="table-responsive mb-2">
+            <table id="table-penjualan" class="table table-striped table-bordered table-hover nowrap">
+                <thead class="text-center">
                     <tr>
                         <th>No</th>
                         <th>Kode Barang</th>
                         <th class="col-2">Nama Barang</th>
-                        <th>Harga</th>
+                        <th>Harga Satuan</th>
                         <th>Jumlah</th>
                         <th>Harga Total</th>
                         <th>Opsi</th>
                     </tr>
                 </thead>
-                <tbody class="text-wrap">
-                    <tr>
-                        <th class="align-middle text-center">1</th>
-                        <td class="align-middle text-center">B01</td>
-                        <td class="align-middle">Buku</td>
-                        <td class="align-middle text-center">5</td>
-                        <td class="align-middle text-center">2500</td>
-                        <td class="align-middle text-center">12500</td>
-                        <td class="align-middle text-center"><button class="btn btn-small btn-danger">Hapus</button>
-                        </td>
-                    </tr>
+                <tbody id="table-data-penjualan">
                 </tbody>
             </table>
         </div>
-        <div class="row align-item-center mb-1">
-            {!! Form::submit('Submit', ['class' => 'btn btn-success btn-small']) !!}
+        <div class="d-grid gap-2 mb-2">
+            {!! Form::submit('Jual', ['class' => 'btn btn-success btn-sm']) !!}
         </div>
+        <div class="d-grid gap-2">
+            <a id="batal" class="btn btn-sm btn-danger">Batal</a>
+        </div>
+        {!! Form::close() !!}
     </div>
 </div>
 @endsection
 
 @section('script')
-    <script>
-        $('[name="jenis_pembayaran"]').change(function() {
-            if ($(this).val() == "Kredit") {
-                $('[for="dibayar"]').addClass('hide');
-                $('[name="jumlah_bayar"]').addClass('hide');
+<script src="{{ asset('js/base-url.js') }}"></script>
+<script src="{{ asset('js/data-barang-jual.js') }}"></script>
+<script src="{{ asset('js/data-pelanggan.js') }}"></script>
+<script src="{{ asset('js/nomor-penjualan.js') }}"></script>
+<script>
+var nomor;
+var jumlah_harga;
+
+$('#table-penjualan').DataTable();
+
+function tambah_daftar() {
+    $.ajax({
+        url: '/toko/transaksi/penjualan/store',
+        type: 'POST',
+        data: {
+            nomor: $('[name="nomor"]').val(),
+            id_barang: $('[name="kode_barang"]').val(),
+            jumlah: $('[name="jumlah"]').val(),
+            total_harga: $('[name="total_harga"]').val(),
+            _token: $('meta[name="csrf-token"]').attr('content')
+        },
+        success: function(response) {
+            if (response.code == 200) {
+                tampil_daftar();
+            }
+        }
+    });
+}
+
+function tampil_daftar() {
+    var i = 1;
+    nomor = $('[name="nomor"]').val();
+    jumlah_harga = 0;
+
+    $.ajax({
+        url: '/toko/transaksi/penjualan/' + nomor,
+        type: 'GET',
+        success: function(response) {
+            if (response.code == 200) {
+                $('#table-data-penjualan').empty();
+                $.each(response.barang_penjualan, function(index, value) {
+                    $('#table-data-penjualan').append('<tr>' +
+                        '<th class="align-middle text-center">' + i++ + '</th>' +
+                        '<td class="align-middle text-center">' + value.kode_barang + '</td>' +
+                        '<td class="align-middle">' + value.nama_barang + '</td>' +
+                        '<td class="align-middle text-center">' + value.harga_jual + '</td>' +
+                        '<td class="align-middle text-center">' + value.jumlah_barang +
+                        '</td>' +
+                        '<td class="align-middle text-center">' + value.total_harga + '</td>' +
+                        '<td class="align-middle text-center"><a id="hapus-' + value
+                        .id + '" class="btn btn-sm btn-danger">Hapus</a>' +
+                        '</td>' +
+                        '</tr>')
+
+                    jumlah_harga += value.total_harga;
+                })
+
+                $('[name="nomor"]').attr('readonly', true);
+
+                if (response.barang_penjualan.length > 0) {
+                    $('[name="tanggal"]').attr('readonly', true);
+                    $('[name="kode_pelanggan"]').attr('readonly', true);
+                    $('[name="nama_pelanggan"]').attr('readonly', true);
+                    $('[name="alamat"]').attr('readonly', true);
+                    $('[name="telepon"]').attr('readonly', true);
+                    $('[name="wa"]').attr('readonly', true);
+                } else {
+                    $('[name="kode_pelanggan"]').removeAttr('readonly');
+                    $('[name="nama_pelanggan"]').removeAttr('readonly');
+                    $('[name="alamat"]').removeAttr('readonly');
+                    $('[name="telepon"]').removeAttr('readonly');
+                    $('[name="wa"]').removeAttr('readonly');
+                }
+
+                $('#jumlah-harga').html("Rp. " + jumlah_harga + ",-");
+                $('[name="jumlah_harga"]').val(jumlah_harga);
+
+                if (response.pelanggan_penjualan) {
+                    $('[name="jumlah_bayar"]').val(response.pelanggan_penjualan.jumlah_bayar);
+                    $('#jumlah-kembalian').html("Rp. " + response.pelanggan_penjualan.jumlah_kembalian +
+                        ",-");
+                    $('[name="jumlah_kembalian"]').val(response.pelanggan_penjualan.jumlah_kembalian);
+
+                    $('[name="tanggal"]').val(response.pelanggan_penjualan.tanggal);
+                    $('[name="kode_pelanggan"]').val(response.pelanggan_penjualan.id_pelanggan);
+                    $('[name="nama_pelanggan"]').val(response.pelanggan_penjualan.id_pelanggan);
+                    $('[name="alamat"]').val(response.pelanggan_penjualan.alamat);
+                    $('[name="telepon"]').val(response.pelanggan_penjualan.telepon);
+                    $('[name="wa"]').val(response.pelanggan_penjualan.wa);
+
+                    $('[name="pembayaran"]').val(response.pelanggan_penjualan.pembayaran);
+                }
+
+                if ($('[name="pembayaran"]').val() == 1) {
+                    $('[for="dibayar"]').addClass('d-none');
+                    $('[name="jumlah_bayar"]').addClass('d-none');
+                } else {
+                    $('[for="dibayar"]').removeClass('d-none');
+                    $('[name="jumlah_bayar"]').removeClass('d-none');
+                }
+                $('#table-penjualan').DataTable();
+                kalkulasi_pembayaran();
+                return false;
+            }
+        }
+    });
+}
+
+function batal_transaksi() {
+    $.ajax({
+        url: '/toko/transaksi/penjualan/cancel/',
+        type: 'POST',
+        data: {
+            nomor: $('[name="nomor"]').val(),
+            _token: $('meta[name="csrf-token"]').attr('content')
+        },
+        success: function(response) {
+            if (response.code == 200) {
+                location.reload();
+            }
+        }
+    });
+}
+
+function kalkulasi_pembayaran() {
+    $('#jumlah-kembalian').html("Rp. " + ($('[name="jumlah_bayar"]').val() - jumlah_harga) + ",-");
+    $('[name="jumlah_kembalian"]').val($('[name="jumlah_bayar"]').val() - jumlah_harga);
+}
+
+$(function() {
+    $('#cek-nomor').click(function() {
+        tampil_daftar();
+    });
+
+    $('[name="pembayaran"]').change(function() {
+        if ($(this).val() == 1) {
+            $('[for="dibayar"]').addClass('d-none');
+            $('[name="jumlah_bayar"]').addClass('d-none');
+        } else {
+            $('[for="dibayar"]').removeClass('d-none');
+            $('[name="jumlah_bayar"]').removeClass('d-none');
+        }
+    });
+
+    $('[name="jumlah"]').change(function() {
+        $('[name="total_harga"]').val($('[name="harga_satuan"]').val() * $(this).val());
+    });
+
+    $('[name="kode_barang"]').change(function() {
+        $('[name="total_harga"]').val($('[name="harga_satuan"]').val() * $('[name="jumlah"]').val());
+    });
+
+    $('[name="jumlah_bayar"]').change(function() {
+        kalkulasi_pembayaran();
+    });
+
+    $('#tambah').click(function() {
+        var allFilled = false;
+        var skip = false;
+
+        document.getElementById('form').querySelectorAll('[required]').forEach(function(
+            i) {
+            if (!skip) {
+                if (!i.value) {
+                    i.focus();
+                    allFilled = false;
+                    skip = true;
+                } else {
+                    allFilled = true;
+                }
             } else {
-                $('[for="dibayar"]').removeClass('hide');
-                $('[name="jumlah_bayar"]').removeClass('hide');
+                return;
             }
         });
-    </script>
+
+        if (allFilled) {
+            tambah_daftar();
+        }
+    });
+
+    $('#batal').click(function() {
+        batal_transaksi();
+    });
+});
+</script>
 @endsection

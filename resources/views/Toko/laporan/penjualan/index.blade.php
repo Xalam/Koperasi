@@ -2,119 +2,69 @@
 
 @section('main')
 <div class="card m-6">
+    <p class="card-header bg-light">Laporan Penjualan</p>
     <div class="card-body">
-        {!! Form::open( ['url' => 'laporan/penjualan/cek', 'method' => 'GET']) !!}
-        <div class="row align-item-center mb-1">
-            {!! Form::label(null, 'Laporan Penjualan', ['class' => 'col-3 font-weight-bold']) !!}
+        {!! Form::open( ['url' => '/toko/laporan/penjualan', 'method' => 'GET']) !!}
+        <div class="row-lg align-item-center mb-2">
+            {!! Form::label(null, 'Tanggal Awal', ['class' => 'col-lg-2']) !!}
+            {!! Form::date('tanggal_awal', (isset($tanggal_awal) ? $tanggal_awal : null), ['class' => 'col-lg-2
+            form-control form-control-sm', 'required']) !!}
+            {!! Form::label(null, '-', ['class' => 'offset-lg-1 col-lg-1']) !!}
+            {!! Form::label(null, 'Tanggal Akhir', ['class' => 'col-lg-2']) !!}
+            {!! Form::date('tanggal_akhir', (isset($tanggal_akhir) ? $tanggal_akhir : null), ['class' => 'col-lg-2
+            form-control form-control-sm']) !!}
         </div>
-        <div class="row align-item-center mb-1">
-            {!! Form::label(null, 'Laporan Berdasarkan', ['class' => 'col-5']) !!}
-            {!! Form::select('select-laporan', ['Pilih' => '-- Pilih Jenis Laporan --', 'Nota' => 'Nota', 'Harian' => 'Harian', 'Mingguan' => 'Mingguan', 'Bulanan' =>
-            'Bulanan'], null, ['class' => 'col-8']) !!}
+        <div class="row-lg align-item-center mb-2">
+            {!! Form::label(null, 'Type Pembayaran', ['class' => 'col-lg-2']) !!}
+            {!! Form::select('type_pembayaran', $pembayaran, (isset($type_pembayaran) ? $type_pembayaran : null),
+            ['class' => 'col-lg-4 form-select form-select-sm']) !!}
         </div>
-        <div id="select-nota" class="hide">
-            <div class="row align-item-center mb-1">
-                {!! Form::label(null, 'No. Nota', ['class' => 'col-5']) !!}
-                {!! Form::text(null, null, ['class' =>'col-8']) !!}
-            </div>
-            <div class="row align-item-center mb-1">
-                {!! Form::submit('Cek', ['class' => 'btn btn-primary btn-small']) !!}
-            </div>
-        </div>
-        <div id="select-harian" class="hide">
-            <div class="row align-item-center mb-1">
-                {!! Form::label(null, 'Tanggal', ['class' => 'col-5']) !!}
-                {!! Form::date(null, null, ['class' =>'col-4']) !!}
-            </div>
-            <div class="row align-item-center mb-1">
-                {!! Form::submit('Cek', ['class' => 'btn btn-primary btn-small']) !!}
-            </div>
-        </div>
-        <div id="select-mingguan" class="hide">
-            <div class="row align-item-center mb-1">
-                {!! Form::label(null, 'Tanggal Awal', ['class' => 'col-5']) !!}
-                {!! Form::date(null, null, ['class' =>'col-4']) !!}
-            </div>
-            <div class="row align-item-center mb-1">
-                {!! Form::label(null, 'Tanggal Akhir', ['class' => 'col-5']) !!}
-                {!! Form::date(null, null, ['class' => 'col-4']) !!}
-            </div>
-            <div class="row align-item-center mb-1">
-                {!! Form::submit('Cek', ['class' => 'btn btn-primary btn-small']) !!}
-            </div>
-        </div>
-        <div id="select-bulanan" class="hide">
-            <div class="row align-item-center mb-1">
-                {!! Form::label(null, 'Bulan', ['class' => 'col-5']) !!}
-                {!! Form::select(null, [], null, ['class' =>'col-4']) !!}
-            </div>
-            <div class="row align-item-center mb-1">
-                {!! Form::label(null, 'Tahun', ['class' => 'col-5']) !!}
-                {!! Form::select(null, [], null, ['class' => 'col-2']) !!}
-            </div>
-            <div class="row align-item-center mb-1">
-                {!! Form::submit('Cek', ['class' => 'btn btn-primary btn-small']) !!}
-            </div>
+        <div class="d-grid gap-2">
+            {!! Form::submit('Cek', ['class' => 'btn btn-primary btn-sm']) !!}
         </div>
         {!! Form::close() !!}
-        <hr>
+    </div>
+</div>
+
+<div class="card m-6">
+    @if (isset($laporan_penjualan) && count($laporan_penjualan) > 0)
+    <p class="card-header bg-light">Daftar {{$pembayaran[$type_pembayaran]}}</p>
+    @else
+    <p class="card-header bg-light">Daftar </p>
+    @endif
+    <div class="card-body">
         <div class="table-responsive">
-            <table class="table table-striped table-bordered table-hover">
-                <thead class="text-center text-nowrap">
+            <table id="table-data" class="table table-striped table-bordered table-hover nowrap">
+                <thead class="text-center">
                     <tr>
                         <th>No</th>
-                        <th>Kode Akun</th>
-                        <th class="col-2">Nama Akun</th>
-                        <th>Saldo Awal</th>
-                        <th colspan="2">Opsi</th>
+                        <th>Kode Barang</th>
+                        <th class="col-2">Nama Barang</th>
+                        <th>Harga Jual</th>
+                        <th>Jumlah Jual</th>
+                        <th>Total Harga</th>
                     </tr>
                 </thead>
-                <tbody class="text-wrap">
+                @if (isset($laporan_penjualan) && count($laporan_penjualan) > 0)
+                <tbody>
+                    @php
+                    $i = 1 + 1 * ($laporan_penjualan->currentPage() - 1);
+                    @endphp
+                    @foreach ($laporan_penjualan AS $data)
                     <tr>
-                        <th class="align-middle text-center">1</th>
-                        <td class="align-middle text-center">B01</td>
-                        <td class="align-middle">Buku</td>
-                        <td class="align-middle text-center">5</td>
-                        <td class="align-middle text-center"><button class="btn btn-small btn-warning">Edit</button>
-                        <td class="align-middle text-center"><button class="btn btn-small btn-danger">Hapus</button>
+                        <th class="align-middle text-center">{{$i++}}</th>
+                        <td class="align-middle text-center">{{$data->kode}}</td>
+                        <td class="align-middle">{{$data->nama}}</td>
+                        <td class="align-middle text-center">{{$data->harga_jual}}</td>
+                        <td class="align-middle text-center">{{$data->jumlah}}</td>
+                        <td class="align-middle text-center">{{$data->total_harga}}</td>
                         </td>
                     </tr>
+                    @endforeach
                 </tbody>
             </table>
         </div>
+        @endif
     </div>
 </div>
-@endsection
-
-@section('script')
-    <script>
-        $('[name="select-laporan"]').change(function() {
-            if ($(this).val() == "Nota") {
-                $('#select-nota').removeClass('hide');
-                $('#select-harian').addClass('hide');
-                $('#select-mingguan').addClass('hide');
-                $('#select-bulanan').addClass('hide');
-            } else if ($(this).val() == "Harian") {
-                $('#select-nota').addClass('hide');
-                $('#select-harian').removeClass('hide');
-                $('#select-mingguan').addClass('hide');
-                $('#select-bulanan').addClass('hide');
-            } else if ($(this).val() == "Mingguan") {
-                $('#select-nota').addClass('hide');
-                $('#select-harian').addClass('hide');
-                $('#select-mingguan').removeClass('hide');
-                $('#select-bulanan').addClass('hide');
-            }  else if ($(this).val() == "Bulanan") {
-                $('#select-nota').addClass('hide');
-                $('#select-harian').addClass('hide');
-                $('#select-mingguan').addClass('hide');
-                $('#select-bulanan').removeClass('hide');
-            }  else {
-                $('#select-nota').addClass('hide');
-                $('#select-harian').addClass('hide');
-                $('#select-mingguan').addClass('hide');
-                $('#select-bulanan').addClass('hide');
-            }
-        });
-    </script>
 @endsection

@@ -20,4 +20,20 @@ class AdminController extends Controller
 
         return redirect('/toko/master/admin');
     }
+
+    public function update(Request $request) {
+        AdminModel::where('id', $request->id)->update($request->all());
+
+        $admin = AdminModel::where('id', $request->id)->first();
+
+        return response()->json(['code' => 200, 'admin' => $admin]);
+    }
+
+    public function delete(Request $request) {
+        AdminModel::where('id', $request->id)->delete();
+
+        $admin = AdminModel::where('id', $request->id)->first();
+
+        return response()->json(['code' => 200, 'admin' => $admin]);
+    }
 }

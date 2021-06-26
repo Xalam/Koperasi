@@ -14,6 +14,7 @@ class AkunModel extends Model
     protected $fillable = [
         'kode',
         'nama',
-        'saldo'
+        'debit', 
+        'kredit'
     ];
 }
