@@ -2,44 +2,60 @@
 
 @section('main')
 <div class="card m-6">
+    <p class="card-header bg-light">Laporan Persediaan</p>
     <div class="card-body">
-        {!! Form::open( ['url' => 'laporan/persediaan/cek', 'method' => 'GET']) !!}
-        <div class="row align-item-center mb-1">
-            {!! Form::label(null, 'Laporan Persediaan', ['class' => 'col-3 font-weight-bold']) !!}
+        {!! Form::open( ['url' => '/toko/laporan/persediaan/', 'method' => 'GET']) !!}
+        <div class="row-lg align-item-center mb-2">
+            {!! Form::label(null, 'Jumlah barang kurang dari', ['class' => 'col-lg-3']) !!}
+            {!! Form::number('jumlah_barang', (isset($jumlah_barang) ? $jumlah_barang : 0), ['class' => 'col-lg-1
+            form-control form-control-sm']) !!}
         </div>
-        <div class="row align-item-center mb-1">
-            {!! Form::label(null, 'Jumlah barang kurang dari', ['class' => 'col-5']) !!}
-            {!! Form::number(null, 0, ['class' => 'col-2 text-center']) !!}
-        </div>
-        <div class="row align-item-center mb-1">
-            {!! Form::submit('Cek', ['class' => 'btn btn-primary btn-small']) !!}
+        <div class="d-grid gap-2">
+            {!! Form::submit('Cek', ['class' => 'btn btn-primary btn-sm']) !!}
         </div>
         {!! Form::close() !!}
-        <hr>
+    </div>
+</div>
+
+<div class="card m-6">
+    @if (isset($laporan_persediaan) && count($laporan_persediaan) > 0)
+    <p class="card-header bg-light">Daftar Barang Kurang Dari {{$jumlah_barang}}</p>
+    @else
+    <p class="card-header bg-light">Daftar Barang </p>
+    @endif
+    <div class="card-body">
         <div class="table-responsive">
-            <table class="table table-striped table-bordered table-hover">
-                <thead class="text-center text-nowrap">
+            <table id="table-data" class="table table-striped table-bordered table-hover nowrap">
+                <thead class="text-center">
                     <tr>
                         <th>No</th>
-                        <th>Kode Akun</th>
-                        <th class="col-2">Nama Akun</th>
-                        <th>Saldo Awal</th>
-                        <th colspan="2">Opsi</th>
+                        <th>Kode Barang</th>
+                        <th class="col-2">Nama Barang</th>
+                        <th>Stok</th>
+                        <th>HPP</th>
+                        <th>Jumlah Harga</th>
                     </tr>
                 </thead>
-                <tbody class="text-wrap">
+                @if (isset($laporan_persediaan) && count($laporan_persediaan) > 0)
+                <tbody>
+                    @php
+                    $i = 1 + 1 * ($laporan_persediaan->currentPage() - 1);
+                    @endphp
+                    @foreach ($laporan_persediaan AS $data)
                     <tr>
-                        <th class="align-middle text-center">1</th>
-                        <td class="align-middle text-center">B01</td>
-                        <td class="align-middle">Buku</td>
-                        <td class="align-middle text-center">5</td>
-                        <td class="align-middle text-center"><button class="btn btn-small btn-warning">Edit</button>
-                        <td class="align-middle text-center"><button class="btn btn-small btn-danger">Hapus</button>
+                        <th class="align-middle text-center">{{$i++}}</th>
+                        <td class="align-middle text-center">{{$data->kode}}</td>
+                        <td class="align-middle">{{$data->nama}}</td>
+                        <td class="align-middle text-center">{{$data->stok}}</td>
+                        <td class="align-middle text-center">{{$data->harga_jual}}</td>
+                        <td class="align-middle text-center">{{$data->stok * $data->harga_jual}}</td>
                         </td>
                     </tr>
+                    @endforeach
                 </tbody>
             </table>
         </div>
+        @endif
     </div>
 </div>
 @endsection

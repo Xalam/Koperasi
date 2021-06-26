@@ -12,10 +12,12 @@ class PembelianModel extends Model
     protected $table = 'pembelian';
 
     protected $fillable = [
+        'tanggal',
         'nomor',
         'id_supplier',
-        'id_barang',
-        'jumlah',
-        'total_harga'
+        'jumlah_harga',
+        'jumlah_bayar',
+        'jumlah_kembalian',
+        'pembayaran'
     ];
 }

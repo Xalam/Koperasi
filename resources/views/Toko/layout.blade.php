@@ -8,13 +8,21 @@
 
     <title>Skripsi</title>
 
-    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
-    <link href="https://use.fontawesome.com/releases/v5.15.3/css/all.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
 
+    <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.9.2/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.25/js/dataTables.bootstrap5.min.js"></script>
+
+    <link rel="stylesheet" href="{{ asset('bootstrap 5/dist/css/bootstrap.css') }}">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.22/css/dataTables.bootstrap4.min.css">
     <link rel="stylesheet" href="{{ asset('css/sidebar.css') }}">
     <link rel="stylesheet" href="{{ asset('css/style.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="https://use.fontawesome.com/releases/v5.15.3/css/all.css" rel="stylesheet">
     <link rel="stylesheet" href="{{ asset('css/normalize.css') }}">
 
     @yield('style')
@@ -35,14 +43,22 @@
 </body>
 
 </html>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.9.2/umd/popper.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.js"></script>
-<script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk="
-    crossorigin="anonymous"></script>
 
 @yield('script')
 
 <script type="text/javascript">
+// var options = {
+//     "info": false,
+//     "paging": true,
+//     "autoWidth": false,
+//     "scrollX": true,
+//     "processing": true,
+// };
+
+$(document).ready(function() {
+    $('#table-data').DataTable();
+});
+
 jQuery(function($) {
     $.ajaxSetup({
         headers: {
@@ -54,8 +70,16 @@ jQuery(function($) {
         $(".sidebar-submenu").slideUp(200);
         $(".sidebar-submenu2").slideUp(200);
         $(".sidebar-submenu3").slideUp(200);
+        $(".sidebar-submenu4").slideUp(200);
+        $(".sidebar-submenu5").slideUp(200);
+        $(".sidebar-submenu6").slideUp(200);
         if ($(this).parent().hasClass("active")) {
             $(".sidebar-dropdown").removeClass("active");
+            $(".sidebar-dropdown2").removeClass("active");
+            $(".sidebar-dropdown3").removeClass("active");
+            $(".sidebar-dropdown4").removeClass("active");
+            $(".sidebar-dropdown5").removeClass("active");
+            $(".sidebar-dropdown6").removeClass("active");
             $(this).parent().removeClass("active");
         } else {
             $(".sidebar-dropdown").removeClass("active");
@@ -67,8 +91,15 @@ jQuery(function($) {
     $(".sidebar-dropdown2 > a").click(function() {
         $(".sidebar-submenu2").slideUp(200);
         $(".sidebar-submenu3").slideUp(200);
+        $(".sidebar-submenu4").slideUp(200);
+        $(".sidebar-submenu5").slideUp(200);
+        $(".sidebar-submenu6").slideUp(200);
         if ($(this).parent().hasClass("active")) {
             $(".sidebar-dropdown2").removeClass("active");
+            $(".sidebar-dropdown3").removeClass("active");
+            $(".sidebar-dropdown4").removeClass("active");
+            $(".sidebar-dropdown5").removeClass("active");
+            $(".sidebar-dropdown6").removeClass("active");
             $(this).parent().removeClass("active");
         } else {
             $(".sidebar-dropdown2").removeClass("active");
@@ -79,8 +110,14 @@ jQuery(function($) {
 
     $(".sidebar-dropdown3 > a").click(function() {
         $(".sidebar-submenu3").slideUp(200);
+        $(".sidebar-submenu4").slideUp(200);
+        $(".sidebar-submenu5").slideUp(200);
+        $(".sidebar-submenu6").slideUp(200);
         if ($(this).parent().hasClass("active")) {
             $(".sidebar-dropdown3").removeClass("active");
+            $(".sidebar-dropdown4").removeClass("active");
+            $(".sidebar-dropdown5").removeClass("active");
+            $(".sidebar-dropdown6").removeClass("active");
             $(this).parent().removeClass("active");
         } else {
             $(".sidebar-dropdown3").removeClass("active");
@@ -91,8 +128,12 @@ jQuery(function($) {
 
     $(".sidebar-dropdown4 > a").click(function() {
         $(".sidebar-submenu4").slideUp(200);
+        $(".sidebar-submenu5").slideUp(200);
+        $(".sidebar-submenu6").slideUp(200);
         if ($(this).parent().hasClass("active")) {
             $(".sidebar-dropdown4").removeClass("active");
+            $(".sidebar-dropdown5").removeClass("active");
+            $(".sidebar-dropdown6").removeClass("active");
             $(this).parent().removeClass("active");
         } else {
             $(".sidebar-dropdown4").removeClass("active");
@@ -103,8 +144,10 @@ jQuery(function($) {
 
     $(".sidebar-dropdown5 > a").click(function() {
         $(".sidebar-submenu5").slideUp(200);
+        $(".sidebar-submenu6").slideUp(200);
         if ($(this).parent().hasClass("active")) {
             $(".sidebar-dropdown5").removeClass("active");
+            $(".sidebar-dropdown6").removeClass("active");
             $(this).parent().removeClass("active");
         } else {
             $(".sidebar-dropdown5").removeClass("active");
@@ -148,5 +191,10 @@ jQuery(function($) {
             $(".page-wrapper").addClass("toggled");
         }
     });
+
+    if (window.innerWidth < 1280 && $('.page-wrapper').hasClass('toggled')) {
+        $(".page-wrapper").removeClass("toggled");
+    }
+
 });
 </script>
