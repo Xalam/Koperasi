@@ -1,5 +1,5 @@
 <div class="modal-header">
-    <h6 class="modal-title">Konfirmasi</h6>
+    <h5 class="modal-title">Konfirmasi</h5>
     <button type="button" class="close" data-dismiss="modal" aria-label="close">
         <span aria-hidden="true">&times;</span>
     </button>
@@ -7,11 +7,11 @@
 <div class="modal-body">
     <p>
         @if ($tarikSaldo->status == 0)
-            Apakah Anda ingin memproses permintaan saldo dari <strong>{{ $tarikSaldo->saldo->anggota->nama_anggota }}</strong><br>
+            Apakah Anda ingin memproses permintaan penarikan dari <strong>{{ $tarikSaldo->saldo->anggota->nama_anggota }}</strong><br>
             sebesar <strong>Rp {{ number_format($tarikSaldo->nominal, 2, ',', '.') }}</strong> ?
         @endif
         @if ($tarikSaldo->status == 1)
-            Apakah proses permintaan saldo dari <strong>{{ $tarikSaldo->saldo->anggota->nama_anggota }}</strong><br>
+            Apakah proses  permintaan penarikan dari <strong>{{ $tarikSaldo->saldo->anggota->nama_anggota }}</strong><br>
             sebesar <strong>Rp {{ number_format($tarikSaldo->nominal, 2, ',', '.') }}</strong> sudah selesai diproses ?
         @endif
     </p>

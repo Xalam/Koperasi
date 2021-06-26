@@ -151,6 +151,18 @@
                                 </tr>
                             @endforeach
                             <tr>
+                                <td><b>Total Kewajiban Jangka Panjang</b></td>
+                                <td class="text-right"><b>{{ number_format($sumPanjang, 2, ',', '.') }}</b></td>
+                            </tr>
+                            <tr>
+                                <td><b>TOTAL KEWAJIBAN</b></td>
+                                @if ($sumPendek + $sumPanjang < 0)
+                                <td class="text-right"><b>{{ number_format($sumPendek + $sumPanjang * -1, 2, ',', '.') }}</b></td>
+                                @else
+                                <td class="text-right"><b>{{ number_format($sumPendek + $sumPanjang, 2, ',', '.') }}</b></td>  
+                                @endif
+                            </tr>
+                            <tr>
                                 <td><b>Ekuitas</b></td>
                                 <td></td>
                             </tr>
@@ -165,7 +177,7 @@
                                 </tr>
                             @endforeach
                             <tr>
-                                <td><b>Total Ekuitas</b></td>
+                                <td><b>TOTAL EKUITAS</b></td>
                                 @if ($sumEkuitas < 0)
                                 <td class="text-right"><b>{{ number_format($sumEkuitas * -1, 2, ',', '.') }}</b></td>
                                 @else

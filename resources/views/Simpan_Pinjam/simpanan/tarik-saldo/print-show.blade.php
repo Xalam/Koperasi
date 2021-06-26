@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Simpan Pinjam | Simpanan Print</title>
+    <title>Simpan Pinjam | Penarikan Print</title>
 
     <!-- Google Font: Source Sans Pro -->
     <link rel="stylesheet"
@@ -23,13 +23,15 @@
                 <div class="col-12">        
                     <!-- Main content -->
                     <div class="invoice p-3 mb-3">
+                        <div class="col-12">
+                            <small class="float-right">Tanggal Cetak: {{ date('d-m-Y H:i:s') }}</small>
+                        </div>
                         <!-- title row -->
                         <div class="row">
-                            <div class="col-12">
+                            <div class="col-12" style="margin-bottom: 15px;">
                                 <h4>
                                     <img src="{{ asset('assets/dist/img/logo-koperasi.png') }}" alt="Primkop Logo" class="brand-image img-circle elevation-1" style="max-height: 30px;">
                                         Primkop Polrestabes Semarang
-                                    <small class="float-right">Tanggal: {{ date('d-m-Y', strtotime($tarikSaldo->tanggal)) }}</small>
                                 </h4>
                             </div>
                             <!-- /.col -->
@@ -40,7 +42,7 @@
                                 From
                                 <address>
                                     <strong>Primkop Polrestabes Semarang</strong><br>
-                                    Jl. Kaligarang No.1A, Petompon<br>
+                                    Jl. Kaligarang No.1A, Barusari<br>
                                     Semarang<br>
                                     Phone: 0895-2458-3818<br>
                                     Email: -
@@ -63,7 +65,9 @@
                             <!-- /.col -->
                         </div>
                         <!-- /.row -->
-        
+                        <div class="row" style="margin-bottom: 10px;">
+                            Lembar : <b>Bukti Penarikan Simpanan</b>
+                        </div>
                         <!-- Table row -->
                         <div class="row">
                             <div class="col-12 table-responsive">
@@ -71,12 +75,14 @@
                                     <thead>
                                         <tr>
                                             <th>No</th>
+                                            <th>Tanggal Penarikan</th>
                                             <th>Jumlah Penarikan</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         <tr>
                                             <td>1</td>
+                                            <td>{{ date('d-m-Y', strtotime($tarikSaldo->tanggal)) }}</td>
                                             <td>{{ number_format($tarikSaldo->nominal, 2, ',', '.') }}</td>
                                         </tr>
                                     </tbody>

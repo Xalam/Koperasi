@@ -40,7 +40,7 @@ class SaldoController extends Controller
                     'no'    => $no++,
                     'kode'  => $value->anggota->kd_anggota,
                     'nama'  => $value->anggota->nama_anggota,
-                    'saldo' => 'Rp. ' . number_format($value->saldo, 2, ',', '.'),
+                    'saldo' => number_format($value->saldo, 2, ',', '.'),
                 ];
             }
             return response()->json(compact('data'));

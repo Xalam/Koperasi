@@ -12,7 +12,7 @@ class SaldoTarik extends Model
     protected $table = 'tb_saldo_tarik';
 
     protected $fillable = [
-        'id_saldo', 'tanggal', 'nominal', 'status'
+        'id_saldo', 'tanggal', 'nominal', 'status', 'kode_jurnal'
     ];
 
     public function saldo()

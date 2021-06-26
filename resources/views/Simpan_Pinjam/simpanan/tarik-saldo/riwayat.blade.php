@@ -29,8 +29,8 @@
                             <tr>
                                 <th width="10%">No</th>
                                 <th>Tanggal</th>
-                                <th>Nama Anggota</th>
-                                <th>Nominal</th>
+                                <th class="text-center">Nama Anggota</th>
+                                <th class="text-center">Nominal (Rp)</th>
                                 <th>Aksi</th>
                             </tr>
                         </thead>
@@ -53,6 +53,23 @@
             $('#table-history').DataTable({
                 "stateSave": true,
                 "deferRender": true,
+                "columnDefs": [
+                {
+                  "targets": 0,
+                  "className": "text-center",
+                },
+                {
+                  "targets": 1,
+                  "className": "text-center",
+                },
+                {
+                  "targets": 3,
+                  "className": "text-right",
+                },
+                {
+                  "targets": 4,
+                  "className": "text-center",
+                }],
                 "ajax": {
                     url: "{{ route('tarik-saldo.history') }}"
                 },

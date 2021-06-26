@@ -44,7 +44,7 @@
                                 <th>Tanggal Simpan</th>
                                 <th>Jenis Simpanan</th>
                                 <th class="text-center">Nama Anggota</th>
-                                <th class="text-center">Nominal Setoran</th>
+                                <th class="text-center">Nominal Setoran (Rp)</th>
                                 <th>Status Bayar</th>
                                 <th class="text-center">Keterangan</th>
                                 <th>Aksi</th>

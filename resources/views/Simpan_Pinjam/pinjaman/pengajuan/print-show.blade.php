@@ -73,7 +73,7 @@
                             <!-- /.col -->
                         </div>
                         <!-- /.row -->
-                        <div class="row">
+                        <div class="row" style="margin-bottom: 10px;">
                             Lembar : <b>Pengajuan Pinjaman</b>
                         </div>
                         <!-- Table row -->

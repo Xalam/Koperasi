@@ -73,8 +73,8 @@
                             <!-- /.col -->
                         </div>
                         <!-- /.row -->
-                        <div class="row">
-                            Lembar : <b>Bukti Angsuran</b>
+                        <div class="row" style="margin-bottom: 10px;">
+                            Lembar : <b>Bukti Pembayaran Angsuran</b>
                         </div>
                         <!-- Table row -->
                         <div class="row">

@@ -37,7 +37,7 @@ class SimpananController extends Controller
                             'tanggal'        => date('d-m-Y', strtotime($value->tanggal)),
                             'jenis_simpanan' => 'Simpanan Pokok',
                             'nama_anggota'   => $value->anggota->nama_anggota,
-                            'nominal'        => 'Rp. ' . number_format($value->nominal, 2, ',', '.'),
+                            'nominal'        => number_format($value->nominal, 2, ',', '.'),
                             'status'         => ($value->status == 0) ? '<a href="#modalKonfirmasi" data-remote="' . route('data.konfirmasi', $value->id) . '" 
                                                 data-toggle="modal" data-target="#modalKonfirmasi" class="btn btn-info btn-sm">
                                                 <i class="far fa-plus-square"></i>&nbsp; Proses</a>' : '<span class="badge bg-success">Sudah Bayar</span>',
@@ -59,7 +59,7 @@ class SimpananController extends Controller
                             'tanggal'        => date('d-m-Y', strtotime($value->tanggal)),
                             'jenis_simpanan' => 'Simpanan Wajib',
                             'nama_anggota'   => $value->anggota->nama_anggota,
-                            'nominal'        => 'Rp. ' . number_format($value->nominal, 2, ',', '.'),
+                            'nominal'        => number_format($value->nominal, 2, ',', '.'),
                             'status'         => ($value->status == 0) ? '<a href="#modalKonfirmasi" data-remote="' . route('data.konfirmasi', $value->id) . '" 
                                                 data-toggle="modal" data-target="#modalKonfirmasi" class="btn btn-info btn-sm">
                                                 <i class="far fa-plus-square"></i>&nbsp; Proses</a>' : '<span class="badge bg-success">Sudah Bayar</span>',
@@ -81,7 +81,7 @@ class SimpananController extends Controller
                             'tanggal'        => date('d-m-Y', strtotime($value->tanggal)),
                             'jenis_simpanan' => 'Simpanan Sukarela',
                             'nama_anggota'   => $value->anggota->nama_anggota,
-                            'nominal'        => 'Rp. ' . number_format($value->nominal, 2, ',', '.'),
+                            'nominal'        => number_format($value->nominal, 2, ',', '.'),
                             'status'         => ($value->status == 0) ? '<a href="#modalKonfirmasi" data-remote="' . route('data.konfirmasi', $value->id) . '" 
                                                 data-toggle="modal" data-target="#modalKonfirmasi" class="btn btn-info btn-sm">
                                                 <i class="far fa-plus-square"></i>&nbsp; Proses</a>' : '<span class="badge bg-success">Sudah Bayar</span>',
@@ -112,7 +112,7 @@ class SimpananController extends Controller
                             'tanggal'        => date('d-m-Y', strtotime($value->tanggal)),
                             'jenis_simpanan' => $jenis,
                             'nama_anggota'   => $value->anggota->nama_anggota,
-                            'nominal'        => 'Rp. ' . number_format($value->nominal, 2, ',', '.'),
+                            'nominal'        => number_format($value->nominal, 2, ',', '.'),
                             'status'         => ($value->status == 0) ? '<a href="#modalKonfirmasi" data-remote="' . route('data.konfirmasi', $value->id) . '" 
                                                 data-toggle="modal" data-target="#modalKonfirmasi" class="btn btn-info btn-sm">
                                                 <i class="far fa-plus-square"></i>&nbsp; Proses</a>' : '<span class="badge bg-success">Sudah Bayar</span>',
@@ -216,7 +216,7 @@ class SimpananController extends Controller
             }
             #Simpan Jurnal Simpanan
             $jurnal = new JurnalUmum();
-            $jurnal->kode_jurnal   = 'JU-' . str_pad($idJurnal, 6, '0', STR_PAD_LEFT);
+            $jurnal->kode_jurnal    = 'JU-' . str_pad($idJurnal, 6, '0', STR_PAD_LEFT);
             $jurnal->id_akun        = $idSimpan;
             $jurnal->tanggal        = date('Y-m-d');
             $jurnal->keterangan     = 'Simpanan ( ' . $kodeSimpanan->kode_simpanan . ' )';
@@ -226,7 +226,7 @@ class SimpananController extends Controller
 
             #Simpan Jurnal Kas
             $jurnal = new JurnalUmum();
-            $jurnal->kode_jurnal   = 'JU-' . str_pad($idJurnal, 6, '0', STR_PAD_LEFT);
+            $jurnal->kode_jurnal    = 'JU-' . str_pad($idJurnal, 6, '0', STR_PAD_LEFT);
             $jurnal->id_akun        = $idKas;
             $jurnal->tanggal        = date('Y-m-d');
             $jurnal->keterangan     = 'Simpanan ( ' . $kodeSimpanan->kode_simpanan . ' )';
@@ -347,7 +347,7 @@ class SimpananController extends Controller
             }
             #Simpan Jurnal Simpanan
             $jurnal = new JurnalUmum();
-            $jurnal->kode_jurnal   = 'JU-' . str_pad($idJurnal, 6, '0', STR_PAD_LEFT);
+            $jurnal->kode_jurnal    = 'JU-' . str_pad($idJurnal, 6, '0', STR_PAD_LEFT);
             $jurnal->id_akun        = $idSimpan;
             $jurnal->tanggal        = date('Y-m-d');
             $jurnal->keterangan     = 'Simpanan ( ' . $kodeSimpanan->kode_simpanan . ' )';
@@ -357,7 +357,7 @@ class SimpananController extends Controller
 
             #Simpan Jurnal Kas
             $jurnal = new JurnalUmum();
-            $jurnal->kode_jurnal   = 'JU-' . str_pad($idJurnal, 6, '0', STR_PAD_LEFT);
+            $jurnal->kode_jurnal    = 'JU-' . str_pad($idJurnal, 6, '0', STR_PAD_LEFT);
             $jurnal->id_akun        = $idKas;
             $jurnal->tanggal        = date('Y-m-d');
             $jurnal->keterangan     = 'Simpanan ( ' . $kodeSimpanan->kode_simpanan . ' )';
@@ -480,16 +480,6 @@ class SimpananController extends Controller
 
             $kodeSimpanan = Simpanan::orderBy('id', 'DESC')->first();
 
-            #Simpan Jurnal Kas
-            $jurnal = new JurnalUmum();
-            $jurnal->kode_jurnal   = 'JU-' . str_pad($idJurnal, 6, '0', STR_PAD_LEFT);
-            $jurnal->id_akun        = $idKas;
-            $jurnal->tanggal        = date('Y-m-d');
-            $jurnal->keterangan     = 'Simpanan ( ' . $kodeSimpanan->kode_simpanan . ' )';
-            $jurnal->debet          = 0;
-            $jurnal->kredit         = $kodeSimpanan->nominal;
-            $jurnal->save();
-
             #Simpan Jurnal Simpanan Wajib
             $jurnal = new JurnalUmum();
             $jurnal->kode_jurnal   = 'JU-' . str_pad($idJurnal, 6, '0', STR_PAD_LEFT);
@@ -498,6 +488,16 @@ class SimpananController extends Controller
             $jurnal->keterangan     = 'Simpanan ( ' . $kodeSimpanan->kode_simpanan . ' )';
             $jurnal->debet          = 0;
             $jurnal->kredit         = $kodeSimpanan->nominal;
+            $jurnal->save();
+
+            #Simpan Jurnal Kas
+            $jurnal = new JurnalUmum();
+            $jurnal->kode_jurnal   = 'JU-' . str_pad($idJurnal, 6, '0', STR_PAD_LEFT);
+            $jurnal->id_akun        = $idKas;
+            $jurnal->tanggal        = date('Y-m-d');
+            $jurnal->keterangan     = 'Simpanan ( ' . $kodeSimpanan->kode_simpanan . ' )';
+            $jurnal->debet          = $kodeSimpanan->nominal;
+            $jurnal->kredit         = 0;
             $jurnal->save();
         }
 

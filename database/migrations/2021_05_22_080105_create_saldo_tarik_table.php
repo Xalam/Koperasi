@@ -17,8 +17,9 @@ class CreateSaldoTarikTable extends Migration
             $table->id();
             $table->integer('id_saldo');
             $table->date('tanggal');
-            $table->integer('nominal');
+            $table->double('nominal');
             $table->integer('status')->comment('0 = Waiting, 1 = Proses, 2 = Sukses')->default(0);
+            $table->string('kode_jurnal')->nullable();
             $table->timestamps();
         });
     }

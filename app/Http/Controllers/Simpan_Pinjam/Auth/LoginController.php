@@ -24,7 +24,9 @@ class LoginController extends Controller
         // }
 
         if (Auth::attempt(['username' => $request->username, 'password' => $request->password])) {
-            return redirect()->route('dashboard');
+            return redirect()->route('dashboard')->with([
+                'success' => 'Selamat datang ' . $check_user->name . '!'
+            ]);
         }
 
         return redirect()->route('login')->with([

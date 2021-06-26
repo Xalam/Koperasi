@@ -2,7 +2,7 @@
 
 @section('title', 'Simpanan')
 
-@section('content_header', 'Cetak Riwayat Simpanan')
+@section('content_header', 'Cetak Riwayat Penarikan')
 
     @push('style')
 
@@ -10,8 +10,8 @@
 
 @section('breadcrumb')
     <li class="breadcrumb-item"><a href="#">Simpanan</a></li>
-    <li class="breadcrumb-item"><a href="{{ route('tarik-saldo.history') }}">Riwayat Simpanan</a></li>
-    <li class="breadcrumb-item active">Cetak Riwayat Simpanan</li>
+    <li class="breadcrumb-item"><a href="{{ route('tarik-saldo.history') }}">Riwayat Penarikan</a></li>
+    <li class="breadcrumb-item active">Cetak Riwayat Penarikan</li>
 @endsection
 
 @section('content_main')
@@ -19,7 +19,7 @@
         <div class="col-12">
             <div class="callout callout-info">
                 <h5><i class="fas fa-info"></i> Note:</h5>
-                Halaman ini akan dicetak. Periksa kembali detail simpanan di bawah sebelum dicetak.
+                Halaman ini akan dicetak. Periksa kembali detail penarikan di bawah sebelum dicetak.
             </div>
 
             <!-- Main content -->
@@ -41,7 +41,7 @@
                         From
                         <address>
                             <strong>Primkop Polrestabes Semarang</strong><br>
-                            Jl. Kaligarang No.1A, Petompon<br>
+                            Jl. Kaligarang No.1A, Barusari<br>
                             Semarang<br>
                             Phone: 0895-2458-3818<br>
                             Email: -
@@ -72,12 +72,14 @@
                             <thead>
                                 <tr>
                                     <th>No</th>
+                                    <th>Tanggal Penarikan</th>
                                     <th>Jumlah Penarikan</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr>
                                     <td>1</td>
+                                    <td>{{ date('d-m-Y', strtotime($tarikSaldo->tanggal)) }}</td>
                                     <td>{{ number_format($tarikSaldo->nominal, 2, ',', '.') }}</td>
                                 </tr>
                             </tbody>
@@ -112,7 +114,7 @@
                     <div class="col-12">
                         <a href="{{ route('tarik-saldo.print-show', $tarikSaldo->id) }}" rel="noopener" target="_blank" class="btn btn-info float-right"><i
                                 class="fas fa-print"></i> Print</a>
-                        <a href="{{ route('tarik-saldo.history') }}" class="btn btn-light float-right" style="margin-right: 5px;"><i></i> Kembali</a>
+                        <a href="{{ route('tarik-saldo.history') }}" class="btn btn-default float-right" style="margin-right: 5px;"><i></i> Kembali</a>
                     </div>
                 </div>
             </div>

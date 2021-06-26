@@ -73,7 +73,9 @@
                             <!-- /.col -->
                         </div>
                         <!-- /.row -->
-        
+                        <div class="row" style="margin-bottom: 10px;">
+                            Lembar : <b>Bukti Simpanan</b>
+                        </div>
                         <!-- Table row -->
                         <div class="row">
                             <div class="col-12 table-responsive">

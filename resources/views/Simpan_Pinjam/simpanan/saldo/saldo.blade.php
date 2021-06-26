@@ -31,8 +31,8 @@
                             <tr>
                                 <th>No</th>
                                 <th>Kode Anggota</th>
-                                <th>Nama Anggota</th>
-                                <th>Saldo</th>
+                                <th class="text-center">Nama Anggota</th>
+                                <th class="text-center">Saldo (Rp)</th>
                             </tr>
                         </thead>
                     </table>
@@ -61,6 +61,19 @@
                 "autoWidth": false,
                 "responsive": true,
                 "deferRender": true,
+                "columnDefs": [
+                {
+                  "targets": 0,
+                  "className": "text-center",
+                },
+                {
+                  "targets": 1,
+                  "className": "text-center",
+                },
+                {
+                  "targets": 3,
+                  "className": "text-right",
+                }],
                 "ajax": "{{ route('saldo.index') }}",
                 "columns": [{
                         data: 'no'

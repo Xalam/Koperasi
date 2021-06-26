@@ -164,8 +164,11 @@ Route::group(['prefix' => 'simpan-pinjam', 'middleware' => ['auth', 'checkrole:a
         Route::get('riwayat', 'Simpan_Pinjam\Simpanan\TarikSaldoController@history')->name('tarik-saldo.history');
         Route::get('riwayat/cetak/{id}', 'Simpan_Pinjam\Simpanan\TarikSaldoController@print')->name('tarik-saldo.print');
         Route::get('riwayat/cetak/show/{id}', 'Simpan_Pinjam\Simpanan\TarikSaldoController@print_show')->name('tarik-saldo.print-show');
+        
         Route::resource('tarik-saldo', 'Simpan_Pinjam\Simpanan\TarikSaldoController');
         Route::get('tarik-saldo/modal/{id}', 'Simpan_Pinjam\Simpanan\TarikSaldoController@modal')->name('tarik-saldo.konfirmasi');
+        Route::get('tarik-saldo/modal/delete/{id}', 'Simpan_Pinjam\Simpanan\TarikSaldoController@modal_delete')->name('tarik-saldo.modal-delete');
+        Route::post('tarik-saldo/saldo', 'Simpan_Pinjam\Simpanan\TarikSaldoController@saldo')->name('tarik-saldo.saldo');
     });
 
     #Pinjaman

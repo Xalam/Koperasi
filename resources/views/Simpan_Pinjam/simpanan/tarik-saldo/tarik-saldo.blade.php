@@ -10,6 +10,8 @@
     <link rel="stylesheet" href="{{ asset('assets/plugins/datatables-responsive/css/responsive.bootstrap4.min.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/plugins/datatables-buttons/css/buttons.bootstrap4.min.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/plugins/toastr/toastr.min.css') }}">
+    <!-- SweetAlert2 -->
+    <link rel="stylesheet" href="{{ asset('assets/plugins/sweetalert2-theme-bootstrap-4/bootstrap-4.min.css') }}">
 @endpush
 
 @section('breadcrumb')
@@ -23,6 +25,7 @@
             <div class="card">
                 <div class="card-header">
                     <h3 class="card-title">Permintaan Penarikan</h3>
+                    <a href="{{ route('tarik-saldo.create') }}" class="btn btn-sm btn-primary float-right">Tambah Penarikan</a>
                 </div>
                 <div class="card-body">
                     <table id="table-permintaan" class="table table-bordered table-hover">
@@ -30,8 +33,8 @@
                             <tr>
                                 <th width="10%">No</th>
                                 <th>Tanggal</th>
-                                <th>Nama Anggota</th>
-                                <th>Nominal</th>
+                                <th class="text-center">Nama Anggota</th>
+                                <th class="text-center">Nominal (Rp)</th>
                                 <th width="20%">Aksi</th>
                             </tr>
                         </thead>
@@ -53,8 +56,8 @@
                             <tr>
                                 <th width="10%">No</th>
                                 <th>Tanggal</th>
-                                <th>Nama Anggota</th>
-                                <th>Nominal</th>
+                                <th class="text-center">Nama Anggota</th>
+                                <th class="text-center">Nominal (Rp)</th>
                                 <th width="20%">Aksi</th>
                             </tr>
                         </thead>
@@ -72,12 +75,31 @@
     <script src="{{ asset('assets/plugins/datatables-responsive/js/dataTables.responsive.min.js') }}"></script>
     <script src="{{ asset('assets/plugins/datatables-responsive/js/responsive.bootstrap4.min.js') }}"></script>
     <script src="{{ asset('assets/plugins/toastr/toastr.min.js') }}"></script>
+    <!-- SweetAlert2 -->
+    <script src="{{ asset('assets/plugins/sweetalert2/sweetalert2.min.js') }}"></script>
 
     <script>
         $(function() {
             $('#table-permintaan').DataTable({
                 "stateSave": true,
                 "deferRender": true,
+                "columnDefs": [
+                {
+                  "targets": 0,
+                  "className": "text-center",
+                },
+                {
+                  "targets": 1,
+                  "className": "text-center",
+                },
+                {
+                  "targets": 3,
+                  "className": "text-right",
+                },
+                {
+                  "targets": 4,
+                  "className": "text-center",
+                }],
                 "ajax": {
                     url: "{{ route('tarik-saldo.index') }}?type=permintaan_masuk"
                 },
@@ -103,6 +125,23 @@
             $('#table-permintaan-proses').DataTable({
                 "stateSave": true,
                 "deferRender": true,
+                "columnDefs": [
+                {
+                  "targets": 0,
+                  "className": "text-center",
+                },
+                {
+                  "targets": 1,
+                  "className": "text-center",
+                },
+                {
+                  "targets": 3,
+                  "className": "text-right",
+                },
+                {
+                  "targets": 4,
+                  "className": "text-center",
+                }],
                 "ajax": {
                     url: "{{ route('tarik-saldo.index') }}?type=permintaan_proses"
                 },
@@ -129,10 +168,21 @@
 
     </script>
 
+    @if (session()->has('success'))
+    <script>
+        toastr.success("{{ session()->get('success') }}");
+
+    </script>
+    @endif
+
     @if (session()->has('error'))
     <script>
-        toastr.error("{{ session()->get('error') }}");
-
+        Swal.fire({
+            title: 'Error!',
+            text: '{{ session()->get('error') }}',
+            icon: 'error',
+            confirmButtonText: 'OK'
+        })
     </script>
     @endif
 

@@ -132,6 +132,77 @@ class JatuhTempoController extends Controller
 
         $kodeAngsuran = Angsuran::orderBy('id', 'DESC')->first();
 
+        #Pembulatan Pendapatan
+        $pendapatan = round(($kodeAngsuran->pinjaman->total_pinjaman - $kodeAngsuran->pinjaman->nominal_pinjaman) / $kodeAngsuran->pinjaman->tenor, 2);
+        
+        $intNumberPen = (int) $pendapatan;
+
+        $ratusanPen = substr($intNumberPen, -3);
+
+        $bulatPen = $intNumberPen - $ratusanPen;
+        $newRatusanPen = 0;
+
+        if ($ratusanPen > 0 && $ratusanPen <= 100) {
+            $newRatusanPen = 100;
+        } else if($ratusanPen > 100 && $ratusanPen <= 200) {
+            $newRatusanPen = 200;
+        } else if($ratusanPen > 200 && $ratusanPen <= 300) {
+            $newRatusanPen = 300;
+        } else if($ratusanPen > 300 && $ratusanPen <= 400) {
+            $newRatusanPen = 400;
+        } else if($ratusanPen > 400 && $ratusanPen <= 500) {
+            $newRatusanPen = 500;
+        } else if($ratusanPen > 500 && $ratusanPen <= 600) {
+            $newRatusanPen = 600;
+        } else if($ratusanPen > 600 && $ratusanPen <= 700) {
+            $newRatusanPen = 700;
+        } else if($ratusanPen > 700 && $ratusanPen <= 800) {
+            $newRatusanPen = 800;
+        } else if($ratusanPen > 800 && $ratusanPen <= 900) {
+            $newRatusanPen = 900;
+        } else if($ratusanPen > 900 && $ratusanPen <= 999) {
+            $newRatusanPen = 1000;
+        } else {
+            $newRatusanPen = $ratusanPen;
+        }
+
+        $newPendapatan = $bulatPen + $newRatusanPen;
+
+        #Pembulatan Piutang
+        $piutang = round($kodeAngsuran->pinjaman->nominal_pinjaman / $kodeAngsuran->pinjaman->tenor, 2);
+        $intNumberPi = (int) $piutang;
+
+        $ratusanPi = substr($intNumberPi, -3);
+
+        $bulatPi = $intNumberPi - $ratusanPi;
+        $newRatusanPi = 0;
+
+        if ($ratusanPi > 0 && $ratusanPi <= 100) {
+            $newRatusanPi = 100;
+        } else if($ratusanPi > 100 && $ratusanPi <= 200) {
+            $newRatusanPi = 200;
+        } else if($ratusanPi > 200 && $ratusanPi <= 300) {
+            $newRatusanPi = 300;
+        } else if($ratusanPi > 300 && $ratusanPi <= 400) {
+            $newRatusanPi = 400;
+        } else if($ratusanPi > 400 && $ratusanPi <= 500) {
+            $newRatusanPi = 500;
+        } else if($ratusanPi > 500 && $ratusanPi <= 600) {
+            $newRatusanPi = 600;
+        } else if($ratusanPi > 600 && $ratusanPi <= 700) {
+            $newRatusanPi = 700;
+        } else if($ratusanPi > 700 && $ratusanPi <= 800) {
+            $newRatusanPi = 800;
+        } else if($ratusanPi > 800 && $ratusanPi <= 900) {
+            $newRatusanPi = 900;
+        } else if($ratusanPi > 900 && $ratusanPi <= 999) {
+            $newRatusanPi = 1000;
+        } else {
+            $newRatusanPi = $ratusanPi;
+        }
+
+        $newPiutang = $bulatPi + $newRatusanPi;
+
         #Simpan Jurnal Pendapatan
         $jurnal = new JurnalUmum();
         $jurnal-> kode_jurnal   = 'JU-' . str_pad($idJurnal, 6, '0', STR_PAD_LEFT);
@@ -139,7 +210,7 @@ class JatuhTempoController extends Controller
         $jurnal->tanggal        = date('Y-m-d');
         $jurnal->keterangan     = 'Angsuran ( ' . $kodeAngsuran->kode_angsuran . ' )';
         $jurnal->debet          = 0;
-        $jurnal->kredit         = round(($kodeAngsuran->pinjaman->total_pinjaman - $kodeAngsuran->pinjaman->nominal_pinjaman) / $kodeAngsuran->pinjaman->tenor, 2);
+        $jurnal->kredit         = $newPendapatan;
         $jurnal->save();
 
         #Simpan Jurnal Piutang
@@ -149,7 +220,7 @@ class JatuhTempoController extends Controller
         $jurnal->tanggal        = date('Y-m-d');
         $jurnal->keterangan     = 'Angsuran ( ' . $kodeAngsuran->kode_angsuran . ' )';
         $jurnal->debet          = 0;
-        $jurnal->kredit         = round($kodeAngsuran->pinjaman->nominal_pinjaman / $kodeAngsuran->pinjaman->tenor, 2);
+        $jurnal->kredit         = $newPiutang;
         $jurnal->save();
 
         #Simpan Jurnal Kas
@@ -239,6 +310,77 @@ class JatuhTempoController extends Controller
 
         $kodeAngsuran = Angsuran::where('id', $id)->first();
 
+        #Pembulatan Pendapatan
+        $pendapatan = round(($kodeAngsuran->pinjaman->total_pinjaman - $kodeAngsuran->pinjaman->nominal_pinjaman) / $kodeAngsuran->pinjaman->tenor, 2);
+        
+        $intNumberPen = (int) $pendapatan;
+
+        $ratusanPen = substr($intNumberPen, -3);
+
+        $bulatPen = $intNumberPen - $ratusanPen;
+        $newRatusanPen = 0;
+
+        if ($ratusanPen > 0 && $ratusanPen <= 100) {
+            $newRatusanPen = 100;
+        } else if($ratusanPen > 100 && $ratusanPen <= 200) {
+            $newRatusanPen = 200;
+        } else if($ratusanPen > 200 && $ratusanPen <= 300) {
+            $newRatusanPen = 300;
+        } else if($ratusanPen > 300 && $ratusanPen <= 400) {
+            $newRatusanPen = 400;
+        } else if($ratusanPen > 400 && $ratusanPen <= 500) {
+            $newRatusanPen = 500;
+        } else if($ratusanPen > 500 && $ratusanPen <= 600) {
+            $newRatusanPen = 600;
+        } else if($ratusanPen > 600 && $ratusanPen <= 700) {
+            $newRatusanPen = 700;
+        } else if($ratusanPen > 700 && $ratusanPen <= 800) {
+            $newRatusanPen = 800;
+        } else if($ratusanPen > 800 && $ratusanPen <= 900) {
+            $newRatusanPen = 900;
+        } else if($ratusanPen > 900 && $ratusanPen <= 999) {
+            $newRatusanPen = 1000;
+        } else {
+            $newRatusanPen = $ratusanPen;
+        }
+
+        $newPendapatan = $bulatPen + $newRatusanPen;
+
+        #Pembulatan Piutang
+        $piutang = round($kodeAngsuran->pinjaman->nominal_pinjaman / $kodeAngsuran->pinjaman->tenor, 2);
+        $intNumberPi = (int) $piutang;
+
+        $ratusanPi = substr($intNumberPi, -3);
+
+        $bulatPi = $intNumberPi - $ratusanPi;
+        $newRatusanPi = 0;
+
+        if ($ratusanPi > 0 && $ratusanPi <= 100) {
+            $newRatusanPi = 100;
+        } else if($ratusanPi > 100 && $ratusanPi <= 200) {
+            $newRatusanPi = 200;
+        } else if($ratusanPi > 200 && $ratusanPi <= 300) {
+            $newRatusanPi = 300;
+        } else if($ratusanPi > 300 && $ratusanPi <= 400) {
+            $newRatusanPi = 400;
+        } else if($ratusanPi > 400 && $ratusanPi <= 500) {
+            $newRatusanPi = 500;
+        } else if($ratusanPi > 500 && $ratusanPi <= 600) {
+            $newRatusanPi = 600;
+        } else if($ratusanPi > 600 && $ratusanPi <= 700) {
+            $newRatusanPi = 700;
+        } else if($ratusanPi > 700 && $ratusanPi <= 800) {
+            $newRatusanPi = 800;
+        } else if($ratusanPi > 800 && $ratusanPi <= 900) {
+            $newRatusanPi = 900;
+        } else if($ratusanPi > 900 && $ratusanPi <= 999) {
+            $newRatusanPi = 1000;
+        } else {
+            $newRatusanPi = $ratusanPi;
+        }
+
+        $newPiutang = $bulatPi + $newRatusanPi;
+
         #Simpan Jurnal Pendapatan
         $jurnal = new JurnalUmum();
         $jurnal-> kode_jurnal   = 'JU-' . str_pad($idJurnal, 6, '0', STR_PAD_LEFT);
@@ -246,7 +388,7 @@ class JatuhTempoController extends Controller
         $jurnal->tanggal        = date('Y-m-d');
         $jurnal->keterangan     = 'Angsuran ( ' . $kodeAngsuran->kode_angsuran . ' )';
         $jurnal->debet          = 0;
-        $jurnal->kredit         = round(($kodeAngsuran->pinjaman->total_pinjaman - $kodeAngsuran->pinjaman->nominal_pinjaman) / $kodeAngsuran->pinjaman->tenor, 2);
+        $jurnal->kredit         = $newPendapatan;
         $jurnal->save();
 
         #Simpan Jurnal Piutang
@@ -256,7 +398,7 @@ class JatuhTempoController extends Controller
         $jurnal->tanggal        = date('Y-m-d');
         $jurnal->keterangan     = 'Angsuran ( ' . $kodeAngsuran->kode_angsuran . ' )';
         $jurnal->debet          = 0;
-        $jurnal->kredit         = round($kodeAngsuran->pinjaman->nominal_pinjaman / $kodeAngsuran->pinjaman->tenor, 2);
+        $jurnal->kredit         = $newPiutang;
         $jurnal->save();
 
         #Simpan Jurnal Kas

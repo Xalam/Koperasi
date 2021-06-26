@@ -8,9 +8,10 @@
     <span id="ct"></span>
 @endsection
 
-@section('style')
-
-@endsection
+@push('style')
+    <!-- SweetAlert2 -->
+    <link rel="stylesheet" href="{{ asset('assets/plugins/sweetalert2-theme-bootstrap-4/bootstrap-4.min.css') }}">
+@endpush
 
 @section('content_main')
     <div class="row">
@@ -99,6 +100,8 @@
     <script src="{{ asset('assets/plugins/chart.js/Chart.min.js') }}"></script>
     <!-- Sparkline -->
     <script src="{{ asset('assets/plugins/sparklines/sparkline.js') }}"></script>
+    <!-- SweetAlert2 -->
+    <script src="{{ asset('assets/plugins/sweetalert2/sweetalert2.min.js') }}"></script> 
 @endpush
 
 @section('script')
@@ -165,7 +168,7 @@
                     pointBackgroundColor: '#007bff',
                     data: [
                         @for ($i = 0; $i < sizeof($monthly); $i++)
-                            {{ $monthly[$i]['laba'] }},
+                            '{{ $monthly[$i]['laba'] }}',
                         @endfor
                     ]
                 }]
@@ -211,4 +214,15 @@
         });
 
     </script>
+
+    @if (session()->has('success'))
+    <script>
+        Swal.fire({
+            title: 'Berhasil!',
+            text: '{{ session()->get('success') }}',
+            icon: 'success',
+            confirmButtonText: 'OK'
+        })
+    </script>
+    @endif
 @endsection
