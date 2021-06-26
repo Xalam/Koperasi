@@ -28,7 +28,7 @@ class UserController extends Controller
                     'nama'      => $value->name,
                     'username'  => $value->username,
                     'role'      => $value->role,
-                    'action'    => '<a href="#mymodal" data-remote="' . route('admin.modal', $value->id) . '" data-toggle="modal" data-target="#mymodal" class="btn btn-danger btn-sm"><i class="far fa-trash-alt"></i>&nbsp; Hapus</a>',
+                    'action'    => ($key != 0) ? '<a href="#mymodal" data-remote="' . route('admin.modal', $value->id) . '" data-toggle="modal" data-target="#mymodal" class="btn btn-danger btn-sm"><i class="far fa-trash-alt"></i>&nbsp; Hapus</a>' : '',
                 ];
             }
             return response()->json(compact('data'));
