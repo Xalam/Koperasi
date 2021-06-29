@@ -4,7 +4,7 @@
 <nav id="sidebar" class="sidebar-wrapper">
     <div class="sidebar-content">
         <div class="sidebar-brand">
-            <a href="/" class="font-2">Primkop Polrestabes Semarang</a>
+            <a class="font-3">Navigation</a>
             <div id="close-sidebar">
                 <i class="fas fa-times" aria-hidden="true"></i>
             </div>
@@ -12,17 +12,14 @@
 
         <div class="sidebar-menu">
             <ul>
-                <li class="header-menu"><span>Menu</span></li>
-            </ul>
-            <ul>
                 <li class="sidebar-dropdown">
-                    <a><i class="fas fa-sliders-h" aria-hidden="true"></i>Master</a>
+                    <a><i class="fas fa-server" aria-hidden="true"></i>Master</a>
                     <div class="sidebar-submenu">
                         <ul>
                             <li><a href="/toko/master/admin">Admin</a></li>
                             <li><a href="/toko/master/akun">Akun</a></li>
                             <li><a href="/toko/master/barang">Barang</a></li>
-                            <li><a href="/toko/master/pelanggan">Pelanggan</a></li>
+                            <li><a href="/toko/master/anggota">Anggota</a></li>
                             <li><a href="/toko/master/supplier">Supplier</a></li>
                         </ul>
                     </div>
@@ -30,11 +27,12 @@
             </ul>
             <ul>
                 <li class="sidebar-dropdown">
-                    <a><i class="fas fa-sliders-h" aria-hidden="true"></i>Transaksi</a>
+                    <a><i class="fas fa-receipt" aria-hidden="true"></i>Transaksi</a>
                     <div class="sidebar-submenu">
                         <ul>
                             <li><a href="/toko/transaksi/penjualan">Penjualan</a></li>
                             <li><a href="/toko/transaksi/pembelian">Pembelian</a></li>
+                            <li><a href="/toko/transaksi/titip-jual">Titip Jual</a></li>
                             <li><a href="/toko/transaksi/retur-pembelian">Retur Pembelian</a></li>
                             <li><a href="/toko/transaksi/hutang">Hutang</a></li>
                             <li><a href="/toko/transaksi/piutang">Piutang</a></li>
@@ -45,7 +43,7 @@
             </ul>
             <ul>
                 <li class="sidebar-dropdown">
-                    <a><i class="fas fa-sliders-h" aria-hidden="true"></i>Laporan</a>
+                    <a><i class="fas fa-book" aria-hidden="true"></i>Laporan</a>
                     <div class="sidebar-submenu">
                         <ul>
                             <li><a href="/toko/laporan/akuntansi">Akuntansi</a></li>
@@ -61,6 +59,9 @@
                             </li>
                             <li><a href="/toko/laporan/penjualan">Penjualan</a></li>
                             <li><a href="/toko/laporan/persediaan">Persediaan</a></li>
+                            <li><a href="/toko/laporan/kas-masuk">Kas Masuk</a></li>
+                            <li><a href="/toko/laporan/kas-keluar">Kas Keluar</a></li>
+                            <li><a href="/toko/laporan/pendapatan">Pendapatan</a></li>
                         </ul>
                     </div>
                 </li>

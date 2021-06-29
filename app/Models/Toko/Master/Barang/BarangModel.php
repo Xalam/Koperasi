@@ -16,7 +16,12 @@ class BarangModel extends Model
         'nama', 
         'hpp',
         'harga_jual',
+        'minimum_grosir',
+        'harga_grosir',
         'stok',
-        'satuan'
+        'stok_minimal',
+        'satuan',
+        'expired',
+        'alert_status'
     ];
 }

@@ -11,12 +11,26 @@ use App\Models\Toko\Transaksi\PembayaranModel;
 use App\Models\Toko\Transaksi\Pembelian\PembelianBarangModel;
 use App\Models\Toko\Master\Supplier\SupplierModel;
 use App\Models\Toko\Transaksi\Hutang\HutangModel;
+use App\Models\Toko\Transaksi\Jurnal\JurnalModel;
 use App\Models\Toko\Transaksi\Pembelian\PembelianModel;
 use Carbon\Carbon;
 
 class PembelianController extends Controller
 {
     public function index() {
+        $data_notif = BarangModel::where('alert_status', 1)->get();
+
+        $data_notified = BarangModel::all();
+        foreach ($data_notified AS $data) {
+            if ($data->stok <= $data->stok_minimal) {
+                BarangModel::where('id', $data->id)->update([
+                    'alert_status' => 1
+                ]);
+            }
+        }
+
+        $cur_date = Carbon::now();
+
         $data_barang = BarangModel::orderBy('nama')
                                     ->get();
 
@@ -56,14 +70,13 @@ class PembelianController extends Controller
             $kode_supplier[$data->id] = $data->kode;
         }
 
-
-        return view('toko.transaksi.pembelian.index', compact('barang', 'kode_barang', 'kode_supplier', 'pembayaran', 'supplier'));
+        return view('toko.transaksi.pembelian.index', compact('barang', 'cur_date', 'data_notified', 'data_notif', 'kode_barang', 'kode_supplier', 'pembayaran', 'supplier'));
     }
 
     public function show($nomor) {
         $barang_pembelian = PembelianBarangModel::where('detail_beli.nomor', $nomor)
                                     ->join('barang', 'barang.id', '=', 'detail_beli.id_barang')
-                                    ->select('detail_beli.nomor AS nomor_pembelian', 'detail_beli.jumlah AS jumlah_barang',
+                                    ->select('detail_beli.id AS id', 'detail_beli.nomor AS nomor_pembelian', 'detail_beli.jumlah AS jumlah_barang',
                                             'detail_beli.total_harga AS total_harga', 'detail_beli.id_barang AS id_barang',
                                             'barang.kode AS kode_barang', 'barang.nama AS nama_barang', 
                                             'detail_beli.harga_satuan AS harga_satuan')
@@ -113,34 +126,53 @@ class PembelianController extends Controller
                 'stok' => $barang->stok + $data->jumlah]);
         }
 
-        $data_pembelian = PembelianModel::where('nomor', $nomor)->first();
-
         if ($request->input('pembayaran') == 2) {
-            $persediaan = AkunModel::where('kode', 1131)->first()->debit;
-            $kas = AkunModel::where('kode', 1102)->first()->debit;
+            $persediaan = AkunModel::where('kode', 1131)->first();
+            $kas = AkunModel::where('kode', 1102)->first();
 
             AkunModel::where('kode', 1131)->update([
-                'debit' => $persediaan + $request->input('jumlah_harga')
+                'debit' => $persediaan->debit + $request->input('jumlah_harga')
             ]);
 
             AkunModel::where('kode', 1102)->update([
-                'debit' => $kas - $request->input('jumlah_harga')
+                'debit' => $kas->debit - $request->input('jumlah_harga')
+            ]);
+
+            $keterangan = "Pembelian barang secara tunai.";
+
+            JurnalModel::create([
+                'nomor' => $request->input('nomor_jurnal'),
+                'tanggal' => $request->input('tanggal'),
+                'keterangan' => $keterangan,
+                'id_akun' => $persediaan->id,
+                'debit' => $request->input('jumlah_harga'),
+                'kredit' => 0
+            ]); 
+            
+            JurnalModel::create([
+                'nomor' => $request->input('nomor_jurnal'),
+                'tanggal' => $request->input('tanggal'),
+                'keterangan' => $keterangan,
+                'id_akun' => $kas->id,
+                'debit' => 0,
+                'kredit' => $request->input('jumlah_harga')
             ]);
 
             $jumlah_bayar = $request->input('jumlah_bayar');
             $jumlah_kembalian = $request->input('jumlah_kembalian');
 
         } else {
-            $persediaan = AkunModel::where('kode', 1131)->first()->debit;
-            $hutang = AkunModel::where('kode', 2101)->first()->kredit;
+            $persediaan = AkunModel::where('kode', 1131)->first();
+            $hutang = AkunModel::where('kode', 2101)->first();
 
             AkunModel::where('kode', 1131)->update([
-                'debit' => $persediaan + $request->input('jumlah_harga')
+                'debit' => $persediaan->debit + $request->input('jumlah_harga')
             ]);
 
             AkunModel::where('kode', 2101)->update([
-                'kredit' => $hutang + $request->input('jumlah_harga')
+                'kredit' => $hutang->kredit + $request->input('jumlah_harga')
             ]);
+
             $jumlah_bayar = 0;
             $jumlah_kembalian = 0;
 
@@ -153,29 +185,46 @@ class PembelianController extends Controller
                 'jatuh_tempo' => Carbon::parse($tanggal)->addDays($request->input('tempo')),
                 'sisa_hutang' => $request->input('jumlah_harga')
             ]);
-        }
 
-        if (!$data_pembelian) {
-            PembelianModel::create([
+            $keterangan = "Pembelian barang secara kredit.";
+
+            JurnalModel::create([
+                'nomor' => $request->input('nomor_jurnal'),
                 'tanggal' => $request->input('tanggal'),
-                'nomor' => $request->input('nomor'),
-                'id_supplier' => $request->input('kode_supplier'),
-                'jumlah_harga' => $request->input('jumlah_harga'),
-                'jumlah_bayar' => $jumlah_bayar,
-                'jumlah_kembalian' => $jumlah_kembalian,
-                'pembayaran' => $request->input('pembayaran')
-            ]);
-        } else {
-            PembelianModel::where('nomor', $nomor)->update([
+                'keterangan' => $keterangan,
+                'id_akun' => $persediaan->id,
+                'debit' => $request->input('jumlah_harga'),
+                'kredit' => 0
+            ]); 
+                
+            JurnalModel::create([
+                'nomor' => $request->input('nomor_jurnal'),
                 'tanggal' => $request->input('tanggal'),
-                'jumlah_harga' => $request->input('jumlah_harga'),
-                'jumlah_bayar' => $jumlah_bayar,
-                'jumlah_kembalian' => $jumlah_kembalian,
-                'pembayaran' => $request->input('pembayaran')
+                'keterangan' => $keterangan,
+                'id_akun' => $hutang->id,
+                'debit' => 0,
+                'kredit' => $request->input('jumlah_harga')
             ]);
         }
         
+        PembelianModel::create([
+            'tanggal' => $request->input('tanggal'),
+            'nomor' => $request->input('nomor'),
+            'nomor_jurnal' => $request->input('nomor_jurnal'),
+            'id_supplier' => $request->input('kode_supplier'),
+            'jumlah_harga' => $request->input('jumlah_harga'),
+            'jumlah_bayar' => $jumlah_bayar,
+            'jumlah_kembalian' => $jumlah_kembalian,
+            'pembayaran' => $request->input('pembayaran')
+        ]);
+        
         return redirect('toko/transaksi/pembelian');
+    }
+
+    public function delete($id) {
+        PembelianBarangModel::where('id', $id)->delete();
+        
+        return response()->json(['code'=>200]);
     }
 
     public function cancel(Request $request) {

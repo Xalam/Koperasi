@@ -1,5 +1,14 @@
 @extends('toko.layout')
 
+@section('popup')
+<div id="popup-delete" class="popup-background d-none">
+    <div class="popup center-object">
+        <div id="popup-body" class="popup-body p-4">
+        </div>
+    </div>
+</div>
+@endsection
+
 @section('main')
 <div class="card m-6">
     <div class="row-lg align-item-center">
@@ -11,26 +20,30 @@
         <div class="card-body">
             <div class="row-lg align-item-center mb-2">
                 {!! Form::label(null, 'Tanggal', ['class' => 'col-lg-2']) !!}
-                {!! Form::date('tanggal', null, ['class' => 'col-lg-2 form-control form-control-sm', 'required']) !!}
+                {!! Form::date('tanggal', $cur_date, ['class' => 'col-lg-2 form-control form-control-sm', 'required'])
+                !!}
                 {!! Form::label(null, 'No. Beli', ['class' => 'offset-lg-2 col-lg-2']) !!}
-                {!! Form::select('nomor_beli', $pembayaran, null, ['class' => 'col-lg-3 form-select form-select-sm',
+                {!! Form::select('nomor_beli', $pembayaran, null, ['class' => 'col-lg-3 form-control form-control-sm',
                 'readonly'])
                 !!}
                 {!! Form::text('nomor', null, ['class' => 'd-none', 'readonly'])!!}
+                {!! Form::text('nomor_jurnal', null, ['class' => 'd-none', 'readonly'])!!}
             </div>
             <div class="row-lg align-item-center mb-2">
                 {!! Form::label(null, 'Supplier', ['class' => 'col-lg-2 fw-bold']) !!}
                 <div class="w-100"></div>
                 {!! Form::label(null, 'Kode Supplier', ['class' => 'col-lg-2']) !!}
-                {!! Form::select('kode_supplier', [], null, ['class' => 'col-lg-4 form-select form-select-sm']) !!}
+                {!! Form::select('kode_supplier', [], null, ['class' => 'col-lg-4 form-control form-control-sm',
+                'readonly']) !!}
             </div>
             <div class="row-lg align-item-center mb-2">
                 {!! Form::label(null, 'Nama Supplier', ['class' => 'col-lg-2']) !!}
-                {!! Form::select('nama_supplier', [], null, ['class' => 'col-lg-9 form-control form-control-sm']) !!}
+                {!! Form::select('nama_supplier', [], null, ['class' => 'col-lg-9 form-control form-control-sm',
+                'readonly']) !!}
             </div>
             <div class="row-lg align-item-center mb-2">
                 {!! Form::label(null, 'Sisa Utang', ['class' => 'col-lg-2']) !!}
-                {!! Form::number('sisa_utang', 0, ['class' => 'col-lg-2 form-control form-control-sm']) !!}
+                {!! Form::number('sisa_utang', 0, ['class' => 'col-lg-2 form-control form-control-sm', 'readonly']) !!}
             </div>
             <div class="row-lg align-item-center mb-2">
                 {!! Form::label(null, 'Pelunasan', ['class' => 'col-lg-2 fw-bold']) !!}
@@ -49,7 +62,10 @@
     </div>
 
     <div id="panel-daftar-utang">
-        <p class="card-header bg-light">Daftar Hutang</p>
+        <div class="d-flex bg-light">
+            <p class="card-header col-lg">Daftar Hutang</p>
+            <i class="card-header fas fa-sync text-success" style="cursor: pointer;" title="Refresh Page" onclick="location.reload()"></i>
+        </div>
         <div class="card-body">
             <div class="table-responsive">
                 <table id="table-data" class="table table-striped table-bordered table-hover nowrap">
@@ -61,7 +77,8 @@
                             <th>Nama Supplier</th>
                             <th>Tanggal Beli</th>
                             <th>Jatuh Tempo</th>
-                            <th>Nilai Utang</th>
+                            <th>Nilai Hutang</th>
+                            <th>Sisa Hutang</th>
                             <th>Opsi</th>
                         </tr>
                     </thead>
@@ -71,33 +88,24 @@
                         $i = 1;
                         @endphp
                         @foreach ($hutang as $data)
+                        @if ($data->status == 0)
                         <tr>
                             <th class="align-middle text-center">
                                 <p>{{$i++}}</p>
                             </th>
-                            <td class="align-middle text-center">
-                                <p id="kode-<?php echo $data->id ?>">{{$data->nomor_beli}}</p>
-                            </td>
-                            <td class="align-middle">
-                                <p id="nama-<?php echo $data->id ?>">{{$data->kode_supplier}}</p>
-                            </td>
-                            <td class="align-middle text-center">
-                                <p id="hpp-<?php echo $data->id ?>">{{$data->nama_supplier}}</p>
-                            </td>
-                            <td class="align-middle text-center">
-                                <p id="harga-jual-<?php echo $data->id ?>">{{$data->tanggal_beli}}</p>
-                            </td>
-                            <td class="align-middle text-center">
-                                <p id="stok-<?php echo $data->id ?>">{{$data->jatuh_tempo}}</p>
-                            </td>
-                            <td class="align-middle text-center">
-                                <p id="satuan-<?php echo $data->id ?>">{{$data->jumlah_hutang}}</p>
-                            </td>
+                            <td class="align-middle text-center">{{$data->nomor_beli}}</td>
+                            <td class="align-middle">{{$data->kode_supplier}}</td>
+                            <td class="align-middle text-center">{{$data->nama_supplier}}</td>
+                            <td class="align-middle text-center">{{$data->tanggal_beli}}</td>
+                            <td class="align-middle text-center">{{$data->jatuh_tempo}}</td>
+                            <td class="align-middle text-center">{{$data->jumlah_hutang}}</td>
+                            <td class="align-middle text-center">{{$data->sisa_hutang}}</td>
                             <td class="align-middle text-center">
                                 <a id=<?php echo "bayar-" . $data->id ?> class="btn btn-sm btn-success"
                                     onclick="bayar(<?php echo $data->id ?>)">Bayar</a>
                             </td>
                         </tr>
+                        @endif
                         @endforeach
                     </tbody>
                     @endif
@@ -117,8 +125,8 @@
                         <tr>
                             <th>No</th>
                             <th>Nomor</th>
+                            <th>Nomor Jurnal</th>
                             <th>Tanggal</th>
-                            <th class="col-2">Nomor Hutang</th>
                             <th>Angsuran</th>
                             <th>Sisa Hutang</th>
                             <th>Opsi</th>
@@ -138,8 +146,6 @@
 <script src="{{ asset('js/nomor-angsuran.js') }}"></script>
 <script>
 var nomor_beli;
-
-$('#table-angsuran').DataTable();
 
 function panel_daftar() {
     $('#panel-daftar-utang').removeClass('d-none');
@@ -168,17 +174,31 @@ function bayar_hutang() {
         url: '/toko/transaksi/hutang/store',
         type: 'POST',
         data: {
+            nomor: $('[name="nomor"]').val(),
+            nomor_jurnal: $('[name="nomor_jurnal"]').val(),
             tanggal: $('[name="tanggal"]').val(),
             id_hutang: $('[name="nomor_beli"]').val(),
             angsuran: $('[name="angsuran"]').val(),
             sisa_hutang: $('[name="sisa_utang"]').val() - $('[name="angsuran"]').val(),
-            nomor: $('[name="nomor"]').val(),
             _token: $('meta[name="csrf-token"]').attr('content')
         },
         success: function(response) {
             if (response.code == 200) {
                 tampil_daftar();
                 nomorTransaksi();
+            }
+        }
+    });
+}
+
+function hapus_daftar($id) {
+    $.ajax({
+        url: '/toko/transaksi/hutang/delete/' + $id,
+        type: 'POST',
+        success: function(response) {
+            if (response.code == 200) {
+                close_popup_hapus();
+                tampil_daftar();
             }
         }
     });
@@ -194,17 +214,24 @@ function tampil_daftar() {
         success: function(response) {
             if (response.code == 200) {
                 $('#table-data-angsuran').empty();
+
+                $sisa_hutang = response.supplier_hutang.jumlah_hutang;
+
                 $.each(response.detail_hutang, function(index, value) {
+                    $sisa_hutang -= value.angsuran;
+
                     $('#table-data-angsuran').append('<tr>' +
                         '<th class="align-middle text-center">' + i++ + '</th>' +
                         '<td class="align-middle text-center">' + value.nomor + '</td>' +
+                        '<td class="align-middle text-center">' + value.nomor_jurnal + '</td>' +
                         '<td class="align-middle text-center">' + value.tanggal + '</td>' +
-                        '<td class="align-middle">' + value.nomor_hutang + '</td>' +
                         '<td class="align-middle text-center">' + value.angsuran + '</td>' +
-                        '<td class="align-middle text-center">' + value.sisa_hutang +
+                        '<td class="align-middle text-center">' + $sisa_hutang +
                         '</td>' +
                         '<td class="align-middle text-center"><a id="hapus-' + value
-                        .id + '" class="btn btn-sm btn-danger">Hapus</a>' +
+                        .id + '" class="btn btn-sm btn-danger" onclick="show_popup_hapus(' +
+                        value
+                        .id + ')"><i class="fas fa-trash-alt p-1"></i> Hapus</a>' +
                         '</td>' +
                         '</tr>')
                 })
@@ -243,12 +270,41 @@ function batal_transaksi() {
     });
 }
 
-$(function() {
+function show_popup_hapus(id) {
+    $("#popup-delete").removeClass("d-none");
+
+    $('#popup-body').empty();
+    $('#popup-body').append('<div class="row-lg align-item-center">' +
+        '<label for="">Apakah anda yakin ingin menghapus data ini?</label>' +
+        '</div><div class="row-lg align-item-center">' +
+        '<a class="btn btn-block btn-sm btn-success mt-1" onclick="hapus_daftar(' + id + ')">Hapus</a>' +
+        '<a class="btn btn-block btn-sm btn-danger mt-1" onclick="close_popup_hapus()">Batal</a>' +
+        '</div>')
+}
+
+function close_popup_hapus() {
+    $("#popup-delete").addClass("d-none");
+}
+
+$(document).ready(function() {
+    $('#table-angsuran').DataTable();
+
+    $('[name="angsuran"]').change(function() {
+        if (parseInt($(this).val()) < 0) {
+            $(this).val(0);
+        }
+        
+        if (parseInt($(this).val()) > parseInt($('[name="sisa_utang"]').val())) {
+            $(this).val($('[name="sisa_utang"]').val());
+        }
+    });
+
     $('#bayar').click(function() {
         var allFilled = false;
         var skip = false;
 
-        document.getElementById('panel-bayar-utang').querySelectorAll('[required]').forEach(function(i) {
+        document.getElementById('panel-bayar-utang').querySelectorAll('[required]').forEach(function(
+            i) {
             if (!skip) {
                 if (!i.value) {
                     i.focus();

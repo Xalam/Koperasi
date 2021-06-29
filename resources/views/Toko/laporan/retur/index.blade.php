@@ -4,15 +4,11 @@
 <div class="card m-6">
     <p class="card-header bg-light">Laporan Retur</p>
     <div class="card-body">
-        {!! Form::open( ['url' => '/toko/laporan/retur-pembelian', 'method' => 'GET']) !!}
+        {!! Form::open( ['url' => '/toko/laporan/pendapatan', 'method' => 'GET']) !!}
         <div class="row-lg align-item-center mb-2">
-            {!! Form::label(null, 'Tanggal Awal', ['class' => 'col-lg-2']) !!}
-            {!! Form::date('tanggal_awal', (isset($tanggal_awal) ? $tanggal_awal : null), ['class' => 'col-lg-2
+            {!! Form::label(null, 'Tanggal', ['class' => 'col-lg-2']) !!}
+            {!! Form::date('tanggal', (isset($tanggal_awal) ? $tanggal_awal : $cur_date), ['class' => 'col-lg-2
             form-control form-control-sm', 'required']) !!}
-            {!! Form::label(null, '-', ['class' => 'offset-lg-1 col-lg-1']) !!}
-            {!! Form::label(null, 'Tanggal Akhir', ['class' => 'col-lg-2']) !!}
-            {!! Form::date('tanggal_akhir', (isset($tanggal_akhir) ? $tanggal_akhir : null), ['class' => 'col-lg-2
-            form-control form-control-sm']) !!}
         </div>
         <div class="d-grid gap-2">
             {!! Form::submit('Cek', ['class' => 'btn btn-primary btn-sm']) !!}
@@ -22,7 +18,15 @@
 </div>
 
 <div class="card m-6">
-    <p class="card-header bg-light">Daftar Retur</p>
+    <div class="d-flex flex-row">
+        @if (isset($laporan_retur_pembelian) && count($laporan_retur_pembelian) > 0)
+        <p class="card-header col-lg">Daftar Retur</p>
+        <a href=<?php echo 'retur-pembelian/export/'.$tanggal_awal.'/'.$tanggal_akhir ?> target="_blank"><i class="card-header text-success fas fa-file-export" style="cursor: pointer;" title="Export to Excel"></i></a>
+        <a href=<?php echo 'retur-pembelian/print/'.$tanggal_awal.'/'.$tanggal_akhir ?> target="_blank"><i class="card-header text-success fas fa-print" style="cursor: pointer;" title="Print"></i></a>
+        @else
+        <p class="card-header col-lg">Daftar Retur</p>
+        @endif
+    </div>
     <div class="card-body">
         <div class="table-responsive">
             <table id="table-data" class="table table-striped table-bordered table-hover nowrap">
@@ -33,8 +37,8 @@
                         <th>Tanggal Retur</th>
                         <th>Nomor Beli</th>
                         <th>Kode Barang</th>
-                        <th class="col-2">Nama Barang</th>
-                        <th>Harga Beli</th>
+                        <th>Nama Barang</th>
+                        <th>HPP</th>
                         <th>Jumlah Retur</th>
                         <th>Total Harga</th>
                     </tr>
@@ -42,7 +46,7 @@
                 @if (isset($laporan_retur_pembelian) && count($laporan_retur_pembelian) > 0)
                 <tbody>
                     @php
-                    $i = 1 + 1 * ($laporan_retur_pembelian->currentPage() - 1);
+                    $i = 1;
                     @endphp
                     @foreach ($laporan_retur_pembelian AS $data)
                     <tr>
@@ -55,7 +59,6 @@
                         <td class="align-middle text-center">{{$data->hpp}}</td>
                         <td class="align-middle text-center">{{$data->jumlah}}</td>
                         <td class="align-middle text-center">{{$data->total_harga}}</td>
-                        </td>
                     </tr>
                     @endforeach
                 </tbody>

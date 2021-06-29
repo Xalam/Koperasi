@@ -14,6 +14,7 @@ class PembelianModel extends Model
     protected $fillable = [
         'tanggal',
         'nomor',
+        'nomor_jurnal',
         'id_supplier',
         'jumlah_harga',
         'jumlah_bayar',

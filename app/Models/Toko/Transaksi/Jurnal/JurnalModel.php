@@ -8,4 +8,15 @@ use Illuminate\Database\Eloquent\Model;
 class JurnalModel extends Model
 {
     use HasFactory;
+
+    protected $table = 'jurnal';
+
+    protected $fillable = [
+        'nomor',
+        'tanggal',
+        'keterangan',
+        'id_akun',
+        'debit', 
+        'kredit'
+    ];
 }

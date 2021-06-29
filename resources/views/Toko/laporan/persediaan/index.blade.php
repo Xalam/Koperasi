@@ -18,11 +18,15 @@
 </div>
 
 <div class="card m-6">
-    @if (isset($laporan_persediaan) && count($laporan_persediaan) > 0)
-    <p class="card-header bg-light">Daftar Barang Kurang Dari {{$jumlah_barang}}</p>
-    @else
-    <p class="card-header bg-light">Daftar Barang </p>
-    @endif
+    <div class="d-flex flex-row">
+        @if (isset($laporan_persediaan) && count($laporan_persediaan) > 0)
+        <p class="card-header col-lg">Daftar Persediaan Barang Kurang Dari {{$jumlah_barang}}</p>
+        <a href=<?php echo 'persediaan/export/'.$jumlah_barang ?> target="_blank"><i class="card-header text-success fas fa-file-export" style="cursor: pointer;" title="Export to Excel"></i></a>
+        <a href=<?php echo 'persediaan/print/'.$jumlah_barang ?> target="_blank"><i class="card-header text-success fas fa-print" style="cursor: pointer;" title="Print"></i></a>
+        @else
+        <p class="card-header col-lg">Daftar Persediaan Barang </p>
+        @endif
+    </div>
     <div class="card-body">
         <div class="table-responsive">
             <table id="table-data" class="table table-striped table-bordered table-hover nowrap">
@@ -30,7 +34,7 @@
                     <tr>
                         <th>No</th>
                         <th>Kode Barang</th>
-                        <th class="col-2">Nama Barang</th>
+                        <th>Nama Barang</th>
                         <th>Stok</th>
                         <th>HPP</th>
                         <th>Jumlah Harga</th>
@@ -39,7 +43,7 @@
                 @if (isset($laporan_persediaan) && count($laporan_persediaan) > 0)
                 <tbody>
                     @php
-                    $i = 1 + 1 * ($laporan_persediaan->currentPage() - 1);
+                    $i = 1;
                     @endphp
                     @foreach ($laporan_persediaan AS $data)
                     <tr>
@@ -47,9 +51,8 @@
                         <td class="align-middle text-center">{{$data->kode}}</td>
                         <td class="align-middle">{{$data->nama}}</td>
                         <td class="align-middle text-center">{{$data->stok}}</td>
-                        <td class="align-middle text-center">{{$data->harga_jual}}</td>
-                        <td class="align-middle text-center">{{$data->stok * $data->harga_jual}}</td>
-                        </td>
+                        <td class="align-middle text-center">{{$data->hpp}}</td>
+                        <td class="align-middle text-center">{{$data->stok * $data->hpp}}</td>
                     </tr>
                     @endforeach
                 </tbody>

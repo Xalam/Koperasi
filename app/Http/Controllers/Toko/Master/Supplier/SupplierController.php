@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Toko\Master\Supplier;
 
 use App\Http\Controllers\Controller;
+use App\Models\Toko\Master\Barang\BarangModel;
 use Illuminate\Http\Request;
 
 use App\Models\Toko\Master\Supplier\SupplierModel;
@@ -12,7 +13,33 @@ class SupplierController extends Controller
     public function index() {
         $supplier = SupplierModel::all();
 
-        return view('toko.master.supplier.index', compact('supplier'));
+        $data_notif = BarangModel::where('alert_status', 1)->get();
+
+        $data_notified = BarangModel::all();
+        foreach ($data_notified AS $data) {
+            if ($data->stok <= $data->stok_minimal) {
+                BarangModel::where('id', $data->id)->update([
+                    'alert_status' => 1
+                ]);
+            }
+        }
+
+        return view('toko.master.supplier.index', compact('data_notified', 'data_notif', 'supplier'));
+    }
+    
+    public function create() {
+        $data_notif = BarangModel::where('alert_status', 1)->get();
+
+        $data_notified = BarangModel::all();
+        foreach ($data_notified AS $data) {
+            if ($data->stok <= $data->stok_minimal) {
+                BarangModel::where('id', $data->id)->update([
+                    'alert_status' => 1
+                ]);
+            }
+        }
+        
+        return view('toko.master.supplier.create', compact('data_notified', 'data_notif'));
     }
 
     public function store(Request $request) {
