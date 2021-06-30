@@ -13,7 +13,7 @@ class Saldo extends Model
     protected $table = 'tb_saldo';
 
     protected $fillable = [
-        'id_anggota', 'saldo'
+        'id_anggota', 'saldo', 'jenis_simpanan'
     ];
 
     public function anggota()
