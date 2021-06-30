@@ -52,6 +52,7 @@ use App\Http\Controllers\Toko\Laporan\Retur\LaporanReturPembelianController;
 
 //API
 Route::group(['prefix' => 'api'], function () {
+    Route::get('/barang', [DataBarangController::class, 'apiBarang']);
     Route::get('/data-akun/{id}', [DataAkunController::class, 'dataAkun']);
     Route::get('/data-barang/{id}', [DataBarangController::class, 'dataBarang']);
     Route::get('/data-retur-barang/{id}', [DataBarangController::class, 'dataReturBarang']);

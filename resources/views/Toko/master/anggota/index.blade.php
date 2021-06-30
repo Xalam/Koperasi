@@ -22,13 +22,13 @@
                         <th>No</th>
                         <th>Kode Anggota</th>
                         <th>Nama Anggota</th>
-                        <th>Jabatan</th>
+                        <th>Status</th>
                         <th>Alamat</th>
+                        <th>Jabatan</th>
                         <th>Gaji</th>
-                        <th>Limit Belanja</th>
+                        <th>Limit Gaji</th>
                         <th>Nomor Telepon</th>
                         <th>Nomor WA</th>
-                        <th>Status</th>
                     </tr>
                 </thead>
                 @if (count($anggota) > 0)
@@ -42,37 +42,31 @@
                             <div>{{$i++}}</div>
                         </th>
                         <td class="align-middle text-center">
-                            <div id="kode-<?php echo $data->id ?>">{{$data->kode}}</div>
+                            <div id="kd_anggota-<?php echo $data->id ?>">{{$data->kd_anggota}}</div>
                         </td>
                         <td class="align-middle">
-                            <div id="nama-<?php echo $data->id ?>">{{$data->nama}}</div>
+                            <div id="nama_anggota-<?php echo $data->id ?>">{{$data->nama_anggota}}</div>
                         </td>
-                        <td class="align-middle">
-                            <div id="jabatan-<?php echo $data->id ?>">{{$data->jabatan}}</div>
+                        <td class="align-middle text-center">
+                            <div id="status-<?php echo $data->id ?>">{{$data->status}}</div>
                         </td>
                         <td class="align-middle">
                             <div id="alamat-<?php echo $data->id ?>">{{$data->alamat}}</div>
                         </td>
                         <td class="align-middle">
+                            <div id="jabatan-<?php echo $data->id ?>">{{$data->jabatan}}</div>
+                        </td>
+                        <td class="align-middle">
                             <div id="gaji-<?php echo $data->id ?>">{{$data->gaji}}</div>
                         </td>
                         <td class="align-middle">
-                            <div id="limit_belanja-<?php echo $data->id ?>">{{$data->limit_belanja}}</div>
+                            <div id="limit_gaji-<?php echo $data->id ?>">{{$data->limit_gaji}}</div>
                         </td>
                         <td class="align-middle">
-                            <div id="telepon-<?php echo $data->id ?>">{{$data->telepon}}</div>
+                            <div id="no_hp-<?php echo $data->id ?>">{{$data->no_hp}}</div>
                         </td>
                         <td class="align-middle">
-                            <div id="wa-<?php echo $data->id ?>">{{$data->wa}}</div>
-                        </td>
-                        <td class="align-middle text-center">
-                            @if ($data->status == 'Aktif')
-                            <div id="status-<?php echo $data->id ?>" class="btn-success rounded p-1">{{$data->status}}
-                            </div>
-                            @else
-                            <div id="status-<?php echo $data->id ?>" class="btn-danger rounded p-1 ps-2 pe-2">{{$data->status}}
-                            </div>
-                            @endif
+                            <div id="no_wa-<?php echo $data->id ?>">{{$data->no_wa}}</div>
                         </td>
                     </tr>
                     @endforeach

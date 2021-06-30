@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 
 use App\Models\Toko\Master\Anggota\AnggotaModel;
 use App\Models\Toko\Master\Barang\BarangModel;
+use Carbon\Carbon;
+use Illuminate\Support\Facades\Hash;
 
 class AnggotaController extends Controller
 {
@@ -43,7 +45,30 @@ class AnggotaController extends Controller
     }
 
     public function store(Request $request) {
-        AnggotaModel::create($request->all());
+        if ($request->file('foto')->isValid()) {
+            AnggotaModel::create([
+                'kd_anggota' => $request->input('kd_anggota'),
+                'nama_anggota' => $request->input('nama_anggota'),
+                'jenis_kelamin' => $request->input('jenis_kelamin'),
+                'agama' => $request->input('agama'),
+                'tempat_lahir' => $request->input('tempat_lahir'),
+                'tanggal_lahir' => $request->input('tanggal_lahir'),
+                'alamat' => $request->input('alamat'),
+                'no_hp' => $request->input('no_hp'),
+                'no_wa' => $request->input('no_wa'),
+                'foto' => $request->input('nama_anggota') .'.' . $request->file('foto')->getClientOriginalExtension(),
+                'status' => $request->input('status'),
+                'jabatan' => $request->input('jabatan'),
+                'email' => $request->input('email'),
+                'username' => $request->input('username'),
+                'password' => Hash::make($request->input('password')),
+                'role' => $request->input('role'),
+                'gaji' => $request->input('gaji'),
+                'limit_gaji' => $request->input('limit_gaji')
+            ]);
+
+            $request->file('foto')->move(public_path('document/toko/anggota/foto/'), $request->input('nama_anggota') .'.' . $request->file('foto')->getClientOriginalExtension());
+        }
 
         return redirect('/toko/master/anggota');
     }

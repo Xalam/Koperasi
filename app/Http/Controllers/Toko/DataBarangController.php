@@ -10,6 +10,11 @@ use Illuminate\Support\Facades\DB;
 
 class DataBarangController extends Controller
 {
+    public function apiBarang() {
+        return BarangModel::orderBy('nama')
+                            ->get();
+    }
+
     public function dataBarang($id) {
         return BarangModel::where('id', $id)
                             ->orderBy('nama')
