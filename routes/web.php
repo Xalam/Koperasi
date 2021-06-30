@@ -73,10 +73,8 @@ Route::group(['prefix' => 'api'], function () {
     Route::get('/nomor-jurnal-umum/{tanggal}', [NomorJurnalController::class, 'nomorJurnalUmum']);
 });
 
-Route::group(['middleware' => 'auth'], function () {
-    Route::get('/', function () {
-        return view('welcome');
-    });
+Route::get('/', function () {
+    return redirect()->to('toko/login');
 });
 
 Route::group(['prefix' => 'toko'], function () {
