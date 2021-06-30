@@ -25,6 +25,7 @@
                         <th>Harga Jual</th>
                         <th>Stok</th>
                         <th>Satuan</th>
+                        <th>Expired</th>
                         <th class="w-20">Opsi</th>
                     </tr>
                 </thead>
@@ -69,6 +70,11 @@
                             <div id="satuan-<?php echo $data->id ?>">{{$data->satuan}}</div>
                         </td>
                         <td class="align-middle text-center">
+                            {!! Form::date('edit_expired', $data->expired, ['class' => 'd-none', 'id' =>
+                            'edit-expired-'.$data->id]) !!}
+                            <div id="expired-<?php echo $data->id ?>">{{$data->expired}}</div>
+                        </td>
+                        <td class="align-middle text-center">
                             <a id=<?php echo "edit-" . $data->id ?> class="w-48 btn btn-sm btn-warning"
                                 onclick="edit(<?php echo $data->id ?>)"><i class="fas fa-edit p-1"></i> Edit</a>
                             <a id=<?php echo "terapkan-" . $data->id ?> class="w-48 btn btn-sm btn-warning d-none"
@@ -102,6 +108,8 @@ function edit(id) {
     $("#edit-stok-" + id).removeClass("d-none");
     $("#satuan-" + id).addClass("d-none");
     $("#edit-satuan-" + id).removeClass("d-none");
+    $("#expired-" + id).addClass("d-none");
+    $("#edit-expired-" + id).removeClass("d-none");
     $("#edit-" + id).addClass("d-none");
     $("#terapkan-" + id).removeClass("d-none");
 }
@@ -117,7 +125,8 @@ function terapkan(id) {
             hpp: $('#edit-hpp-' + id).val(),
             harga_jual: $('#edit-harga-jual-' + id).val(),
             stok: $('#edit-stok-' + id).val(),
-            satuan: $('#edit-satuan-' + id).val()
+            satuan: $('#edit-satuan-' + id).val(),
+            expired: $('#edit-expired-' + id).val()
         },
         success: function(response) {
             if (response.code == 200) {
@@ -133,6 +142,8 @@ function terapkan(id) {
                 $("#edit-stok-" + id).addClass("d-none");
                 $("#satuan-" + id).removeClass("d-none");
                 $("#edit-satuan-" + id).addClass("d-none");
+                $("#expired-" + id).removeClass("d-none");
+                $("#edit-expired-" + id).addClass("d-none");
                 $("#edit-" + id).removeClass("d-none");
                 $("#terapkan-" + id).addClass("d-none");
 
@@ -142,6 +153,7 @@ function terapkan(id) {
                 $("#harga-jual-" + id).html(response.barang.harga_jual);
                 $("#stok-" + id).html(response.barang.stok);
                 $("#satuan-" + id).html(response.barang.satuan);
+                $("#expired-" + id).html(response.barang.expired);
             }
         }
     });

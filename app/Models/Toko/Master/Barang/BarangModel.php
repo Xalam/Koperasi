@@ -16,11 +16,12 @@ class BarangModel extends Model
         'nama', 
         'hpp',
         'harga_jual',
-        'minimum_grosir',
+        'minimal_grosir',
         'harga_grosir',
         'stok',
         'stok_minimal',
         'satuan',
+        'foto',
         'expired',
         'alert_status'
     ];

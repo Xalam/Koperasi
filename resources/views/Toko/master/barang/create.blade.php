@@ -4,7 +4,7 @@
 <div class="card m-6">
     <p class="card-header bg-light">Tambah Barang</p>
     <div class="card-body">
-        {!! Form::open(['url' => '/toko/master/barang/store']) !!}
+        {!! Form::open(['url' => '/toko/master/barang/store', 'enctype' => 'multipart/form-data', 'method' => 'post']) !!}
         <div class="row-lg align-item-center mb-2">
             {!! Form::label(null, 'Kode Barang', ['class' => 'col-lg-2']) !!}
             {!! Form::text('kode', null, ['class' => 'col-lg-4 form-control form-control-sm', 'required']) !!}
@@ -54,6 +54,14 @@
             </div>
         </div>
         <div class="row-lg align-item-center mb-2">
+            {!! Form::label(null, 'Foto', ['class' => 'col-lg-2']) !!}
+            {!! Form::file('foto', ['class' => 'col-lg-4 form-control form-control-sm', 'required', 'accept' => 'application/pdf, image/png, image/jpg, image/jpeg']) !!}
+            <div class="vw-100"></div>
+            {!! Form::label(null, 'Type : pdf, png, jfif, pjpeg, jpg, pjp, jpeg', ['class' => 'offset-lg-2 col-lg']) !!}
+            <div class="vw-100"></div>
+            {!! Form::label(null, 'Size : < 2 MB', ['class' => 'offset-lg-2 col-lg']) !!}
+        </div>
+        <div class="row-lg align-item-center mb-2">
             {!! Form::label(null, 'Grosir', ['class' => 'col-lg fw-bold']) !!}
             <div class="w-100"></div>
             {!! Form::label(null, 'Harga Jual', ['class' => 'col-lg-2']) !!}
@@ -78,9 +86,19 @@ $(function() {
     $("input[name='margin']").change(function() {
         marginLaba();
     });
-    
+
     $("input[name='hpp']").change(function() {
         marginLaba();
+    });
+
+    $('input[type="file"]').change(function() {
+        var size = $(this)[0].files[0].size;
+        var extension = $(this).val().replace(/^.*\./, '');
+        var pattern = ['pdf', 'png', 'jfif', 'pjpeg', 'jpg', 'pjp', 'jpeg'];
+
+        if (size > 2048000 || $.inArray(extension, pattern) == -1) {
+            $(this).val(null);
+        }
     });
 
     function marginLaba() {
