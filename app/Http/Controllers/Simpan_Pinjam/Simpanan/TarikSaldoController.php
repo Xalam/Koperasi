@@ -87,7 +87,8 @@ class TarikSaldoController extends Controller
      */
     public function store(Request $request)
     {
-        $saldo = Saldo::where('id_anggota', $request->id_anggota)->first();
+        $saldo = Saldo::where('id_anggota', $request->id_anggota)
+            ->where('jenis_simpanan', $request->jenis_simpanan)->first();
 
         $tarikSaldo = new SaldoTarik();
         $tarikSaldo->id_saldo   = $saldo->id;
@@ -138,24 +139,13 @@ class TarikSaldoController extends Controller
 
         $checkAkunKas       = Akun::where('kode_akun', 1101)->first();
         $checkSimSukarela   = Akun::where('kode_akun', 2121)->first();
-
-        if ($checkAkunKas == null) {
-            $idKas = 0;
-        } else {
-            $idKas = $checkAkunKas->id;
-        }
-
-        if ($checkSimSukarela == null) {
-            $idSukarela = 0;
-        } else {
-            $idSukarela = $checkSimSukarela->id;
-        }
+        $checkSimWajib      = Akun::where('kode_akun', 3102)->first();
+        $checkSimPokok      = Akun::where('kode_akun', 3101)->first();
 
         if ($saldo->saldo >= $tarikSaldo->nominal) {
             $tarikSaldo->update(['status' => $request->status]);
 
-            if ($tarikSaldo->status == 2)
-            {
+            if ($tarikSaldo->status == 2) {
                 #Check Jurnal
                 $checkJurnal = JurnalUmum::select('*')->orderBy('id', 'DESC')->first();
                 if ($checkJurnal == null) {
@@ -170,17 +160,24 @@ class TarikSaldoController extends Controller
                 #Simpan Jurnal Kas
                 $jurnal = new JurnalUmum();
                 $jurnal->kode_jurnal   = 'JU-' . str_pad($idJurnal, 6, '0', STR_PAD_LEFT);
-                $jurnal->id_akun        = $idKas;
+                $jurnal->id_akun        = $checkAkunKas->id;
                 $jurnal->tanggal        = date('Y-m-d');
                 $jurnal->keterangan     = 'Penarikan ( ' . $penarikan->saldo->anggota->nama_anggota . ' )';
                 $jurnal->debet          = 0;
                 $jurnal->kredit         = $penarikan->nominal;
                 $jurnal->save();
 
-                #Simpan Jurnal Simpanan Sukarela
+                if ($saldo->jenis_simpanan == 1) {
+                    $idJenisSimpanan = $checkSimPokok->id;
+                } elseif ($saldo->jenis_simpanan == 2) {
+                    $idJenisSimpanan = $checkSimWajib->id;
+                } else {
+                    $idJenisSimpanan = $checkSimSukarela->id;
+                }
+                #Simpan Jurnal Simpanan
                 $jurnal = new JurnalUmum();
                 $jurnal->kode_jurnal   = 'JU-' . str_pad($idJurnal, 6, '0', STR_PAD_LEFT);
-                $jurnal->id_akun        = $idSukarela;
+                $jurnal->id_akun        = $idJenisSimpanan;
                 $jurnal->tanggal        = date('Y-m-d');
                 $jurnal->keterangan     = 'Penarikan ( ' . $penarikan->saldo->anggota->nama_anggota . ' )';
                 $jurnal->debet          = $penarikan->nominal;
@@ -237,11 +234,22 @@ class TarikSaldoController extends Controller
             $no   = 1;
 
             foreach ($history as $key => $value) {
+                $jenisSimpanan = '';
+
+                if ($value->saldo->jenis_simpanan == 1) {
+                    $jenisSimpanan = 'Simpanan Pokok';
+                } elseif ($value->saldo->jenis_simpanan == 2) {
+                    $jenisSimpanan = 'Simpanan Wajib';
+                } else {
+                    $jenisSimpanan = 'Simpanan Sukarela';
+                }
+
                 $data[] = [
                     'no'        => $no++,
                     'tanggal'   => date('d-m-Y', strtotime($value->tanggal)),
                     'nama'      => $value->saldo->anggota->nama_anggota,
                     'nominal'   => number_format($value->nominal, 2, ',', '.'),
+                    'jenis'     => $jenisSimpanan,
                     'action'    => '<a href="' . route('tarik-saldo.print', $value->id) . '" class="btn btn-default btn-sm">
                     <i class="fas fa-print"></i>&nbsp; Cetak</a>'
                 ];
@@ -266,7 +274,8 @@ class TarikSaldoController extends Controller
         return view('Simpan_Pinjam.simpanan.tarik-saldo.print-show', compact('tarikSaldo'));
     }
 
-    public function modal_delete($id) {
+    public function modal_delete($id)
+    {
         $tarikSaldo = SaldoTarik::findOrFail($id);
 
         return view('Simpan_Pinjam.simpanan.tarik-saldo.modal-delete', compact('tarikSaldo'));
@@ -274,7 +283,9 @@ class TarikSaldoController extends Controller
 
     public function saldo(Request $request)
     {
-        $saldo = Saldo::select('saldo')->where('id_anggota', $request->id)->first();
+        $saldo = Saldo::select('saldo')->where('id_anggota', $request->id)
+            ->where('jenis_simpanan', $request->id_simpan)->first();
+
         $data = array(
             'saldo' => 0
         );
@@ -285,7 +296,7 @@ class TarikSaldoController extends Controller
             );
             return response()->json($data);
         } else {
-            
+
             return response()->json($data);
         }
     }

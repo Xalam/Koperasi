@@ -4,12 +4,12 @@
 
 @section('content_header', 'Tambah Penarikan')
 
-@push('style')
-    <link rel="stylesheet"
-        href="{{ asset('assets/plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css') }}">
-    <link rel="stylesheet" href="{{ asset('assets/plugins/select2/css/select2.min.css') }}">
-    <link rel="stylesheet" href="{{ asset('assets/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css') }}">
-@endpush
+    @push('style')
+        <link rel="stylesheet"
+            href="{{ asset('assets/plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css') }}">
+        <link rel="stylesheet" href="{{ asset('assets/plugins/select2/css/select2.min.css') }}">
+        <link rel="stylesheet" href="{{ asset('assets/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css') }}">
+    @endpush
 
 @section('breadcrumb')
     <li class="breadcrumb-item"><a href="#">Simpanan</a></li>
@@ -29,7 +29,8 @@
                     </div>
                 </div>
                 <div class="card-body col-md-6 mx-auto">
-                    <form id="form-tarik" action="{{ route('tarik-saldo.store') }}" role="form" method="post" autocomplete="off">
+                    <form id="form-tarik" action="{{ route('tarik-saldo.store') }}" role="form" method="post"
+                        autocomplete="off">
                         @csrf
                         <div class="form-group">
                             <label>Nama Anggota</label>
@@ -39,6 +40,15 @@
                                     <option value="{{ $a->id }}">{{ $a->kd_anggota . ' - ' . $a->nama_anggota }}
                                     </option>
                                 @endforeach
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Jenis Simpanan</label>
+                            <select class="form-control select2" style="width: 100%;" name="jenis_simpanan"
+                                id="jenis-simpanan">
+                                <option selected="selected" value="3">Simpanan Sukarela</option>
+                                <option value="2">Simpanan Wajib</option>
+                                <option value="1">Simpanan Pokok</option>
                             </select>
                         </div>
                         <div class="form-group">
@@ -88,25 +98,15 @@
 @section('script')
     <script>
         $(function() {
-            $('#nominal').mask('#.##0', {
-                reverse: true
-            });
-
-            $('#tanggal').datetimepicker({
-                format: 'YYYY-MM-DD'
-            });
-
-            $('.select2').select2();
-
-            $('#id-anggota').on('change', function() {
-                let id = $(this).val();
-                // console.log(id);
+            function getSaldo(id, idSimpan) {
                 $.ajax({
                     method: 'POST',
                     url: '{{ route('tarik-saldo.saldo') }}',
                     data: {
                         '_token': '{{ csrf_token() }}',
-                        'id':id},
+                        'id': id,
+                        'id_simpan': idSimpan
+                    },
                     success: function(data) {
                         // console.log(data.saldo);
                         $('#saldo').attr('value', formatMoney(data.saldo));
@@ -118,10 +118,35 @@
                         }
                     }
                 })
+            }
+
+            let id_simpanan = 3;
+            let id = 0;
+
+            $('#nominal').mask('#.##0', {
+                reverse: true
+            });
+
+            $('#tanggal').datetimepicker({
+                format: 'YYYY-MM-DD'
+            });
+
+            $('.select2').select2();
+
+            $('#jenis-simpanan').on('change', function() {
+                id_simpanan = $(this).val();
+                getSaldo(id, id_simpanan);
+            });
+
+            $('#id-anggota').on('change', function() {
+                id = $(this).val();
+                console.log(id);
+                console.log(id_simpanan);
+                getSaldo(id, id_simpanan);
             });
 
             $.validator.setDefaults({
-                submitHandler: function () {
+                submitHandler: function() {
                     form.submit();
                 }
             });
@@ -160,6 +185,5 @@
                 return new Intl.NumberFormat("id-ID").format(n);
             }
         })
-
     </script>
 @endsection

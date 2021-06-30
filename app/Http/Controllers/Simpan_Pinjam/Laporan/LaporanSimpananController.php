@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Simpan_Pinjam\Laporan;
 
 use App\Http\Controllers\Controller;
 use App\Models\Simpan_Pinjam\Master\Anggota\Anggota;
+use App\Models\Simpan_Pinjam\Simpanan\SaldoTarik;
 use App\Models\Simpan_Pinjam\Simpanan\Simpanan;
 use Illuminate\Http\Request;
 
@@ -18,23 +19,31 @@ class LaporanSimpananController extends Controller
 
     public function show(Request $request)
     {
-        $simpanan = Simpanan::where('id_anggota', $request->id_anggota)->get();
-        $anggota = Anggota::findOrFail($request->id_anggota);
+        $idAnggota = $request->id_anggota;
+
+        $simpanan = Simpanan::where('id_anggota', $idAnggota)->get();
+        $anggota = Anggota::findOrFail($idAnggota);
+
+        $saldoTarik = SaldoTarik::with('saldo')
+            ->whereHas('saldo', function ($query) use ($idAnggota) {
+                $query->where('id_anggota', $idAnggota);
+            })->get();
 
         if (sizeof($simpanan) == 0) {
             return redirect()->route('lap-simpanan.index')->with([
                 'error' => 'Belum terdapat simpanan'
             ]);
         } else {
-            return view('Simpan_Pinjam.laporan.simpanan.print', compact('simpanan', 'anggota'));
+            return view('Simpan_Pinjam.laporan.simpanan.print', compact('simpanan', 'anggota', 'saldoTarik'));
         }
     }
 
     public function print_all()
     {
         $simpanan = Simpanan::get();
+        $saldoTarik = SaldoTarik::with('saldo')->get();
 
-        return view('Simpan_Pinjam.laporan.simpanan.print-all', compact('simpanan'));
+        return view('Simpan_Pinjam.laporan.simpanan.print-all', compact('simpanan', 'saldoTarik'));
     }
 
     public function print_show($id)
@@ -42,6 +51,11 @@ class LaporanSimpananController extends Controller
         $simpanan = Simpanan::where('id_anggota', $id)->get();
         $anggota = Anggota::findOrFail($id);
 
-        return view('Simpan_Pinjam.laporan.simpanan.print-show', compact('simpanan', 'anggota'));
+        $saldoTarik = SaldoTarik::with('saldo')
+            ->whereHas('saldo', function ($query) use ($id) {
+                $query->where('id_anggota', $id);
+            })->get();
+
+        return view('Simpan_Pinjam.laporan.simpanan.print-show', compact('simpanan', 'anggota', 'saldoTarik'));
     }
 }

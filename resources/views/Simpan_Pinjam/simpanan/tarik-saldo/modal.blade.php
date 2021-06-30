@@ -7,12 +7,15 @@
 <div class="modal-body">
     <p>
         @if ($tarikSaldo->status == 0)
-            Apakah Anda ingin memproses permintaan penarikan dari <strong>{{ $tarikSaldo->saldo->anggota->nama_anggota }}</strong><br>
+            Apakah Anda ingin memproses permintaan penarikan dari
+            <strong>{{ $tarikSaldo->saldo->anggota->nama_anggota }}</strong><br>
             sebesar <strong>Rp {{ number_format($tarikSaldo->nominal, 2, ',', '.') }}</strong> ?
         @endif
         @if ($tarikSaldo->status == 1)
-            Apakah proses  permintaan penarikan dari <strong>{{ $tarikSaldo->saldo->anggota->nama_anggota }}</strong><br>
-            sebesar <strong>Rp {{ number_format($tarikSaldo->nominal, 2, ',', '.') }}</strong> sudah selesai diproses ?
+            Apakah proses permintaan penarikan dari
+            <strong>{{ $tarikSaldo->saldo->anggota->nama_anggota }}</strong><br>
+            sebesar <strong>Rp {{ number_format($tarikSaldo->nominal, 2, ',', '.') }}</strong> sudah selesai diproses
+            ?
         @endif
     </p>
 </div>
