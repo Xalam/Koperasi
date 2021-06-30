@@ -14,7 +14,7 @@ return [
     */
 
     'defaults' => [
-        'guard' => 'web',
+        'guard' => 'simpan-pinjam',
         'passwords' => 'users',
     ],
 
@@ -36,9 +36,14 @@ return [
     */
 
     'guards' => [
-        'web' => [
+        'simpan-pinjam' => [
             'driver' => 'session',
             'provider' => 'users',
+        ],
+
+        'toko' => [
+            'driver' => 'session',
+            'provider' => 'user',
         ],
 
         'api' => [
@@ -67,6 +72,11 @@ return [
 
     'providers' => [
         'users' => [
+            'driver' => 'eloquent',
+            'model' => App\Models\User::class,
+        ],
+        
+        'user' => [
             'driver' => 'eloquent',
             'model' => App\Models\Toko\User::class,
         ],

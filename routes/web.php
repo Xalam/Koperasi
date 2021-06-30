@@ -1,7 +1,9 @@
 <?php
 
-use App\Http\Controllers\AuthController;
+use App\Http\Controllers\Simpan_Pinjam\Dashboard\DashboardController;
 use Illuminate\Support\Facades\Route;
+
+use App\Http\Controllers\Toko\AuthController;
 
 use App\Http\Controllers\Toko\DataAkunController;
 use App\Http\Controllers\Toko\DataBarangController;

@@ -23,7 +23,7 @@ class LoginController extends Controller
         //     return redirect()->route('dashboard');
         // }
 
-        if (Auth::attempt(['username' => $request->username, 'password' => $request->password])) {
+        if (Auth::guard('simpan-pinjam')->attempt(['username' => $request->username, 'password' => $request->password])) {
             return redirect()->route('dashboard')->with([
                 'success' => 'Selamat datang ' . $check_user->name . '!'
             ]);
@@ -36,7 +36,7 @@ class LoginController extends Controller
 
     public function logout()
     {
-        Auth::logout();
+        Auth::guard('simpan-pinjam')->logout();
 
         return redirect()->route('login');
     }
