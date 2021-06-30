@@ -24,15 +24,38 @@
         <div class="card-login">
             <h4 class="text-center card-header p-3">Salepropos</h4>
             <div class="card-body">
-                {!! Form::open(['url' => '']) !!}
-                {!! Form::label(null, 'Username', ['class' => 'font-3 fw-bold']) !!}
-                {!! Form::text(null, null, ['class' => 'font-3 mb-2 form-control form-control-sm', 'placeholder' =>
-                'Input Username', 'required']) !!}
+                {!! Form::open(['url' => '/toko/login/store']) !!}
+                @if(session('errors'))
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    Something it's wrong:
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                    <ul>
+                        @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+                @endif
+                @if (Session::has('success'))
+                <div class="alert alert-success p-3">
+                    {{ Session::get('success') }}
+                </div>
+                @endif
+                @if (Session::has('error'))
+                <div class="alert alert-danger p-3">
+                    {{ Session::get('error') }}
+                </div>
+                @endif
+                {!! Form::label(null, 'Nama', ['class' => 'font-3 fw-bold']) !!}
+                {!! Form::text('nama', null, ['class' => 'font-3 mb-2 form-control form-control-sm', 'placeholder' =>
+                'Input Nama', 'required']) !!}
                 {!! Form::label(null, 'Password', ['class' => 'font-3 fw-bold']) !!}
-                {!! Form::password(null, ['class' => 'font-3 form-control form-control-sm', 'placeholder' => 'Input Password', 'required']) !!}
+                {!! Form::password('password', ['class' => 'font-3 form-control form-control-sm', 'placeholder' =>
+                'Input Password', 'required']) !!}
                 <div class="d-grid gap-2 mt-2">
-                    <a href="/" class="btn btn-small btn-primary">Login</a>
-                    <!-- {!! Form::submit('Login', ['class' => 'btn btn-small btn-primary']) !!} -->
+                    {!! Form::submit('Login', ['class' => 'btn btn-small btn-primary']) !!}
                 </div>
                 {!! Form::close() !!}
             </div>

@@ -13,6 +13,7 @@ class ReturPembelianBarangModel extends Model
 
     protected $fillable = [
         'nomor',
+        'nomor_beli',
         'id_barang',
         'harga_beli',
         'jumlah',

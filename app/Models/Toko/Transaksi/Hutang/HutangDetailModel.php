@@ -13,9 +13,9 @@ class HutangDetailModel extends Model
 
     protected $fillable = [
         'nomor',
+        'nomor_jurnal',
         'tanggal',
         'id_hutang',
-        'angsuran',
-        'sisa_hutang'
+        'angsuran'
     ];
 }

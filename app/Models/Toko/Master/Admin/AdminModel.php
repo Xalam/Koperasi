@@ -15,6 +15,6 @@ class AdminModel extends Model
         'kode',
         'nama',
         'password',
-        'level'
+        'jabatan'
     ];
 }

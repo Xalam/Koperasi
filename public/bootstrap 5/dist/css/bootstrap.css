@@ -600,7 +600,7 @@ progress {
 .container-sm {
   width: 100%;
   padding-right: var(--bs-gutter-x, 0.75rem);
-  padding-left: var(--bs-gutter-x, 0.75rem);
+  padding-left: var(--bs-gutter-x, 0.25rem);
   margin-right: auto;
   margin-left: auto;
 }
@@ -3496,7 +3496,7 @@ textarea.form-control-lg {
   top: 100%;
   z-index: 1000;
   display: none;
-  min-width: 10rem;
+  min-width: 12rem;
   padding: 0.5rem 0;
   margin: 0;
   font-size: 1rem;
@@ -4677,8 +4677,6 @@ textarea.form-control-lg {
 
 .alert {
   position: relative;
-  padding: 1rem 1rem;
-  margin-bottom: 1rem;
   border: 1px solid transparent;
   border-radius: 0.25rem;
 }

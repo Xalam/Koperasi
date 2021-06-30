@@ -4,21 +4,36 @@ namespace App\Http\Controllers\Toko\Transaksi\Hutang;
 
 use App\Http\Controllers\Controller;
 use App\Models\Toko\Master\Akun\AkunModel;
-use App\Models\Toko\Master\Jurnal\JurnalModel;
+use App\Models\Toko\Master\Barang\BarangModel;
 use App\Models\Toko\Master\Supplier\SupplierModel;
 use App\Models\Toko\Transaksi\Hutang\HutangDetailModel;
 use App\Models\Toko\Transaksi\Hutang\HutangModel;
+use App\Models\Toko\Transaksi\Jurnal\JurnalModel;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class HutangController extends Controller
 {
     public function index() {
+        $cur_date = Carbon::now();
+
+        $data_notif = BarangModel::where('alert_status', 1)->get();
+
+        $data_notified = BarangModel::all();
+        foreach ($data_notified AS $data) {
+            if ($data->stok <= $data->stok_minimal) {
+                BarangModel::where('id', $data->id)->update([
+                    'alert_status' => 1
+                ]);
+            }
+        }
+
         $data_hutang = HutangModel::all();
 
         if (count($data_hutang) > 0) {
-            $pembayaran[0] = "-- Pilih Nomor Beli --";
+            $pembayaran[''] = "-- Pilih Nomor Beli --";
         } else {
-            $pembayaran[0] = "-- Tidak Ada Data Hutang --";
+            $pembayaran[''] = "-- Tidak Ada Data Hutang --";
         }
             
         foreach ($data_hutang as $data) {
@@ -47,7 +62,7 @@ class HutangController extends Controller
                             'supplier.kode AS kode_supplier', 'supplier.nama AS nama_supplier')
                             ->get();
 
-        return view('toko.transaksi.hutang.index', compact('hutang', 'kode_supplier', 'pembayaran', 'supplier'));
+        return view('toko.transaksi.hutang.index', compact('cur_date', 'data_notified', 'data_notif', 'hutang', 'kode_supplier', 'pembayaran', 'supplier'));
     }
     
     public function show($nomor_beli) {
@@ -58,7 +73,8 @@ class HutangController extends Controller
 
         $supplier_hutang = HutangModel::join('supplier', 'supplier.id', '=', 'hutang.id_supplier')
                                     ->select('supplier.nama AS nama_supplier', 'supplier.id AS id_supplier', 
-                                    'supplier.kode AS kode_supplier', 'hutang.sisa_hutang AS sisa_hutang')
+                                    'supplier.kode AS kode_supplier', 'hutang.sisa_hutang AS sisa_hutang',
+                                    'hutang.jumlah_hutang AS jumlah_hutang')
                                     ->where('hutang.id', $nomor_beli)
                                     ->first();
 
@@ -70,35 +86,82 @@ class HutangController extends Controller
         $angsuran = $request->input('angsuran');
         $sisa_hutang = $request->input('sisa_hutang');
 
-        $jumlah_angsuran = HutangModel::where('id', $id_hutang)->sum('jumlah_angsuran');
-
+        $jumlah_angsuran = HutangModel::where('id', $id_hutang)->first()->jumlah_angsuran;
+ 
         HutangModel::where('id', $id_hutang)->update([
             'jumlah_angsuran' => $jumlah_angsuran + $angsuran,
             'sisa_hutang' => $sisa_hutang
         ]);
+        
+        $data_hutang = HutangModel::where('id', $id_hutang)->first();
 
-        $kas = AkunModel::where('kode', 1102)->first()->debit;
+        if ($data_hutang->sisa_hutang == 0) {
+            HutangModel::where('id', $id_hutang)->update([
+                'status' => 1
+            ]);
+        }
+
+        $kas = AkunModel::where('kode', 1102)->first();
 
         AkunModel::where('kode', 1102)->update([
-            'debit' => $kas - $angsuran
+            'debit' => $kas->debit - $angsuran
         ]);
 
-        $hutang = AkunModel::where('kode', 2101)->first()->kredit;
+        $hutang = AkunModel::where('kode', 2101)->first();
 
         AkunModel::where('kode', 2101)->update([
-            'kredit' => $hutang - $angsuran
+            'kredit' => $hutang->kredit - $angsuran
         ]);
 
-        // JurnalModel::create([
-        //     'nomor' => $request->input('nomor_beli'),
-        //     'tanggal' => $request->input('nomor_beli'),
-        //     'keterangan' => $request->input('nomor_beli'),
-        //     'id_akun' => $request->input('nomor_beli'),
-        //     'nomor' => $request->input('nomor_beli'),
-        //     'nomor' => $request->input('nomor_beli'),
-        // ]);
-
         HutangDetailModel::create($request->all());
+            
+        $keterangan = "Penerimaan angsuran.";
+
+        JurnalModel::create([
+            'nomor' => $request->input('nomor_jurnal'),
+            'tanggal' => $request->input('tanggal'),
+            'keterangan' => $keterangan,
+            'id_akun' => $hutang->id,
+            'debit' => $angsuran,
+            'kredit' => 0 
+        ]); 
+
+        JurnalModel::create([
+            'nomor' => $request->input('nomor_jurnal'),
+            'tanggal' => $request->input('tanggal'),
+            'keterangan' => $keterangan,
+            'id_akun' => $kas->id,
+            'debit' => 0,
+            'kredit' => $angsuran
+        ]); 
+        
+        return response()->json(['code'=>200]);
+    }
+
+    public function delete($id) {
+        $data_angsuran = HutangDetailModel::where('id', $id)->first();
+        $data_hutang = HutangModel::where('id', $data_angsuran->id_hutang)->first();
+
+        HutangModel::where('id', $data_angsuran->id_hutang)->update([
+            'jumlah_angsuran' => $data_hutang->jumlah_angsuran - $data_angsuran->angsuran
+        ]);
+        
+        $data_hutang = HutangModel::where('id', $data_angsuran->id_hutang)->first();
+
+        HutangModel::where('id', $data_angsuran->id_hutang)->update([
+            'sisa_hutang' => $data_hutang->jumlah_hutang - $data_hutang->jumlah_angsuran
+        ]);
+        
+        $data_hutang = HutangModel::where('id', $data_angsuran->id_hutang)->first();
+
+        if ($data_hutang->sisa_hutang > 0) {
+            HutangModel::where('id', $data_angsuran->id_hutang)->update([
+                'status' => 0
+            ]);
+        }
+
+        HutangDetailModel::where('id', $id)->delete();
+        JurnalModel::where('nomor', $data_angsuran->nomor_jurnal)->delete();
         
         return response()->json(['code'=>200]);
     }

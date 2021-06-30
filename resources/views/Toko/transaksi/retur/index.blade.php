@@ -1,42 +1,59 @@
 @extends('toko.layout')
 
+@section('popup')
+<div id="popup-delete" class="popup-background d-none">
+    <div class="popup center-object">
+        <div id="popup-body" class="popup-body p-4">
+        </div>
+    </div>
+</div>
+@endsection
+
 @section('main')
 <div class="card m-6">
     <p class="card-header bg-light">Tambah Retur</p>
-    <div class="card-body">
+    <div id="form" class="card-body">
         {!! Form::open(['url' => '/toko/transaksi/retur-pembelian/retur']) !!}
         <div class="row-lg align-item-center mb-2">
             {!! Form::label(null, 'Tanggal', ['class' => 'col-lg-2']) !!}
-            {!! Form::date('tanggal', null, ['class' => 'col-lg-2 form-control form-control-sm']) !!}
+            {!! Form::date('tanggal', $cur_date, ['class' => 'col-lg-2 form-control form-control-sm', 'required']) !!}
             {!! Form::label(null, 'No. Retur', ['class' => 'offset-lg-2 col-lg-2']) !!}
-            {!! Form::text('nomor', null, ['class' => 'col-lg-2 form-control form-control-sm']) !!}
-            <a id="cek-nomor" class="btn btn-sm btn-primary col-lg-1">Cek</a>
+            {!! Form::text('nomor', null, ['class' => 'col-lg-3 form-control form-control-sm', 'readonly']) !!}
+            {!! Form::text('nomor_jurnal', null, ['class' => 'd-none', 'readonly']) !!}
         </div>
         <div class="row-lg align-item-center mb-2">
             {!! Form::label(null, 'Retur', ['class' => 'col-lg-2 fw-bold']) !!}
             <div class="w-100"></div>
             {!! Form::label(null, 'No. Beli', ['class' => 'col-lg-2']) !!}
-            {!! Form::select('id_beli', $nomor_beli, null, ['class' => 'col-lg-4 form-select form-select-sm']) !!}
+            {!! Form::select('id_beli', $nomor_beli, null, ['class' => 'col-lg-4 form-select form-select-sm',
+            'required']) !!}
         </div>
         <div class="row-lg align-item-center mb-2">
             {!! Form::label(null, 'Nama Supplier', ['class' => 'col-lg-2']) !!}
-            {!! Form::select('nama_supplier', [], null, ['class' => 'col-lg-9 form-select form-select-sm', 'readonly' => 'readonly']) !!}
+            {!! Form::select('nama_supplier', [], null, ['class' => 'col-lg-9 form-control form-control-sm', 'readonly'
+            => 'readonly', 'required']) !!}
         </div>
         <div class="row-lg align-item-center mb-2">
             {!! Form::label(null, 'Kode Barang', ['class' => 'col-lg-2']) !!}
-            {!! Form::select('kode_barang', [], null, ['class' => 'col-lg-4 form-select form-select-sm']) !!}
+            {!! Form::select('kode_barang', [], null, ['class' => 'col-lg-4 form-select form-select-sm', 'required'])
+            !!}
         </div>
         <div class="row-lg align-item-center mb-2">
             {!! Form::label(null, 'Nama Barang', ['class' => 'col-lg-2']) !!}
-            {!! Form::select('nama_barang', [], null, ['class' => 'col-lg-9 form-select form-select-sm']) !!}
+            {!! Form::select('nama_barang', [], null, ['class' => 'col-lg-9 form-select form-select-sm', 'required'])
+            !!}
         </div>
         <div class="row-lg align-item-center mb-2">
             {!! Form::label(null, 'Harga Beli', ['class' => 'col-lg-2']) !!}
-            {!! Form::number('harga_beli', null, ['class' => 'col-lg-2 form-control form-control-sm', 'readonly' => 'readonly']) !!}
+            {!! Form::number('harga_beli', null, ['class' => 'col-lg-2 form-control form-control-sm', 'readonly' =>
+            'readonly', 'required']) !!}
         </div>
         <div class="row-lg align-item-center mb-2">
             {!! Form::label(null, 'Jumlah Retur', ['class' => 'col-lg-2']) !!}
-            {!! Form::number('jumlah', null, ['class' => 'col-lg-1 form-control form-control-sm']) !!}
+            {!! Form::number('jumlah', null, ['class' => 'col-lg-1 form-control form-control-sm', 'required']) !!}
+            {!! Form::label(null, 'Maksimal Retur : 0', ['class' => 'offset-lg-1 col-lg-auto', 'id' =>
+            'text-maksimal-retur']) !!}
+            {!! Form::number('maksimal_retur', null, ['class' => 'col-lg-1 form-control form-control-sm d-none']) !!}
         </div>
         <div class="row-lg align-item-center mb-2">
             {!! Form::label(null, 'Jumlah Harga', ['class' => 'col-lg-2 d-none']) !!}
@@ -57,7 +74,7 @@
                     <tr>
                         <th>No</th>
                         <th>Kode Barang</th>
-                        <th class="col-2">Nama Barang</th>
+                        <th>Nama Barang</th>
                         <th>Harga Beli</th>
                         <th>Jumlah Retur</th>
                         <th>Harga Total</th>
@@ -83,11 +100,10 @@
 <script src="{{ asset('js/base-url.js') }}"></script>
 <script src="{{ asset('js/data-retur-barang.js') }}"></script>
 <script src="{{ asset('js/data-retur-supplier.js') }}"></script>
+<script src="{{ asset('js/nomor-retur-pembelian.js') }}"></script>
 <script>
 var nomor;
 var jumlah_harga;
-
-$('#table-retur').DataTable();
 
 function tambah_daftar() {
     $.ajax({
@@ -95,6 +111,7 @@ function tambah_daftar() {
         type: 'POST',
         data: {
             nomor: $('[name="nomor"]').val(),
+            nomor_beli: $('[name="id_beli"] option:selected').text(),
             id_barang: $('[name="kode_barang"]').val(),
             harga_beli: $('[name="harga_beli"]').val(),
             jumlah: $('[name="jumlah"]').val(),
@@ -103,10 +120,41 @@ function tambah_daftar() {
         success: function(response) {
             if (response.code == 200) {
                 tampil_daftar();
+
+                const id_barang = $('[name="kode_barang"]').val();
+                const nomor_beli = $('[name="id_beli"] option:selected').text();
+                if (id_barang != '') {
+                    $('[name="nama_barang"]').val(id_barang);
+                    $.get(`${base_url}api/data-retur-detail-barang/${nomor_beli}/${id_barang}`,
+                        function(data, status) {
+                            $('[name="harga_beli"]').val(data.harga);
+                            $('#text-maksimal-retur').text('Maksimal Retur : ' + parseInt(data.jumlah_beli - data.jumlah_retur));
+                            $('[name="maksimal_retur"]').val(parseInt(data.jumlah_beli - data.jumlah_retur));
+                        });
+                } else {
+                    $('[name="nama_barang"]').val("");
+                    $('[name="harga_beli"]').val("");
+                }
+
+                $('[name="jumlah"]').val(0);
             }
         }
     });
 }
+
+function hapus_daftar($id) {
+    $.ajax({
+        url: '/toko/transaksi/retur-pembelian/delete/' + $id,
+        type: 'POST',
+        success: function(response) {
+            if (response.code == 200) {
+                close_popup_hapus();
+                tampil_daftar();
+            }
+        }
+    });
+}
+
 
 function tampil_daftar() {
     var i = 1;
@@ -129,7 +177,9 @@ function tampil_daftar() {
                         '</td>' +
                         '<td class="align-middle text-center">' + value.total_harga + '</td>' +
                         '<td class="align-middle text-center"><a id="hapus-' + value
-                        .id + '" class="btn btn-small btn-danger">Hapus</a>' +
+                        .id + '" class="btn btn-small btn-danger" onclick="show_popup_hapus(' +
+                        value
+                        .id + ')"><i class="fas fa-trash-alt p-1"></i> Hapus</a>' +
                         '</td>' +
                         '</tr>')
 
@@ -181,13 +231,61 @@ function batal_transaksi() {
     });
 }
 
-$(function() {
+function show_popup_hapus(id) {
+    $("#popup-delete").removeClass("d-none");
+
+    $('#popup-body').empty();
+    $('#popup-body').append('<div class="row-lg align-item-center">' +
+        '<label for="">Apakah anda yakin ingin menghapus data ini?</label>' +
+        '</div><div class="row-lg align-item-center">' +
+        '<a class="btn btn-block btn-sm btn-success mt-1" onclick="hapus_daftar(' + id + ')">Hapus</a>' +
+        '<a class="btn btn-block btn-sm btn-danger mt-1" onclick="close_popup_hapus()">Batal</a>' +
+        '</div>')
+}
+
+function close_popup_hapus() {
+    $("#popup-delete").addClass("d-none");
+}
+
+$(document).ready(function() {
+    $('#table-penjualan').DataTable();
+
     $('#cek-nomor').click(function() {
         tampil_daftar();
     });
 
+    $('[name="jumlah"]').change(function() {
+        if ($(this).val() < 0) {
+            $(this).val(0);
+        }
+
+        if (parseInt($(this).val()) > parseInt($('[name="maksimal_retur"]').val())) {
+            $(this).val($('[name="maksimal_retur"]').val());
+        }
+    });
+
     $('#tambah').click(function() {
-        tambah_daftar();
+        var allFilled = false;
+        var skip = false;
+
+        document.getElementById('form').querySelectorAll('[required]').forEach(function(
+            i) {
+            if (!skip) {
+                if (!i.value) {
+                    i.focus();
+                    allFilled = false;
+                    skip = true;
+                } else {
+                    allFilled = true;
+                }
+            } else {
+                return;
+            }
+        });
+
+        if (allFilled) {
+            tambah_daftar();
+        }
     });
 
     $('#batal').click(function() {

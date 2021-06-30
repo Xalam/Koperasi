@@ -10,7 +10,6 @@
 
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 
-
     <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.9.2/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
@@ -23,6 +22,7 @@
     <link rel="stylesheet" href="{{ asset('css/style.css') }}">
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
     <link href="https://use.fontawesome.com/releases/v5.15.3/css/all.css" rel="stylesheet">
+
     <link rel="stylesheet" href="{{ asset('css/normalize.css') }}">
 
     @yield('style')
@@ -32,14 +32,31 @@
 <body class="antialiased">
     @yield('popup')
     <div class="page-wrapper chiller-theme toggled">
+        @include('toko.navbar')
         <main class="page-content">
-            @include('toko.navbar')
             @include('toko.sidebar')
             <div class="container-fluid">
                 @yield('main')
+                @include('toko.footer')
             </div>
         </main>
     </div>
+
+    @if (isset($data_notif) && count($data_notif) > 0)
+    <div id="alert-popover" class="alert-wrapper">
+        @foreach ($data_notif as $data)
+        @if ($data->stok <= $data->stok_minimal && $data->alert_status == 0)
+            <div class="alert alert-primary ">
+                <div class="alert-close close" data-dismiss="alert" aria-label="close">
+                    <i class="fas fa-times" aria-hidden="true"></i>
+                </div>
+                <p class="alert-message"><b>Pemberitahuan Persediaan Barang</b> <br> Persediaan {{$data->nama}} kurang
+                    dari stok minimal</p>
+            </div>
+            @endif
+            @endforeach
+    </div>
+    @endif
 </body>
 
 </html>
@@ -47,17 +64,21 @@
 @yield('script')
 
 <script type="text/javascript">
-// var options = {
-//     "info": false,
-//     "paging": true,
-//     "autoWidth": false,
-//     "scrollX": true,
-//     "processing": true,
-// };
-
 $(document).ready(function() {
     $('#table-data').DataTable();
 });
+
+function close_notification($id) {
+    $.ajax({
+        url: '/toko/master/barang/remove-notification/' + $id,
+        type: 'POST',
+        success: function(response) {
+            if (response.code == 200) {
+                $('#notification-count').text(response.data_barang.length);
+            }
+        }
+    });
+}
 
 jQuery(function($) {
     $.ajaxSetup({
@@ -195,6 +216,5 @@ jQuery(function($) {
     if (window.innerWidth < 1280 && $('.page-wrapper').hasClass('toggled')) {
         $(".page-wrapper").removeClass("toggled");
     }
-
 });
 </script>
