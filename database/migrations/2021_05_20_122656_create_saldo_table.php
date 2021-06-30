@@ -17,6 +17,7 @@ class CreateSaldoTable extends Migration
             $table->id();
             $table->integer('id_anggota');
             $table->integer('saldo');
+            $table->integer('jenis_simpanan')->comment('1 = pokok, 2 = wajib, 3 = sukarela');
             $table->timestamps();
         });
     }

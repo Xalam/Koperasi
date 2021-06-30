@@ -27,7 +27,7 @@ class AnggotaController extends Controller
     {
         $anggota = Anggota::get();
 
-        if(request()->ajax()) {
+        if (request()->ajax()) {
             $data = [];
             $no   = 1;
             foreach ($anggota as $key => $value) {
@@ -35,13 +35,13 @@ class AnggotaController extends Controller
                     'no'     => $no++,
                     'kode'   => $value->kd_anggota,
                     'nama'   => $value->nama_anggota,
-                    'ttl'    => $value->tempat_lahir .', '. date('d-m-Y', strtotime($value->tanggal_lahir)),
+                    'ttl'    => $value->tempat_lahir . ', ' . date('d-m-Y', strtotime($value->tanggal_lahir)),
                     'gender' => $value->jenis_kelamin,
                     'agama'  => $value->agama,
                     'alamat' => $value->alamat,
                     'nowa'   => $value->no_wa,
-                    'action' => '<a href="'. route('anggota.show', $value->id) . '" class="btn btn-info btn-sm"><i class="far fa-file-alt"></i>&nbsp; Detail</a>
-                    &nbsp; <a href="'. route('anggota.edit', $value->id) . '" class="btn btn-warning btn-sm"><i class="far fa-edit"></i>&nbsp; Edit</a>
+                    'action' => '<a href="' . route('anggota.show', $value->id) . '" class="btn btn-info btn-sm"><i class="far fa-file-alt"></i>&nbsp; Detail</a>
+                    &nbsp; <a href="' . route('anggota.edit', $value->id) . '" class="btn btn-warning btn-sm"><i class="far fa-edit"></i>&nbsp; Edit</a>
                     &nbsp; <a href="#mymodal" data-remote="' . route('anggota.modal', $value->id) . '" data-toggle="modal" data-target="#mymodal" class="btn btn-danger btn-sm"><i class="far fa-trash-alt"></i>&nbsp; Hapus</a>',
                 ];
             }
@@ -56,9 +56,9 @@ class AnggotaController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function create()
-    {   
+    {
         $simWajib    = Pengaturan::where('id', 5)->first();
-        
+
         $expWajib    = explode(" ", $simWajib->angka);
 
         $wajib        = $expWajib[0];
@@ -84,15 +84,15 @@ class AnggotaController extends Controller
             'email.unique'          => 'Email sudah terdaftar',
             'username.unique'       => 'Username sudah terdaftar',
         ];
-        
+
         $validator = Validator::make($request->all(), $rules, $messages);
-        
+
         if ($validator->fails()) {
             return redirect()->back()->withErrors($validator)->withInput($request->all());
         }
 
         $data = $request->all();
-        
+
         $user = $data['username'];
         $kode_anggota = 'ANG-' . $user;
 
@@ -114,15 +114,17 @@ class AnggotaController extends Controller
         #Insert Saldo
         $anggotaId = Anggota::orderBy('id', 'DESC')->first();
 
-        $saldo = new Saldo();
-        $saldo->id_anggota = $anggotaId->id;
-        $saldo->saldo = 0;
-        $saldo->save();
+        for ($i = 1; $i < 4; $i++) {
+            $saldo = new Saldo();
+            $saldo->id_anggota = $anggotaId->id;
+            $saldo->saldo = 0;
+            $saldo->jenis_simpanan = $i;
+            $saldo->save();
+        }
 
         return redirect()->route('anggota.index')->with([
             'success' => 'Berhasil menambahkan anggota'
         ]);
-
     }
 
     /**
@@ -134,7 +136,7 @@ class AnggotaController extends Controller
     public function show($id)
     {
         $anggota = Anggota::findOrFail($id);
-        
+
         return view('Simpan_Pinjam.master.anggota.show')->with([
             'anggota' => $anggota
         ]);
@@ -151,11 +153,11 @@ class AnggotaController extends Controller
         $anggota = Anggota::findOrFail($id);
 
         $simWajib    = Pengaturan::where('id', 5)->first();
-        
+
         $expWajib    = explode(" ", $simWajib->angka);
 
         $wajib        = $expWajib[0];
-        
+
         return view('Simpan_Pinjam.master.anggota.edit', compact('anggota', 'wajib'));
     }
 
@@ -171,7 +173,7 @@ class AnggotaController extends Controller
         $anggota = Anggota::findOrFail($id);
 
         $data = $request->all();
-        
+
         $user = $anggota->username;
 
         if ($request->foto == null) {
@@ -182,13 +184,13 @@ class AnggotaController extends Controller
 
             $extension = $request->file('foto')->extension();
             $imageName = $user . '.' . $extension;
-            
+
             //Storage::putFileAs('foto', $request->file('foto'), $imageName);
             $request->foto->move(public_path('storage/foto'), $imageName);
 
             $data['foto'] = $imageName;
         }
-        
+
         if ($request->password == null) {
             $data['password'] = $anggota->password;
         } else {
@@ -226,7 +228,7 @@ class AnggotaController extends Controller
 
         #Hapus saldo
         $saldo = Saldo::select('id')->where('id_anggota', $id)->first();
-        if ($saldo != null ){
+        if ($saldo != null) {
             Saldo::where('id_anggota', $id)->delete();
             SaldoTarik::where('id_saldo', $saldo->id)->delete();
         }
@@ -236,7 +238,7 @@ class AnggotaController extends Controller
         $pinjaman->where('id_anggota', $id)->delete();
 
         #Hapus angsuran
-        
+
 
         return redirect()->route('anggota.index')->with([
             'success' => 'Data anggota berhasil dihapus'

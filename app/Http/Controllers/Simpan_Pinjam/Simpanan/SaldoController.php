@@ -16,7 +16,9 @@ class SaldoController extends Controller
      */
     public function index()
     {
-        $saldo      = Saldo::with('anggota')->get();
+        $saldoSukarela = Saldo::with('anggota')->where('jenis_simpanan', 3)->get();
+        $saldoWajib    = Saldo::with('anggota')->where('jenis_simpanan', 2)->get();
+        $saldoPokok    = Saldo::with('anggota')->where('jenis_simpanan', 1)->get();
         //$totalSaldo = Simpanan::selectRaw('SUM(nominal) as total_simpanan, id_anggota')->groupBy('id_anggota')->where('status', 1)->pluck('total_simpanan', 'id_anggota');
         // echo($totalSaldo->toArray());
         // exit;
@@ -25,25 +27,46 @@ class SaldoController extends Controller
             $data = [];
             $no   = 1;
 
-            foreach ($saldo as $key => $value) {
-                // $showSaldo = 0;
-                // if (isset($totalSaldo[$value->id_anggota])) {
-                //     $showSaldo = $totalSaldo[$value->id_anggota];
-                // } else {
-                //     $showSaldo;
-                // }
+            switch (request()->type) {
+                case 'sukarela':
+                    foreach ($saldoSukarela as $key => $value) {
 
-                #Update saldo
-                //Saldo::where('id_anggota', $value->id_anggota)->update(['saldo' => $showSaldo]);
+                        $data[] = [
+                            'no'    => $no++,
+                            'kode'  => $value->anggota->kd_anggota,
+                            'nama'  => $value->anggota->nama_anggota,
+                            'saldo' => number_format($value->saldo, 2, ',', '.'),
+                        ];
+                    }
+                    return response()->json(compact('data'));
 
-                $data[] = [
-                    'no'    => $no++,
-                    'kode'  => $value->anggota->kd_anggota,
-                    'nama'  => $value->anggota->nama_anggota,
-                    'saldo' => number_format($value->saldo, 2, ',', '.'),
-                ];
+                    break;
+                case 'wajib':
+                    foreach ($saldoWajib as $key => $value) {
+
+                        $data[] = [
+                            'no'    => $no++,
+                            'kode'  => $value->anggota->kd_anggota,
+                            'nama'  => $value->anggota->nama_anggota,
+                            'saldo' => number_format($value->saldo, 2, ',', '.'),
+                        ];
+                    }
+                    return response()->json(compact('data'));
+                    break;
+                case 'pokok':
+                    foreach ($saldoPokok as $key => $value) {
+
+                        $data[] = [
+                            'no'    => $no++,
+                            'kode'  => $value->anggota->kd_anggota,
+                            'nama'  => $value->anggota->nama_anggota,
+                            'saldo' => number_format($value->saldo, 2, ',', '.'),
+                        ];
+                    }
+                    return response()->json(compact('data'));
+                    break;
+                    break;
             }
-            return response()->json(compact('data'));
         }
         return view('Simpan_Pinjam.simpanan.saldo.saldo');
     }
