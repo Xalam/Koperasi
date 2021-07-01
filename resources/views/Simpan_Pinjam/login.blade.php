@@ -159,9 +159,11 @@
                     </div>
                     <div class="card-body">
                         <div class="row">
-                            <img src="{{ asset('assets/dist/img/logo-koperasi.png') }}" alt="Primkop Logo" class="brand-image img-circle elevation-3"
+                            <img src="{{ asset('assets/dist/img/logo-koperasi.png') }}" alt="Primkop Logo"
+                                class="brand-image img-circle elevation-3"
                                 style="opacity: .9; width: 60px; height: 60px;">
-                                <h5 style="margin-left: 25px; margin-top: 5px;" class="text-center">Primer Koperasi Polrestabes <br> Semarang</h5>
+                            <h5 style="margin-left: 25px; margin-top: 5px;" class="text-center">Primer Koperasi
+                                Polrestabes <br> Semarang</h5>
                         </div>
                         <div class="row" style="margin-bottom: 20px; margin-top: 20px;">
                             <div class="line"></div>
@@ -171,22 +173,21 @@
                         <form action="{{ route('post-login') }}" class="form-signin" method="POST" role="form">
                             @csrf
                             <div class="form-label-group">
-                                <input type="text" id="input-username" name="username" class="form-control" placeholder="Username"
-                                    required>
+                                <input type="text" id="input-username" name="username" class="form-control"
+                                    placeholder="Username" required>
                                 <label for="input-username">Username</label>
                             </div>
 
                             <div class="form-label-group" id="password">
                                 <input type="password" id="input-password" name="password" class="form-control"
-                                placeholder="Password" required>
+                                    placeholder="Password" required>
                                 <div class="suffix">
                                     <a href=""><i class="fas fa-eye-slash" aria-hidden="true"></i></a>
                                 </div>
                                 <label for="input-password">Password</label>
                             </div>
 
-                            <button class="btn btn-lg btn-primary btn-block text-uppercase"
-                                type="submit">Login</button>
+                            <button class="btn btn-lg btn-primary btn-block text-uppercase" type="submit">Login</button>
                         </form>
                     </div>
                 </div>
@@ -204,28 +205,28 @@
     <script src="{{ asset('assets/plugins/sweetalert2/sweetalert2.min.js') }}"></script>
 
     @if (session()->has('error'))
-    <script>
-        Swal.fire({
-            title: 'Error!',
-            text: '{{ session()->get('error') }}',
-            icon: 'error',
-            confirmButtonText: 'OK'
-        })
-    </script>
+        <script>
+            Swal.fire({
+                title: 'Error!',
+                text: '{{ session()->get('error') }}',
+                icon: 'error',
+                confirmButtonText: 'OK'
+            })
+        </script>
     @endif
 
     <script>
-        $(function () {
+        $(function() {
             $("#password a").on('click', function(event) {
                 event.preventDefault();
                 if ($('#password input').attr("type") == "text") {
                     $('#password input').attr('type', 'password');
-                    $('#password i').addClass( "fa-eye-slash" );
-                    $('#password i').removeClass( "fa-eye" );
+                    $('#password i').addClass("fa-eye-slash");
+                    $('#password i').removeClass("fa-eye");
                 } else if ($('#password input').attr("type") == "password") {
                     $('#password input').attr('type', 'text');
-                    $('#password i').removeClass( "fa-eye-slash" );
-                    $('#password i').addClass( "fa-eye" );
+                    $('#password i').removeClass("fa-eye-slash");
+                    $('#password i').addClass("fa-eye");
                 }
             });
         })
