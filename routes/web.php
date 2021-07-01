@@ -77,7 +77,7 @@ Route::group(['prefix' => 'api'], function () {
 });
 
 Route::get('/', function () {
-    return redirect()->to('toko/login');
+    return view('index');
 });
 
 Route::group(['prefix' => 'toko'], function () {
@@ -97,7 +97,7 @@ Route::group(['prefix' => 'toko'], function () {
                 return view('welcome');
             });
         });
-        
+
         Route::get('/logout', [AuthController::class, 'logout']);
 
         //Transaksi
@@ -110,7 +110,7 @@ Route::group(['prefix' => 'toko'], function () {
                 Route::get('/{nomor}', [PembelianController::class, 'show']);
                 Route::post('/delete/{nomor}', [PembelianController::class, 'delete']);
             });
-            
+
             Route::group(['prefix' => 'penjualan'], function () {
                 Route::get('/', [PenjualanController::class, 'index']);
                 Route::post('/store', [PenjualanController::class, 'store']);
@@ -119,7 +119,7 @@ Route::group(['prefix' => 'toko'], function () {
                 Route::get('/{nomor}', [PenjualanController::class, 'show']);
                 Route::post('/delete/{nomor}', [PenjualanController::class, 'delete']);
             });
-            
+
             Route::group(['prefix' => 'retur-pembelian'], function () {
                 Route::get('/', [ReturPembelianController::class, 'index']);
                 Route::post('/store', [ReturPembelianController::class, 'store']);
@@ -128,7 +128,7 @@ Route::group(['prefix' => 'toko'], function () {
                 Route::get('/{nomor}', [ReturPembelianController::class, 'show']);
                 Route::post('/delete/{nomor}', [ReturPembelianController::class, 'delete']);
             });
-            
+
             Route::group(['prefix' => 'hutang'], function () {
                 Route::get('/', [HutangController::class, 'index']);
                 Route::post('/store', [HutangController::class, 'store']);
@@ -136,7 +136,7 @@ Route::group(['prefix' => 'toko'], function () {
                 Route::get('/{nomor_beli}', [HutangController::class, 'show']);
                 Route::post('/delete/{nomor}', [HutangController::class, 'delete']);
             });
-            
+
             Route::group(['prefix' => 'piutang'], function () {
                 Route::get('/', [PiutangController::class, 'index']);
                 Route::post('/store', [PiutangController::class, 'store']);
@@ -144,7 +144,7 @@ Route::group(['prefix' => 'toko'], function () {
                 Route::get('/{nomor_jual}', [PiutangController::class, 'show']);
                 Route::post('/delete/{nomor}', [PiutangController::class, 'delete']);
             });
-            
+
             Route::group(['prefix' => 'titip-jual'], function () {
                 Route::get('/', [TitipJualController::class, 'index']);
                 Route::post('/store', [TitipJualController::class, 'store']);
@@ -152,11 +152,11 @@ Route::group(['prefix' => 'toko'], function () {
                 Route::get('/{nomor_jual}', [TitipJualController::class, 'show']);
                 Route::post('/delete/{nomor}', [TitipJualController::class, 'delete']);
             });
-            
+
             Route::group(['prefix' => 'jurnal'], function () {
                 Route::get('/', [JurnalController::class, 'index']);
             });
-            
+
             Route::group(['prefix' => 'jurnal-umum'], function () {
                 Route::get('/', [JurnalUmumController::class, 'create']);
                 Route::get('/create', [JurnalUmumController::class, 'create']);
@@ -173,49 +173,49 @@ Route::group(['prefix' => 'toko'], function () {
             Route::group(['prefix' => 'akuntansi'], function () {
                 Route::get('/', [LaporanAkuntansiController::class, 'index']);
             });
-            
+
             Route::group(['prefix' => 'data-master'], function () {
                 Route::get('/', [LaporanMasterController::class, 'index']);
                 Route::get('/print/{bagian}', [LaporanMasterController::class, 'print']);
                 Route::get('/export/{bagian}', [LaporanMasterController::class, 'export']);
             });
-            
+
             Route::group(['prefix' => 'pembelian'], function () {
                 Route::get('/', [LaporanPembelianController::class, 'index']);
                 Route::get('/print/{type}/{awal}/{akhir}', [LaporanPembelianController::class, 'print']);
                 Route::get('/export/{type}/{awal}/{akhir}', [LaporanPembelianController::class, 'export']);
             });
-            
+
             Route::group(['prefix' => 'retur-pembelian'], function () {
                 Route::get('/', [LaporanReturPembelianController::class, 'index']);
                 Route::get('/print/{awal}/{akhir}', [LaporanReturPembelianController::class, 'print']);
                 Route::get('/export/{awal}/{akhir}', [LaporanReturPembelianController::class, 'export']);
             });
-            
+
             Route::group(['prefix' => 'penjualan'], function () {
                 Route::get('/', [LaporanPenjualanController::class, 'index']);
                 Route::get('/print/{type}/{awal}/{akhir}', [LaporanPenjualanController::class, 'print']);
                 Route::get('/export/{type}/{awal}/{akhir}', [LaporanPenjualanController::class, 'export']);
             });
-            
+
             Route::group(['prefix' => 'persediaan'], function () {
                 Route::get('/', [LaporanPersediaanController::class, 'index']);
                 Route::get('/print/{stok}', [LaporanPersediaanController::class, 'print']);
                 Route::get('/export/{stok}', [LaporanPersediaanController::class, 'export']);
             });
-            
+
             Route::group(['prefix' => 'kas-masuk'], function () {
                 Route::get('/', [LaporanKasMasukController::class, 'index']);
                 Route::get('/print/{jenis}/{awal}/{akhir}', [LaporanKasMasukController::class, 'print']);
                 Route::get('/export/{jenis}/{awal}/{akhir}', [LaporanKasMasukController::class, 'export']);
             });
-            
+
             Route::group(['prefix' => 'kas-keluar'], function () {
                 Route::get('/', [LaporanKasKeluarController::class, 'index']);
                 Route::get('/print/{jenis}/{awal}/{akhir}', [LaporanKasKeluarController::class, 'print']);
                 Route::get('/export/{jenis}/{awal}/{akhir}', [LaporanKasKeluarController::class, 'export']);
             });
-            
+
             Route::group(['prefix' => 'pendapatan'], function () {
                 Route::get('/', [LaporanPendapatanController::class, 'index']);
             });
@@ -231,7 +231,7 @@ Route::group(['prefix' => 'toko'], function () {
                 Route::post('/delete', [BarangController::class, 'delete']);
                 Route::post('/remove-notification/{id}', [BarangController::class, 'removeNotification']);
             });
-            
+
             Route::group(['prefix' => 'admin'], function () {
                 Route::get('/', [AdminController::class, 'index']);
                 Route::get('/create', [AdminController::class, 'create']);
@@ -239,7 +239,7 @@ Route::group(['prefix' => 'toko'], function () {
                 Route::post('/update', [AdminController::class, 'update']);
                 Route::post('/delete', [AdminController::class, 'delete']);
             });
-            
+
             Route::group(['prefix' => 'akun'], function () {
                 Route::get('/', [AkunController::class, 'index']);
                 Route::get('/create', [AkunController::class, 'create']);
@@ -247,7 +247,7 @@ Route::group(['prefix' => 'toko'], function () {
                 Route::post('/update', [AkunController::class, 'update']);
                 Route::post('/delete', [AkunController::class, 'delete']);
             });
-            
+
             Route::group(['prefix' => 'anggota'], function () {
                 Route::get('/', [AnggotaController::class, 'index']);
                 Route::get('/create', [AnggotaController::class, 'create']);
@@ -255,7 +255,7 @@ Route::group(['prefix' => 'toko'], function () {
                 Route::post('/update', [AnggotaController::class, 'update']);
                 Route::post('/delete', [AnggotaController::class, 'delete']);
             });
-            
+
             Route::group(['prefix' => 'supplier'], function () {
                 Route::get('/', [SupplierController::class, 'index']);
                 Route::get('/create', [SupplierController::class, 'create']);
@@ -268,14 +268,14 @@ Route::group(['prefix' => 'toko'], function () {
 });
 
 //SIMPAN PINJAM
-Route::prefix('simpan-pinjam')->group(function (){
+Route::prefix('simpan-pinjam')->group(function () {
     #Login
-    Route::get('login', 'Simpan_Pinjam\Auth\LoginController@login')->name('login');
+    Route::get('login', 'Simpan_Pinjam\Auth\LoginController@login')->name('s-login');
     Route::post('postlogin', 'Simpan_Pinjam\Auth\LoginController@post_login')->name('post-login');
-    Route::get('logout', 'Simpan_Pinjam\Auth\LoginController@logout')->name('logout');
+    Route::get('logout', 'Simpan_Pinjam\Auth\LoginController@logout')->name('s-logout');
 
     Route::get('/', function () {
-        return redirect()->route('login');
+        return redirect()->route('s-login');
     });
 });
 
@@ -296,7 +296,6 @@ Route::group(['prefix' => 'simpan-pinjam', 'middleware' => ['auth', 'checkrole:a
 
         Route::resource('admin', 'Simpan_Pinjam\Master\User\UserController')->middleware('checkrole:admin');
         Route::get('admin/modal/{id}', 'Simpan_Pinjam\Master\User\UserController@modal')->name('admin.modal');
-        
     });
 
     #Simpanan
@@ -313,7 +312,7 @@ Route::group(['prefix' => 'simpan-pinjam', 'middleware' => ['auth', 'checkrole:a
         Route::get('riwayat', 'Simpan_Pinjam\Simpanan\TarikSaldoController@history')->name('tarik-saldo.history');
         Route::get('riwayat/cetak/{id}', 'Simpan_Pinjam\Simpanan\TarikSaldoController@print')->name('tarik-saldo.print');
         Route::get('riwayat/cetak/show/{id}', 'Simpan_Pinjam\Simpanan\TarikSaldoController@print_show')->name('tarik-saldo.print-show');
-        
+
         Route::resource('tarik-saldo', 'Simpan_Pinjam\Simpanan\TarikSaldoController');
         Route::get('tarik-saldo/modal/{id}', 'Simpan_Pinjam\Simpanan\TarikSaldoController@modal')->name('tarik-saldo.konfirmasi');
         Route::get('tarik-saldo/modal/delete/{id}', 'Simpan_Pinjam\Simpanan\TarikSaldoController@modal_delete')->name('tarik-saldo.modal-delete');
@@ -326,10 +325,10 @@ Route::group(['prefix' => 'simpan-pinjam', 'middleware' => ['auth', 'checkrole:a
 
         Route::get('pengajuan/konfirmasi/{id}', 'Simpan_Pinjam\Pinjaman\PengajuanController@konfirmasi')->name('pengajuan.konfirmasi');
         Route::get('pengajuan/cetak/{id}', 'Simpan_Pinjam\Pinjaman\PengajuanController@print')->name('pengajuan.print');
-        Route::get('pengajuan/cetak/show/{id}', 'Simpan_Pinjam\Pinjaman\PengajuanController@print_show')->name('pengajuan.print-show'); 
-        Route::get('pengajuan/modal/{id}', 'Simpan_Pinjam\Pinjaman\PengajuanController@modal')->name('pengajuan.modal');  
+        Route::get('pengajuan/cetak/show/{id}', 'Simpan_Pinjam\Pinjaman\PengajuanController@print_show')->name('pengajuan.print-show');
+        Route::get('pengajuan/modal/{id}', 'Simpan_Pinjam\Pinjaman\PengajuanController@modal')->name('pengajuan.modal');
         Route::post('pengajuan/limit', 'Simpan_Pinjam\Pinjaman\PengajuanController@limit')->name('pengajuan.limit');
-        
+
         Route::resource('angsuran', 'Simpan_Pinjam\Pinjaman\AngsuranController');
         Route::post('angsuran/bayar', 'Simpan_Pinjam\Pinjaman\AngsuranController@bayar')->name('angsuran.bayar');
         Route::get('angsuran/cetak/show/{id}', 'Simpan_Pinjam\Pinjaman\AngsuranController@print_show')->name('angsuran.print-show');
@@ -354,7 +353,7 @@ Route::group(['prefix' => 'simpan-pinjam', 'middleware' => ['auth', 'checkrole:a
         Route::post('simpanan/show', 'Simpan_Pinjam\Laporan\LaporanSimpananController@show')->name('lap-simpanan.show');
         Route::get('simpanan/cetak/all', 'Simpan_Pinjam\Laporan\LaporanSimpananController@print_all')->name('lap-simpanan.print-all');
         Route::get('simpanan/cetak/show/{id}', 'Simpan_Pinjam\Laporan\LaporanSimpananController@print_show')->name('lap-simpanan.print-show');
-        
+
         Route::get('pinjaman', 'Simpan_Pinjam\Laporan\LaporanPinjamanController@index')->name('lap-pinjaman.index');
         Route::post('pinjaman/show', 'Simpan_Pinjam\Laporan\LaporanPinjamanController@show')->name('lap-pinjaman.show');
         Route::get('pinjaman/cetak/all', 'Simpan_Pinjam\Laporan\LaporanPinjamanController@print_all')->name('lap-pinjaman.print-all');
@@ -363,11 +362,11 @@ Route::group(['prefix' => 'simpan-pinjam', 'middleware' => ['auth', 'checkrole:a
         Route::get('shu', 'Simpan_Pinjam\Laporan\SHUController@index')->name('shu.index');
         Route::post('shu/cetak', 'Simpan_Pinjam\Laporan\SHUController@print_show')->name('shu.print-show');
         Route::post('shu/show', 'Simpan_Pinjam\Laporan\SHUController@show_data')->name('shu.show-data');
-        
+
         Route::get('buku-besar', 'Simpan_Pinjam\Laporan\BukuBesarController@index')->name('buku-besar.index');
         Route::post('buku-besar/show', 'Simpan_Pinjam\Laporan\BukuBesarController@show_data')->name('buku-besar.show-data');
         Route::post('buku-besar/cetak', 'Simpan_Pinjam\Laporan\BukuBesarController@print_show')->name('buku-besar.print-show');
-        
+
         Route::get('ekuitas', 'Simpan_Pinjam\Laporan\EkuitasController@index')->name('ekuitas.index');
         Route::post('ekuiats/show', 'Simpan_Pinjam\Laporan\EkuitasController@show_data')->name('ekuitas.show-data');
         Route::post('ekuitas/cetak', 'Simpan_Pinjam\Laporan\EkuitasController@print_show')->name('ekuitas.print-show');
