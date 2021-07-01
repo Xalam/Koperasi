@@ -14,6 +14,15 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:api')->get('/user', function (Request $request) {
-    return $request->user();
+
+Route::namespace('API')->group(function () {
+    Route::get('/anggota', 'Simpan_Pinjam\TestController@index');
+    Route::post('/login', 'LoginController@login');
+
+    Route::prefix('simpan-pinjam')->group(function () {
+    });
+
+    Route::prefix('toko')->group(function () {
+        Route::get('/barang', 'Toko\DataBarangController@index');
+    });
 });

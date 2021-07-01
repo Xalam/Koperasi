@@ -12,6 +12,8 @@ use App\Http\Controllers\Toko\DataAnggotaController;
 use App\Http\Controllers\Toko\NomorTransaksiController;
 use App\Http\Controllers\Toko\NomorJurnalController;
 
+use App\Http\Controllers\Toko\Android\AndroidController;
+
 use App\Http\Controllers\Toko\Transaksi\Pembelian\PembelianController;
 use App\Http\Controllers\Toko\Transaksi\Penjualan\PenjualanController;
 use App\Http\Controllers\Toko\Transaksi\Retur\ReturPembelianController;
@@ -52,7 +54,10 @@ use App\Http\Controllers\Toko\Laporan\Retur\LaporanReturPembelianController;
 
 //API
 Route::group(['prefix' => 'api'], function () {
-    Route::get('/barang', [DataBarangController::class, 'apiBarang']);
+    Route::get('/anggota', [AndroidController::class, 'apiAnggota']);
+    Route::get('/barang', [AndroidController::class, 'apiBarang']);
+    Route::get('/login', [AndroidController::class, 'apiLogin']);
+
     Route::get('/data-akun/{id}', [DataAkunController::class, 'dataAkun']);
     Route::get('/data-barang/{id}', [DataBarangController::class, 'dataBarang']);
     Route::get('/data-retur-barang/{id}', [DataBarangController::class, 'dataReturBarang']);
