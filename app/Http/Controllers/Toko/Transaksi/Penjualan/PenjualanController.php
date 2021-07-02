@@ -278,8 +278,6 @@ class PenjualanController extends Controller
             'jumlah_kembalian' => $jumlah_kembalian,
             'pembayaran' => $request->input('pembayaran')
         ]);
-
-        echo $jumlah_hpp;
         
         return redirect('toko/transaksi/penjualan');
     }
