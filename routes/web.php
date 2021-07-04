@@ -88,13 +88,10 @@ Route::group(['prefix' => 'toko'], function () {
 
     Route::group(['middleware' => 'auth'], function () {
         Route::get('/dashboard', function () {
-            return view('welcome');
+            return view('toko.dashboard');
         });
-
-        Route::group(['middleware' => 'auth'], function () {
-            Route::get('/', function () {
-                return view('welcome');
-            });
+        Route::get('/', function () {
+            return view('toko.dashboard');
         });
 
         Route::get('/logout', [AuthController::class, 'logout']);
