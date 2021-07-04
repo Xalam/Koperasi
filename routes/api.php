@@ -19,9 +19,9 @@ Route::namespace('API')->group(function () {
     Route::post('/login', 'LoginController@login');
 
     Route::prefix('simpan-pinjam')->group(function () {
+        Route::get('saldo', 'Simpan_Pinjam\SaldoController@index');
     });
 
     Route::prefix('toko')->group(function () {
-        Route::get('/barang', 'Toko\DataBarangController@index');
     });
 });
