@@ -22,6 +22,5 @@ Route::namespace('API')->group(function () {
     });
 
     Route::prefix('toko')->group(function () {
-        Route::get('/barang', 'Toko\DataBarangController@index');
     });
 });

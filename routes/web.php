@@ -3,8 +3,6 @@
 use App\Http\Controllers\Simpan_Pinjam\Dashboard\DashboardController;
 use Illuminate\Support\Facades\Route;
 
-use App\Http\Controllers\Toko\AuthController;
-
 use App\Http\Controllers\Toko\DataAkunController;
 use App\Http\Controllers\Toko\DataBarangController;
 use App\Http\Controllers\Toko\DataSupplierController;
@@ -12,6 +10,8 @@ use App\Http\Controllers\Toko\DataAnggotaController;
 use App\Http\Controllers\Toko\NomorTransaksiController;
 use App\Http\Controllers\Toko\NomorJurnalController;
 
+use App\Http\Controllers\Toko\Android\AndroidController;
+use App\Http\Controllers\Toko\AuthController;
 use App\Http\Controllers\Toko\Transaksi\Pembelian\PembelianController;
 use App\Http\Controllers\Toko\Transaksi\Penjualan\PenjualanController;
 use App\Http\Controllers\Toko\Transaksi\Retur\ReturPembelianController;
@@ -52,7 +52,6 @@ use App\Http\Controllers\Toko\Laporan\Retur\LaporanReturPembelianController;
 
 //API
 Route::group(['prefix' => 'api'], function () {
-    Route::get('/barang', [DataBarangController::class, 'apiBarang']);
     Route::get('/data-akun/{id}', [DataAkunController::class, 'dataAkun']);
     Route::get('/data-barang/{id}', [DataBarangController::class, 'dataBarang']);
     Route::get('/data-retur-barang/{id}', [DataBarangController::class, 'dataReturBarang']);

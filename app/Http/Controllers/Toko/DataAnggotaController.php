@@ -10,7 +10,7 @@ class DataAnggotaController extends Controller
 {
     public function dataAnggota($id) {
         return AnggotaModel::where('id', $id)
-                            ->orderBy('nama')
+                            ->orderBy('nama_anggota')
                             ->get();
     }
 }
