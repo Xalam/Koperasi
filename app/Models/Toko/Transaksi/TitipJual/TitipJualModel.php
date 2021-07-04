@@ -17,7 +17,6 @@ class TitipJualModel extends Model
         'id_supplier',
         'jumlah_harga',
         'jumlah_bayar',
-        'jumlah_kembalian',
-        'pembayaran'
+        'jumlah_kembalian'
     ];
 }

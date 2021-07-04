@@ -148,6 +148,7 @@ Route::group(['prefix' => 'toko'], function () {
                 Route::get('/', [TitipJualController::class, 'index']);
                 Route::post('/store', [TitipJualController::class, 'store']);
                 Route::post('/cancel', [TitipJualController::class, 'cancel']);
+                Route::post('/buy', [TitipJualController::class, 'buy']);
                 Route::get('/{nomor_jual}', [TitipJualController::class, 'show']);
                 Route::post('/delete/{nomor}', [TitipJualController::class, 'delete']);
             });

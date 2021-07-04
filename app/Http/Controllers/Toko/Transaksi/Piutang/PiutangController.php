@@ -39,9 +39,9 @@ class PiutangController extends Controller
             $nomor[''] = "-- Tidak Ada Data Piutang --";
         }
 
-        $piutang = PiutangModel::join('anggota', 'anggota.id', '=', 'piutang.id_anggota')
-                            ->select('piutang.*', 'anggota.nama AS nama_anggota', 
-                            'anggota.kode AS kode_anggota', 'anggota.limit_belanja AS limit_belanja')
+        $piutang = PiutangModel::join('tb_anggota', 'tb_anggota.id', '=', 'piutang.id_anggota')
+                            ->select('piutang.*', 'tb_anggota.nama_anggota AS nama_anggota', 
+                            'tb_anggota.kd_anggota AS kode_anggota', 'tb_anggota.limit_gaji AS limit_belanja')
                             ->get();
 
         return view('toko.transaksi.piutang.index', compact('cur_date', 'data_notified', 'data_notif', 'nomor', 'piutang'));
@@ -53,9 +53,9 @@ class PiutangController extends Controller
                                             ->where('id_piutang', $nomor_jual)
                                             ->get();
 
-        $anggota_piutang = PiutangModel::join('anggota', 'anggota.id', '=', 'piutang.id_anggota')
-                                    ->select('anggota.nama AS nama_anggota', 'anggota.id AS id_anggota', 
-                                    'anggota.kode AS kode_anggota', 'piutang.sisa_piutang AS sisa_piutang',
+        $anggota_piutang = PiutangModel::join('tb_anggota', 'tb_anggota.id', '=', 'piutang.id_anggota')
+                                    ->select('tb_anggota.nama_anggota AS nama_anggota', 'tb_anggota.id AS id_anggota', 
+                                    'tb_anggota.kd_anggota AS kode_anggota', 'piutang.sisa_piutang AS sisa_piutang',
                                     'piutang.jumlah_piutang AS jumlah_piutang')
                                     ->where('piutang.id', $nomor_jual)
                                     ->first();

@@ -54,22 +54,22 @@ class PenjualanController extends Controller
             $pembayaran[$data->id] = $data->nama;
         }
 
-        $data_anggota = AnggotaModel::orderBy('nama')
+        $data_anggota = AnggotaModel::orderBy('nama_anggota')
                                         ->get();
 
         $anggota[''] = '-- Pilih Nama Anggota --';
         $anggota[0] = 'Masyarakat Umum';
         foreach ($data_anggota as $data) {
-            $anggota[$data->id] = $data->nama;
+            $anggota[$data->id] = $data->nama_anggota;
         }
 
-        $data_anggota = AnggotaModel::orderBy('kode')
+        $data_anggota = AnggotaModel::orderBy('kd_anggota')
                                         ->get();
 
         $kode_anggota[''] = '-- Pilih Kode Anggota --';
         $kode_anggota[0] = 'Masyarakat Umum';
         foreach ($data_anggota as $data) {
-            $kode_anggota[$data->id] = $data->kode;
+            $kode_anggota[$data->id] = $data->kd_anggota;
         }
 
         return view('toko.transaksi.penjualan.index', compact('barang', 'cur_date', 'data_notified', 'data_notif', 'kode_barang', 'kode_anggota', 'pembayaran', 'anggota'));
@@ -85,10 +85,10 @@ class PenjualanController extends Controller
                                     ->get();
 
         $anggota_penjualan = PenjualanModel::where('penjualan.nomor', $nomor)
-                                    ->join('anggota', 'anggota.id', '=', 'penjualan.id_anggota')
+                                    ->join('tb_anggota', 'tb_anggota.id', '=', 'penjualan.id_anggota')
                                     ->select('penjualan.tanggal AS tanggal', 'penjualan.nomor AS nomor_penjualan', 'penjualan.id_anggota AS id_anggota',
                                             'penjualan.jumlah_bayar AS jumlah_bayar', 'penjualan.jumlah_kembalian AS jumlah_kembalian', 
-                                            'penjualan.pembayaran AS pembayaran', 'anggota.alamat AS alamat', 'anggota.telepon AS telepon')
+                                            'penjualan.pembayaran AS pembayaran', 'tb_anggota.alamat AS alamat', 'tb_anggota.telepon AS telepon')
                                     ->first();
 
         return response()->json(['code'=>200, 'barang_penjualan' => $barang_penjualan, 'anggota_penjualan' => $anggota_penjualan]);

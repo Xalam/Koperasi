@@ -46,23 +46,23 @@ class LaporanPenjualanController extends Controller
                                                     ->where('pembayaran', '=', $type_pembayaran)
                                                     ->join('detail_jual', 'detail_jual.nomor', '=', 'penjualan.nomor')
                                                     ->join('barang', 'barang.id', '=', 'detail_jual.id_barang')
-                                                    ->leftJoin('anggota', 'anggota.id', '=', 'penjualan.id_anggota')
+                                                    ->leftJoin('tb_anggota', 'tb_anggota.id', '=', 'penjualan.id_anggota')
                                                     ->select('barang.kode AS kode', 'barang.nama AS nama',
                                                             'barang.harga_jual AS harga_jual', 'detail_jual.jumlah AS jumlah', 
                                                             'detail_jual.total_harga AS total_harga', 'detail_jual.nomor AS nomor',
-                                                            'penjualan.tanggal AS tanggal', 'anggota.nama AS nama_anggota', 
-                                                            'anggota.kode AS kode_anggota', 'anggota.jabatan AS status')
+                                                            'penjualan.tanggal AS tanggal', 'tb_anggota.nama_anggota AS nama_anggota', 
+                                                            'tb_anggota.kd_anggota AS kode_anggota', 'tb_anggota.jabatan AS status')
                                                     ->get();
             } else {
                 $laporan_penjualan = PenjualanModel::whereBetween('penjualan.tanggal', [$tanggal_awal, $tanggal_akhir])
                                                     ->join('detail_jual', 'detail_jual.nomor', '=', 'penjualan.nomor')
                                                     ->join('barang', 'barang.id', '=', 'detail_jual.id_barang')
-                                                    ->leftJoin('anggota', 'anggota.id', '=', 'penjualan.id_anggota')
+                                                    ->leftJoin('tb_anggota', 'tb_anggota.id', '=', 'penjualan.id_anggota')
                                                     ->select('barang.kode AS kode', 'barang.nama AS nama',
                                                             'barang.harga_jual AS harga_jual', 'detail_jual.jumlah AS jumlah', 
                                                             'detail_jual.total_harga AS total_harga', 'detail_jual.nomor AS nomor',
-                                                            'penjualan.tanggal AS tanggal', 'anggota.nama AS nama_anggota', 
-                                                            'anggota.kode AS kode_anggota', 'anggota.jabatan AS status')
+                                                            'penjualan.tanggal AS tanggal', 'tb_anggota.nama_anggota AS nama_anggota', 
+                                                            'tb_anggota.kd_anggota AS kode_anggota', 'tb_anggota.jabatan AS status')
                                                     ->get();
             }
     
@@ -97,23 +97,23 @@ class LaporanPenjualanController extends Controller
                                                     ->where('pembayaran', '=', $type_pembayaran)
                                                     ->join('detail_jual', 'detail_jual.nomor', '=', 'penjualan.nomor')
                                                     ->join('barang', 'barang.id', '=', 'detail_jual.id_barang')
-                                                    ->leftJoin('anggota', 'anggota.id', '=', 'penjualan.id_anggota')
+                                                    ->leftJoin('tb_anggota', 'tb_anggota.id', '=', 'penjualan.id_anggota')
                                                     ->select('barang.kode AS kode', 'barang.nama AS nama',
                                                             'barang.harga_jual AS harga_jual', 'detail_jual.jumlah AS jumlah', 
                                                             'detail_jual.total_harga AS total_harga', 'detail_jual.nomor AS nomor',
-                                                            'penjualan.tanggal AS tanggal', 'anggota.nama AS nama_anggota', 
-                                                            'anggota.kode AS kode_anggota', 'anggota.jabatan AS status')
+                                                            'penjualan.tanggal AS tanggal', 'tb_anggota.nama_anggota AS nama_anggota', 
+                                                            'tb_anggota.kd_anggota AS kode_anggota', 'tb_anggota.jabatan AS status')
                                                     ->get();
             } else {
                 $laporan_penjualan = PenjualanModel::whereBetween('penjualan.tanggal', [$tanggal_awal, $tanggal_akhir])
                                                     ->join('detail_jual', 'detail_jual.nomor', '=', 'penjualan.nomor')
                                                     ->join('barang', 'barang.id', '=', 'detail_jual.id_barang')
-                                                    ->leftJoin('anggota', 'anggota.id', '=', 'penjualan.id_anggota')
+                                                    ->leftJoin('tb_anggota', 'tb_anggota.id', '=', 'penjualan.id_anggota')
                                                     ->select('barang.kode AS kode', 'barang.nama AS nama',
                                                             'barang.harga_jual AS harga_jual', 'detail_jual.jumlah AS jumlah', 
                                                             'detail_jual.total_harga AS total_harga', 'detail_jual.nomor AS nomor',
-                                                            'penjualan.tanggal AS tanggal', 'anggota.nama AS nama_anggota', 
-                                                            'anggota.kode AS kode_anggota', 'anggota.jabatan AS status')
+                                                            'penjualan.tanggal AS tanggal', 'tb_anggota.nama_anggota AS nama_anggota', 
+                                                            'tb_anggota.kd_anggota AS kode_anggota', 'tb_anggota.jabatan AS status')
                                                     ->get();
             }
         }

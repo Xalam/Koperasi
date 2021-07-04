@@ -32,7 +32,15 @@
                         <ul>
                             <li><a href="/toko/transaksi/penjualan">Penjualan</a></li>
                             <li><a href="/toko/transaksi/pembelian">Pembelian</a></li>
-                            <li><a href="/toko/transaksi/titip-jual">Titip Jual</a></li>
+                            <li class="sidebar-dropdown2">
+                                <a>Konsinyasi</a>
+                                <div class="sidebar-submenu2">
+                                    <ul>
+                                        <li><a href="/toko/transaksi/titip-jual">Titip Jual</a></li>
+                                        <li><a href="/toko/transaksi/bayar-titip-jual">Bayar Titip Jual</a></li>
+                                    </ul>
+                                </div>
+                            </li>
                             <li><a href="/toko/transaksi/retur-pembelian">Retur Pembelian</a></li>
                             <li><a href="/toko/transaksi/hutang">Hutang</a></li>
                             <li><a href="/toko/transaksi/piutang">Piutang</a></li>
