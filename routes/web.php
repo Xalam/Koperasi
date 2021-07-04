@@ -3,6 +3,7 @@
 use App\Http\Controllers\Simpan_Pinjam\Dashboard\DashboardController;
 use Illuminate\Support\Facades\Route;
 
+use App\Http\Controllers\Toko\AuthController;
 use App\Http\Controllers\Toko\DataAkunController;
 use App\Http\Controllers\Toko\DataBarangController;
 use App\Http\Controllers\Toko\DataSupplierController;
@@ -10,8 +11,6 @@ use App\Http\Controllers\Toko\DataAnggotaController;
 use App\Http\Controllers\Toko\NomorTransaksiController;
 use App\Http\Controllers\Toko\NomorJurnalController;
 
-use App\Http\Controllers\Toko\Android\AndroidController;
-use App\Http\Controllers\Toko\AuthController;
 use App\Http\Controllers\Toko\Transaksi\Pembelian\PembelianController;
 use App\Http\Controllers\Toko\Transaksi\Penjualan\PenjualanController;
 use App\Http\Controllers\Toko\Transaksi\Retur\ReturPembelianController;
@@ -86,7 +85,7 @@ Route::group(['prefix' => 'toko'], function () {
     Route::get('/register', [AuthController::class, 'register'])->name('register');
     Route::post('/register/store', [AuthController::class, 'store']);
 
-    Route::group(['middleware' => 'auth'], function () {
+    Route::group(['middleware' => 'auth:toko'], function () {
         Route::get('/dashboard', function () {
             return view('toko.dashboard');
         });
