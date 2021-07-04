@@ -78,21 +78,21 @@ Route::group(['prefix' => 'api'], function () {
 
 Route::get('/', function () {
     return view('index');
-});
+})->name('login');
 
 Route::group(['prefix' => 'toko'], function () {
     //Login
-    Route::get('/login', [AuthController::class, 'index'])->name('login');
+    Route::get('/login', [AuthController::class, 'index'])->name('t-login');
     Route::post('/login/store', [AuthController::class, 'login']);
     Route::get('/register', [AuthController::class, 'register'])->name('register');
     Route::post('/register/store', [AuthController::class, 'store']);
 
-    Route::group(['middleware' => 'auth'], function () {
+    Route::group(['middleware' => 'auth:toko'], function () {
         Route::get('/dashboard', function () {
             return view('welcome');
         });
 
-        Route::group(['middleware' => 'auth'], function () {
+        Route::group(['middleware' => 'auth:toko'], function () {
             Route::get('/', function () {
                 return view('welcome');
             });
@@ -277,10 +277,14 @@ Route::prefix('simpan-pinjam')->group(function () {
     Route::get('/', function () {
         return redirect()->route('s-login');
     });
+
+    Route::get('/dashboard', function () {
+        return redirect()->route('s-login');
+    });
 });
 
 //checkrole:admin,bendahara,bendahara_pusat,ketua_koperasi,simpan_pinjam
-Route::group(['prefix' => 'simpan-pinjam', 'middleware' => ['auth', 'checkrole:admin,bendahara,bendahara_pusat,ketua_koperasi,simpan_pinjam']], function () {
+Route::group(['prefix' => 'simpan-pinjam', 'middleware' => ['auth:simpan-pinjam', 'checkrole:admin,bendahara,bendahara_pusat,ketua_koperasi,simpan_pinjam']], function () {
 
     #Dashboard
     Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
