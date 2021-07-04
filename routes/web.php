@@ -76,11 +76,11 @@ Route::group(['prefix' => 'api'], function () {
 
 Route::get('/', function () {
     return view('index');
-});
+})->name('login');
 
 Route::group(['prefix' => 'toko'], function () {
     //Login
-    Route::get('/login', [AuthController::class, 'index'])->name('login');
+    Route::get('/login', [AuthController::class, 'index'])->name('t-login');
     Route::post('/login/store', [AuthController::class, 'login']);
     Route::get('/register', [AuthController::class, 'register'])->name('register');
     Route::post('/register/store', [AuthController::class, 'store']);
@@ -269,14 +269,14 @@ Route::prefix('simpan-pinjam')->group(function () {
     Route::get('login', 'Simpan_Pinjam\Auth\LoginController@login')->name('s-login');
     Route::post('postlogin', 'Simpan_Pinjam\Auth\LoginController@post_login')->name('post-login');
     Route::get('logout', 'Simpan_Pinjam\Auth\LoginController@logout')->name('s-logout');
+});
+
+//checkrole:admin,bendahara,bendahara_pusat,ketua_koperasi,simpan_pinjam
+Route::group(['prefix' => 'simpan-pinjam', 'middleware' => ['auth:simpan-pinjam', 'checkrole:admin,bendahara,bendahara_pusat,ketua_koperasi,simpan_pinjam']], function () {
 
     Route::get('/', function () {
         return redirect()->route('s-login');
     });
-});
-
-//checkrole:admin,bendahara,bendahara_pusat,ketua_koperasi,simpan_pinjam
-Route::group(['prefix' => 'simpan-pinjam', 'middleware' => ['auth', 'checkrole:admin,bendahara,bendahara_pusat,ketua_koperasi,simpan_pinjam']], function () {
 
     #Dashboard
     Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
