@@ -15,6 +15,9 @@ use Illuminate\Support\Facades\Validator;
 class AuthController extends Controller
 {
     public function index() {
+        if (Auth::guard('toko')->check()) {
+            return redirect()->to('/toko/dashboard');
+        }
         return view('toko.login');
     }
 
