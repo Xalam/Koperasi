@@ -4,12 +4,12 @@
 
 @section('content_header', 'Riwayat Penarikan Simpanan')
 
-@push('style')
-    <!-- DataTables -->
-    <link rel="stylesheet" href="{{ asset('assets/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css') }}">
-    <link rel="stylesheet" href="{{ asset('assets/plugins/datatables-responsive/css/responsive.bootstrap4.min.css') }}">
-    <link rel="stylesheet" href="{{ asset('assets/plugins/datatables-buttons/css/buttons.bootstrap4.min.css') }}">
-@endpush
+    @push('style')
+        <!-- DataTables -->
+        <link rel="stylesheet" href="{{ asset('assets/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css') }}">
+        <link rel="stylesheet" href="{{ asset('assets/plugins/datatables-responsive/css/responsive.bootstrap4.min.css') }}">
+        <link rel="stylesheet" href="{{ asset('assets/plugins/datatables-buttons/css/buttons.bootstrap4.min.css') }}">
+    @endpush
 
 @section('breadcrumb')
     <li class="breadcrumb-item"><a href="#">Simpanan</a></li>
@@ -31,6 +31,7 @@
                                 <th>Tanggal</th>
                                 <th class="text-center">Nama Anggota</th>
                                 <th class="text-center">Nominal (Rp)</th>
+                                <th>Jenis Simpanan</th>
                                 <th>Aksi</th>
                             </tr>
                         </thead>
@@ -53,23 +54,27 @@
             $('#table-history').DataTable({
                 "stateSave": true,
                 "deferRender": true,
-                "columnDefs": [
-                {
-                  "targets": 0,
-                  "className": "text-center",
-                },
-                {
-                  "targets": 1,
-                  "className": "text-center",
-                },
-                {
-                  "targets": 3,
-                  "className": "text-right",
-                },
-                {
-                  "targets": 4,
-                  "className": "text-center",
-                }],
+                "columnDefs": [{
+                        "targets": 0,
+                        "className": "text-center",
+                    },
+                    {
+                        "targets": 1,
+                        "className": "text-center",
+                    },
+                    {
+                        "targets": 3,
+                        "className": "text-right",
+                    },
+                    {
+                        "targets": 4,
+                        "className": "text-center",
+                    },
+                    {
+                        "targets": 5,
+                        "className": "text-center",
+                    }
+                ],
                 "ajax": {
                     url: "{{ route('tarik-saldo.history') }}"
                 },
@@ -86,12 +91,14 @@
                         data: 'nominal'
                     },
                     {
+                        data: 'jenis'
+                    },
+                    {
                         data: 'action'
                     }
                 ]
             });
-            
-        });
 
+        });
     </script>
 @endsection

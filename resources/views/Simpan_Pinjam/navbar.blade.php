@@ -20,7 +20,7 @@
             <div class="dropdown-menu dropdown-menu dropdown-menu-right">
                 <span class="dropdown-item dropdown-header">Akun</span>
                 <div class="dropdown-divider"></div>
-                <a href="{{ route('logout') }}" class="dropdown-item">
+                <a href="{{ route('s-logout') }}" class="dropdown-item">
                     <i class="fas fa-sign-out-alt mr-2"></i> Logout
                 </a>
             </div>

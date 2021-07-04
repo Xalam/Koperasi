@@ -29,7 +29,7 @@ class LoginController extends Controller
             ]);
         }
 
-        return redirect()->route('login')->with([
+        return redirect()->route('s-login')->with([
             'error' => 'Harap masukkan username dan password yang sesuai'
         ]);
     }
@@ -38,6 +38,6 @@ class LoginController extends Controller
     {
         Auth::guard('simpan-pinjam')->logout();
 
-        return redirect()->route('login');
+        return redirect()->route('s-login');
     }
 }

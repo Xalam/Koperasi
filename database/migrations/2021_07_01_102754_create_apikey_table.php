@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateSaldoTable extends Migration
+class CreateApikeyTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,11 +13,9 @@ class CreateSaldoTable extends Migration
      */
     public function up()
     {
-        Schema::create('tb_saldo', function (Blueprint $table) {
+        Schema::create('api_key', function (Blueprint $table) {
             $table->id();
-            $table->integer('id_anggota');
-            $table->integer('saldo');
-            $table->integer('jenis_simpanan')->comment('1 = pokok, 2 = wajib, 3 = sukarela');
+            $table->string('api_key');
             $table->timestamps();
         });
     }
@@ -29,6 +27,6 @@ class CreateSaldoTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('tb_saldo');
+        Schema::dropIfExists('api_key');
     }
 }

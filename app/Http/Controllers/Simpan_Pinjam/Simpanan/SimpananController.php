@@ -43,7 +43,7 @@ class SimpananController extends Controller
                                                 <i class="far fa-plus-square"></i>&nbsp; Proses</a>' : '<span class="badge bg-success">Sudah Bayar</span>',
                             'keterangan'     => $value->keterangan == null ? '-' : $value->keterangan,
                             'action'         => ($value->status == 0) ? '<a href="#mymodal" data-remote="' . route('data.modal', $value->id) . '" data-toggle="modal" data-target="#mymodal" class="btn btn-danger btn-sm"><i class="far fa-trash-alt"></i>&nbsp; Hapus</a>'
-                                                : '<a href="' . route('data.print', $value->id) . '" class="btn btn-light btn-sm"><i class="fas fa-print"></i>&nbsp; Cetak</a>'
+                                : '<a href="' . route('data.print', $value->id) . '" class="btn btn-light btn-sm"><i class="fas fa-print"></i>&nbsp; Cetak</a>'
                         ];
                     }
                     return response()->json(compact('data'));
@@ -52,7 +52,7 @@ class SimpananController extends Controller
                     $data = [];
                     $no   = 1;
                     foreach ($wajib as $key => $value) {
-                
+
                         $data[] = [
                             'no' => $no++,
                             'kode_simpanan'  => $value->kode_simpanan,
@@ -65,7 +65,7 @@ class SimpananController extends Controller
                                                 <i class="far fa-plus-square"></i>&nbsp; Proses</a>' : '<span class="badge bg-success">Sudah Bayar</span>',
                             'keterangan'     => $value->keterangan == null ? '-' : $value->keterangan,
                             'action'         => ($value->status == 0) ? '<a href="#mymodal" data-remote="' . route('data.modal', $value->id) . '" data-toggle="modal" data-target="#mymodal" class="btn btn-danger btn-sm"><i class="far fa-trash-alt"></i>&nbsp; Hapus</a>'
-                                                : '<a href="' . route('data.print', $value->id) . '" class="btn btn-light btn-sm"><i class="fas fa-print"></i>&nbsp; Cetak</a>'
+                                : '<a href="' . route('data.print', $value->id) . '" class="btn btn-light btn-sm"><i class="fas fa-print"></i>&nbsp; Cetak</a>'
                         ];
                     }
                     return response()->json(compact('data'));
@@ -74,7 +74,7 @@ class SimpananController extends Controller
                     $data = [];
                     $no   = 1;
                     foreach ($sukarela as $key => $value) {
-                
+
                         $data[] = [
                             'no' => $no++,
                             'kode_simpanan'  => $value->kode_simpanan,
@@ -87,7 +87,7 @@ class SimpananController extends Controller
                                                 <i class="far fa-plus-square"></i>&nbsp; Proses</a>' : '<span class="badge bg-success">Sudah Bayar</span>',
                             'keterangan'     => $value->keterangan == null ? '-' : $value->keterangan,
                             'action'         => ($value->status == 0) ? '<a href="#mymodal" data-remote="' . route('data.modal', $value->id) . '" data-toggle="modal" data-target="#mymodal" class="btn btn-danger btn-sm"><i class="far fa-trash-alt"></i>&nbsp; Hapus</a>'
-                                                : '<a href="' . route('data.print', $value->id) . '" class="btn btn-light btn-sm"><i class="fas fa-print"></i>&nbsp; Cetak</a>'
+                                : '<a href="' . route('data.print', $value->id) . '" class="btn btn-light btn-sm"><i class="fas fa-print"></i>&nbsp; Cetak</a>'
                         ];
                     }
                     return response()->json(compact('data'));
@@ -96,7 +96,7 @@ class SimpananController extends Controller
                     $data = [];
                     $no   = 1;
                     $jenis = '';
-                    
+
                     foreach ($simpanan as $key => $value) {
                         if ($value->jenis_simpanan == 1) {
                             $jenis = 'Simpanan Pokok';
@@ -118,13 +118,12 @@ class SimpananController extends Controller
                                                 <i class="far fa-plus-square"></i>&nbsp; Proses</a>' : '<span class="badge bg-success">Sudah Bayar</span>',
                             'keterangan'     => $value->keterangan == null ? '-' : $value->keterangan,
                             'action'         => ($value->status == 0) ? '<a href="#mymodal" data-remote="' . route('data.modal', $value->id) . '" data-toggle="modal" data-target="#mymodal" class="btn btn-danger btn-sm"><i class="far fa-trash-alt"></i>&nbsp; Hapus</a>'
-                                                : '<a href="' . route('data.print', $value->id) . '" class="btn btn-light btn-sm"><i class="fas fa-print"></i>&nbsp; Cetak</a>'
+                                : '<a href="' . route('data.print', $value->id) . '" class="btn btn-light btn-sm"><i class="fas fa-print"></i>&nbsp; Cetak</a>'
                         ];
                     }
                     return response()->json(compact('data'));
                     break;
             }
-            
         }
         return view('Simpan_Pinjam.simpanan.simpanan');
     }
@@ -236,19 +235,26 @@ class SimpananController extends Controller
 
             #Update Saldo
             if ($kodeSimpanan->jenis_simpanan == 3) {
-                $checkSaldo = Saldo::where('id_anggota', $kodeSimpanan->id_anggota)->first();
+                $checkSaldo = Saldo::where('id_anggota', $kodeSimpanan->id_anggota)
+                    ->where('jenis_simpanan', 3)->first();
 
-                if ($checkSaldo == null) {
-                    $saldo = new Saldo();
-                    $saldo->create([
-                        'id_anggota' => $kodeSimpanan->id_anggota,
-                        'saldo'      => $kodeSimpanan->nominal
-                    ]);
-                } else {
-                    $checkSaldo->update([
-                        'saldo' => $checkSaldo->saldo + $kodeSimpanan->nominal
-                    ]);
-                }
+                $checkSaldo->update([
+                    'saldo' => $checkSaldo->saldo + $kodeSimpanan->nominal
+                ]);
+            } elseif ($kodeSimpanan->jenis_simpanan == 2) {
+                $checkSaldo = Saldo::where('id_anggota', $kodeSimpanan->id_anggota)
+                    ->where('jenis_simpanan', 2)->first();
+
+                $checkSaldo->update([
+                    'saldo' => $checkSaldo->saldo + $kodeSimpanan->nominal
+                ]);
+            } else {
+                $checkSaldo = Saldo::where('id_anggota', $kodeSimpanan->id_anggota)
+                    ->where('jenis_simpanan', 1)->first();
+
+                $checkSaldo->update([
+                    'saldo' => $checkSaldo->saldo + $kodeSimpanan->nominal
+                ]);
             }
         }
         return redirect()->route('data.index')->with([
@@ -367,19 +373,26 @@ class SimpananController extends Controller
 
             #Update Saldo
             if ($kodeSimpanan->jenis_simpanan == 3) {
-                $checkSaldo = Saldo::where('id_anggota', $kodeSimpanan->id_anggota)->first();
+                $checkSaldo = Saldo::where('id_anggota', $kodeSimpanan->id_anggota)
+                    ->where('jenis_simpanan', 3)->first();
 
-                if ($checkSaldo == null) {
-                    $saldo = new Saldo();
-                    $saldo->create([
-                        'id_anggota' => $kodeSimpanan->id_anggota,
-                        'saldo'      => $kodeSimpanan->nominal
-                    ]);
-                } else {
-                    $checkSaldo->update([
-                        'saldo' => $checkSaldo->saldo + $kodeSimpanan->nominal
-                    ]);
-                }
+                $checkSaldo->update([
+                    'saldo' => $checkSaldo->saldo + $kodeSimpanan->nominal
+                ]);
+            } elseif ($kodeSimpanan->jenis_simpanan == 2) {
+                $checkSaldo = Saldo::where('id_anggota', $kodeSimpanan->id_anggota)
+                    ->where('jenis_simpanan', 2)->first();
+
+                $checkSaldo->update([
+                    'saldo' => $checkSaldo->saldo + $kodeSimpanan->nominal
+                ]);
+            } else {
+                $checkSaldo = Saldo::where('id_anggota', $kodeSimpanan->id_anggota)
+                    ->where('jenis_simpanan', 1)->first();
+
+                $checkSaldo->update([
+                    'saldo' => $checkSaldo->saldo + $kodeSimpanan->nominal
+                ]);
             }
         }
 
@@ -403,7 +416,7 @@ class SimpananController extends Controller
         ]);
     }
 
-    public function print($id) 
+    public function print($id)
     {
         $simpanan = Simpanan::with('anggota')->findOrFail($id);
 
@@ -412,7 +425,7 @@ class SimpananController extends Controller
         ]);
     }
 
-    public function print_show($id) 
+    public function print_show($id)
     {
         $simpanan = Simpanan::with('anggota')->findOrFail($id);
 
@@ -430,7 +443,7 @@ class SimpananController extends Controller
         ]);
     }
 
-    public function store_all(Request $request) 
+    public function store_all(Request $request)
     {
         $anggota        = Anggota::pluck('id');
         $count          = $anggota->count();
@@ -448,7 +461,7 @@ class SimpananController extends Controller
         } else {
             $idWajib = $checkSimWajib->id;
         }
-        
+
         for ($i = 0; $i < $count; $i++) {
             #Check Jurnal
             $checkJurnal = JurnalUmum::select('*')->orderBy('id', 'DESC')->first();
@@ -499,6 +512,13 @@ class SimpananController extends Controller
             $jurnal->debet          = $kodeSimpanan->nominal;
             $jurnal->kredit         = 0;
             $jurnal->save();
+
+            $checkSaldo = Saldo::where('id_anggota', $kodeSimpanan->id_anggota)
+                ->where('jenis_simpanan', 2)->first();
+
+            $checkSaldo->update([
+                'saldo' => $checkSaldo->saldo + $kodeSimpanan->nominal
+            ]);
         }
 
         return redirect()->route('data.index')->with([
