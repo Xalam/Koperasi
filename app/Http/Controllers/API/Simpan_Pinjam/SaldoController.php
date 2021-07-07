@@ -59,4 +59,36 @@ class SaldoController extends Controller
             return ResponseFormatter::success($data, 'Berhasil mengajukan simpanan');
         }
     }
+
+    public function withdraw(Request $request)
+    {
+        $idAnggota = getallheaders()['id'];
+
+        $checkSaldo = SaldoTarik::with('saldo')
+            ->whereHas('saldo', function ($query) use ($idAnggota) {
+                $query->where('id_anggota', $idAnggota);
+                $query->where('jenis_simpanan', 3);
+            })->where('status', 0)->first();
+
+        if ($checkSaldo) {
+            return ResponseFormatter::error('Masih terdapat penarikan yang belum disetujui');
+        } else {
+            $saldo = Saldo::where('id_anggota', $idAnggota)->where('jenis_simpanan', 3)->first();
+
+            if ($saldo->saldo < $request->nominal) {
+                return ResponseFormatter::error('Jumlah saldo kurang');
+            } else {
+                $item = $request->all();
+
+                $item['id_saldo'] = $saldo->id;
+                $item['status'] = 0;
+
+                SaldoTarik::create($item);
+
+                $data = SaldoTarik::orderBy('id', 'DESC')->first();
+
+                return ResponseFormatter::success($data, 'Berhasil mengajukan penarikan');
+            }
+        }
+    }
 }

@@ -21,6 +21,7 @@ Route::namespace('API')->group(function () {
     Route::prefix('simpan-pinjam')->group(function () {
         Route::get('saldo', 'Simpan_Pinjam\SaldoController@index');
         Route::post('saldo-deposit', 'Simpan_Pinjam\SaldoController@deposit');
+        Route::post('saldo-tarik', 'Simpan_Pinjam\SaldoController@withdraw');
     });
 
     Route::prefix('toko')->group(function () {
