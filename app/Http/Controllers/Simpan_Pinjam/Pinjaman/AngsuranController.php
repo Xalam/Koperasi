@@ -20,10 +20,10 @@ class AngsuranController extends Controller
      */
     public function index()
     {
-        $angsuran = Angsuran::with('pinjaman')->whereIn('id', function($q) {
-                        $q->select(DB::raw('MAX(id) FROM tb_angsuran'))->groupBy('id_pinjaman');
-                    })->orderBy('id', 'DESC')->get();
-        
+        $angsuran = Angsuran::with('pinjaman')->whereIn('id', function ($q) {
+            $q->select(DB::raw('MAX(id) FROM tb_angsuran'))->groupBy('id_pinjaman');
+        })->where('jenis', 1)->orderBy('id', 'DESC')->get();
+
         if (request()->ajax()) {
             $data = [];
             $no   = 1;
@@ -38,7 +38,7 @@ class AngsuranController extends Controller
                     'angsuran'      => $value->pinjaman->angsuran_ke,
                     'status'        => (($value->status == 0) ? '<a href="#modalKonfirmasi" data-remote="' . route('angsuran.konfirmasi', $value->id) . '" 
                                        data-toggle="modal" data-target="#modalKonfirmasi" class="btn btn-primary btn-sm"><i class="far fa-plus-square"></i>&nbsp; Proses</a>' :
-                                       '<span class="badge badge-success">Disetujui</span>') . (($value->lunas == 1) ? '<span class="badge badge-success">Lunas</span>' : ''),
+                        '<span class="badge badge-success">Disetujui</span>') . (($value->lunas == 1) ? '<span class="badge badge-success">Lunas</span>' : ''),
                     'action'        => (($value->status == 1) ? '<a href="' . route('angsuran.print-show', $value->id) . '" class="btn btn-light btn-sm"><i class="fas fa-print"></i>&nbsp; Cetak</a>' : '')
                 ];
             }
@@ -89,7 +89,7 @@ class AngsuranController extends Controller
         $checkAkunKas        = Akun::where('kode_akun', 1101)->first();
         $checkAkunPiutang    = Akun::where('kode_akun', 1121)->first();
         $checkAkunPendapatan = Akun::where('kode_akun', 4101)->first();
-        
+
         if ($checkAkunKas == null) {
             $idKas = 0;
         } else {
@@ -140,7 +140,7 @@ class AngsuranController extends Controller
 
         #Pembulatan Pendapatan
         $pendapatan = round(($kodeAngsuran->pinjaman->total_pinjaman - $kodeAngsuran->pinjaman->nominal_pinjaman) / $kodeAngsuran->pinjaman->tenor, 2);
-        
+
         $intNumberPen = (int) $pendapatan;
 
         $ratusanPen = substr($intNumberPen, -3);
@@ -150,23 +150,23 @@ class AngsuranController extends Controller
 
         if ($ratusanPen > 0 && $ratusanPen <= 100) {
             $newRatusanPen = 100;
-        } else if($ratusanPen > 100 && $ratusanPen <= 200) {
+        } else if ($ratusanPen > 100 && $ratusanPen <= 200) {
             $newRatusanPen = 200;
-        } else if($ratusanPen > 200 && $ratusanPen <= 300) {
+        } else if ($ratusanPen > 200 && $ratusanPen <= 300) {
             $newRatusanPen = 300;
-        } else if($ratusanPen > 300 && $ratusanPen <= 400) {
+        } else if ($ratusanPen > 300 && $ratusanPen <= 400) {
             $newRatusanPen = 400;
-        } else if($ratusanPen > 400 && $ratusanPen <= 500) {
+        } else if ($ratusanPen > 400 && $ratusanPen <= 500) {
             $newRatusanPen = 500;
-        } else if($ratusanPen > 500 && $ratusanPen <= 600) {
+        } else if ($ratusanPen > 500 && $ratusanPen <= 600) {
             $newRatusanPen = 600;
-        } else if($ratusanPen > 600 && $ratusanPen <= 700) {
+        } else if ($ratusanPen > 600 && $ratusanPen <= 700) {
             $newRatusanPen = 700;
-        } else if($ratusanPen > 700 && $ratusanPen <= 800) {
+        } else if ($ratusanPen > 700 && $ratusanPen <= 800) {
             $newRatusanPen = 800;
-        } else if($ratusanPen > 800 && $ratusanPen <= 900) {
+        } else if ($ratusanPen > 800 && $ratusanPen <= 900) {
             $newRatusanPen = 900;
-        } else if($ratusanPen > 900 && $ratusanPen <= 999) {
+        } else if ($ratusanPen > 900 && $ratusanPen <= 999) {
             $newRatusanPen = 1000;
         } else {
             $newRatusanPen = $ratusanPen;
@@ -185,23 +185,23 @@ class AngsuranController extends Controller
 
         if ($ratusanPi > 0 && $ratusanPi <= 100) {
             $newRatusanPi = 100;
-        } else if($ratusanPi > 100 && $ratusanPi <= 200) {
+        } else if ($ratusanPi > 100 && $ratusanPi <= 200) {
             $newRatusanPi = 200;
-        } else if($ratusanPi > 200 && $ratusanPi <= 300) {
+        } else if ($ratusanPi > 200 && $ratusanPi <= 300) {
             $newRatusanPi = 300;
-        } else if($ratusanPi > 300 && $ratusanPi <= 400) {
+        } else if ($ratusanPi > 300 && $ratusanPi <= 400) {
             $newRatusanPi = 400;
-        } else if($ratusanPi > 400 && $ratusanPi <= 500) {
+        } else if ($ratusanPi > 400 && $ratusanPi <= 500) {
             $newRatusanPi = 500;
-        } else if($ratusanPi > 500 && $ratusanPi <= 600) {
+        } else if ($ratusanPi > 500 && $ratusanPi <= 600) {
             $newRatusanPi = 600;
-        } else if($ratusanPi > 600 && $ratusanPi <= 700) {
+        } else if ($ratusanPi > 600 && $ratusanPi <= 700) {
             $newRatusanPi = 700;
-        } else if($ratusanPi > 700 && $ratusanPi <= 800) {
+        } else if ($ratusanPi > 700 && $ratusanPi <= 800) {
             $newRatusanPi = 800;
-        } else if($ratusanPi > 800 && $ratusanPi <= 900) {
+        } else if ($ratusanPi > 800 && $ratusanPi <= 900) {
             $newRatusanPi = 900;
-        } else if($ratusanPi > 900 && $ratusanPi <= 999) {
+        } else if ($ratusanPi > 900 && $ratusanPi <= 999) {
             $newRatusanPi = 1000;
         } else {
             $newRatusanPi = $ratusanPi;
@@ -211,7 +211,7 @@ class AngsuranController extends Controller
 
         #Simpan Jurnal Pendapatan
         $jurnal = new JurnalUmum();
-        $jurnal-> kode_jurnal   = 'JU-' . str_pad($idJurnal, 6, '0', STR_PAD_LEFT);
+        $jurnal->kode_jurnal   = 'JU-' . str_pad($idJurnal, 6, '0', STR_PAD_LEFT);
         $jurnal->id_akun        = $idPendapatan;
         $jurnal->tanggal        = date('Y-m-d');
         $jurnal->keterangan     = 'Angsuran ( ' . $kodeAngsuran->kode_angsuran . ' )';
@@ -221,7 +221,7 @@ class AngsuranController extends Controller
 
         #Simpan Jurnal Piutang
         $jurnal = new JurnalUmum();
-        $jurnal-> kode_jurnal   = 'JU-' . str_pad($idJurnal, 6, '0', STR_PAD_LEFT);
+        $jurnal->kode_jurnal   = 'JU-' . str_pad($idJurnal, 6, '0', STR_PAD_LEFT);
         $jurnal->id_akun        = $idPiutang;
         $jurnal->tanggal        = date('Y-m-d');
         $jurnal->keterangan     = 'Angsuran ( ' . $kodeAngsuran->kode_angsuran . ' )';
@@ -231,7 +231,7 @@ class AngsuranController extends Controller
 
         #Simpan Jurnal Kas
         $jurnal = new JurnalUmum();
-        $jurnal-> kode_jurnal   = 'JU-' . str_pad($idJurnal, 6, '0', STR_PAD_LEFT);
+        $jurnal->kode_jurnal   = 'JU-' . str_pad($idJurnal, 6, '0', STR_PAD_LEFT);
         $jurnal->id_akun        = $idKas;
         $jurnal->tanggal        = date('Y-m-d');
         $jurnal->keterangan     = 'Angsuran ( ' . $kodeAngsuran->kode_angsuran . ' )';
@@ -282,7 +282,7 @@ class AngsuranController extends Controller
         $checkAkunKas        = Akun::where('kode_akun', 1101)->first();
         $checkAkunPiutang    = Akun::where('kode_akun', 1121)->first();
         $checkAkunPendapatan = Akun::where('kode_akun', 4101)->first();
-        
+
         if ($checkAkunKas == null) {
             $idKas = 0;
         } else {
@@ -318,7 +318,7 @@ class AngsuranController extends Controller
 
         #Pembulatan Pendapatan
         $pendapatan = round(($kodeAngsuran->pinjaman->total_pinjaman - $kodeAngsuran->pinjaman->nominal_pinjaman) / $kodeAngsuran->pinjaman->tenor, 2);
-        
+
         $intNumberPen = (int) $pendapatan;
 
         $ratusanPen = substr($intNumberPen, -3);
@@ -328,23 +328,23 @@ class AngsuranController extends Controller
 
         if ($ratusanPen > 0 && $ratusanPen <= 100) {
             $newRatusanPen = 100;
-        } else if($ratusanPen > 100 && $ratusanPen <= 200) {
+        } else if ($ratusanPen > 100 && $ratusanPen <= 200) {
             $newRatusanPen = 200;
-        } else if($ratusanPen > 200 && $ratusanPen <= 300) {
+        } else if ($ratusanPen > 200 && $ratusanPen <= 300) {
             $newRatusanPen = 300;
-        } else if($ratusanPen > 300 && $ratusanPen <= 400) {
+        } else if ($ratusanPen > 300 && $ratusanPen <= 400) {
             $newRatusanPen = 400;
-        } else if($ratusanPen > 400 && $ratusanPen <= 500) {
+        } else if ($ratusanPen > 400 && $ratusanPen <= 500) {
             $newRatusanPen = 500;
-        } else if($ratusanPen > 500 && $ratusanPen <= 600) {
+        } else if ($ratusanPen > 500 && $ratusanPen <= 600) {
             $newRatusanPen = 600;
-        } else if($ratusanPen > 600 && $ratusanPen <= 700) {
+        } else if ($ratusanPen > 600 && $ratusanPen <= 700) {
             $newRatusanPen = 700;
-        } else if($ratusanPen > 700 && $ratusanPen <= 800) {
+        } else if ($ratusanPen > 700 && $ratusanPen <= 800) {
             $newRatusanPen = 800;
-        } else if($ratusanPen > 800 && $ratusanPen <= 900) {
+        } else if ($ratusanPen > 800 && $ratusanPen <= 900) {
             $newRatusanPen = 900;
-        } else if($ratusanPen > 900 && $ratusanPen <= 999) {
+        } else if ($ratusanPen > 900 && $ratusanPen <= 999) {
             $newRatusanPen = 1000;
         } else {
             $newRatusanPen = $ratusanPen;
@@ -363,23 +363,23 @@ class AngsuranController extends Controller
 
         if ($ratusanPi > 0 && $ratusanPi <= 100) {
             $newRatusanPi = 100;
-        } else if($ratusanPi > 100 && $ratusanPi <= 200) {
+        } else if ($ratusanPi > 100 && $ratusanPi <= 200) {
             $newRatusanPi = 200;
-        } else if($ratusanPi > 200 && $ratusanPi <= 300) {
+        } else if ($ratusanPi > 200 && $ratusanPi <= 300) {
             $newRatusanPi = 300;
-        } else if($ratusanPi > 300 && $ratusanPi <= 400) {
+        } else if ($ratusanPi > 300 && $ratusanPi <= 400) {
             $newRatusanPi = 400;
-        } else if($ratusanPi > 400 && $ratusanPi <= 500) {
+        } else if ($ratusanPi > 400 && $ratusanPi <= 500) {
             $newRatusanPi = 500;
-        } else if($ratusanPi > 500 && $ratusanPi <= 600) {
+        } else if ($ratusanPi > 500 && $ratusanPi <= 600) {
             $newRatusanPi = 600;
-        } else if($ratusanPi > 600 && $ratusanPi <= 700) {
+        } else if ($ratusanPi > 600 && $ratusanPi <= 700) {
             $newRatusanPi = 700;
-        } else if($ratusanPi > 700 && $ratusanPi <= 800) {
+        } else if ($ratusanPi > 700 && $ratusanPi <= 800) {
             $newRatusanPi = 800;
-        } else if($ratusanPi > 800 && $ratusanPi <= 900) {
+        } else if ($ratusanPi > 800 && $ratusanPi <= 900) {
             $newRatusanPi = 900;
-        } else if($ratusanPi > 900 && $ratusanPi <= 999) {
+        } else if ($ratusanPi > 900 && $ratusanPi <= 999) {
             $newRatusanPi = 1000;
         } else {
             $newRatusanPi = $ratusanPi;
@@ -389,7 +389,7 @@ class AngsuranController extends Controller
 
         #Simpan Jurnal Pendapatan
         $jurnal = new JurnalUmum();
-        $jurnal-> kode_jurnal   = 'JU-' . str_pad($idJurnal, 6, '0', STR_PAD_LEFT);
+        $jurnal->kode_jurnal   = 'JU-' . str_pad($idJurnal, 6, '0', STR_PAD_LEFT);
         $jurnal->id_akun        = $idPendapatan;
         $jurnal->tanggal        = date('Y-m-d');
         $jurnal->keterangan     = 'Angsuran ( ' . $kodeAngsuran->kode_angsuran . ' )';
@@ -399,7 +399,7 @@ class AngsuranController extends Controller
 
         #Simpan Jurnal Piutang
         $jurnal = new JurnalUmum();
-        $jurnal-> kode_jurnal   = 'JU-' . str_pad($idJurnal, 6, '0', STR_PAD_LEFT);
+        $jurnal->kode_jurnal   = 'JU-' . str_pad($idJurnal, 6, '0', STR_PAD_LEFT);
         $jurnal->id_akun        = $idPiutang;
         $jurnal->tanggal        = date('Y-m-d');
         $jurnal->keterangan     = 'Angsuran ( ' . $kodeAngsuran->kode_angsuran . ' )';
@@ -409,7 +409,7 @@ class AngsuranController extends Controller
 
         #Simpan Jurnal Kas
         $jurnal = new JurnalUmum();
-        $jurnal-> kode_jurnal   = 'JU-' . str_pad($idJurnal, 6, '0', STR_PAD_LEFT);
+        $jurnal->kode_jurnal   = 'JU-' . str_pad($idJurnal, 6, '0', STR_PAD_LEFT);
         $jurnal->id_akun        = $idKas;
         $jurnal->tanggal        = date('Y-m-d');
         $jurnal->keterangan     = 'Angsuran ( ' . $kodeAngsuran->kode_angsuran . ' )';
@@ -441,7 +441,7 @@ class AngsuranController extends Controller
                 if ($pinjaman->where('lunas', 0)->get()->count() > 0) {
 
                     $data = $pinjaman->firstOrFail();
-    
+
                     return view('Simpan_Pinjam.pinjaman.angsuran.bayar', compact('data'));
                 } else {
                     return redirect()->route('angsuran.index')->with([

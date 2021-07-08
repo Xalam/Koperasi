@@ -21,7 +21,7 @@ class JatuhTempoController extends Controller
     {
         $angsuran = Angsuran::with('pinjaman')->whereIn('id', function ($q) {
             $q->select(DB::raw('MAX(id) FROM tb_angsuran'))->groupBy('id_pinjaman');
-        })->orderBy('id', 'DESC')->get();
+        })->where('jenis', 2)->orderBy('id', 'DESC')->get();
 
         if (request()->ajax()) {
             $data = [];
@@ -80,6 +80,15 @@ class JatuhTempoController extends Controller
             $id = $check->id + 1;
         }
 
+        #Check Jurnal
+        $checkJurnal = JurnalUmum::select('*')->orderBy('id', 'DESC')->first();
+        if ($checkJurnal == null) {
+            $idJurnal = 1;
+        } else {
+            $substrKode = substr($checkJurnal->kode_jurnal, 3);
+            $idJurnal   = $substrKode + 1;
+        }
+
         $angsuran = new Angsuran();
         $angsuran->kode_angsuran    = 'ASN-' . str_replace('-', '', date('Y-m-d')) . '-' . str_pad($id, 6, '0', STR_PAD_LEFT);
         $angsuran->id_pinjaman      = $request->id_pinjaman;
@@ -90,7 +99,9 @@ class JatuhTempoController extends Controller
         $angsuran->potongan         = str_replace('.', '', $request->potongan);
         $angsuran->status           = 1;
         $angsuran->lunas            = 1;
+        $angsuran->jenis            = 2;
         $angsuran->keterangan       = $request->keterangan;
+        $angsuran->kode_jurnal      = 'JU-' . str_pad($idJurnal, 6, '0', STR_PAD_LEFT);
         $angsuran->save();
 
         //Input Jurnal Umum
@@ -98,7 +109,7 @@ class JatuhTempoController extends Controller
         $checkAkunKas        = Akun::where('kode_akun', 1101)->first();
         $checkAkunPiutang    = Akun::where('kode_akun', 1121)->first();
         $checkAkunPendapatan = Akun::where('kode_akun', 4101)->first();
-        
+
         if ($checkAkunKas == null) {
             $idKas = 0;
         } else {
@@ -117,24 +128,11 @@ class JatuhTempoController extends Controller
             $idPendapatan = $checkAkunPendapatan->id;
         }
 
-        #Check Jurnal
-        $checkJurnal = JurnalUmum::select('*')->orderBy('id', 'DESC')->first();
-        if ($checkJurnal == null) {
-            $idJurnal = 1;
-        } else {
-            $substrKode = substr($checkJurnal->kode_jurnal, 3);
-            $idJurnal   = $substrKode + 1;
-        }
-
-        $angsuran->status = $request->status;
-        $angsuran->kode_jurnal = 'JU-' . str_pad($idJurnal, 6, '0', STR_PAD_LEFT);
-        $angsuran->update();
-
         $kodeAngsuran = Angsuran::orderBy('id', 'DESC')->first();
 
         #Pembulatan Pendapatan
         $pendapatan = round(($kodeAngsuran->pinjaman->total_pinjaman - $kodeAngsuran->pinjaman->nominal_pinjaman) / $kodeAngsuran->pinjaman->tenor, 2);
-        
+
         $intNumberPen = (int) $pendapatan;
 
         $ratusanPen = substr($intNumberPen, -3);
@@ -144,23 +142,23 @@ class JatuhTempoController extends Controller
 
         if ($ratusanPen > 0 && $ratusanPen <= 100) {
             $newRatusanPen = 100;
-        } else if($ratusanPen > 100 && $ratusanPen <= 200) {
+        } else if ($ratusanPen > 100 && $ratusanPen <= 200) {
             $newRatusanPen = 200;
-        } else if($ratusanPen > 200 && $ratusanPen <= 300) {
+        } else if ($ratusanPen > 200 && $ratusanPen <= 300) {
             $newRatusanPen = 300;
-        } else if($ratusanPen > 300 && $ratusanPen <= 400) {
+        } else if ($ratusanPen > 300 && $ratusanPen <= 400) {
             $newRatusanPen = 400;
-        } else if($ratusanPen > 400 && $ratusanPen <= 500) {
+        } else if ($ratusanPen > 400 && $ratusanPen <= 500) {
             $newRatusanPen = 500;
-        } else if($ratusanPen > 500 && $ratusanPen <= 600) {
+        } else if ($ratusanPen > 500 && $ratusanPen <= 600) {
             $newRatusanPen = 600;
-        } else if($ratusanPen > 600 && $ratusanPen <= 700) {
+        } else if ($ratusanPen > 600 && $ratusanPen <= 700) {
             $newRatusanPen = 700;
-        } else if($ratusanPen > 700 && $ratusanPen <= 800) {
+        } else if ($ratusanPen > 700 && $ratusanPen <= 800) {
             $newRatusanPen = 800;
-        } else if($ratusanPen > 800 && $ratusanPen <= 900) {
+        } else if ($ratusanPen > 800 && $ratusanPen <= 900) {
             $newRatusanPen = 900;
-        } else if($ratusanPen > 900 && $ratusanPen <= 999) {
+        } else if ($ratusanPen > 900 && $ratusanPen <= 999) {
             $newRatusanPen = 1000;
         } else {
             $newRatusanPen = $ratusanPen;
@@ -179,23 +177,23 @@ class JatuhTempoController extends Controller
 
         if ($ratusanPi > 0 && $ratusanPi <= 100) {
             $newRatusanPi = 100;
-        } else if($ratusanPi > 100 && $ratusanPi <= 200) {
+        } else if ($ratusanPi > 100 && $ratusanPi <= 200) {
             $newRatusanPi = 200;
-        } else if($ratusanPi > 200 && $ratusanPi <= 300) {
+        } else if ($ratusanPi > 200 && $ratusanPi <= 300) {
             $newRatusanPi = 300;
-        } else if($ratusanPi > 300 && $ratusanPi <= 400) {
+        } else if ($ratusanPi > 300 && $ratusanPi <= 400) {
             $newRatusanPi = 400;
-        } else if($ratusanPi > 400 && $ratusanPi <= 500) {
+        } else if ($ratusanPi > 400 && $ratusanPi <= 500) {
             $newRatusanPi = 500;
-        } else if($ratusanPi > 500 && $ratusanPi <= 600) {
+        } else if ($ratusanPi > 500 && $ratusanPi <= 600) {
             $newRatusanPi = 600;
-        } else if($ratusanPi > 600 && $ratusanPi <= 700) {
+        } else if ($ratusanPi > 600 && $ratusanPi <= 700) {
             $newRatusanPi = 700;
-        } else if($ratusanPi > 700 && $ratusanPi <= 800) {
+        } else if ($ratusanPi > 700 && $ratusanPi <= 800) {
             $newRatusanPi = 800;
-        } else if($ratusanPi > 800 && $ratusanPi <= 900) {
+        } else if ($ratusanPi > 800 && $ratusanPi <= 900) {
             $newRatusanPi = 900;
-        } else if($ratusanPi > 900 && $ratusanPi <= 999) {
+        } else if ($ratusanPi > 900 && $ratusanPi <= 999) {
             $newRatusanPi = 1000;
         } else {
             $newRatusanPi = $ratusanPi;
@@ -205,7 +203,7 @@ class JatuhTempoController extends Controller
 
         #Simpan Jurnal Pendapatan
         $jurnal = new JurnalUmum();
-        $jurnal-> kode_jurnal   = 'JU-' . str_pad($idJurnal, 6, '0', STR_PAD_LEFT);
+        $jurnal->kode_jurnal   = 'JU-' . str_pad($idJurnal, 6, '0', STR_PAD_LEFT);
         $jurnal->id_akun        = $idPendapatan;
         $jurnal->tanggal        = date('Y-m-d');
         $jurnal->keterangan     = 'Angsuran ( ' . $kodeAngsuran->kode_angsuran . ' )';
@@ -215,7 +213,7 @@ class JatuhTempoController extends Controller
 
         #Simpan Jurnal Piutang
         $jurnal = new JurnalUmum();
-        $jurnal-> kode_jurnal   = 'JU-' . str_pad($idJurnal, 6, '0', STR_PAD_LEFT);
+        $jurnal->kode_jurnal   = 'JU-' . str_pad($idJurnal, 6, '0', STR_PAD_LEFT);
         $jurnal->id_akun        = $idPiutang;
         $jurnal->tanggal        = date('Y-m-d');
         $jurnal->keterangan     = 'Angsuran ( ' . $kodeAngsuran->kode_angsuran . ' )';
@@ -225,7 +223,7 @@ class JatuhTempoController extends Controller
 
         #Simpan Jurnal Kas
         $jurnal = new JurnalUmum();
-        $jurnal-> kode_jurnal   = 'JU-' . str_pad($idJurnal, 6, '0', STR_PAD_LEFT);
+        $jurnal->kode_jurnal   = 'JU-' . str_pad($idJurnal, 6, '0', STR_PAD_LEFT);
         $jurnal->id_akun        = $idKas;
         $jurnal->tanggal        = date('Y-m-d');
         $jurnal->keterangan     = 'Angsuran ( ' . $kodeAngsuran->kode_angsuran . ' )';
@@ -271,12 +269,20 @@ class JatuhTempoController extends Controller
     {
         $angsuran = Angsuran::findOrFail($id);
 
+        #Update Pinjaman
+        $pinjamanUpdate = Pinjaman::findOrFail($angsuran->id_pinjaman);
+
+        $pinjamanUpdate->angsuran_ke = $pinjamanUpdate->angsuran_ke += 1;
+        $pinjamanUpdate->lunas = 1;
+
+        $pinjamanUpdate->update();
+
         //Input Jurnal Umum
         #Check Akun
         $checkAkunKas        = Akun::where('kode_akun', 1101)->first();
         $checkAkunPiutang    = Akun::where('kode_akun', 1121)->first();
         $checkAkunPendapatan = Akun::where('kode_akun', 4101)->first();
-        
+
         if ($checkAkunKas == null) {
             $idKas = 0;
         } else {
@@ -305,6 +311,7 @@ class JatuhTempoController extends Controller
         }
 
         $angsuran->status = $request->status;
+        $angsuran->lunas = 1;
         $angsuran->kode_jurnal = 'JU-' . str_pad($idJurnal, 6, '0', STR_PAD_LEFT);
         $angsuran->update();
 
@@ -312,7 +319,7 @@ class JatuhTempoController extends Controller
 
         #Pembulatan Pendapatan
         $pendapatan = round(($kodeAngsuran->pinjaman->total_pinjaman - $kodeAngsuran->pinjaman->nominal_pinjaman) / $kodeAngsuran->pinjaman->tenor, 2);
-        
+
         $intNumberPen = (int) $pendapatan;
 
         $ratusanPen = substr($intNumberPen, -3);
@@ -322,23 +329,23 @@ class JatuhTempoController extends Controller
 
         if ($ratusanPen > 0 && $ratusanPen <= 100) {
             $newRatusanPen = 100;
-        } else if($ratusanPen > 100 && $ratusanPen <= 200) {
+        } else if ($ratusanPen > 100 && $ratusanPen <= 200) {
             $newRatusanPen = 200;
-        } else if($ratusanPen > 200 && $ratusanPen <= 300) {
+        } else if ($ratusanPen > 200 && $ratusanPen <= 300) {
             $newRatusanPen = 300;
-        } else if($ratusanPen > 300 && $ratusanPen <= 400) {
+        } else if ($ratusanPen > 300 && $ratusanPen <= 400) {
             $newRatusanPen = 400;
-        } else if($ratusanPen > 400 && $ratusanPen <= 500) {
+        } else if ($ratusanPen > 400 && $ratusanPen <= 500) {
             $newRatusanPen = 500;
-        } else if($ratusanPen > 500 && $ratusanPen <= 600) {
+        } else if ($ratusanPen > 500 && $ratusanPen <= 600) {
             $newRatusanPen = 600;
-        } else if($ratusanPen > 600 && $ratusanPen <= 700) {
+        } else if ($ratusanPen > 600 && $ratusanPen <= 700) {
             $newRatusanPen = 700;
-        } else if($ratusanPen > 700 && $ratusanPen <= 800) {
+        } else if ($ratusanPen > 700 && $ratusanPen <= 800) {
             $newRatusanPen = 800;
-        } else if($ratusanPen > 800 && $ratusanPen <= 900) {
+        } else if ($ratusanPen > 800 && $ratusanPen <= 900) {
             $newRatusanPen = 900;
-        } else if($ratusanPen > 900 && $ratusanPen <= 999) {
+        } else if ($ratusanPen > 900 && $ratusanPen <= 999) {
             $newRatusanPen = 1000;
         } else {
             $newRatusanPen = $ratusanPen;
@@ -357,23 +364,23 @@ class JatuhTempoController extends Controller
 
         if ($ratusanPi > 0 && $ratusanPi <= 100) {
             $newRatusanPi = 100;
-        } else if($ratusanPi > 100 && $ratusanPi <= 200) {
+        } else if ($ratusanPi > 100 && $ratusanPi <= 200) {
             $newRatusanPi = 200;
-        } else if($ratusanPi > 200 && $ratusanPi <= 300) {
+        } else if ($ratusanPi > 200 && $ratusanPi <= 300) {
             $newRatusanPi = 300;
-        } else if($ratusanPi > 300 && $ratusanPi <= 400) {
+        } else if ($ratusanPi > 300 && $ratusanPi <= 400) {
             $newRatusanPi = 400;
-        } else if($ratusanPi > 400 && $ratusanPi <= 500) {
+        } else if ($ratusanPi > 400 && $ratusanPi <= 500) {
             $newRatusanPi = 500;
-        } else if($ratusanPi > 500 && $ratusanPi <= 600) {
+        } else if ($ratusanPi > 500 && $ratusanPi <= 600) {
             $newRatusanPi = 600;
-        } else if($ratusanPi > 600 && $ratusanPi <= 700) {
+        } else if ($ratusanPi > 600 && $ratusanPi <= 700) {
             $newRatusanPi = 700;
-        } else if($ratusanPi > 700 && $ratusanPi <= 800) {
+        } else if ($ratusanPi > 700 && $ratusanPi <= 800) {
             $newRatusanPi = 800;
-        } else if($ratusanPi > 800 && $ratusanPi <= 900) {
+        } else if ($ratusanPi > 800 && $ratusanPi <= 900) {
             $newRatusanPi = 900;
-        } else if($ratusanPi > 900 && $ratusanPi <= 999) {
+        } else if ($ratusanPi > 900 && $ratusanPi <= 999) {
             $newRatusanPi = 1000;
         } else {
             $newRatusanPi = $ratusanPi;
@@ -383,7 +390,7 @@ class JatuhTempoController extends Controller
 
         #Simpan Jurnal Pendapatan
         $jurnal = new JurnalUmum();
-        $jurnal-> kode_jurnal   = 'JU-' . str_pad($idJurnal, 6, '0', STR_PAD_LEFT);
+        $jurnal->kode_jurnal   = 'JU-' . str_pad($idJurnal, 6, '0', STR_PAD_LEFT);
         $jurnal->id_akun        = $idPendapatan;
         $jurnal->tanggal        = date('Y-m-d');
         $jurnal->keterangan     = 'Angsuran ( ' . $kodeAngsuran->kode_angsuran . ' )';
@@ -393,7 +400,7 @@ class JatuhTempoController extends Controller
 
         #Simpan Jurnal Piutang
         $jurnal = new JurnalUmum();
-        $jurnal-> kode_jurnal   = 'JU-' . str_pad($idJurnal, 6, '0', STR_PAD_LEFT);
+        $jurnal->kode_jurnal   = 'JU-' . str_pad($idJurnal, 6, '0', STR_PAD_LEFT);
         $jurnal->id_akun        = $idPiutang;
         $jurnal->tanggal        = date('Y-m-d');
         $jurnal->keterangan     = 'Angsuran ( ' . $kodeAngsuran->kode_angsuran . ' )';
@@ -403,7 +410,7 @@ class JatuhTempoController extends Controller
 
         #Simpan Jurnal Kas
         $jurnal = new JurnalUmum();
-        $jurnal-> kode_jurnal   = 'JU-' . str_pad($idJurnal, 6, '0', STR_PAD_LEFT);
+        $jurnal->kode_jurnal   = 'JU-' . str_pad($idJurnal, 6, '0', STR_PAD_LEFT);
         $jurnal->id_akun        = $idKas;
         $jurnal->tanggal        = date('Y-m-d');
         $jurnal->keterangan     = 'Angsuran ( ' . $kodeAngsuran->kode_angsuran . ' )';
@@ -435,7 +442,7 @@ class JatuhTempoController extends Controller
                 if ($pinjaman->where('lunas', 0)->get()->count() > 0) {
 
                     $data = $pinjaman->firstOrFail();
-    
+
                     return view('Simpan_Pinjam.pinjaman.angsuran-tempo.bayar', compact('data'));
                 } else {
                     return redirect()->route('tempo.index')->with([
