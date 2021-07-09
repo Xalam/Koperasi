@@ -36,11 +36,12 @@ class JatuhTempoController extends Controller
                     'tanggal'       => date('d-m-Y', strtotime($value->tanggal)),
                     'nama'          => $value->pinjaman->anggota->nama_anggota,
                     'nominal'       => 'Rp. ' . number_format($value->nominal_angsuran, '2', ',', '.'),
-                    'angsuran'      => $value->pinjaman->angsuran_ke,
+                    'angsuran'      => $value->pinjaman->tenor - $value->sisa_bayar,
                     'status'        => (($value->status == 0) ? '<a href="#modalKonfirmasi" data-remote="' . route('tempo.konfirmasi', $value->id) . '" 
                            data-toggle="modal" data-target="#modalKonfirmasi" class="btn btn-primary btn-sm"><i class="far fa-plus-square"></i>&nbsp; Proses</a>' :
                         '<span class="badge badge-success">Disetujui</span>') . (($value->lunas == 1) ? '<span class="badge badge-success">Lunas</span>' : ''),
-                    'action'        => (($value->status == 1) ? '<a href="' . route('tempo.print-show', $value->id) . '" class="btn btn-light btn-sm"><i class="fas fa-print"></i>&nbsp; Cetak</a>' : '')
+                    'action'        => (($value->status == 1) ? '<a href="' . route('tempo.print-show', $value->id) . '" class="btn btn-light btn-sm"><i class="fas fa-print"></i>&nbsp; Cetak</a>' :
+                        '<a href="#modalKonfirmasi" data-remote="' . route('tempo.modal', $value->id) . '" data-toggle="modal" data-target="#modalKonfirmasi" class="btn btn-danger btn-sm"><i class="fas fa-trash"></i>&nbsp; Hapus</a>')
                 ];
             }
             return response()->json(compact('data'));
@@ -272,156 +273,164 @@ class JatuhTempoController extends Controller
     {
         $angsuran = Angsuran::findOrFail($id);
 
-        #Update Pinjaman
-        $pinjamanUpdate = Pinjaman::findOrFail($angsuran->id_pinjaman);
+        $checkPinjaman = Pinjaman::where('id', $angsuran->id_pinjaman)->where('status', 0)->first();
 
-        $pinjamanUpdate->angsuran_ke = $pinjamanUpdate->angsuran_ke += 1;
-        $pinjamanUpdate->lunas = 1;
+        if (!$checkPinjaman) {
+            #Update Pinjaman
+            $pinjamanUpdate = Pinjaman::findOrFail($angsuran->id_pinjaman);
 
-        $pinjamanUpdate->update();
+            $pinjamanUpdate->angsuran_ke = $pinjamanUpdate->angsuran_ke += 1;
+            $pinjamanUpdate->lunas = 1;
 
-        //Input Jurnal Umum
-        #Check Akun
-        $checkAkunKas        = Akun::where('kode_akun', 1101)->first();
-        $checkAkunPiutang    = Akun::where('kode_akun', 1121)->first();
-        $checkAkunPendapatan = Akun::where('kode_akun', 4101)->first();
+            $pinjamanUpdate->update();
 
-        if ($checkAkunKas == null) {
-            $idKas = 0;
+            //Input Jurnal Umum
+            #Check Akun
+            $checkAkunKas        = Akun::where('kode_akun', 1101)->first();
+            $checkAkunPiutang    = Akun::where('kode_akun', 1121)->first();
+            $checkAkunPendapatan = Akun::where('kode_akun', 4101)->first();
+
+            if ($checkAkunKas == null) {
+                $idKas = 0;
+            } else {
+                $idKas = $checkAkunKas->id;
+            }
+
+            if ($checkAkunPiutang == null) {
+                $idPiutang = 0;
+            } else {
+                $idPiutang = $checkAkunPiutang->id;
+            }
+
+            if ($checkAkunPendapatan == null) {
+                $idPendapatan = 0;
+            } else {
+                $idPendapatan = $checkAkunPendapatan->id;
+            }
+
+            #Check Jurnal
+            $checkJurnal = JurnalUmum::select('*')->orderBy('id', 'DESC')->first();
+            if ($checkJurnal == null) {
+                $idJurnal = 1;
+            } else {
+                $substrKode = substr($checkJurnal->kode_jurnal, 3);
+                $idJurnal   = $substrKode + 1;
+            }
+
+            $angsuran->status = $request->status;
+            $angsuran->lunas = 1;
+            $angsuran->kode_jurnal = 'JU-' . str_pad($idJurnal, 6, '0', STR_PAD_LEFT);
+            $angsuran->update();
+
+            $kodeAngsuran = Angsuran::where('id', $id)->first();
+
+            #Pembulatan Pendapatan
+            $pendapatan = round(($kodeAngsuran->pinjaman->total_pinjaman - $kodeAngsuran->pinjaman->nominal_pinjaman) / $kodeAngsuran->pinjaman->tenor, 2);
+
+            $intNumberPen = (int) $pendapatan;
+
+            $ratusanPen = substr($intNumberPen, -3);
+
+            $bulatPen = $intNumberPen - $ratusanPen;
+            $newRatusanPen = 0;
+
+            if ($ratusanPen > 0 && $ratusanPen <= 100) {
+                $newRatusanPen = 100;
+            } else if ($ratusanPen > 100 && $ratusanPen <= 200) {
+                $newRatusanPen = 200;
+            } else if ($ratusanPen > 200 && $ratusanPen <= 300) {
+                $newRatusanPen = 300;
+            } else if ($ratusanPen > 300 && $ratusanPen <= 400) {
+                $newRatusanPen = 400;
+            } else if ($ratusanPen > 400 && $ratusanPen <= 500) {
+                $newRatusanPen = 500;
+            } else if ($ratusanPen > 500 && $ratusanPen <= 600) {
+                $newRatusanPen = 600;
+            } else if ($ratusanPen > 600 && $ratusanPen <= 700) {
+                $newRatusanPen = 700;
+            } else if ($ratusanPen > 700 && $ratusanPen <= 800) {
+                $newRatusanPen = 800;
+            } else if ($ratusanPen > 800 && $ratusanPen <= 900) {
+                $newRatusanPen = 900;
+            } else if ($ratusanPen > 900 && $ratusanPen <= 999) {
+                $newRatusanPen = 1000;
+            } else {
+                $newRatusanPen = $ratusanPen;
+            }
+
+            $newPendapatan = $bulatPen + $newRatusanPen;
+
+            #Pembulatan Piutang
+            $piutang = round($kodeAngsuran->pinjaman->nominal_pinjaman / $kodeAngsuran->pinjaman->tenor, 2);
+            $intNumberPi = (int) $piutang;
+
+            $ratusanPi = substr($intNumberPi, -3);
+
+            $bulatPi = $intNumberPi - $ratusanPi;
+            $newRatusanPi = 0;
+
+            if ($ratusanPi > 0 && $ratusanPi <= 100) {
+                $newRatusanPi = 100;
+            } else if ($ratusanPi > 100 && $ratusanPi <= 200) {
+                $newRatusanPi = 200;
+            } else if ($ratusanPi > 200 && $ratusanPi <= 300) {
+                $newRatusanPi = 300;
+            } else if ($ratusanPi > 300 && $ratusanPi <= 400) {
+                $newRatusanPi = 400;
+            } else if ($ratusanPi > 400 && $ratusanPi <= 500) {
+                $newRatusanPi = 500;
+            } else if ($ratusanPi > 500 && $ratusanPi <= 600) {
+                $newRatusanPi = 600;
+            } else if ($ratusanPi > 600 && $ratusanPi <= 700) {
+                $newRatusanPi = 700;
+            } else if ($ratusanPi > 700 && $ratusanPi <= 800) {
+                $newRatusanPi = 800;
+            } else if ($ratusanPi > 800 && $ratusanPi <= 900) {
+                $newRatusanPi = 900;
+            } else if ($ratusanPi > 900 && $ratusanPi <= 999) {
+                $newRatusanPi = 1000;
+            } else {
+                $newRatusanPi = $ratusanPi;
+            }
+
+            $newPiutang = $bulatPi + $newRatusanPi;
+
+            #Simpan Jurnal Pendapatan
+            $jurnal = new JurnalUmum();
+            $jurnal->kode_jurnal   = 'JU-' . str_pad($idJurnal, 6, '0', STR_PAD_LEFT);
+            $jurnal->id_akun        = $idPendapatan;
+            $jurnal->tanggal        = date('Y-m-d');
+            $jurnal->keterangan     = 'Angsuran ( ' . $kodeAngsuran->kode_angsuran . ' )';
+            $jurnal->debet          = 0;
+            $jurnal->kredit         = $newPendapatan;
+            $jurnal->save();
+
+            #Simpan Jurnal Piutang
+            $jurnal = new JurnalUmum();
+            $jurnal->kode_jurnal   = 'JU-' . str_pad($idJurnal, 6, '0', STR_PAD_LEFT);
+            $jurnal->id_akun        = $idPiutang;
+            $jurnal->tanggal        = date('Y-m-d');
+            $jurnal->keterangan     = 'Angsuran ( ' . $kodeAngsuran->kode_angsuran . ' )';
+            $jurnal->debet          = 0;
+            $jurnal->kredit         = $newPiutang;
+            $jurnal->save();
+
+            #Simpan Jurnal Kas
+            $jurnal = new JurnalUmum();
+            $jurnal->kode_jurnal   = 'JU-' . str_pad($idJurnal, 6, '0', STR_PAD_LEFT);
+            $jurnal->id_akun        = $idKas;
+            $jurnal->tanggal        = date('Y-m-d');
+            $jurnal->keterangan     = 'Angsuran ( ' . $kodeAngsuran->kode_angsuran . ' )';
+            $jurnal->debet          = $kodeAngsuran->nominal_angsuran;
+            $jurnal->kredit         = 0;
+            $jurnal->save();
+
+            return redirect()->route('tempo.index');
         } else {
-            $idKas = $checkAkunKas->id;
+            return redirect()->route('angsuran.index')->with([
+                'error' => 'Pinjaman belum disetujui'
+            ]);
         }
-
-        if ($checkAkunPiutang == null) {
-            $idPiutang = 0;
-        } else {
-            $idPiutang = $checkAkunPiutang->id;
-        }
-
-        if ($checkAkunPendapatan == null) {
-            $idPendapatan = 0;
-        } else {
-            $idPendapatan = $checkAkunPendapatan->id;
-        }
-
-        #Check Jurnal
-        $checkJurnal = JurnalUmum::select('*')->orderBy('id', 'DESC')->first();
-        if ($checkJurnal == null) {
-            $idJurnal = 1;
-        } else {
-            $substrKode = substr($checkJurnal->kode_jurnal, 3);
-            $idJurnal   = $substrKode + 1;
-        }
-
-        $angsuran->status = $request->status;
-        $angsuran->lunas = 1;
-        $angsuran->kode_jurnal = 'JU-' . str_pad($idJurnal, 6, '0', STR_PAD_LEFT);
-        $angsuran->update();
-
-        $kodeAngsuran = Angsuran::where('id', $id)->first();
-
-        #Pembulatan Pendapatan
-        $pendapatan = round(($kodeAngsuran->pinjaman->total_pinjaman - $kodeAngsuran->pinjaman->nominal_pinjaman) / $kodeAngsuran->pinjaman->tenor, 2);
-
-        $intNumberPen = (int) $pendapatan;
-
-        $ratusanPen = substr($intNumberPen, -3);
-
-        $bulatPen = $intNumberPen - $ratusanPen;
-        $newRatusanPen = 0;
-
-        if ($ratusanPen > 0 && $ratusanPen <= 100) {
-            $newRatusanPen = 100;
-        } else if ($ratusanPen > 100 && $ratusanPen <= 200) {
-            $newRatusanPen = 200;
-        } else if ($ratusanPen > 200 && $ratusanPen <= 300) {
-            $newRatusanPen = 300;
-        } else if ($ratusanPen > 300 && $ratusanPen <= 400) {
-            $newRatusanPen = 400;
-        } else if ($ratusanPen > 400 && $ratusanPen <= 500) {
-            $newRatusanPen = 500;
-        } else if ($ratusanPen > 500 && $ratusanPen <= 600) {
-            $newRatusanPen = 600;
-        } else if ($ratusanPen > 600 && $ratusanPen <= 700) {
-            $newRatusanPen = 700;
-        } else if ($ratusanPen > 700 && $ratusanPen <= 800) {
-            $newRatusanPen = 800;
-        } else if ($ratusanPen > 800 && $ratusanPen <= 900) {
-            $newRatusanPen = 900;
-        } else if ($ratusanPen > 900 && $ratusanPen <= 999) {
-            $newRatusanPen = 1000;
-        } else {
-            $newRatusanPen = $ratusanPen;
-        }
-
-        $newPendapatan = $bulatPen + $newRatusanPen;
-
-        #Pembulatan Piutang
-        $piutang = round($kodeAngsuran->pinjaman->nominal_pinjaman / $kodeAngsuran->pinjaman->tenor, 2);
-        $intNumberPi = (int) $piutang;
-
-        $ratusanPi = substr($intNumberPi, -3);
-
-        $bulatPi = $intNumberPi - $ratusanPi;
-        $newRatusanPi = 0;
-
-        if ($ratusanPi > 0 && $ratusanPi <= 100) {
-            $newRatusanPi = 100;
-        } else if ($ratusanPi > 100 && $ratusanPi <= 200) {
-            $newRatusanPi = 200;
-        } else if ($ratusanPi > 200 && $ratusanPi <= 300) {
-            $newRatusanPi = 300;
-        } else if ($ratusanPi > 300 && $ratusanPi <= 400) {
-            $newRatusanPi = 400;
-        } else if ($ratusanPi > 400 && $ratusanPi <= 500) {
-            $newRatusanPi = 500;
-        } else if ($ratusanPi > 500 && $ratusanPi <= 600) {
-            $newRatusanPi = 600;
-        } else if ($ratusanPi > 600 && $ratusanPi <= 700) {
-            $newRatusanPi = 700;
-        } else if ($ratusanPi > 700 && $ratusanPi <= 800) {
-            $newRatusanPi = 800;
-        } else if ($ratusanPi > 800 && $ratusanPi <= 900) {
-            $newRatusanPi = 900;
-        } else if ($ratusanPi > 900 && $ratusanPi <= 999) {
-            $newRatusanPi = 1000;
-        } else {
-            $newRatusanPi = $ratusanPi;
-        }
-
-        $newPiutang = $bulatPi + $newRatusanPi;
-
-        #Simpan Jurnal Pendapatan
-        $jurnal = new JurnalUmum();
-        $jurnal->kode_jurnal   = 'JU-' . str_pad($idJurnal, 6, '0', STR_PAD_LEFT);
-        $jurnal->id_akun        = $idPendapatan;
-        $jurnal->tanggal        = date('Y-m-d');
-        $jurnal->keterangan     = 'Angsuran ( ' . $kodeAngsuran->kode_angsuran . ' )';
-        $jurnal->debet          = 0;
-        $jurnal->kredit         = $newPendapatan;
-        $jurnal->save();
-
-        #Simpan Jurnal Piutang
-        $jurnal = new JurnalUmum();
-        $jurnal->kode_jurnal   = 'JU-' . str_pad($idJurnal, 6, '0', STR_PAD_LEFT);
-        $jurnal->id_akun        = $idPiutang;
-        $jurnal->tanggal        = date('Y-m-d');
-        $jurnal->keterangan     = 'Angsuran ( ' . $kodeAngsuran->kode_angsuran . ' )';
-        $jurnal->debet          = 0;
-        $jurnal->kredit         = $newPiutang;
-        $jurnal->save();
-
-        #Simpan Jurnal Kas
-        $jurnal = new JurnalUmum();
-        $jurnal->kode_jurnal   = 'JU-' . str_pad($idJurnal, 6, '0', STR_PAD_LEFT);
-        $jurnal->id_akun        = $idKas;
-        $jurnal->tanggal        = date('Y-m-d');
-        $jurnal->keterangan     = 'Angsuran ( ' . $kodeAngsuran->kode_angsuran . ' )';
-        $jurnal->debet          = $kodeAngsuran->nominal_angsuran;
-        $jurnal->kredit         = 0;
-        $jurnal->save();
-
-        return redirect()->route('tempo.index');
     }
 
     /**
@@ -432,7 +441,13 @@ class JatuhTempoController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $angsuran = Angsuran::findOrFail($id);
+
+        $angsuran->delete();
+
+        return redirect()->route('tempo.index')->with([
+            'success' => 'Berhasil menghapus pengajuan angsuran'
+        ]);
     }
 
     public function bayar(Request $request)
@@ -476,5 +491,12 @@ class JatuhTempoController extends Controller
         $angsuran = Angsuran::findOrFail($id);
 
         return view('Simpan_Pinjam.pinjaman.angsuran-tempo.modal', compact('angsuran'));
+    }
+
+    public function modal($id)
+    {
+        $angsuran = Angsuran::findOrFail($id);
+
+        return view('Simpan_Pinjam.pinjaman.angsuran-tempo.modal-delete', compact('angsuran'));
     }
 }

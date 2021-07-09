@@ -337,11 +337,13 @@ Route::group(['prefix' => 'simpan-pinjam', 'middleware' => ['auth:simpan-pinjam'
         Route::post('angsuran/bayar', 'Simpan_Pinjam\Pinjaman\AngsuranController@bayar')->name('angsuran.bayar');
         Route::get('angsuran/cetak/show/{id}', 'Simpan_Pinjam\Pinjaman\AngsuranController@print_show')->name('angsuran.print-show');
         Route::get('angsuran/konfirmasi/{id}', 'Simpan_Pinjam\Pinjaman\AngsuranController@konfirmasi')->name('angsuran.konfirmasi');
+        Route::get('angsuran/modal/{id}', 'Simpan_Pinjam\Pinjaman\AngsuranController@modal')->name('angsuran.modal');
 
         Route::resource('tempo', 'Simpan_Pinjam\Pinjaman\JatuhTempoController');
         Route::post('tempo/bayar', 'Simpan_Pinjam\Pinjaman\JatuhTempoController@bayar')->name('tempo.bayar');
         Route::get('tempo/cetak/show/{id}', 'Simpan_Pinjam\Pinjaman\JatuhTempoController@print_show')->name('tempo.print-show');
         Route::get('tempo/konfirmasi/{id}', 'Simpan_Pinjam\Pinjaman\JatuhTempoController@konfirmasi')->name('tempo.konfirmasi');
+        Route::get('tempo/modal/{id}', 'Simpan_Pinjam\Pinjaman\JatuhTempoController@modal')->name('tempo.modal');
     });
 
     #Laporan

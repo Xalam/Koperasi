@@ -134,4 +134,99 @@ class PinjamanController extends Controller
 
         return ResponseFormatter::success($data, 'Berhasil mendapatkan data');
     }
+
+    public function kode()
+    {
+        $idAnggota = getallheaders()['id'];
+        $data = Pinjaman::select('id', 'kode_pinjaman')->where('lunas', 0)->where('id_anggota', $idAnggota)->orderBy('id', 'DESC')->first();
+
+        return ResponseFormatter::success($data, 'Berhasil mendapatkan data');
+    }
+
+    public function angsuran(Request $request)
+    {
+        $checkAngsuran = Angsuran::where('id_pinjaman', $request->id_pinjaman)->where('status', 0)->orderBy('id', 'DESC')->first();
+
+        if ($checkAngsuran) {
+            return ResponseFormatter::error('Masih terdapat angsuran yang belum disetujui');
+        } else {
+            #Update Pinjaman
+            $pinjamanUpdate = Pinjaman::findOrFail($request->id_pinjaman);
+
+            #Kode Angsuran
+            $check = Angsuran::select('*')->orderBy('id', 'DESC')->first();
+            if ($check == null) {
+                $id = 1;
+            } else {
+                $id = $check->id + 1;
+            }
+
+            #Sisa Angsuran
+            $sisaAngsuran = $pinjamanUpdate->total_pinjaman - ($pinjamanUpdate->nominal_angsuran * $pinjamanUpdate->angsuran_ke);
+
+            if ($sisaAngsuran < 0) {
+                $sisaAngsuran = 0;
+            }
+
+            $angsuran = new Angsuran();
+            $angsuran->kode_angsuran    = 'ASN-' . str_replace('-', '', date('Y-m-d')) . '-' . str_pad($id, 6, '0', STR_PAD_LEFT);
+            $angsuran->id_pinjaman      = $request->id_pinjaman;
+            $angsuran->tanggal          = $request->tanggal;
+            $angsuran->nominal_angsuran = $pinjamanUpdate->nominal_angsuran;
+            $angsuran->sisa_angsuran    = $sisaAngsuran;
+            $angsuran->sisa_bayar       = $pinjamanUpdate->tenor - $pinjamanUpdate->angsuran_ke - 1;
+            $angsuran->status           = 0;
+            $angsuran->lunas            = $pinjamanUpdate->lunas;
+            $angsuran->keterangan       = '(Mobile)';
+            $angsuran->save();
+
+            $data = Angsuran::orderBy('id', 'DESC')->first();
+
+            return ResponseFormatter::success($data, 'Berhasil menambah pengajuan angsuran');
+        }
+    }
+
+    public function angsuran_lunas(Request $request)
+    {
+        $checkAngsuran = Angsuran::where('id_pinjaman', $request->id_pinjaman)->where('status', 0)->orderBy('id', 'DESC')->first();
+
+        if ($checkAngsuran) {
+            return ResponseFormatter::error('Masih terdapat angsuran yang belum disetujui');
+        } else {
+            $pinjamanUpdate = Pinjaman::findOrFail($request->id_pinjaman);
+
+            #Kode Angsuran
+            $check = Angsuran::select('*')->orderBy('id', 'DESC')->first();
+            if ($check == null) {
+                $id = 1;
+            } else {
+                $id = $check->id + 1;
+            }
+
+            $bayarAngsuran  = $pinjamanUpdate->nominal_pinjaman / $pinjamanUpdate->tenor;
+            $tenorAngsuran  = $pinjamanUpdate->tenor - $pinjamanUpdate->angsuran_ke;
+            $bunga          = $pinjamanUpdate->nominal_pinjaman * ($pinjamanUpdate->bunga / 100);
+            $totalBayar     = $bayarAngsuran * $tenorAngsuran + $bunga;
+            $potongan       = $bunga * $tenorAngsuran;
+
+            $angsuran = new Angsuran();
+            $angsuran->kode_angsuran    = 'ASN-' . str_replace('-', '', date('Y-m-d')) . '-' . str_pad($id, 6, '0', STR_PAD_LEFT);
+            $angsuran->id_pinjaman      = $request->id_pinjaman;
+            $angsuran->tanggal          = $request->tanggal;
+            $angsuran->nominal_angsuran = $pinjamanUpdate->nominal_angsuran;
+            $angsuran->sisa_angsuran    = 0;
+            $angsuran->sisa_bayar       = 0;
+            $angsuran->potongan         = str_replace(',', '', $potongan);
+            $angsuran->status           = 0;
+            $angsuran->lunas            = 0;
+            $angsuran->jenis            = 2;
+            $angsuran->total_bayar      = str_replace(',', '', $totalBayar);
+            $angsuran->keterangan       = '(Mobile)';
+            $angsuran->save();
+
+            $data = Angsuran::orderBy('id', 'DESC')->first();
+
+            return ResponseFormatter::success($data, 'Berhasil menambah pengajuan pelunasan angsuran');
+        }
+    }
 }

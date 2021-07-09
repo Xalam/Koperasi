@@ -6,19 +6,20 @@
 </div>
 <div class="modal-body">
     <p>
-        Apakah Anda memproses angsuran dari <strong>{{ $angsuran->pinjaman->anggota->nama_anggota }}</strong> ?
+        Apakah Anda ingin menghapus angsuran pelunasan dari kode pinjaman
+        <strong>{{ $angsuran->pinjaman->kode_pinjaman }}</strong> ?
     </p>
 </div>
-<form action="{{ route('tempo.update', $angsuran->id) }}" method="POST">
+<form action="{{ route('tempo.destroy', $angsuran->id) }}" method="POST">
     @csrf
-    @method('put')
+    @method('delete')
     <input type="hidden" name="status" value="1">
     <div class="modal-footer">
         <button type="button" class="btn btn-light" data-dismiss="modal">
-            Nanti saja
+            Tidak
         </button>
-        <button type="submit" class="btn btn-primary">
-            Proses
+        <button type="submit" class="btn btn-danger">
+            Hapus
         </button>
     </div>
 </form>

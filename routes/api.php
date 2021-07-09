@@ -27,6 +27,10 @@ Route::namespace('API')->group(function () {
         Route::post('pinjaman', 'Simpan_Pinjam\PinjamanController@index');
 
         Route::get('pinjaman-history', 'Simpan_Pinjam\PinjamanController@history');
+        Route::get('pinjaman-kode', 'Simpan_Pinjam\PinjamanController@kode');
+
+        Route::post('angsuran', 'Simpan_Pinjam\PinjamanController@angsuran');
+        Route::post('angsuran-lunas', 'Simpan_Pinjam\PinjamanController@angsuran_lunas');
     });
 
     Route::prefix('toko')->group(function () {
