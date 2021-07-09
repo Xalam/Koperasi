@@ -14,16 +14,20 @@ use Illuminate\Http\Request;
 class PiutangController extends Controller
 {
     public function index() {
-        $data_notif = BarangModel::where('alert_status', 1)->get();
-
         $data_notified = BarangModel::all();
         foreach ($data_notified AS $data) {
             if ($data->stok <= $data->stok_minimal) {
                 BarangModel::where('id', $data->id)->update([
                     'alert_status' => 1
                 ]);
+            } else {
+                BarangModel::where('id', $data->id)->update([
+                    'alert_status' => 0
+                ]);
             }
         }
+
+        $data_notif = BarangModel::where('alert_status', 1)->get();
 
         $cur_date = Carbon::now();
         

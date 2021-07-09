@@ -15,7 +15,7 @@
         <button id="btn-daftar" class="btn btn-sm btn-primary col-lg-6" onclick="panel_daftar()">Daftar Konsinyasi</button>
         <button id="btn-bayar" class="btn btn-sm col-lg-6" onclick="panel_bayar()">Bayar Konsinyasi</button>
     </div>
-    <div id="panel-bayar-utang" class="d-none">
+    <div id="panel-bayar-konsinyasi" class="d-none">
         <p class="card-header bg-light">Tambah Angsuran</p>
         <div class="card-body">
             <div class="row-lg align-item-center mb-2">
@@ -42,8 +42,8 @@
                 'readonly']) !!}
             </div>
             <div class="row-lg align-item-center mb-2">
-                {!! Form::label(null, 'Sisa Utang', ['class' => 'col-lg-2']) !!}
-                {!! Form::number('sisa_utang', 0, ['class' => 'col-lg-2 form-control form-control-sm', 'readonly']) !!}
+                {!! Form::label(null, 'Sisa Konsinyasi', ['class' => 'col-lg-2']) !!}
+                {!! Form::number('sisa_konsinyasi', 0, ['class' => 'col-lg-2 form-control form-control-sm', 'readonly']) !!}
             </div>
             <div class="row-lg align-item-center mb-2">
                 {!! Form::label(null, 'Pelunasan', ['class' => 'col-lg-2 fw-bold']) !!}
@@ -61,9 +61,9 @@
         </div>
     </div>
 
-    <div id="panel-daftar-utang">
+    <div id="panel-daftar-konsinyasi">
         <div class="d-flex bg-light">
-            <p class="card-header col-lg">Daftar Hutang</p>
+            <p class="card-header col-lg">Daftar Konsinyasi</p>
             <i class="card-header fas fa-sync text-success" style="cursor: pointer;" title="Refresh Page" onclick="location.reload()"></i>
         </div>
         <div class="card-body">
@@ -77,17 +77,17 @@
                             <th>Nama Supplier</th>
                             <th>Tanggal Beli</th>
                             <th>Jatuh Tempo</th>
-                            <th>Nilai Hutang</th>
-                            <th>Sisa Hutang</th>
+                            <th>Nilai Konsinyasi</th>
+                            <th>Sisa Konsinyasi</th>
                             <th>Opsi</th>
                         </tr>
                     </thead>
-                    @if (count($hutang) > 0)
+                    @if (count($konsinyasi) > 0)
                     <tbody>
                         @php
                         $i = 1;
                         @endphp
-                        @foreach ($hutang as $data)
+                        @foreach ($konsinyasi as $data)
                         @if ($data->status == 0)
                         <tr>
                             <th class="align-middle text-center">
@@ -98,8 +98,8 @@
                             <td class="align-middle text-center">{{$data->nama_supplier}}</td>
                             <td class="align-middle text-center">{{$data->tanggal_beli}}</td>
                             <td class="align-middle text-center">{{$data->jatuh_tempo}}</td>
-                            <td class="align-middle text-center">{{$data->jumlah_hutang}}</td>
-                            <td class="align-middle text-center">{{$data->sisa_hutang}}</td>
+                            <td class="align-middle text-center">{{$data->jumlah_konsinyasi}}</td>
+                            <td class="align-middle text-center">{{$data->sisa_konsinyasi}}</td>
                             <td class="align-middle text-center">
                                 <a id=<?php echo "bayar-" . $data->id ?> class="btn btn-sm btn-success"
                                     onclick="bayar(<?php echo $data->id ?>)">Bayar</a>
@@ -115,7 +115,7 @@
     </div>
 </div>
 
-<div id="panel-daftar-bayar-utang" class="d-none">
+<div id="panel-daftar-bayar-konsinyasi" class="d-none">
     <div class="card m-6">
         <p class="card-header bg-light">Daftar Angsuran</p>
         <div class="card-body">
@@ -128,7 +128,7 @@
                             <th>Nomor Jurnal</th>
                             <th>Tanggal</th>
                             <th>Angsuran</th>
-                            <th>Sisa Hutang</th>
+                            <th>Sisa Konsinyasi</th>
                             <th>Opsi</th>
                         </tr>
                     </thead>
@@ -143,24 +143,24 @@
 
 @section('script')
 <script src="{{ asset('js/base-url.js') }}"></script>
-<script src="{{ asset('js/nomor-angsuran.js') }}"></script>
+<script src="{{ asset('js/nomor-konsinyasi.js') }}"></script>
 <script>
 var nomor_beli;
 
 function panel_daftar() {
-    $('#panel-daftar-utang').removeClass('d-none');
+    $('#panel-daftar-konsinyasi').removeClass('d-none');
     $('#btn-daftar').addClass('btn-primary');
     $('#btn-bayar').removeClass('btn-primary');
-    $('#panel-bayar-utang').addClass('d-none');
-    $('#panel-daftar-bayar-utang').addClass('d-none');
+    $('#panel-bayar-konsinyasi').addClass('d-none');
+    $('#panel-daftar-bayar-konsinyasi').addClass('d-none');
 }
 
 function panel_bayar() {
-    $('#panel-daftar-utang').addClass('d-none');
+    $('#panel-daftar-konsinyasi').addClass('d-none');
     $('#btn-daftar').removeClass('btn-primary');
     $('#btn-bayar').addClass('btn-primary');
-    $('#panel-bayar-utang').removeClass('d-none');
-    $('#panel-daftar-bayar-utang').removeClass('d-none');
+    $('#panel-bayar-konsinyasi').removeClass('d-none');
+    $('#panel-daftar-bayar-konsinyasi').removeClass('d-none');
 }
 
 function bayar($id) {
@@ -169,17 +169,17 @@ function bayar($id) {
     panel_bayar();
 }
 
-function bayar_hutang() {
+function bayar_konsinyasi() {
     $.ajax({
-        url: '/toko/transaksi/hutang/store',
+        url: '/toko/transaksi/konsinyasi/store',
         type: 'POST',
         data: {
             nomor: $('[name="nomor"]').val(),
             nomor_jurnal: $('[name="nomor_jurnal"]').val(),
             tanggal: $('[name="tanggal"]').val(),
-            id_hutang: $('[name="nomor_beli"]').val(),
+            id_konsinyasi: $('[name="nomor_beli"]').val(),
             angsuran: $('[name="angsuran"]').val(),
-            sisa_hutang: $('[name="sisa_utang"]').val() - $('[name="angsuran"]').val(),
+            sisa_konsinyasi: $('[name="sisa_konsinyasi"]').val() - $('[name="angsuran"]').val(),
             _token: $('meta[name="csrf-token"]').attr('content')
         },
         success: function(response) {
@@ -193,7 +193,7 @@ function bayar_hutang() {
 
 function hapus_daftar($id) {
     $.ajax({
-        url: '/toko/transaksi/hutang/delete/' + $id,
+        url: '/toko/transaksi/konsinyasi/delete/' + $id,
         type: 'POST',
         success: function(response) {
             if (response.code == 200) {
@@ -209,16 +209,16 @@ function tampil_daftar() {
     nomor_beli = $('[name="nomor_beli"]').val();
 
     $.ajax({
-        url: '/toko/transaksi/hutang/' + nomor_beli,
+        url: '/toko/transaksi/konsinyasi/' + nomor_beli,
         type: 'GET',
         success: function(response) {
             if (response.code == 200) {
                 $('#table-data-angsuran').empty();
 
-                $sisa_hutang = response.supplier_hutang.jumlah_hutang;
+                $sisa_konsinyasi = response.supplier_konsinyasi.jumlah_konsinyasi;
 
-                $.each(response.detail_hutang, function(index, value) {
-                    $sisa_hutang -= value.angsuran;
+                $.each(response.detail_konsinyasi, function(index, value) {
+                    $sisa_konsinyasi -= value.angsuran;
 
                     $('#table-data-angsuran').append('<tr>' +
                         '<th class="align-middle text-center">' + i++ + '</th>' +
@@ -226,7 +226,7 @@ function tampil_daftar() {
                         '<td class="align-middle text-center">' + value.nomor_jurnal + '</td>' +
                         '<td class="align-middle text-center">' + value.tanggal + '</td>' +
                         '<td class="align-middle text-center">' + value.angsuran + '</td>' +
-                        '<td class="align-middle text-center">' + $sisa_hutang +
+                        '<td class="align-middle text-center">' + $sisa_konsinyasi +
                         '</td>' +
                         '<td class="align-middle text-center"><a id="hapus-' + value
                         .id + '" class="btn btn-sm btn-danger" onclick="show_popup_hapus(' +
@@ -236,15 +236,15 @@ function tampil_daftar() {
                         '</tr>')
                 })
 
-                if (response.supplier_hutang) {
+                if (response.supplier_konsinyasi) {
                     $('[name="kode_supplier"]').empty();
                     $('[name="nama_supplier"]').empty();
-                    $('[name="sisa_utang"]').empty();
-                    $('[name="kode_supplier"]').append('<option value=' + response.supplier_hutang
-                        .id_supplier + '>' + response.supplier_hutang.kode_supplier + '</option>');
-                    $('[name="nama_supplier"]').append('<option value=' + response.supplier_hutang
-                        .id_supplier + '>' + response.supplier_hutang.nama_supplier + '</option>');
-                    $('[name="sisa_utang"]').val(response.supplier_hutang.sisa_hutang);
+                    $('[name="sisa_konsinyasi"]').empty();
+                    $('[name="kode_supplier"]').append('<option value=' + response.supplier_konsinyasi
+                        .id_supplier + '>' + response.supplier_konsinyasi.kode_supplier + '</option>');
+                    $('[name="nama_supplier"]').append('<option value=' + response.supplier_konsinyasi
+                        .id_supplier + '>' + response.supplier_konsinyasi.nama_supplier + '</option>');
+                    $('[name="sisa_konsinyasi"]').val(response.supplier_konsinyasi.sisa_konsinyasi);
                     $('[name="angsuran"]').val("");
                 }
                 $('#table-angsuran').DataTable();
@@ -256,7 +256,7 @@ function tampil_daftar() {
 
 function batal_transaksi() {
     $.ajax({
-        url: '/toko/transaksi/hutang/cancel/',
+        url: '/toko/transaksi/konsinyasi/cancel/',
         type: 'POST',
         data: {
             nomor_beli: $('[name="nomor_beli"]').val(),
@@ -294,8 +294,8 @@ $(document).ready(function() {
             $(this).val(0);
         }
         
-        if (parseInt($(this).val()) > parseInt($('[name="sisa_utang"]').val())) {
-            $(this).val($('[name="sisa_utang"]').val());
+        if (parseInt($(this).val()) > parseInt($('[name="sisa_konsinyasi"]').val())) {
+            $(this).val($('[name="sisa_konsinyasi"]').val());
         }
     });
 
@@ -303,7 +303,7 @@ $(document).ready(function() {
         var allFilled = false;
         var skip = false;
 
-        document.getElementById('panel-bayar-utang').querySelectorAll('[required]').forEach(function(
+        document.getElementById('panel-bayar-konsinyasi').querySelectorAll('[required]').forEach(function(
             i) {
             if (!skip) {
                 if (!i.value) {
@@ -319,7 +319,7 @@ $(document).ready(function() {
         });
 
         if (allFilled) {
-            bayar_hutang();
+            bayar_konsinyasi();
         }
     });
 

@@ -15,16 +15,20 @@ class LaporanPendapatanController extends Controller
     public function index(Request $request) {
         $cur_date = Carbon::now();
 
-        $data_notif = BarangModel::where('alert_status', 1)->get();
-
         $data_notified = BarangModel::all();
         foreach ($data_notified AS $data) {
             if ($data->stok <= $data->stok_minimal) {
                 BarangModel::where('id', $data->id)->update([
                     'alert_status' => 1
                 ]);
+            } else {
+                BarangModel::where('id', $data->id)->update([
+                    'alert_status' => 0
+                ]);
             }
         }
+
+        $data_notif = BarangModel::where('alert_status', 1)->get();
 
         $tanggal = $request->input('tanggal');
         
@@ -33,9 +37,11 @@ class LaporanPendapatanController extends Controller
                                                 ->select('jurnal.tanggal AS tanggal', 'jurnal.keterangan AS keterangan', 'akun.kode AS kode_akun', 
                                                 'akun.nama AS nama_akun', DB::raw('SUM(jurnal.debit) AS debit'), DB::raw('SUM(jurnal.kredit) AS kredit'))
                                                 ->where('jurnal.tanggal', $tanggal)
-                                                ->where('akun.kode', 'like', '4%')
-                                                ->orWhere('akun.kode', 'like', '5%')
-                                                ->orWhere('akun.kode', 'like', '6%')
+                                                ->where(function($i) {
+                                                    $i->where('akun.kode', 'like', '4%')
+                                                        ->orWhere('akun.kode', 'like', '5%')
+                                                        ->orWhere('akun.kode', 'like', '6%');
+                                                })
                                                 ->groupBy('akun.kode')
                                                 ->get();
                                                 
@@ -45,7 +51,7 @@ class LaporanPendapatanController extends Controller
                                                 ->where('jurnal.tanggal', $tanggal)
                                                 ->where('akun.kode', 'like', '4%')
                                                 ->groupBy('jurnal.tanggal')
-                                                ->first()->jumlah;
+                                                ->first();
                                                 
             $pengeluaran = JurnalModel::join('akun', 'akun.id', '=', 'jurnal.id_akun')
                                                 ->select('jurnal.tanggal AS tanggal', 
@@ -54,8 +60,10 @@ class LaporanPendapatanController extends Controller
                                                 ->where('akun.kode', 'like', '5%')
                                                 ->orWhere('akun.kode', 'like', '6%')
                                                 ->groupBy('jurnal.tanggal')
-                                                ->first()->jumlah;
-                                                
+                                                ->first();
+            
+            // echo $laporan_pendapatan;
+
             return view ('toko.laporan.pendapatan.index', compact('cur_date', 'data_notif', 'data_notified', 'laporan_pendapatan', 'pemasukan', 'pengeluaran', 'tanggal'));
         } else {
             return view ('toko.laporan.pendapatan.index', compact('cur_date', 'data_notif', 'data_notified'));

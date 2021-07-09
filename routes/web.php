@@ -4,6 +4,7 @@ use App\Http\Controllers\Simpan_Pinjam\Dashboard\DashboardController;
 use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\Toko\AuthController;
+use App\Http\Controllers\Toko\DashboardController as TokoDashboardController;
 use App\Http\Controllers\Toko\DataAkunController;
 use App\Http\Controllers\Toko\DataBarangController;
 use App\Http\Controllers\Toko\DataSupplierController;
@@ -19,6 +20,7 @@ use App\Http\Controllers\Toko\Transaksi\Piutang\PiutangController;
 use App\Http\Controllers\Toko\Transaksi\Jurnal\JurnalController;
 use App\Http\Controllers\Toko\Transaksi\TitipJual\TitipJualController;
 use App\Http\Controllers\Toko\Transaksi\JurnalUmum\JurnalUmumController;
+use App\Http\Controllers\Toko\Transaksi\Konsinyasi\KonsinyasiController;
 
 use App\Http\Controllers\Toko\Master\Barang\BarangController;
 use App\Http\Controllers\Toko\Master\Admin\AdminController;
@@ -35,7 +37,6 @@ use App\Http\Controllers\Toko\Laporan\Pendapatan\LaporanPendapatanController;
 use App\Http\Controllers\Toko\Laporan\Penjualan\LaporanPenjualanController;
 use App\Http\Controllers\Toko\Laporan\Persediaan\LaporanPersediaanController;
 use App\Http\Controllers\Toko\Laporan\Retur\LaporanReturPembelianController;
-
 
 /*
 |--------------------------------------------------------------------------
@@ -71,6 +72,8 @@ Route::group(['prefix' => 'api'], function () {
     Route::get('/nomor-jurnal-terima-piutang/{tanggal}', [NomorJurnalController::class, 'nomorJurnalTerimaPiutang']);
     Route::get('/nomor-titip-jual/{tanggal}', [NomorTransaksiController::class, 'nomorTitipJual']);
     Route::get('/nomor-jurnal-titip-jual/{tanggal}', [NomorJurnalController::class, 'nomorJurnalTitipJual']);
+    Route::get('/nomor-konsinyasi/{tanggal}', [NomorTransaksiController::class, 'nomorKonsinyasi']);
+    Route::get('/nomor-jurnal-konsinyasi/{tanggal}', [NomorJurnalController::class, 'nomorJurnalKonsinyasi']);
     Route::get('/nomor-jurnal-umum/{tanggal}', [NomorJurnalController::class, 'nomorJurnalUmum']);
 });
 
@@ -86,12 +89,8 @@ Route::group(['prefix' => 'toko'], function () {
     Route::post('/register/store', [AuthController::class, 'store']);
 
     Route::group(['middleware' => 'auth:toko'], function () {
-        Route::get('/dashboard', function () {
-            return view('toko.dashboard');
-        });
-        Route::get('/', function () {
-            return view('toko.dashboard');
-        });
+        Route::get('/dashboard', [TokoDashboardController::class, 'index']);
+        Route::get('/', [TokoDashboardController::class, 'index']);
 
         Route::get('/logout', [AuthController::class, 'logout']);
 
@@ -130,6 +129,14 @@ Route::group(['prefix' => 'toko'], function () {
                 Route::post('/cancel', [HutangController::class, 'cancel']);
                 Route::get('/{nomor_beli}', [HutangController::class, 'show']);
                 Route::post('/delete/{nomor}', [HutangController::class, 'delete']);
+            });
+
+            Route::group(['prefix' => 'konsinyasi'], function () {
+                Route::get('/', [KonsinyasiController::class, 'index']);
+                Route::post('/store', [KonsinyasiController::class, 'store']);
+                Route::post('/cancel', [KonsinyasiController::class, 'cancel']);
+                Route::get('/{nomor_beli}', [KonsinyasiController::class, 'show']);
+                Route::post('/delete/{nomor}', [KonsinyasiController::class, 'delete']);
             });
 
             Route::group(['prefix' => 'piutang'], function () {

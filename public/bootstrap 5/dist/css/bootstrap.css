@@ -717,6 +717,7 @@ progress {
 }
 
 .col {
+  display: block;
   flex: 1 0 0%;
 }
 

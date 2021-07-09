@@ -18,16 +18,20 @@ use Illuminate\Support\Facades\DB;
 class PenjualanController extends Controller
 {
     public function index() {
-        $data_notif = BarangModel::where('alert_status', 1)->get();
-
         $data_notified = BarangModel::all();
         foreach ($data_notified AS $data) {
             if ($data->stok <= $data->stok_minimal) {
                 BarangModel::where('id', $data->id)->update([
                     'alert_status' => 1
                 ]);
+            } else {
+                BarangModel::where('id', $data->id)->update([
+                    'alert_status' => 0
+                ]);
             }
         }
+
+        $data_notif = BarangModel::where('alert_status', 1)->get();
 
         $cur_date = Carbon::now();
 
@@ -88,7 +92,7 @@ class PenjualanController extends Controller
                                     ->join('tb_anggota', 'tb_anggota.id', '=', 'penjualan.id_anggota')
                                     ->select('penjualan.tanggal AS tanggal', 'penjualan.nomor AS nomor_penjualan', 'penjualan.id_anggota AS id_anggota',
                                             'penjualan.jumlah_bayar AS jumlah_bayar', 'penjualan.jumlah_kembalian AS jumlah_kembalian', 
-                                            'penjualan.pembayaran AS pembayaran', 'tb_anggota.alamat AS alamat', 'tb_anggota.telepon AS telepon')
+                                            'penjualan.pembayaran AS pembayaran', 'tb_anggota.alamat AS alamat', 'tb_anggota.no_hp AS telepon')
                                     ->first();
 
         return response()->json(['code'=>200, 'barang_penjualan' => $barang_penjualan, 'anggota_penjualan' => $anggota_penjualan]);

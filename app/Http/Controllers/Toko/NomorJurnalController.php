@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Toko;
 use App\Http\Controllers\Controller;
 use App\Models\Toko\Transaksi\Hutang\HutangDetailModel;
 use App\Models\Toko\Transaksi\JurnalUmum\JurnalUmumModel;
+use App\Models\Toko\Transaksi\Konsinyasi\KonsinyasiDetailModel;
 use App\Models\Toko\Transaksi\Pembelian\PembelianModel;
 use App\Models\Toko\Transaksi\Penjualan\PenjualanModel;
 use App\Models\Toko\Transaksi\Piutang\PiutangDetailModel;
@@ -57,6 +58,18 @@ class NomorJurnalController extends Controller
             $nomor = "JA" . $tanggal . str_pad(strval($last_nomor[count($last_nomor) - 1]->id + 1), 6, '0', STR_PAD_LEFT);
         } else {
             $nomor = "JA" . $tanggal . str_pad(strval(1), 6, '0', STR_PAD_LEFT);
+        }
+        
+        return $nomor;
+    }
+
+    public function nomorJurnalKonsinyasi($tanggal) {
+        $last_nomor = KonsinyasiDetailModel::all();
+
+        if (count($last_nomor) > 0) {
+            $nomor = "JK" . $tanggal . str_pad(strval($last_nomor[count($last_nomor) - 1]->id + 1), 6, '0', STR_PAD_LEFT);
+        } else {
+            $nomor = "JK" . $tanggal . str_pad(strval(1), 6, '0', STR_PAD_LEFT);
         }
         
         return $nomor;

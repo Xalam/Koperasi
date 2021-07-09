@@ -1,18 +1,18 @@
 <?php
 
-namespace App\Http\Controllers\Toko\Transaksi\Hutang;
+namespace App\Http\Controllers\Toko\Transaksi\Konsinyasi;
 
 use App\Http\Controllers\Controller;
 use App\Models\Toko\Master\Akun\AkunModel;
 use App\Models\Toko\Master\Barang\BarangModel;
 use App\Models\Toko\Master\Supplier\SupplierModel;
-use App\Models\Toko\Transaksi\Hutang\HutangDetailModel;
-use App\Models\Toko\Transaksi\Hutang\HutangModel;
 use App\Models\Toko\Transaksi\Jurnal\JurnalModel;
+use App\Models\Toko\Transaksi\Konsinyasi\KonsinyasiDetailModel;
+use App\Models\Toko\Transaksi\Konsinyasi\KonsinyasiModel;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 
-class HutangController extends Controller
+class KonsinyasiController extends Controller
 {
     public function index() {
         $cur_date = Carbon::now();
@@ -32,15 +32,15 @@ class HutangController extends Controller
 
         $data_notif = BarangModel::where('alert_status', 1)->get();
 
-        $data_hutang = HutangModel::all();
+        $data_konsinyasi = KonsinyasiModel::all();
 
-        if (count($data_hutang) > 0) {
+        if (count($data_konsinyasi) > 0) {
             $pembayaran[''] = "-- Pilih Nomor Beli --";
         } else {
-            $pembayaran[''] = "-- Tidak Ada Data Hutang --";
+            $pembayaran[''] = "-- Tidak Ada Data Konsinyasi --";
         }
             
-        foreach ($data_hutang as $data) {
+        foreach ($data_konsinyasi as $data) {
             $pembayaran[$data->id] = $data->nomor_beli;
         }
 
@@ -60,47 +60,47 @@ class HutangController extends Controller
             $kode_supplier[$data->id] = $data->kode;
         }
 
-        $hutang = HutangModel::join('supplier', 'supplier.id', '=', 'hutang.id_supplier')
-                            ->join('pembelian', 'pembelian.nomor', '=', 'hutang.nomor_beli')
-                            ->select('hutang.*', 'pembelian.tanggal AS tanggal_beli', 
+        $konsinyasi = KonsinyasiModel::join('supplier', 'supplier.id', '=', 'konsinyasi.id_supplier')
+                            ->join('pembelian', 'pembelian.nomor', '=', 'konsinyasi.nomor_beli')
+                            ->select('konsinyasi.*', 'pembelian.tanggal AS tanggal_beli', 
                             'supplier.kode AS kode_supplier', 'supplier.nama AS nama_supplier')
                             ->get();
 
-        return view('toko.transaksi.hutang.index', compact('cur_date', 'data_notified', 'data_notif', 'hutang', 'kode_supplier', 'pembayaran', 'supplier'));
+        return view('toko.transaksi.konsinyasi.index', compact('cur_date', 'data_notified', 'data_notif', 'konsinyasi', 'kode_supplier', 'pembayaran', 'supplier'));
     }
     
     public function show($nomor_beli) {
-        $detail_hutang = HutangDetailModel::join('hutang', 'hutang.id', '=', 'detail_hutang.id_hutang')
-                                    ->select('detail_hutang.*', 'hutang.nomor_beli AS nomor_hutang')
-                                    ->where('detail_hutang.id_hutang', $nomor_beli)
+        $detail_konsinyasi = KonsinyasiDetailModel::join('konsinyasi', 'konsinyasi.id', '=', 'detail_konsinyasi.id_konsinyasi')
+                                    ->select('detail_konsinyasi.*', 'konsinyasi.nomor_beli AS nomor_konsinyasi')
+                                    ->where('detail_konsinyasi.id_konsinyasi', $nomor_beli)
                                     ->get();
 
-        $supplier_hutang = HutangModel::join('supplier', 'supplier.id', '=', 'hutang.id_supplier')
+        $supplier_konsinyasi = KonsinyasiModel::join('supplier', 'supplier.id', '=', 'konsinyasi.id_supplier')
                                     ->select('supplier.nama AS nama_supplier', 'supplier.id AS id_supplier', 
-                                    'supplier.kode AS kode_supplier', 'hutang.sisa_hutang AS sisa_hutang',
-                                    'hutang.jumlah_hutang AS jumlah_hutang')
-                                    ->where('hutang.id', $nomor_beli)
+                                    'supplier.kode AS kode_supplier', 'konsinyasi.sisa_konsinyasi AS sisa_konsinyasi',
+                                    'konsinyasi.jumlah_konsinyasi AS jumlah_konsinyasi')
+                                    ->where('konsinyasi.id', $nomor_beli)
                                     ->first();
 
-        return response()->json(['code'=>200, 'detail_hutang' => $detail_hutang, 'supplier_hutang' => $supplier_hutang]);
+        return response()->json(['code'=>200, 'detail_konsinyasi' => $detail_konsinyasi, 'supplier_konsinyasi' => $supplier_konsinyasi]);
     }
 
     public function store(Request $request) {
-        $id_hutang = $request->input('id_hutang');
+        $id_konsinyasi = $request->input('id_konsinyasi');
         $angsuran = $request->input('angsuran');
-        $sisa_hutang = $request->input('sisa_hutang');
+        $sisa_konsinyasi = $request->input('sisa_konsinyasi');
 
-        $jumlah_angsuran = HutangModel::where('id', $id_hutang)->first()->jumlah_angsuran;
+        $jumlah_angsuran = KonsinyasiModel::where('id', $id_konsinyasi)->first()->jumlah_angsuran;
  
-        HutangModel::where('id', $id_hutang)->update([
+        KonsinyasiModel::where('id', $id_konsinyasi)->update([
             'jumlah_angsuran' => $jumlah_angsuran + $angsuran,
-            'sisa_hutang' => $sisa_hutang
+            'sisa_konsinyasi' => $sisa_konsinyasi
         ]);
         
-        $data_hutang = HutangModel::where('id', $id_hutang)->first();
+        $data_konsinyasi = KonsinyasiModel::where('id', $id_konsinyasi)->first();
 
-        if ($data_hutang->sisa_hutang == 0) {
-            HutangModel::where('id', $id_hutang)->update([
+        if ($data_konsinyasi->sisa_konsinyasi == 0) {
+            KonsinyasiModel::where('id', $id_konsinyasi)->update([
                 'status' => 1
             ]);
         }
@@ -111,13 +111,13 @@ class HutangController extends Controller
             'debit' => $kas->debit - $angsuran
         ]);
 
-        $hutang = AkunModel::where('kode', 2101)->first();
+        $konsinyasi = AkunModel::where('kode', 2101)->first();
 
         AkunModel::where('kode', 2101)->update([
-            'kredit' => $hutang->kredit - $angsuran
+            'kredit' => $konsinyasi->kredit - $angsuran
         ]);
 
-        HutangDetailModel::create($request->all());
+        KonsinyasiDetailModel::create($request->all());
             
         $keterangan = "Penerimaan angsuran.";
 
@@ -125,7 +125,7 @@ class HutangController extends Controller
             'nomor' => $request->input('nomor_jurnal'),
             'tanggal' => $request->input('tanggal'),
             'keterangan' => $keterangan,
-            'id_akun' => $hutang->id,
+            'id_akun' => $konsinyasi->id,
             'debit' => $angsuran,
             'kredit' => 0 
         ]); 
@@ -143,28 +143,28 @@ class HutangController extends Controller
     }
 
     public function delete($id) {
-        $data_angsuran = HutangDetailModel::where('id', $id)->first();
-        $data_hutang = HutangModel::where('id', $data_angsuran->id_hutang)->first();
+        $data_angsuran = KonsinyasiDetailModel::where('id', $id)->first();
+        $data_konsinyasi = KonsinyasiModel::where('id', $data_angsuran->id_konsinyasi)->first();
 
-        HutangModel::where('id', $data_angsuran->id_hutang)->update([
-            'jumlah_angsuran' => $data_hutang->jumlah_angsuran - $data_angsuran->angsuran
+        KonsinyasiModel::where('id', $data_angsuran->id_konsinyasi)->update([
+            'jumlah_angsuran' => $data_konsinyasi->jumlah_angsuran - $data_angsuran->angsuran
         ]);
         
-        $data_hutang = HutangModel::where('id', $data_angsuran->id_hutang)->first();
+        $data_konsinyasi = KonsinyasiModel::where('id', $data_angsuran->id_konsinyasi)->first();
 
-        HutangModel::where('id', $data_angsuran->id_hutang)->update([
-            'sisa_hutang' => $data_hutang->jumlah_hutang - $data_hutang->jumlah_angsuran
+        KonsinyasiModel::where('id', $data_angsuran->id_konsinyasi)->update([
+            'sisa_konsinyasi' => $data_konsinyasi->jumlah_konsinyasi - $data_konsinyasi->jumlah_angsuran
         ]);
         
-        $data_hutang = HutangModel::where('id', $data_angsuran->id_hutang)->first();
+        $data_konsinyasi = KonsinyasiModel::where('id', $data_angsuran->id_konsinyasi)->first();
 
-        if ($data_hutang->sisa_hutang > 0) {
-            HutangModel::where('id', $data_angsuran->id_hutang)->update([
+        if ($data_konsinyasi->sisa_konsinyasi > 0) {
+            KonsinyasiModel::where('id', $data_angsuran->id_konsinyasi)->update([
                 'status' => 0
             ]);
         }
 
-        HutangDetailModel::where('id', $id)->delete();
+        KonsinyasiDetailModel::where('id', $id)->delete();
         JurnalModel::where('nomor', $data_angsuran->nomor_jurnal)->delete();
         
         return response()->json(['code'=>200]);
