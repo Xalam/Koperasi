@@ -14,7 +14,7 @@ class Angsuran extends Model
 
     protected $fillable = [
         'kode_angsuran', 'id_pinjaman', 'tanggal', 'nominal_angsuran',
-        'sisa_angsuran', 'sisa_bayar', 'status', 'lunas', 'jenis', 'keterangan', 'kode_jurnal'
+        'sisa_angsuran', 'sisa_bayar', 'status', 'lunas', 'jenis', 'total_bayar', 'keterangan', 'kode_jurnal'
     ];
 
     public function pinjaman()

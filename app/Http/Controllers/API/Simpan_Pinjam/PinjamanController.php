@@ -6,6 +6,7 @@ use App\Http\Controllers\API\ResponseFormatter;
 use App\Http\Controllers\Controller;
 use App\Models\Simpan_Pinjam\Master\Anggota\Anggota;
 use App\Models\Simpan_Pinjam\Pengaturan\Pengaturan;
+use App\Models\Simpan_Pinjam\Pinjaman\Angsuran;
 use App\Models\Simpan_Pinjam\Pinjaman\Pinjaman;
 use App\Models\Toko\Transaksi\Piutang\PiutangModel;
 use Illuminate\Http\Request;
@@ -113,5 +114,24 @@ class PinjamanController extends Controller
                 return ResponseFormatter::success($data, 'Berhasil menambah pengajuan pinjaman');
             }
         }
+    }
+
+    public function history()
+    {
+        $idAnggota = getallheaders()['id'];
+
+        $data['pengajuan'] = Pinjaman::where('id_anggota', $idAnggota)->orderBy('tanggal', 'DESC')->get();
+
+        $data['angsuran']  = Angsuran::with('pinjaman')
+            ->whereHas('pinjaman', function ($query) use ($idAnggota) {
+                $query->where('id_anggota', $idAnggota);
+            })->where('jenis', 1)->orderBy('tanggal', 'DESC')->get();
+
+        $data['pelunasan']  = Angsuran::with('pinjaman')
+            ->whereHas('pinjaman', function ($query) use ($idAnggota) {
+                $query->where('id_anggota', $idAnggota);
+            })->where('jenis', 2)->orderBy('tanggal', 'DESC')->get();
+
+        return ResponseFormatter::success($data, 'Berhasil mendapatkan data');
     }
 }

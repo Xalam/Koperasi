@@ -19,9 +19,11 @@ class JatuhTempoController extends Controller
      */
     public function index()
     {
-        $angsuran = Angsuran::with('pinjaman')->whereIn('id', function ($q) {
-            $q->select(DB::raw('MAX(id) FROM tb_angsuran'))->groupBy('id_pinjaman');
-        })->where('jenis', 2)->orderBy('id', 'DESC')->get();
+        // $angsuran = Angsuran::with('pinjaman')->whereIn('id', function ($q) {
+        //     $q->select(DB::raw('MAX(id) FROM tb_angsuran'))->groupBy('id_pinjaman');
+        // })->where('jenis', 2)->orderBy('id', 'DESC')->get();
+
+        $angsuran = Angsuran::with('pinjaman')->where('jenis', 2)->orderBy('id', 'DESC')->get();
 
         if (request()->ajax()) {
             $data = [];
@@ -96,10 +98,11 @@ class JatuhTempoController extends Controller
         $angsuran->nominal_angsuran = $pinjamanUpdate->nominal_angsuran;
         $angsuran->sisa_angsuran    = 0;
         $angsuran->sisa_bayar       = 0;
-        $angsuran->potongan         = str_replace('.', '', $request->potongan);
+        $angsuran->potongan         = str_replace(',', '', $request->potongan);
         $angsuran->status           = 1;
         $angsuran->lunas            = 1;
         $angsuran->jenis            = 2;
+        $angsuran->total_bayar      = str_replace(',', '', $request->total_bayar);
         $angsuran->keterangan       = $request->keterangan;
         $angsuran->kode_jurnal      = 'JU-' . str_pad($idJurnal, 6, '0', STR_PAD_LEFT);
         $angsuran->save();
@@ -231,7 +234,7 @@ class JatuhTempoController extends Controller
         $jurnal->kredit         = 0;
         $jurnal->save();
 
-        return redirect()->route('angsuran.index')->with([
+        return redirect()->route('tempo.index')->with([
             'success' => 'Berhasil melunasi angsuran'
         ]);
     }

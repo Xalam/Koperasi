@@ -25,6 +25,8 @@ Route::namespace('API')->group(function () {
         Route::get('settings', 'Simpan_Pinjam\PengaturanController@index');
 
         Route::post('pinjaman', 'Simpan_Pinjam\PinjamanController@index');
+
+        Route::get('pinjaman-history', 'Simpan_Pinjam\PinjamanController@history');
     });
 
     Route::prefix('toko')->group(function () {

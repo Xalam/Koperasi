@@ -89,6 +89,7 @@
                                     <th style="width:50%">Jumlah Bayar</th>
                                     <td>
                                         <input type="text" class="form-control" id="total-bayar" disabled>
+                                        <input type="text" class="form-control" name="total_bayar" id="hide-bayar" hidden>
                                     </td>
                                 </tr>
                                 <tr>
@@ -138,6 +139,7 @@
             let totalBayar = (bayarAngsuran * tenorAngsuran) + bunga;
             let potongan = bunga * tenorAngsuran;
 
+            $('#hide-bayar').attr('value', totalBayar);
             $('#total-bayar').attr('value', formatMoney(totalBayar));
             $('#hide-potongan').attr('value', potongan);
             $('#potongan').attr('value', formatMoney(potongan))

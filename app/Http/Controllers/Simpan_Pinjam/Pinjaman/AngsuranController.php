@@ -20,9 +20,10 @@ class AngsuranController extends Controller
      */
     public function index()
     {
-        $angsuran = Angsuran::with('pinjaman')->whereIn('id', function ($q) {
-            $q->select(DB::raw('MAX(id) FROM tb_angsuran'))->groupBy('id_pinjaman');
-        })->where('jenis', 1)->orderBy('id', 'DESC')->get();
+        // $angsuran = Angsuran::with('pinjaman')->whereIn('id', function ($q) {
+        //     $q->select(DB::raw('MAX(id) FROM tb_angsuran'))->groupBy('id_pinjaman');
+        // })->where('jenis', 1)->orderBy('id', 'DESC')->get();
+        $angsuran = Angsuran::with('pinjaman')->where('jenis', 1)->orderBy('id', 'DESC')->get();
 
         if (request()->ajax()) {
             $data = [];
