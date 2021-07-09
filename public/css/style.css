@@ -12,9 +12,20 @@ body {
     z-index: 1000;
 }
 
+#notif-sell-popover {
+    position: fixed;
+    bottom: 18px;
+    padding-top: 16px;
+    padding-right: 16px;
+    padding-left: 16px;
+    right: 10px;
+    z-index: 1000;
+}
+
 .alert-wrapper {
     height: auto;
-    width: 200px;
+    padding: 0;
+    width: 250px;
 }
 
 .alert-close {

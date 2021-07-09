@@ -280,7 +280,8 @@ class PenjualanController extends Controller
             'jumlah_harga' => $request->input('jumlah_harga'),
             'jumlah_bayar' => $jumlah_bayar,
             'jumlah_kembalian' => $jumlah_kembalian,
-            'pembayaran' => $request->input('pembayaran')
+            'pembayaran' => $request->input('pembayaran'),
+            'notified' => 1
         ]);
         
         return redirect('toko/transaksi/penjualan');
@@ -299,5 +300,18 @@ class PenjualanController extends Controller
         PenjualanBarangModel::where('nomor', $nomor)->delete();
         
         return response()->json(['code'=>200]);
+    }
+
+    public function showNotification() {
+        $data = PenjualanModel::join('tb_anggota', 'tb_anggota.id', '=', 'penjualan.id_anggota')
+                                ->select('penjualan.*', 'tb_anggota.nama_anggota')
+                                ->where('notified', 0)
+                                ->get();
+                                
+        PenjualanModel::where('notified', 0)->update([
+            'notified' => 1
+        ]);
+
+        return response()->json(['code' => 200, 'data' => $data]);
     }
 }

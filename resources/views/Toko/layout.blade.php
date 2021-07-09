@@ -58,6 +58,8 @@
             @endforeach
     </div>
     @endif
+    <div id="notif-sell-popover">
+    </div>
 </body>
 
 </html>
@@ -67,6 +69,7 @@
 <script type="text/javascript">
 $(document).ready(function() {
     $('#table-data').DataTable();
+    setTimeout(showNotificationPenjualan(), 5000);
 });
 
 function close_notification($id) {
@@ -77,6 +80,41 @@ function close_notification($id) {
             if (response.code == 200) {
                 $('#notification-count').text(response.data_barang.length);
             }
+        }
+    });
+}
+
+function showNotificationPenjualan() {
+    $.ajax({
+        url: '/api/show-notification-penjualan',
+        type: 'GET',
+        success: function(response) {
+            if (response.code == 200) {
+                if (response.data.length > 0) {
+                    $.each(response.data, function(i, v) {
+                        $pembayaran = '';
+                        if (v.pembayaran == 1) {
+                            $pembayaran = 'kredit';
+                        } else {
+                            $pembayaran = 'tunai';
+                        }
+
+                        $('#notif-sell-popover').append(`<div class="alert-wrapper">` +
+                                `<div class="alert alert-primary align-self-center">` +
+                                    `<div class="alert-close close" data-dismiss="alert" aria-label="close">` +
+                                        `<i class="fas fa-times" aria-hidden="true"></i>` +
+                                    `</div>` +
+                                    `<p class="alert-message"><b>` + v.nama_anggota + `</b> <br> Melakukan pembelian barang secara ` +
+                                        $pembayaran + ` sebesar ` + v.jumlah_harga + `</p>` +
+                                `</div>` +
+                            `</div>`
+                        );
+                    });
+                }
+            }
+        },
+        complete: function(data) {
+            setTimeout(showNotificationPenjualan(), 5000);
         }
     });
 }

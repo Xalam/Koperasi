@@ -19,6 +19,7 @@ class PenjualanModel extends Model
         'jumlah_harga',
         'jumlah_bayar',
         'jumlah_kembalian',
-        'pembayaran'
+        'pembayaran',
+        'notified'
     ];
 }

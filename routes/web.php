@@ -60,6 +60,7 @@ Route::group(['prefix' => 'api'], function () {
     Route::get('/data-retur-supplier/{id}', [DataSupplierController::class, 'dataReturSupplier']);
     Route::get('/data-hutang-supplier/{id}', [DataSupplierController::class, 'dataHutangSupplier']);
     Route::get('/data-anggota/{id}', [DataAnggotaController::class, 'dataAnggota']);
+    Route::get('/show-notification-penjualan', [PenjualanController::class, 'showNotification']);
     Route::get('/nomor-pembelian/{tanggal}', [NomorTransaksiController::class, 'nomorPembelian']);
     Route::get('/nomor-jurnal-pembelian/{tanggal}', [NomorJurnalController::class, 'nomorJurnalPembelian']);
     Route::get('/nomor-retur-pembelian/{tanggal}', [NomorTransaksiController::class, 'nomorReturPembelian']);

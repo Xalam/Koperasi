@@ -141,6 +141,6 @@ class DashboardController extends Controller
         $chartLaba->colours = $coloursLaba;
         $chartLaba->borders = $bordersLaba;
 
-        return view ('toko.dashboard', compact('chartLaba', 'chartPenjualan', 'data_notif', 'data_notified', 'year'));
+        return view ('toko.dashboard', compact('chartLaba', 'chartPenjualan', 'data_notif', 'data_notified', 'total_penjualan', 'total_pembelian', 'total_pendapatan', 'year'));
     }
 }
