@@ -42,23 +42,23 @@
             </div>
         </main>
     </div>
-
-    @if (isset($data_notified) && count($data_notified) > 0)
-    <div id="alert-popover" class="alert-wrapper">
-        @foreach ($data_notified as $data)
-        @if ($data->stok <= $data->stok_minimal && $data->alert_status == 0)
-            <div class="alert alert-primary">
-                <div class="alert-close close" data-dismiss="alert" aria-label="close">
-                    <i class="fas fa-times" aria-hidden="true"></i>
+    <div id="alert-popover">
+        @if (isset($data_notified) && count($data_notified) > 0)
+        <div class="alert-wrapper">
+            @foreach ($data_notified as $data)
+            @if ($data->stok <= $data->stok_minimal && $data->alert_status == 0)
+                <div class="alert alert-primary">
+                    <div class="alert-close close" data-dismiss="alert" aria-label="close">
+                        <i class="fas fa-times" aria-hidden="true"></i>
+                    </div>
+                    <p class="alert-message"><b>Pemberitahuan Persediaan Barang</b> <br> Persediaan {{$data->nama}}
+                        kurang
+                        dari stok minimal</p>
                 </div>
-                <p class="alert-message"><b>Pemberitahuan Persediaan Barang</b> <br> Persediaan {{$data->nama}} kurang
-                    dari stok minimal</p>
-            </div>
-            @endif
-            @endforeach
-    </div>
-    @endif
-    <div id="notif-sell-popover">
+                @endif
+                @endforeach
+        </div>
+        @endif
     </div>
 </body>
 
@@ -99,14 +99,15 @@ function showNotificationPenjualan() {
                             $pembayaran = 'tunai';
                         }
 
-                        $('#notif-sell-popover').append(`<div class="alert-wrapper">` +
-                                `<div class="alert alert-primary align-self-center">` +
-                                    `<div class="alert-close close" data-dismiss="alert" aria-label="close">` +
-                                        `<i class="fas fa-times" aria-hidden="true"></i>` +
-                                    `</div>` +
-                                    `<p class="alert-message"><b>` + v.nama_anggota + `</b> <br> Melakukan pembelian barang secara ` +
-                                        $pembayaran + ` sebesar ` + v.jumlah_harga + `</p>` +
-                                `</div>` +
+                        $('#alert-popover').append(`<div class="alert-wrapper">` +
+                            `<div class="alert alert-success align-self-center">` +
+                            `<div class="alert-close close" data-dismiss="alert" aria-label="close">` +
+                            `<i class="fas fa-times" aria-hidden="true"></i>` +
+                            `</div>` +
+                            `<p class="alert-message"><b>` + v.nama_anggota +
+                            `</b> <br> Melakukan pembelian barang secara ` +
+                            $pembayaran + ` sebesar ` + v.jumlah_harga + `</p>` +
+                            `</div>` +
                             `</div>`
                         );
                     });
