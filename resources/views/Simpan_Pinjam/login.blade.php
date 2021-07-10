@@ -194,6 +194,12 @@
             </div>
         </div>
     </div>
+    <div class="row">
+        <a href="{{ route('login') }}" class="btn btn-danger-outline btn-lg text-white"
+            style="background-color: transparent;">
+            <i class="fas fa-arrow-left fa-sm text-white"></i>&nbsp;Kembali
+        </a>
+    </div>
 
     <!-- jQuery -->
     <script src="{{ asset('assets/plugins/jquery/jquery.min.js') }}"></script>
