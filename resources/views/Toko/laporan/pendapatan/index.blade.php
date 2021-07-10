@@ -63,7 +63,7 @@
                     <th class="d-none"></th>
                     <th class="d-none"></th>
                     <th class="d-none"></th>
-                    <th class="align-middle text-center">{{$pemasukan-$pengeluaran}}</th>
+                    <th class="align-middle text-center">{{$pemasukan->jumlah-$pengeluaran->jumlah}}</th>
                 </tr>
                 @endif
             </table>

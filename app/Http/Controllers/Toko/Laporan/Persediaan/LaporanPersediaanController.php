@@ -11,16 +11,20 @@ use Maatwebsite\Excel\Facades\Excel;
 class LaporanPersediaanController extends Controller
 {
     public function index(Request $request) {
-        $data_notif = BarangModel::where('alert_status', 1)->get();
-
         $data_notified = BarangModel::all();
         foreach ($data_notified AS $data) {
             if ($data->stok <= $data->stok_minimal) {
                 BarangModel::where('id', $data->id)->update([
                     'alert_status' => 1
                 ]);
+            } else {
+                BarangModel::where('id', $data->id)->update([
+                    'alert_status' => 0
+                ]);
             }
         }
+
+        $data_notif = BarangModel::where('alert_status', 1)->get();
 
         $jumlah_barang = $request->input('jumlah_barang');
 

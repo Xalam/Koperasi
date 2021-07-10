@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Toko;
 use App\Http\Controllers\Controller;
 use App\Models\Toko\Transaksi\Hutang\HutangDetailModel;
 use App\Models\Toko\Transaksi\Hutang\HutangModel;
+use App\Models\Toko\Transaksi\Konsinyasi\KonsinyasiDetailModel;
 use App\Models\Toko\Transaksi\Pembelian\PembelianModel;
 use App\Models\Toko\Transaksi\Penjualan\PenjualanModel;
 use App\Models\Toko\Transaksi\Piutang\PiutangDetailModel;
@@ -81,6 +82,18 @@ class NomorTransaksiController extends Controller
             $nomor = "T" . $tanggal . str_pad(strval($last_nomor[count($last_nomor) - 1]->id + 1), 6, '0', STR_PAD_LEFT);
         } else {
             $nomor = "T" . $tanggal . str_pad(strval(1), 6, '0', STR_PAD_LEFT);
+        }
+        
+        return $nomor;
+    }
+
+    public function nomorKonsinyasi($tanggal) {
+        $last_nomor = KonsinyasiDetailModel::all();
+
+        if (count($last_nomor) > 0) {
+            $nomor = "K" . $tanggal . str_pad(strval($last_nomor[count($last_nomor) - 1]->id + 1), 6, '0', STR_PAD_LEFT);
+        } else {
+            $nomor = "K" . $tanggal . str_pad(strval(1), 6, '0', STR_PAD_LEFT);
         }
         
         return $nomor;

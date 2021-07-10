@@ -13,16 +13,20 @@ class SupplierController extends Controller
     public function index() {
         $supplier = SupplierModel::all();
 
-        $data_notif = BarangModel::where('alert_status', 1)->get();
-
         $data_notified = BarangModel::all();
         foreach ($data_notified AS $data) {
             if ($data->stok <= $data->stok_minimal) {
                 BarangModel::where('id', $data->id)->update([
                     'alert_status' => 1
                 ]);
+            } else {
+                BarangModel::where('id', $data->id)->update([
+                    'alert_status' => 0
+                ]);
             }
         }
+
+        $data_notif = BarangModel::where('alert_status', 1)->get();
 
         return view('toko.master.supplier.index', compact('data_notified', 'data_notif', 'supplier'));
     }

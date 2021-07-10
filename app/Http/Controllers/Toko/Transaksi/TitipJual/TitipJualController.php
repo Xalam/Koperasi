@@ -18,7 +18,6 @@ use Carbon\Carbon;
 class TitipJualController extends Controller
 {
     public function index() {
-        $data_notif = BarangModel::where('alert_status', 1)->get();
 
         $data_notified = BarangModel::all();
         foreach ($data_notified AS $data) {
@@ -26,8 +25,14 @@ class TitipJualController extends Controller
                 BarangModel::where('id', $data->id)->update([
                     'alert_status' => 1
                 ]);
+            } else {
+                BarangModel::where('id', $data->id)->update([
+                    'alert_status' => 0
+                ]);
             }
         }
+
+        $data_notif = BarangModel::where('alert_status', 1)->get();
 
         $cur_date = Carbon::now();
 
@@ -86,7 +91,7 @@ class TitipJualController extends Controller
                                     ->join('supplier', 'supplier.id', '=', 'titip_jual.id_supplier')
                                     ->select('titip_jual.tanggal AS tanggal', 'titip_jual.nomor AS nomor_titip_jual', 'titip_jual.id_supplier AS id_supplier',
                                             'titip_jual.jumlah_bayar AS jumlah_bayar', 'titip_jual.jumlah_kembalian AS jumlah_kembalian', 
-                                            'titip_jual.pembayaran AS pembayaran', 'supplier.alamat AS alamat', 'supplier.telepon AS telepon')
+                                            'supplier.alamat AS alamat', 'supplier.telepon AS telepon')
                                     ->first();
 
         return response()->json(['code'=>200, 'barang_titip_jual' => $barang_titip_jual, 'supplier_titip_jual' => $supplier_titip_jual]);
@@ -127,14 +132,14 @@ class TitipJualController extends Controller
         }
 
         $persediaan_konsinyasi = AkunModel::where('kode', 1131)->first();
-        $hutang_konsinyasi = AkunModel::where('kode', 1102)->first();
+        $hutang_konsinyasi = AkunModel::where('kode', 2102)->first();
 
-        AkunModel::where('kode', 1132)->update([
+        AkunModel::where('kode', 1131)->update([
             'debit' => $persediaan_konsinyasi->debit + $request->input('jumlah_harga')
         ]);
 
         AkunModel::where('kode', 2102)->update([
-            'debit' => $hutang_konsinyasi->debit - $request->input('jumlah_harga')
+            'debit' => $hutang_konsinyasi->debit + $request->input('jumlah_harga')
         ]);
 
         $jumlah_bayar = 0;

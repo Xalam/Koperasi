@@ -18,16 +18,20 @@ use Illuminate\Support\Facades\DB;
 class PenjualanController extends Controller
 {
     public function index() {
-        $data_notif = BarangModel::where('alert_status', 1)->get();
-
         $data_notified = BarangModel::all();
         foreach ($data_notified AS $data) {
             if ($data->stok <= $data->stok_minimal) {
                 BarangModel::where('id', $data->id)->update([
                     'alert_status' => 1
                 ]);
+            } else {
+                BarangModel::where('id', $data->id)->update([
+                    'alert_status' => 0
+                ]);
             }
         }
+
+        $data_notif = BarangModel::where('alert_status', 1)->get();
 
         $cur_date = Carbon::now();
 
@@ -54,22 +58,22 @@ class PenjualanController extends Controller
             $pembayaran[$data->id] = $data->nama;
         }
 
-        $data_anggota = AnggotaModel::orderBy('nama')
+        $data_anggota = AnggotaModel::orderBy('nama_anggota')
                                         ->get();
 
         $anggota[''] = '-- Pilih Nama Anggota --';
         $anggota[0] = 'Masyarakat Umum';
         foreach ($data_anggota as $data) {
-            $anggota[$data->id] = $data->nama;
+            $anggota[$data->id] = $data->nama_anggota;
         }
 
-        $data_anggota = AnggotaModel::orderBy('kode')
+        $data_anggota = AnggotaModel::orderBy('kd_anggota')
                                         ->get();
 
         $kode_anggota[''] = '-- Pilih Kode Anggota --';
         $kode_anggota[0] = 'Masyarakat Umum';
         foreach ($data_anggota as $data) {
-            $kode_anggota[$data->id] = $data->kode;
+            $kode_anggota[$data->id] = $data->kd_anggota;
         }
 
         return view('toko.transaksi.penjualan.index', compact('barang', 'cur_date', 'data_notified', 'data_notif', 'kode_barang', 'kode_anggota', 'pembayaran', 'anggota'));
@@ -85,10 +89,10 @@ class PenjualanController extends Controller
                                     ->get();
 
         $anggota_penjualan = PenjualanModel::where('penjualan.nomor', $nomor)
-                                    ->join('anggota', 'anggota.id', '=', 'penjualan.id_anggota')
+                                    ->join('tb_anggota', 'tb_anggota.id', '=', 'penjualan.id_anggota')
                                     ->select('penjualan.tanggal AS tanggal', 'penjualan.nomor AS nomor_penjualan', 'penjualan.id_anggota AS id_anggota',
                                             'penjualan.jumlah_bayar AS jumlah_bayar', 'penjualan.jumlah_kembalian AS jumlah_kembalian', 
-                                            'penjualan.pembayaran AS pembayaran', 'anggota.alamat AS alamat', 'anggota.telepon AS telepon')
+                                            'penjualan.pembayaran AS pembayaran', 'tb_anggota.alamat AS alamat', 'tb_anggota.no_hp AS telepon')
                                     ->first();
 
         return response()->json(['code'=>200, 'barang_penjualan' => $barang_penjualan, 'anggota_penjualan' => $anggota_penjualan]);
@@ -276,7 +280,8 @@ class PenjualanController extends Controller
             'jumlah_harga' => $request->input('jumlah_harga'),
             'jumlah_bayar' => $jumlah_bayar,
             'jumlah_kembalian' => $jumlah_kembalian,
-            'pembayaran' => $request->input('pembayaran')
+            'pembayaran' => $request->input('pembayaran'),
+            'notified' => 1
         ]);
         
         return redirect('toko/transaksi/penjualan');
@@ -295,5 +300,18 @@ class PenjualanController extends Controller
         PenjualanBarangModel::where('nomor', $nomor)->delete();
         
         return response()->json(['code'=>200]);
+    }
+
+    public function showNotification() {
+        $data = PenjualanModel::join('tb_anggota', 'tb_anggota.id', '=', 'penjualan.id_anggota')
+                                ->select('penjualan.*', 'tb_anggota.nama_anggota')
+                                ->where('notified', 0)
+                                ->get();
+                                
+        PenjualanModel::where('notified', 0)->update([
+            'notified' => 1
+        ]);
+
+        return response()->json(['code' => 200, 'data' => $data]);
     }
 }

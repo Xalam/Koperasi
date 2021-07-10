@@ -5,8 +5,8 @@ $('[name="kode_anggota"]').change(function () {
         $.get(`${base_url}api/data-anggota/${id_anggota}`, function (data, status) {
             data.forEach(x => {
                 $('[name="alamat"]').val(x.alamat);
-                $('[name="telepon"]').val(x.telepon);
-                $('[name="wa"]').val(x.wa);
+                $('[name="telepon"]').val(x.no_hp);
+                $('[name="wa"]').val(x.no_wa);
             });
         });
     } else {
@@ -24,8 +24,8 @@ $('[name="nama_anggota"]').change(function () {
         $.get(`${base_url}api/data-anggota/${id_anggota}`, function (data, status) {
             data.forEach(x => {
                 $('[name="alamat"]').val(x.alamat);
-                $('[name="telepon"]').val(x.telepon);
-                $('[name="wa"]').val(x.wa);
+                $('[name="telepon"]').val(x.no_hp);
+                $('[name="wa"]').val(x.no_wa);
             });
         });
     } else {

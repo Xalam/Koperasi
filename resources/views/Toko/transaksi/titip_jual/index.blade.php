@@ -13,7 +13,7 @@
 <div class="card m-6">
     <p class="card-header bg-light">Tambah Titip Jual</p>
     <div id="form" class="card-body">
-        {!! Form::open(['url' => '/toko/transaksi/titip-jual/beli']) !!}
+        {!! Form::open(['url' => '/toko/transaksi/titip-jual/buy']) !!}
         <div class="row-lg align-item-center mb-2">
             {!! Form::label(null, 'Tanggal', ['class' => 'col-lg-2']) !!}
             {!! Form::date('tanggal', $cur_date, ['class' => 'col-lg-2 form-control form-control-sm', 'required']) !!}
@@ -231,19 +231,8 @@ function tampil_daftar() {
                     $('[name="alamat"]').val(response.supplier_titip_jual.alamat);
                     $('[name="telepon"]').val(response.supplier_titip_jual.telepon);
                     $('[name="wa"]').val(response.supplier_titip_jual.wa);
-
-                    $('[name="pembayaran"]').val(response.supplier_titip_jual.pembayaran);
-                }
-
-                if ($('[name="pembayaran"]').val() == 1) {
-                    $('[for="dibayar"]').addClass('d-none');
-                    $('[name="jumlah_bayar"]').addClass('d-none');
-                } else {
-                    $('[for="dibayar"]').removeClass('d-none');
-                    $('[name="jumlah_bayar"]').removeClass('d-none');
                 }
                 $('#table-titip-jual').DataTable();
-                kalkulasi_pembayaran();
                 return false;
             }
         }
@@ -289,10 +278,6 @@ $(document).ready(function() {
     $('[name="jumlah"]').change(function() {
         if (parseInt($(this).val()) < 0) {
             $(this).val(0);
-        }
-
-        if ($(this).val() > $('[name="stok"]').val()) {
-            $(this).val($('[name="stok"]').val());
         }
         $('[name="total_harga"]').val($('[name="harga_satuan"]').val() * $(this).val());
     });

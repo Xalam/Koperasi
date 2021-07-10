@@ -3,6 +3,8 @@
 use App\Http\Controllers\Simpan_Pinjam\Dashboard\DashboardController;
 use Illuminate\Support\Facades\Route;
 
+use App\Http\Controllers\Toko\AuthController;
+use App\Http\Controllers\Toko\DashboardController as TokoDashboardController;
 use App\Http\Controllers\Toko\DataAkunController;
 use App\Http\Controllers\Toko\DataBarangController;
 use App\Http\Controllers\Toko\DataSupplierController;
@@ -10,8 +12,6 @@ use App\Http\Controllers\Toko\DataAnggotaController;
 use App\Http\Controllers\Toko\NomorTransaksiController;
 use App\Http\Controllers\Toko\NomorJurnalController;
 
-use App\Http\Controllers\Toko\Android\AndroidController;
-use App\Http\Controllers\Toko\AuthController;
 use App\Http\Controllers\Toko\Transaksi\Pembelian\PembelianController;
 use App\Http\Controllers\Toko\Transaksi\Penjualan\PenjualanController;
 use App\Http\Controllers\Toko\Transaksi\Retur\ReturPembelianController;
@@ -20,6 +20,7 @@ use App\Http\Controllers\Toko\Transaksi\Piutang\PiutangController;
 use App\Http\Controllers\Toko\Transaksi\Jurnal\JurnalController;
 use App\Http\Controllers\Toko\Transaksi\TitipJual\TitipJualController;
 use App\Http\Controllers\Toko\Transaksi\JurnalUmum\JurnalUmumController;
+use App\Http\Controllers\Toko\Transaksi\Konsinyasi\KonsinyasiController;
 
 use App\Http\Controllers\Toko\Master\Barang\BarangController;
 use App\Http\Controllers\Toko\Master\Admin\AdminController;
@@ -36,7 +37,6 @@ use App\Http\Controllers\Toko\Laporan\Pendapatan\LaporanPendapatanController;
 use App\Http\Controllers\Toko\Laporan\Penjualan\LaporanPenjualanController;
 use App\Http\Controllers\Toko\Laporan\Persediaan\LaporanPersediaanController;
 use App\Http\Controllers\Toko\Laporan\Retur\LaporanReturPembelianController;
-
 
 /*
 |--------------------------------------------------------------------------
@@ -60,6 +60,7 @@ Route::group(['prefix' => 'api'], function () {
     Route::get('/data-retur-supplier/{id}', [DataSupplierController::class, 'dataReturSupplier']);
     Route::get('/data-hutang-supplier/{id}', [DataSupplierController::class, 'dataHutangSupplier']);
     Route::get('/data-anggota/{id}', [DataAnggotaController::class, 'dataAnggota']);
+    Route::get('/show-notification-penjualan', [PenjualanController::class, 'showNotification']);
     Route::get('/nomor-pembelian/{tanggal}', [NomorTransaksiController::class, 'nomorPembelian']);
     Route::get('/nomor-jurnal-pembelian/{tanggal}', [NomorJurnalController::class, 'nomorJurnalPembelian']);
     Route::get('/nomor-retur-pembelian/{tanggal}', [NomorTransaksiController::class, 'nomorReturPembelian']);
@@ -72,6 +73,8 @@ Route::group(['prefix' => 'api'], function () {
     Route::get('/nomor-jurnal-terima-piutang/{tanggal}', [NomorJurnalController::class, 'nomorJurnalTerimaPiutang']);
     Route::get('/nomor-titip-jual/{tanggal}', [NomorTransaksiController::class, 'nomorTitipJual']);
     Route::get('/nomor-jurnal-titip-jual/{tanggal}', [NomorJurnalController::class, 'nomorJurnalTitipJual']);
+    Route::get('/nomor-konsinyasi/{tanggal}', [NomorTransaksiController::class, 'nomorKonsinyasi']);
+    Route::get('/nomor-jurnal-konsinyasi/{tanggal}', [NomorJurnalController::class, 'nomorJurnalKonsinyasi']);
     Route::get('/nomor-jurnal-umum/{tanggal}', [NomorJurnalController::class, 'nomorJurnalUmum']);
 });
 
@@ -87,15 +90,8 @@ Route::group(['prefix' => 'toko'], function () {
     Route::post('/register/store', [AuthController::class, 'store']);
 
     Route::group(['middleware' => 'auth:toko'], function () {
-        Route::get('/dashboard', function () {
-            return view('welcome');
-        });
-
-        Route::group(['middleware' => 'auth:toko'], function () {
-            Route::get('/', function () {
-                return view('welcome');
-            });
-        });
+        Route::get('/dashboard', [TokoDashboardController::class, 'index']);
+        Route::get('/', [TokoDashboardController::class, 'index']);
 
         Route::get('/logout', [AuthController::class, 'logout']);
 
@@ -136,6 +132,14 @@ Route::group(['prefix' => 'toko'], function () {
                 Route::post('/delete/{nomor}', [HutangController::class, 'delete']);
             });
 
+            Route::group(['prefix' => 'konsinyasi'], function () {
+                Route::get('/', [KonsinyasiController::class, 'index']);
+                Route::post('/store', [KonsinyasiController::class, 'store']);
+                Route::post('/cancel', [KonsinyasiController::class, 'cancel']);
+                Route::get('/{nomor_beli}', [KonsinyasiController::class, 'show']);
+                Route::post('/delete/{nomor}', [KonsinyasiController::class, 'delete']);
+            });
+
             Route::group(['prefix' => 'piutang'], function () {
                 Route::get('/', [PiutangController::class, 'index']);
                 Route::post('/store', [PiutangController::class, 'store']);
@@ -148,6 +152,7 @@ Route::group(['prefix' => 'toko'], function () {
                 Route::get('/', [TitipJualController::class, 'index']);
                 Route::post('/store', [TitipJualController::class, 'store']);
                 Route::post('/cancel', [TitipJualController::class, 'cancel']);
+                Route::post('/buy', [TitipJualController::class, 'buy']);
                 Route::get('/{nomor_jual}', [TitipJualController::class, 'show']);
                 Route::post('/delete/{nomor}', [TitipJualController::class, 'delete']);
             });
@@ -272,18 +277,14 @@ Route::prefix('simpan-pinjam')->group(function () {
     Route::get('login', 'Simpan_Pinjam\Auth\LoginController@login')->name('s-login');
     Route::post('postlogin', 'Simpan_Pinjam\Auth\LoginController@post_login')->name('post-login');
     Route::get('logout', 'Simpan_Pinjam\Auth\LoginController@logout')->name('s-logout');
-
-    Route::get('/', function () {
-        return redirect()->route('s-login');
-    });
-
-    Route::get('/dashboard', function () {
-        return redirect()->route('s-login');
-    });
 });
 
 //checkrole:admin,bendahara,bendahara_pusat,ketua_koperasi,simpan_pinjam
 Route::group(['prefix' => 'simpan-pinjam', 'middleware' => ['auth:simpan-pinjam', 'checkrole:admin,bendahara,bendahara_pusat,ketua_koperasi,simpan_pinjam']], function () {
+
+    Route::get('/', function () {
+        return redirect()->route('s-login');
+    });
 
     #Dashboard
     Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');

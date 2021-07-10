@@ -33,7 +33,7 @@ class AuthController extends Controller
             return redirect()->to('/toko/dashboard');
         } else {
             Session::flash('error', 'Nama atau password salah');
-            return redirect()->route('login');
+            return redirect()->route('t-login');
         }
     }
   
@@ -63,6 +63,6 @@ class AuthController extends Controller
     public function logout()
     {
         Auth::guard('toko')->logout();
-        return redirect()->route('login');
+        return redirect()->route('t-login');
     }
 }

@@ -4,7 +4,7 @@
 <nav id="sidebar" class="sidebar-wrapper">
     <div class="sidebar-content">
         <div class="sidebar-brand">
-            <a class="font-3">Navigation</a>
+            <a class="font-3">MENU</a>
             <div id="close-sidebar">
                 <i class="fas fa-times" aria-hidden="true"></i>
             </div>
@@ -12,6 +12,9 @@
 
         <div class="sidebar-menu">
             <ul>
+                <li>
+                    <a href="/toko/dashboard"><i class="fas fa-th" aria-hidden="true"></i>Dashboard</a>
+                </li>
                 <li class="sidebar-dropdown">
                     <a><i class="fas fa-server" aria-hidden="true"></i>Master</a>
                     <div class="sidebar-submenu">
@@ -32,7 +35,15 @@
                         <ul>
                             <li><a href="/toko/transaksi/penjualan">Penjualan</a></li>
                             <li><a href="/toko/transaksi/pembelian">Pembelian</a></li>
-                            <li><a href="/toko/transaksi/titip-jual">Titip Jual</a></li>
+                            <li class="sidebar-dropdown2">
+                                <a>Konsinyasi</a>
+                                <div class="sidebar-submenu2">
+                                    <ul>
+                                        <li><a href="/toko/transaksi/titip-jual">Titip Jual</a></li>
+                                        <li><a href="/toko/transaksi/konsinyasi">Konsinyasi</a></li>
+                                    </ul>
+                                </div>
+                            </li>
                             <li><a href="/toko/transaksi/retur-pembelian">Retur Pembelian</a></li>
                             <li><a href="/toko/transaksi/hutang">Hutang</a></li>
                             <li><a href="/toko/transaksi/piutang">Piutang</a></li>

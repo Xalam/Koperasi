@@ -15,6 +15,7 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     <script src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/1.10.25/js/dataTables.bootstrap5.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.4.1/dist/chart.min.js"></script>
 
     <link rel="stylesheet" href="{{ asset('bootstrap 5/dist/css/bootstrap.css') }}">
     <link rel="stylesheet" href="https://cdn.datatables.net/1.10.22/css/dataTables.bootstrap4.min.css">
@@ -41,22 +42,24 @@
             </div>
         </main>
     </div>
-
-    @if (isset($data_notif) && count($data_notif) > 0)
-    <div id="alert-popover" class="alert-wrapper">
-        @foreach ($data_notif as $data)
-        @if ($data->stok <= $data->stok_minimal && $data->alert_status == 0)
-            <div class="alert alert-primary ">
-                <div class="alert-close close" data-dismiss="alert" aria-label="close">
-                    <i class="fas fa-times" aria-hidden="true"></i>
+    <div id="alert-popover">
+        @if (isset($data_notified) && count($data_notified) > 0)
+        <div class="alert-wrapper">
+            @foreach ($data_notified as $data)
+            @if ($data->stok <= $data->stok_minimal && $data->alert_status == 0)
+                <div class="alert alert-primary">
+                    <div class="alert-close close" data-dismiss="alert" aria-label="close">
+                        <i class="fas fa-times" aria-hidden="true"></i>
+                    </div>
+                    <p class="alert-message"><b>Pemberitahuan Persediaan Barang</b> <br> Persediaan {{$data->nama}}
+                        kurang
+                        dari stok minimal</p>
                 </div>
-                <p class="alert-message"><b>Pemberitahuan Persediaan Barang</b> <br> Persediaan {{$data->nama}} kurang
-                    dari stok minimal</p>
-            </div>
-            @endif
-            @endforeach
+                @endif
+                @endforeach
+        </div>
+        @endif
     </div>
-    @endif
 </body>
 
 </html>
@@ -66,6 +69,7 @@
 <script type="text/javascript">
 $(document).ready(function() {
     $('#table-data').DataTable();
+    setTimeout(showNotificationPenjualan(), 5000);
 });
 
 function close_notification($id) {
@@ -76,6 +80,42 @@ function close_notification($id) {
             if (response.code == 200) {
                 $('#notification-count').text(response.data_barang.length);
             }
+        }
+    });
+}
+
+function showNotificationPenjualan() {
+    $.ajax({
+        url: '/api/show-notification-penjualan',
+        type: 'GET',
+        success: function(response) {
+            if (response.code == 200) {
+                if (response.data.length > 0) {
+                    $.each(response.data, function(i, v) {
+                        $pembayaran = '';
+                        if (v.pembayaran == 1) {
+                            $pembayaran = 'kredit';
+                        } else {
+                            $pembayaran = 'tunai';
+                        }
+
+                        $('#alert-popover').append(`<div class="alert-wrapper">` +
+                            `<div class="alert alert-success align-self-center">` +
+                            `<div class="alert-close close" data-dismiss="alert" aria-label="close">` +
+                            `<i class="fas fa-times" aria-hidden="true"></i>` +
+                            `</div>` +
+                            `<p class="alert-message"><b>` + v.nama_anggota +
+                            `</b> <br> Melakukan pembelian barang secara ` +
+                            $pembayaran + ` sebesar ` + v.jumlah_harga + `</p>` +
+                            `</div>` +
+                            `</div>`
+                        );
+                    });
+                }
+            }
+        },
+        complete: function(data) {
+            setTimeout(showNotificationPenjualan(), 5000);
         }
     });
 }
