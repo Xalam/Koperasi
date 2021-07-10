@@ -32,21 +32,25 @@ class DashboardController extends Controller
 
         $year = Carbon::now()->year;
         
-        $total_penjualan = PenjualanBarangModel::select(DB::raw("SUM(jumlah) AS jumlah"))->first();
-        $total_pembelian = PembelianBarangModel::select(DB::raw("SUM(jumlah) AS jumlah"))->first();
+        $total_penjualan = PenjualanBarangModel::select(DB::raw("SUM(jumlah) AS jumlah"))->where(DB::raw('YEAR(created_at)'), now()->year)->first();
+        $total_pembelian = PembelianBarangModel::select(DB::raw("SUM(jumlah) AS jumlah"))->where(DB::raw('YEAR(created_at)'), now()->year)->first();
      
         $pemasukan = JurnalModel::join('akun', 'akun.id', '=', 'jurnal.id_akun')
                                     ->select('jurnal.tanggal AS tanggal', 
                                     DB::raw('IFNULL(SUM(jurnal.debit+jurnal.kredit), 0) AS jumlah'))
                                     ->where('akun.kode', 'like', '4%')
+                                    ->where(DB::raw('YEAR(jurnal.created_at)'), now()->year)
                                     ->groupBy('jurnal.tanggal')
                                     ->first();
         
         $pengeluaran = JurnalModel::join('akun', 'akun.id', '=', 'jurnal.id_akun')
                                     ->select('jurnal.tanggal AS tanggal', 
                                     DB::raw('IFNULL(SUM(jurnal.debit+jurnal.kredit), 0) AS jumlah'))
-                                    ->where('akun.kode', 'like', '5%')
-                                    ->orWhere('akun.kode', 'like', '6%')
+                                    ->where(DB::raw('YEAR(jurnal.created_at)'), now()->year)
+                                    ->where(function($i) {
+                                        $i->where('akun.kode', 'like', '5%')
+                                        ->orWhere('akun.kode', 'like', '6%');
+                                    })
                                     ->groupBy('jurnal.tanggal')
                                     ->first();
 
