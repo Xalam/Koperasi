@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Simpan_Pinjam\Laporan\JurnalUmum;
 use App\Models\Simpan_Pinjam\Master\Akun\Akun;
 use App\Models\Simpan_Pinjam\Master\Anggota\Anggota;
+use App\Models\Simpan_Pinjam\Other\Notifikasi;
 use App\Models\Simpan_Pinjam\Simpanan\Saldo;
 use App\Models\Simpan_Pinjam\Simpanan\Simpanan;
 use Illuminate\Http\Request;
@@ -410,6 +411,14 @@ class SimpananController extends Controller
         $simpanan = Simpanan::findOrFail($id);
 
         $simpanan->delete();
+
+        $notifikasi = new Notifikasi();
+
+        $notifikasi->create([
+            'id_anggota' => $simpanan->id_anggota,
+            'title'      => 'Penolakan Simpanan',
+            'content'    => 'Pengajuan simpanan Anda pada tanggal ' . date('d-m-Y', strtotime($simpanan->tanggal)) . ' sebesar Rp ' . number_format($simpanan->nominal, 0, '', '.') . ' ditolak.'
+        ]);
 
         return redirect()->route('data.index')->with([
             'success' => 'Simpanan anggota berhasil dihapus'

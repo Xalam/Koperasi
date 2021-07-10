@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Simpan_Pinjam\Laporan\JurnalUmum;
 use App\Models\Simpan_Pinjam\Master\Akun\Akun;
 use App\Models\Simpan_Pinjam\Master\Anggota\Anggota;
+use App\Models\Simpan_Pinjam\Other\Notifikasi;
 use App\Models\Simpan_Pinjam\Simpanan\Saldo;
 use App\Models\Simpan_Pinjam\Simpanan\SaldoTarik;
 use Illuminate\Http\Request;
@@ -212,6 +213,14 @@ class TarikSaldoController extends Controller
         $tarikSaldo = SaldoTarik::findOrFail($id);
 
         $tarikSaldo->delete();
+
+        $notifikasi = new Notifikasi();
+
+        $notifikasi->create([
+            'id_anggota' => $tarikSaldo->saldo->id_anggota,
+            'title'      => 'Penolakan Penarikan Simpanan',
+            'content'    => 'Pengajuan penarikan simpanan Anda pada tanggal ' . date('d-m-Y', strtotime($tarikSaldo->tanggal)) . ' sebesar Rp ' . number_format($tarikSaldo->nominal, 0, '', '.') . ' ditolak.'
+        ]);
 
         return redirect()->route('tarik-saldo.index')->with([
             'success' => 'Penarikan berhasil dihapus'
