@@ -77,21 +77,21 @@ Route::group(['prefix' => 'api'], function () {
 
 Route::get('/', function () {
     return view('index');
-});
+})->name('login');
 
 Route::group(['prefix' => 'toko'], function () {
     //Login
-    Route::get('/login', [AuthController::class, 'index'])->name('login');
+    Route::get('/login', [AuthController::class, 'index'])->name('t-login');
     Route::post('/login/store', [AuthController::class, 'login']);
     Route::get('/register', [AuthController::class, 'register'])->name('register');
     Route::post('/register/store', [AuthController::class, 'store']);
 
-    Route::group(['middleware' => 'auth'], function () {
+    Route::group(['middleware' => 'auth:toko'], function () {
         Route::get('/dashboard', function () {
             return view('welcome');
         });
 
-        Route::group(['middleware' => 'auth'], function () {
+        Route::group(['middleware' => 'auth:toko'], function () {
             Route::get('/', function () {
                 return view('welcome');
             });
@@ -276,10 +276,14 @@ Route::prefix('simpan-pinjam')->group(function () {
     Route::get('/', function () {
         return redirect()->route('s-login');
     });
+
+    Route::get('/dashboard', function () {
+        return redirect()->route('s-login');
+    });
 });
 
 //checkrole:admin,bendahara,bendahara_pusat,ketua_koperasi,simpan_pinjam
-Route::group(['prefix' => 'simpan-pinjam', 'middleware' => ['auth', 'checkrole:admin,bendahara,bendahara_pusat,ketua_koperasi,simpan_pinjam']], function () {
+Route::group(['prefix' => 'simpan-pinjam', 'middleware' => ['auth:simpan-pinjam', 'checkrole:admin,bendahara,bendahara_pusat,ketua_koperasi,simpan_pinjam']], function () {
 
     #Dashboard
     Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
@@ -332,11 +336,13 @@ Route::group(['prefix' => 'simpan-pinjam', 'middleware' => ['auth', 'checkrole:a
         Route::post('angsuran/bayar', 'Simpan_Pinjam\Pinjaman\AngsuranController@bayar')->name('angsuran.bayar');
         Route::get('angsuran/cetak/show/{id}', 'Simpan_Pinjam\Pinjaman\AngsuranController@print_show')->name('angsuran.print-show');
         Route::get('angsuran/konfirmasi/{id}', 'Simpan_Pinjam\Pinjaman\AngsuranController@konfirmasi')->name('angsuran.konfirmasi');
+        Route::get('angsuran/modal/{id}', 'Simpan_Pinjam\Pinjaman\AngsuranController@modal')->name('angsuran.modal');
 
         Route::resource('tempo', 'Simpan_Pinjam\Pinjaman\JatuhTempoController');
         Route::post('tempo/bayar', 'Simpan_Pinjam\Pinjaman\JatuhTempoController@bayar')->name('tempo.bayar');
         Route::get('tempo/cetak/show/{id}', 'Simpan_Pinjam\Pinjaman\JatuhTempoController@print_show')->name('tempo.print-show');
         Route::get('tempo/konfirmasi/{id}', 'Simpan_Pinjam\Pinjaman\JatuhTempoController@konfirmasi')->name('tempo.konfirmasi');
+        Route::get('tempo/modal/{id}', 'Simpan_Pinjam\Pinjaman\JatuhTempoController@modal')->name('tempo.modal');
     });
 
     #Laporan

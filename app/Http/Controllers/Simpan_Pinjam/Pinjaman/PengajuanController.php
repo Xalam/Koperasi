@@ -175,35 +175,49 @@ class PengajuanController extends Controller
             ->where('id_anggota', $request->id_anggota)
             ->orderBy('id', 'DESC')
             ->first();
-        if ($checkAnggota != null) {
-            $checkLunas = Pinjaman::select('*')
+
+        if ($checkAnggota) {
+            $checkAcc = Pinjaman::select('*')
                 ->where('id_anggota', $request->id_anggota)
-                ->where('lunas', 1)
+                ->where('status', 0)
                 ->orderBy('id', 'DESC')
                 ->first();
-            if ($checkLunas == null) {
+
+            if ($checkAcc) {
                 return redirect()->route('pengajuan.create')->with([
-                    'error' => 'Pinjaman sebelumnya belum lunas'
+                    'error' => 'Pinjaman sebelumnya masih belum disetujui'
                 ]);
             } else {
-                #Simpan Pinjaman
-                $pinjaman = new Pinjaman();
-                $pinjaman->kode_pinjaman    = 'PNJ-' . str_replace('-', '', $request->tanggal) . '-' . str_pad($id, 6, '0', STR_PAD_LEFT);
-                $pinjaman->id_anggota       = $request->id_anggota;
-                $pinjaman->tanggal          = $request->tanggal;
-                $pinjaman->nominal_pinjaman = $nominal;
-                $pinjaman->bunga            = $request->bunga;
-                $pinjaman->tenor            = $request->tenor;
-                $pinjaman->total_pinjaman   = $totalPinjaman;
-                $pinjaman->nominal_angsuran = $uangAngsuran;
-                $pinjaman->biaya_provisi    = $countProv;
-                $pinjaman->biaya_asuransi   = $countAsur;
-                $pinjaman->biaya_admin      = $biaya_admin;
-                $pinjaman->save();
+                $checkLunas = Pinjaman::select('*')
+                    ->where('id_anggota', $request->id_anggota)
+                    ->where('lunas', 0)
+                    ->orderBy('id', 'DESC')
+                    ->first();
 
-                return redirect()->route('pengajuan.index')->with([
-                    'success' => 'Berhasil menambah pinjaman'
-                ]);
+                if ($checkLunas) {
+                    return redirect()->route('pengajuan.create')->with([
+                        'error' => 'Pinjaman sebelumnya belum lunas'
+                    ]);
+                } else {
+                    #Simpan Pinjaman
+                    $pinjaman = new Pinjaman();
+                    $pinjaman->kode_pinjaman    = 'PNJ-' . str_replace('-', '', $request->tanggal) . '-' . str_pad($id, 6, '0', STR_PAD_LEFT);
+                    $pinjaman->id_anggota       = $request->id_anggota;
+                    $pinjaman->tanggal          = $request->tanggal;
+                    $pinjaman->nominal_pinjaman = $nominal;
+                    $pinjaman->bunga            = $request->bunga;
+                    $pinjaman->tenor            = $request->tenor;
+                    $pinjaman->total_pinjaman   = $totalPinjaman;
+                    $pinjaman->nominal_angsuran = $uangAngsuran;
+                    $pinjaman->biaya_provisi    = $countProv;
+                    $pinjaman->biaya_asuransi   = $countAsur;
+                    $pinjaman->biaya_admin      = $biaya_admin;
+                    $pinjaman->save();
+
+                    return redirect()->route('pengajuan.index')->with([
+                        'success' => 'Berhasil menambah pinjaman'
+                    ]);
+                }
             }
         } else {
             #Simpan Pinjaman

@@ -6,7 +6,7 @@
 </div>
 <div class="modal-body">
     <p>
-        Apakah Anda menyetujui angsuran dari <strong>{{ $angsuran->pinjaman->anggota->nama_anggota }}</strong> ?
+        Apakah Anda memproses angsuran dari <strong>{{ $angsuran->pinjaman->anggota->nama_anggota }}</strong> ?
     </p>
 </div>
 <form action="{{ route('angsuran.update', $angsuran->id) }}" method="POST">

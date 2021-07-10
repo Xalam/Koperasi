@@ -58,7 +58,7 @@
         </div>
         <div class="row justify-content-center">
             <div class="col-md-4 zoom">
-                <a href="{{ route('login') }}">
+                <a href="{{ route('t-login') }}">
                     <div class="card bg-info">
                         <div class="card-body">
                             <div class="text-center">

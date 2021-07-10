@@ -15,10 +15,22 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::namespace('API')->group(function () {
-    Route::get('/anggota', 'Simpan_Pinjam\TestController@index');
     Route::post('/login', 'LoginController@login');
 
     Route::prefix('simpan-pinjam')->group(function () {
+        Route::get('saldo', 'Simpan_Pinjam\SaldoController@index');
+        Route::post('saldo-deposit', 'Simpan_Pinjam\SaldoController@deposit');
+        Route::post('saldo-tarik', 'Simpan_Pinjam\SaldoController@withdraw');
+
+        Route::get('settings', 'Simpan_Pinjam\PengaturanController@index');
+
+        Route::post('pinjaman', 'Simpan_Pinjam\PinjamanController@index');
+
+        Route::get('pinjaman-history', 'Simpan_Pinjam\PinjamanController@history');
+        Route::get('pinjaman-kode', 'Simpan_Pinjam\PinjamanController@kode');
+
+        Route::post('angsuran', 'Simpan_Pinjam\PinjamanController@angsuran');
+        Route::post('angsuran-lunas', 'Simpan_Pinjam\PinjamanController@angsuran_lunas');
     });
 
     Route::prefix('toko')->group(function () {
