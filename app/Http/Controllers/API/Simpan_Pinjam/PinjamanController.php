@@ -120,17 +120,17 @@ class PinjamanController extends Controller
     {
         $idAnggota = getallheaders()['id'];
 
-        $data['pengajuan'] = Pinjaman::where('id_anggota', $idAnggota)->orderBy('tanggal', 'DESC')->get();
+        $data['pengajuan'] = Pinjaman::where('id_anggota', $idAnggota)->orderBy('tanggal', 'DESC')->orderBy('id', 'DESC')->get();
 
         $data['angsuran']  = Angsuran::with('pinjaman')
             ->whereHas('pinjaman', function ($query) use ($idAnggota) {
                 $query->where('id_anggota', $idAnggota);
-            })->where('jenis', 1)->orderBy('tanggal', 'DESC')->get();
+            })->where('jenis', 1)->orderBy('tanggal', 'DESC')->orderBy('id', 'DESC')->get();
 
         $data['pelunasan']  = Angsuran::with('pinjaman')
             ->whereHas('pinjaman', function ($query) use ($idAnggota) {
                 $query->where('id_anggota', $idAnggota);
-            })->where('jenis', 2)->orderBy('tanggal', 'DESC')->get();
+            })->where('jenis', 2)->orderBy('tanggal', 'DESC')->orderBy('id', 'DESC')->get();
 
         return ResponseFormatter::success($data, 'Berhasil mendapatkan data');
     }

@@ -17,12 +17,12 @@ class SaldoController extends Controller
 
         $data['saldo'] = Saldo::where('id_anggota', $idAnggota)->orderBy('jenis_simpanan', 'DESC')->get();
 
-        $data['saldo_masuk'] = Simpanan::where('id_anggota', $idAnggota)->orderBy('id', 'DESC')->get();
+        $data['saldo_masuk'] = Simpanan::where('id_anggota', $idAnggota)->orderBy('tanggal', 'DESC')->orderBy('id', 'DESC')->get();
 
         $data['saldo_keluar'] = SaldoTarik::with('saldo')
             ->whereHas('saldo', function ($query) use ($idAnggota) {
                 $query->where('id_anggota', $idAnggota);
-            })->orderBy('tanggal', 'DESC')->get();
+            })->orderBy('tanggal', 'DESC')->orderBy('id', 'DESC')->get();
 
         return ResponseFormatter::success($data, 'Berhasil mendapatkan saldo');
     }
