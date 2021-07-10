@@ -21,6 +21,7 @@ use App\Http\Controllers\Toko\Transaksi\Jurnal\JurnalController;
 use App\Http\Controllers\Toko\Transaksi\TitipJual\TitipJualController;
 use App\Http\Controllers\Toko\Transaksi\JurnalUmum\JurnalUmumController;
 use App\Http\Controllers\Toko\Transaksi\Konsinyasi\KonsinyasiController;
+use App\Http\Controllers\Toko\Transaksi\PesananOnline\PesananOnlineController;
 
 use App\Http\Controllers\Toko\Master\Barang\BarangController;
 use App\Http\Controllers\Toko\Master\Admin\AdminController;
@@ -169,6 +170,11 @@ Route::group(['prefix' => 'toko'], function () {
                 Route::post('/cancel', [JurnalUmumController::class, 'cancel']);
                 Route::get('/{nomor_jual}', [JurnalUmumController::class, 'show']);
                 Route::post('/delete/{id}', [JurnalUmumController::class, 'delete']);
+            });
+
+            Route::group(['prefix' => 'pesanan-online'], function () {
+                Route::get('/', [PesananOnlineController::class, 'index']);
+                Route::post('/proses/{id}/{proses}', [PesananOnlineController::class, 'proses']);
             });
         });
 

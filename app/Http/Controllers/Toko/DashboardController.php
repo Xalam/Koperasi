@@ -7,7 +7,9 @@ use App\Models\Toko\ChartModel;
 use App\Models\Toko\Master\Barang\BarangModel;
 use App\Models\Toko\Transaksi\Jurnal\JurnalModel;
 use App\Models\Toko\Transaksi\Pembelian\PembelianBarangModel;
+use App\Models\Toko\Transaksi\Pembelian\PembelianModel;
 use App\Models\Toko\Transaksi\Penjualan\PenjualanBarangModel;
+use App\Models\Toko\Transaksi\Penjualan\PenjualanModel;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -32,8 +34,8 @@ class DashboardController extends Controller
 
         $year = Carbon::now()->year;
         
-        $total_penjualan = PenjualanBarangModel::select(DB::raw("SUM(jumlah) AS jumlah"))->where(DB::raw('YEAR(created_at)'), now()->year)->first();
-        $total_pembelian = PembelianBarangModel::select(DB::raw("SUM(jumlah) AS jumlah"))->where(DB::raw('YEAR(created_at)'), now()->year)->first();
+        $total_penjualan = PenjualanModel::select(DB::raw("COUNT(*) AS total"))->where(DB::raw('YEAR(created_at)'), now()->year)->first();
+        $total_pembelian = PembelianModel::select(DB::raw("COUNT(*) AS total"))->where(DB::raw('YEAR(created_at)'), now()->year)->first();
      
         $pemasukan = JurnalModel::join('akun', 'akun.id', '=', 'jurnal.id_akun')
                                     ->select('jurnal.tanggal AS tanggal', 
@@ -71,7 +73,7 @@ class DashboardController extends Controller
         $list_bulan[] = 'November';
         $list_bulan[] = 'Desember';
         
-        $listPenjualan = PenjualanBarangModel::select(DB::raw("SUM(jumlah) AS jumlah"), DB::raw('MONTH(created_at) AS tanggal'))
+        $listPenjualan = PenjualanBarangModel::select(DB::raw("SUM(total_harga) AS jumlah"), DB::raw('MONTH(created_at) AS tanggal'))
                                                 ->where(DB::raw('YEAR(created_at)'), now()->year)
                                                 ->groupBy(DB::raw('MONTH(created_at)'))
                                                 ->get();

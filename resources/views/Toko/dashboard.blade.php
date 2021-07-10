@@ -23,7 +23,11 @@
                     </div>
                     <div class="ms-3 align">
                         <b class="text-gray-600">Penjualan</b>
-                        <h3 class="fw-bolder">{{$total_penjualan->jumlah}}</h3>
+                        @if (isset($total_penjualan->total))
+                        <h3 class="fw-bolder">{{$total_penjualan->total}}</h3>
+                        @else
+                        <h3 class="fw-bolder">0</h3>
+                        @endif
                     </div>
                 </div>
                 <div class="col-lg-4 align-self-center d-flex flex-row">
@@ -32,7 +36,11 @@
                     </div>
                     <div class="ms-3">
                         <b class="text-gray-600">Pembelian</b>
-                        <h3 class="fw-bolder">{{$total_pembelian->jumlah}}</h3>
+                        @if (isset($total_pembelian->total))
+                        <h3 class="fw-bolder">{{$total_pembelian->total}}</h3>
+                        @else
+                        <h3 class="fw-bolder">0</h3>
+                        @endif
                     </div>
                 </div>
                 <div class="col-lg-4 align-self-center d-flex flex-row">
@@ -41,7 +49,11 @@
                     </div>
                     <div class="ms-3">
                         <b class="text-gray-600">Pendapatan</b>
+                        @if (isset($total_pendapatan))
                         <h3 class="fw-bolder">Rp. {{$total_pendapatan}},-</h3>
+                        @else
+                        <h3 class="fw-bolder">Rp. 0,-</h3>
+                        @endif
                     </div>
                 </div>
             </div>

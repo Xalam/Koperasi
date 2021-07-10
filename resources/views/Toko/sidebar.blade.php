@@ -48,6 +48,7 @@
                             <li><a href="/toko/transaksi/hutang">Hutang</a></li>
                             <li><a href="/toko/transaksi/piutang">Piutang</a></li>
                             <li><a href="/toko/transaksi/jurnal">Jurnal</a></li>
+                            <li><a href="/toko/transaksi/pesanan-online">Pesanan Online</a></li>
                         </ul>
                     </div>
                 </li>
