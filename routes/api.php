@@ -33,6 +33,7 @@ Route::namespace('API')->group(function () {
         Route::post('angsuran-lunas', 'Simpan_Pinjam\PinjamanController@angsuran_lunas');
 
         Route::get('notifikasi', 'Simpan_Pinjam\NotifikasiController@index');
+        Route::get('notifikasi-unread', 'Simpan_Pinjam\NotifikasiController@unread');
         Route::get('notifikasi/{id}', 'Simpan_Pinjam\NotifikasiController@detail');
         Route::delete('notifikasi/delete', 'Simpan_Pinjam\NotifikasiController@delete');
     });

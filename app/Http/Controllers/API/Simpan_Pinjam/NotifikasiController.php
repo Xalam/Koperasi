@@ -11,7 +11,7 @@ class NotifikasiController extends Controller
 {
     public function index()
     {
-        $data = Notifikasi::where('id_anggota', getallheaders()['id'])->orderBy('updated_at', 'DESC')->get();
+        $data = Notifikasi::where('id_anggota', getallheaders()['id'])->orderBy('created_at', 'DESC')->get();
 
         if ($data->count() > 0) {
             return ResponseFormatter::success($data, 'Berhasil mendapatkan notifikasi');
@@ -48,5 +48,16 @@ class NotifikasiController extends Controller
         }
 
         return ResponseFormatter::error('Notifikasi tidak ada');
+    }
+
+    public function unread()
+    {
+        $data = Notifikasi::where('id_anggota', getallheaders()['id'])->orderBy('updated_at', 'DESC')->where('status', 0)->get();
+
+        if ($data->count() > 0) {
+            return ResponseFormatter::success($data, 'Terdapat notifikasi yang belum dibaca');
+        }
+
+        return ResponseFormatter::error('Notifikasi terbaca');
     }
 }
