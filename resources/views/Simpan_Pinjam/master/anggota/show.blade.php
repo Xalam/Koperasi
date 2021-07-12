@@ -4,10 +4,10 @@
 
 @section('content_header', 'Profil Anggota')
 
-@push('style')
-    <link rel="stylesheet"
-        href="{{ asset('assets/plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css') }}">
-@endpush
+    @push('style')
+        <link rel="stylesheet"
+            href="{{ asset('assets/plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css') }}">
+    @endpush
 
 @section('breadcrumb')
     <li class="breadcrumb-item"><a href="#">Master</a></li>
@@ -24,7 +24,7 @@
                     <div class="text-center">
                         <img class="profile-user-img img-fluid img-circle"
                             src="{{ $anggota->foto == null ? asset('assets/dist/img/avatar5.png') : asset('storage/foto/' . $anggota->foto) }}"
-                            alt="User profile picture">
+                            alt="{{ $anggota->foto }}">
                     </div>
                     <h3 class="profile-username text-center">{{ $anggota->nama_anggota }}</h3>
                     <p class="text-muted text-center"></p>
@@ -78,8 +78,8 @@
                                 <div class="form-group row">
                                     <label class="col-sm-2 col-form-label">Nama</label>
                                     <div class="col-sm-10">
-                                        <input type="text" class="form-control form-readonly" 
-                                        value="{{ $anggota->nama_anggota }}" readonly>
+                                        <input type="text" class="form-control form-readonly"
+                                            value="{{ $anggota->nama_anggota }}" readonly>
                                     </div>
                                 </div>
                                 <!-- Gender -->
@@ -103,7 +103,8 @@
                                     <label class="col-sm-2 col-form-label">Tempat Tanggal Lahir</label>
                                     <div class="col-sm-10">
                                         <input type="text" class="form-control form-readonly"
-                                            value="{{ $anggota->tempat_lahir . ', ' . $anggota->tanggal_lahir }}" readonly>
+                                            value="{{ $anggota->tempat_lahir . ', ' . $anggota->tanggal_lahir }}"
+                                            readonly>
                                     </div>
                                 </div>
                                 <!-- Address -->
@@ -135,7 +136,8 @@
                                     <label class="col-sm-2 col-form-label">Status Pernikahan</label>
                                     <div class="col-sm-10">
                                         <input type="text" class="form-control form-readonly"
-                                            value="{{ $anggota->status == 'kawin' ? 'Menikah' : 'Belum Menikah' }}" readonly>
+                                            value="{{ $anggota->status == 'kawin' ? 'Menikah' : 'Belum Menikah' }}"
+                                            readonly>
                                     </div>
                                 </div>
                                 <!-- Jabatan -->

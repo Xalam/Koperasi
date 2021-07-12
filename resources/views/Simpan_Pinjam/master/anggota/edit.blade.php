@@ -25,14 +25,14 @@
                     <h3 class="card-title">Edit Anggota</h3>
                 </div>
                 <div class="card-body col-md-6 mx-auto">
-                    <form id="form-anggota-edit" action="{{ route('anggota.update', $anggota->id) }}" role="form" method="post"
-                        enctype="multipart/form-data" autocomplete="off">
+                    <form id="form-anggota-edit" action="{{ route('anggota.update', $anggota->id) }}" role="form"
+                        method="post" enctype="multipart/form-data" autocomplete="off">
                         @csrf
                         @method('put')
                         <div class="form-group">
                             <label for="kode-anggota">Kode Anggota</label>
-                            <input type="text" class="form-control" id="kode-anggota" name="kd_anggota"
-                                disabled value="{{ old('kd_anggota') ? old('kd_anggota') : $anggota->kd_anggota }}">
+                            <input type="text" class="form-control" id="kode-anggota" name="kd_anggota" disabled
+                                value="{{ old('kd_anggota') ? old('kd_anggota') : $anggota->kd_anggota }}">
                         </div>
                         <div class="form-group">
                             <label for="nama-anggota">Nama Anggota</label>
@@ -59,13 +59,21 @@
                         <div class="form-group">
                             <label>Agama</label>
                             <select class="form-control select2" style="width: 100%;" name="agama">
-                                <option {{ $anggota->agama == 'Lainnya' ? 'selected="selected"' : '' }} value="Lainnya">Lainnya</option>
-                                <option {{ $anggota->agama == 'Islam' ? 'selected="selected"' : '' }} value="Islam">Islam</option>
-                                <option {{ $anggota->agama == 'Kristen' ? 'selected="selected"' : '' }} value="Kristen">Kristen</option>
-                                <option {{ $anggota->agama == 'Katolik' ? 'selected="selected"' : '' }} value="Katolik">Katolik</option>
-                                <option {{ $anggota->agama == 'Hindu' ? 'selected="selected"' : '' }} value="Hindu">Hindu</option>
-                                <option {{ $anggota->agama == 'Buddha' ? 'selected="selected"' : '' }} value="Buddha">Buddha</option>
-                                <option {{ $anggota->agama == 'Khonghucu' ? 'selected="selected"' : '' }}value="Khonghucu">Khonghucu</option>
+                                <option {{ $anggota->agama == 'Lainnya' ? 'selected="selected"' : '' }} value="Lainnya">
+                                    Lainnya</option>
+                                <option {{ $anggota->agama == 'Islam' ? 'selected="selected"' : '' }} value="Islam">Islam
+                                </option>
+                                <option {{ $anggota->agama == 'Kristen' ? 'selected="selected"' : '' }} value="Kristen">
+                                    Kristen</option>
+                                <option {{ $anggota->agama == 'Katolik' ? 'selected="selected"' : '' }} value="Katolik">
+                                    Katolik</option>
+                                <option {{ $anggota->agama == 'Hindu' ? 'selected="selected"' : '' }} value="Hindu">Hindu
+                                </option>
+                                <option {{ $anggota->agama == 'Buddha' ? 'selected="selected"' : '' }} value="Buddha">
+                                    Buddha</option>
+                                <option
+                                    {{ $anggota->agama == 'Khonghucu' ? 'selected="selected"' : '' }}value="Khonghucu">
+                                    Khonghucu</option>
                             </select>
                         </div>
                         <div class="form-group">
@@ -82,7 +90,8 @@
                             <div class="input-group date" id="tanggal-lahir" data-target-input="nearest">
                                 <input type="text" class="form-control datetimepicker-input" data-target="#tanggal-lahir"
                                     name="tanggal_lahir"
-                                    value="{{ old('tanggal_lahir') ? old('tanggal_lahir') : $anggota->tanggal_lahir }}" placeholder="Tanggal lahir"/>
+                                    value="{{ old('tanggal_lahir') ? old('tanggal_lahir') : $anggota->tanggal_lahir }}"
+                                    placeholder="Tanggal lahir" />
                                 <div class="input-group-append" data-target="#tanggal-lahir" data-toggle="datetimepicker">
                                     <div class="input-group-text"><i class="fa fa-calendar"></i></div>
                                 </div>
@@ -127,8 +136,10 @@
                         <div class="form-group">
                             <label>Status Pernikahan</label>
                             <select class="form-control select2" style="width: 100%;" name="status">
-                                <option {{ $anggota->status == 'belum_kawin' ? 'selected="selected"' : '' }} value="belum_kawin">Belum Menikah</option>
-                                <option {{ $anggota->status == 'kawin' ? 'selected="selected"' : '' }} value="kawin">Menikah</option>
+                                <option {{ $anggota->status == 'belum_kawin' ? 'selected="selected"' : '' }}
+                                    value="belum_kawin">Belum Menikah</option>
+                                <option {{ $anggota->status == 'kawin' ? 'selected="selected"' : '' }} value="kawin">
+                                    Menikah</option>
                             </select>
                         </div>
                         <div class="form-group">
@@ -154,8 +165,7 @@
                         <div class="form-group">
                             <label for="password">Password Baru (boleh dikosongkan)</label>
                             <div class="input-group" id="password">
-                                <input type="password" class="form-control" name="password"
-                                    placeholder="Password baru">
+                                <input type="password" class="form-control" name="password" placeholder="Password baru">
                                 <div class="input-group-append">
                                     <a href="" class="input-group-text"><i class="fas fa-eye-slash"
                                             aria-hidden="true"></i></a>
@@ -168,11 +178,16 @@
                         <div class="form-group">
                             <label>Role</label>
                             <select class="form-control select2" style="width: 100%;" name="role">
-                                <option {{ $anggota->role == 'anggota' ? 'selected="selected"' : '' }} value="anggota">Anggota</option>
-                                <option {{ $anggota->role == 'bendahara' ? 'selected="selected"' : '' }} value="bendahara">Bendahara</option>
-                                <option {{ $anggota->role == 'bendahara_pusat' ? 'selected="selected"' : '' }} value="bendahara_pusat">Bendahara Pusat</option>
-                                <option {{ $anggota->role == 'ketua_koperasi' ? 'selected="selected"' : '' }} value="ketua_koperasi">Ketua Koperasi</option>
-                                <option {{ $anggota->role == 'simpan_pinjam' ? 'selected="selected"' : '' }} value="simpan_pinjam">Unit Simpan Pinjam</option>
+                                <option {{ $anggota->role == 'anggota' ? 'selected="selected"' : '' }} value="anggota">
+                                    Anggota</option>
+                                <option {{ $anggota->role == 'bendahara' ? 'selected="selected"' : '' }}
+                                    value="bendahara">Bendahara</option>
+                                <option {{ $anggota->role == 'bendahara_pusat' ? 'selected="selected"' : '' }}
+                                    value="bendahara_pusat">Bendahara Pusat</option>
+                                <option {{ $anggota->role == 'ketua_koperasi' ? 'selected="selected"' : '' }}
+                                    value="ketua_koperasi">Ketua Koperasi</option>
+                                <option {{ $anggota->role == 'simpan_pinjam' ? 'selected="selected"' : '' }}
+                                    value="simpan_pinjam">Unit Simpan Pinjam</option>
                             </select>
                         </div>
                         <div class="row cal-gaji">
@@ -269,7 +284,7 @@
                 }
 
                 let simWajib = @php echo($wajib); @endphp;
-                
+
                 let result = 2 / 3 * newGaji - simWajib;
                 $('#limit').attr('value', formatMoney(result));
                 $('#limit-gaji').attr('value', (result.toFixed(2)));
@@ -301,12 +316,12 @@
                 reader.readAsDataURL(this.files[0]);
             });
 
-            $.validator.addMethod('filesize', function (value, element, param) {
+            $.validator.addMethod('filesize', function(value, element, param) {
                 return this.optional(element) || (element.files[0].size <= param)
-            },'Ukuran file tidak boleh lebih dari 2mb'); 
+            }, 'Ukuran file tidak boleh lebih dari 500 kb');
 
             $.validator.setDefaults({
-                submitHandler: function () {
+                submitHandler: function() {
                     form.submit();
                 }
             });
@@ -345,7 +360,7 @@
                     },
                     foto: {
                         extension: "jpg,jpeg,png",
-                        filesize: 2,
+                        filesize: 500000,
                     },
                 },
                 messages: {
@@ -377,6 +392,5 @@
                 }
             });
         })
-
     </script>
 @endsection

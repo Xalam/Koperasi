@@ -98,9 +98,9 @@ class AnggotaController extends Controller
 
         $extension = $request->file('foto')->extension();
         $imageName = $user . '.' . $extension;
-        //Storage::putFileAs('foto', $request->file('foto'), $imageName);
+        Storage::putFileAs('foto', $request->file('foto'), $imageName);
 
-        $request->foto->move(public_path('storage/foto'), $imageName);
+        // $request->foto->move(public_path('storage/foto'), $imageName);
 
         $data['kd_anggota'] = $kode_anggota;
         $data['foto'] = $imageName;
@@ -179,14 +179,14 @@ class AnggotaController extends Controller
         if ($request->foto == null) {
             $anggota->foto == $anggota->foto;
         } else {
-            //Storage::delete('foto/' . $anggota->foto);
-            File::delete('storage/foto/' . $anggota->foto);
+            Storage::delete('foto/' . $anggota->foto);
+            // File::delete('storage/foto/' . $anggota->foto);
 
             $extension = $request->file('foto')->extension();
             $imageName = $user . '.' . $extension;
 
-            //Storage::putFileAs('foto', $request->file('foto'), $imageName);
-            $request->foto->move(public_path('storage/foto'), $imageName);
+            Storage::putFileAs('foto', $request->file('foto'), $imageName);
+            // $request->foto->move(public_path('storage/foto'), $imageName);
 
             $data['foto'] = $imageName;
         }
