@@ -28,6 +28,7 @@ Route::namespace('API')->group(function () {
 
         Route::get('pinjaman-history', 'Simpan_Pinjam\PinjamanController@history');
         Route::get('pinjaman-kode', 'Simpan_Pinjam\PinjamanController@kode');
+        Route::get('pinjaman-angsuran', 'Simpan_Pinjam\PinjamanController@angsuran_pinjaman');
 
         Route::post('angsuran', 'Simpan_Pinjam\PinjamanController@angsuran');
         Route::post('angsuran-lunas', 'Simpan_Pinjam\PinjamanController@angsuran_lunas');
