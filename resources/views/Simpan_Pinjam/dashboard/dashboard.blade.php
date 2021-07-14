@@ -51,14 +51,15 @@
             <!-- small box -->
             <div class="small-box bg-maroon">
                 <div class="inner">
-                    <h3>Rp. {{ number_format($count_simpanan, 2, ',','.') }}</h3>
+                    <h3>Rp. {{ number_format($count_simpanan, 2, ',', '.') }}</h3>
 
                     <p>Total Simpanan</p>
                 </div>
                 <div class="icon">
                     <i class="ion ion-card"></i>
                 </div>
-                <a href="{{ route('data.index') }}" class="small-box-footer">Info lebih <i class="fas fa-arrow-circle-right"></i></a>
+                <a href="{{ route('data.index') }}" class="small-box-footer">Info lebih <i
+                        class="fas fa-arrow-circle-right"></i></a>
             </div>
         </div>
         <!-- ./col -->
@@ -101,7 +102,7 @@
     <!-- Sparkline -->
     <script src="{{ asset('assets/plugins/sparklines/sparkline.js') }}"></script>
     <!-- SweetAlert2 -->
-    <script src="{{ asset('assets/plugins/sweetalert2/sweetalert2.min.js') }}"></script> 
+    <script src="{{ asset('assets/plugins/sweetalert2/sweetalert2.min.js') }}"></script>
 @endpush
 
 @section('script')
@@ -152,7 +153,7 @@
             var salesGraphChartData = {
                 labels: [
                     @for ($i = 0; $i < sizeof($monthly); $i++)
-                        '{{ date("F Y", strtotime($monthly[$i]["month"])) }}',
+                        '{{ date('F Y', strtotime($monthly[$i]['month'])) }}',
                     @endfor
                 ],
                 datasets: [{
@@ -193,6 +194,7 @@
                     }],
                     yAxes: [{
                         ticks: {
+                            beginAtZero: true,
                             stepSize: 100000,
                             fontColor: '#000000',
                         },
@@ -212,17 +214,16 @@
                 options: salesGraphChartOptions
             })
         });
-
     </script>
 
     @if (session()->has('success'))
-    <script>
-        Swal.fire({
-            title: 'Berhasil!',
-            text: '{{ session()->get('success') }}',
-            icon: 'success',
-            confirmButtonText: 'OK'
-        })
-    </script>
+        <script>
+            Swal.fire({
+                title: 'Berhasil!',
+                text: '{{ session()->get('success') }}',
+                icon: 'success',
+                confirmButtonText: 'OK'
+            })
+        </script>
     @endif
 @endsection

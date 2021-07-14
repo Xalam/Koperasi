@@ -138,7 +138,16 @@ class PinjamanController extends Controller
     public function kode()
     {
         $idAnggota = getallheaders()['id'];
-        $data = Pinjaman::select('id', 'kode_pinjaman')->where('lunas', 0)->where('id_anggota', $idAnggota)->orderBy('id', 'DESC')->first();
+        $pinjaman = Pinjaman::where('lunas', 0)->where('id_anggota', $idAnggota)->orderBy('id', 'DESC')->first();
+
+        $bayarAngsuran  = $pinjaman->nominal_pinjaman / $pinjaman->tenor;
+        $tenorAngsuran  = $pinjaman->tenor - $pinjaman->angsuran_ke;
+        $bunga          = $pinjaman->nominal_pinjaman * ($pinjaman->bunga / 100);
+        $totalBayar     = $bayarAngsuran * $tenorAngsuran + $bunga;
+
+        $data['id'] = $pinjaman->id;
+        $data['kode_pinjaman'] = $pinjaman->kode_pinjaman;
+        $data['total_bayar'] = $totalBayar;
 
         return ResponseFormatter::success($data, 'Berhasil mendapatkan data');
     }
@@ -228,5 +237,27 @@ class PinjamanController extends Controller
 
             return ResponseFormatter::success($data, 'Berhasil menambah pengajuan pelunasan angsuran');
         }
+    }
+
+    public function angsuran_pinjaman()
+    {
+        $idAnggota = getallheaders()['id'];
+
+        $pinjaman = Pinjaman::where('id_anggota', $idAnggota)->where('lunas', 0)->where('status', 1)->orderBy('id', 'DESC')->first();
+        $angsuran = Angsuran::where('id_pinjaman', $pinjaman->id)->where('status', 1)->orderBy('id', 'DESC')->first();
+
+        if ($pinjaman) {
+            $data['nominal_pinjaman'] = $pinjaman->nominal_pinjaman;
+
+            if ($angsuran) {
+                $data['sisa_angsuran'] = $angsuran->sisa_angsuran;
+            } else {
+                $data['sisa_angsuran'] = $pinjaman->nominal_angsuran * $pinjaman->tenor;
+            }
+
+            return ResponseFormatter::success($data, 'Berhasil mendapatkan data');
+        }
+
+        return ResponseFormatter::error('Tidak terdapat pinjaman');
     }
 }

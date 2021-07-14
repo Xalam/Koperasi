@@ -17,9 +17,9 @@ class DashboardController extends Controller
     public function index()
     {
         $anggota    = Anggota::get();
-        $pinjaman   = Pinjaman::whereYear('tanggal', date('Y'))->get();
-        $simpanan   = Simpanan::whereYear('tanggal', date('Y'))->get();
-        $saldoTarik = SaldoTarik::whereYear('tanggal', date('Y'))->get();
+        $pinjaman   = Pinjaman::whereYear('tanggal', date('Y'))->where('status', 1)->get();
+        $simpanan   = Simpanan::whereYear('tanggal', date('Y'))->where('status', 1)->get();
+        $saldoTarik = SaldoTarik::whereYear('tanggal', date('Y'))->where('status', 1)->get();
 
         $idSimpanPinjam = Akun::where('kode_akun', 4101)->first();
         $idUnitToko     = Akun::where('kode_akun', 4102)->first();
@@ -28,18 +28,23 @@ class DashboardController extends Controller
         $idArisan       = Akun::where('kode_akun', 4104)->first();
         $idHPP          = Akun::where('kode_akun', 5101)->first();
 
-        $laba = JurnalUmum::selectRaw("sum(debet) as debet, sum(kredit) as kredit, DATE_FORMAT(tanggal, '%Y-%m') monthly")
+        $laba = JurnalUmum::selectRaw("sum(debet) as debet, sum(kredit) as kredit, DATE_FORMAT(tanggal, '%m') monthly")
             ->whereYear('tanggal', date('Y'))
             ->whereIn('id_akun', [$idSimpanPinjam->id, $idUnitToko->id, $idFotoCopy->id, $idRuko->id, $idArisan->id, $idHPP->id])
             ->orderBy('tanggal', 'ASC')
             ->groupBy('monthly')->get();
 
         $monthly = [];
-        foreach ($laba as $key => $value) {
-            $monthly[] = [
-                'month' => $value->monthly,
-                'laba'  => $value->kredit - $value->debet
-            ];
+        $countMonth = '';
+        for ($i = 1; $i < 13; $i++) {
+            $countMonth = str_pad($i, 2, '0', STR_PAD_LEFT);
+
+            foreach ($laba as $key => $value) {
+                $monthly[] = [
+                    'month' => date('Y-') . $countMonth,
+                    'laba'  => ($value->monthly != $countMonth) ? 0 : $value->kredit - $value->debet
+                ];
+            }
         }
 
         $count_laba     = $laba->sum('kredit') - $laba->sum('debet');

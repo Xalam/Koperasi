@@ -4,12 +4,12 @@
 
 @section('content_header', 'Edit Simpanan')
 
-@push('style')
-    <link rel="stylesheet"
-        href="{{ asset('assets/plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css') }}">
-    <link rel="stylesheet" href="{{ asset('assets/plugins/select2/css/select2.min.css') }}">
-    <link rel="stylesheet" href="{{ asset('assets/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css') }}">
-@endpush
+    @push('style')
+        <link rel="stylesheet"
+            href="{{ asset('assets/plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css') }}">
+        <link rel="stylesheet" href="{{ asset('assets/plugins/select2/css/select2.min.css') }}">
+        <link rel="stylesheet" href="{{ asset('assets/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css') }}">
+    @endpush
 
 @section('breadcrumb')
     <li class="breadcrumb-item"><a href="#">Simpanan</a></li>
@@ -25,28 +25,32 @@
                     <h3 class="card-title">Edit Simpanan</h3>
                 </div>
                 <div class="card-body mx-auto col-md-6">
-                    <form id="form-data" action="{{ route('data.update', $simpanan->id) }}" role="form" method="post" autocomplete="off">
+                    <form id="form-data" action="{{ route('data.edit-all', $simpanan->id) }}" role="form" method="post"
+                        autocomplete="off">
                         @csrf
                         @method('put')
                         <div class="form-group">
                             <label for="kode-simpanan">Kode Simpanan</label>
-                            <input type="text" class="form-control" id="kode-simpanan" value="{{ $simpanan->kode_simpanan }}" disabled>
+                            <input type="text" class="form-control" id="kode-simpanan"
+                                value="{{ $simpanan->kode_simpanan }}" disabled>
                         </div>
                         <div class="form-group">
                             <label for="id-anggota">Nama Anggota</label>
-                            <input type="text" class="form-control" id="id-anggota" value="{{ $simpanan->anggota->kd_anggota . '-' . $simpanan->anggota->nama_anggota }}" disabled>
+                            <input type="text" class="form-control" id="id-anggota"
+                                value="{{ $simpanan->anggota->kd_anggota . '-' . $simpanan->anggota->nama_anggota }}"
+                                disabled>
                         </div>
                         <div class="form-group">
                             <label>Tanggal</label>
                             <div class="input-group date" id="tanggal" data-target-input="nearest">
                                 <input type="text" class="form-control datetimepicker-input" data-target="#tanggal"
-                                    name="tanggal" value="{{ $simpanan->tanggal }}" placeholder="Tanggal"/>
+                                    name="tanggal" value="{{ $simpanan->tanggal }}" placeholder="Tanggal" disabled />
                                 <div class="input-group-append" data-target="#tanggal" data-toggle="datetimepicker">
                                     <div class="input-group-text"><i class="fa fa-calendar"></i></div>
                                 </div>
                             </div>
                         </div>
-                        <div class="form-group">
+                        {{-- <div class="form-group">
                             <label>Nominal</label>
                             <div class="input-group">
                                 <div class="input-group-prepend">
@@ -63,18 +67,20 @@
                                 <option {{ $simpanan->jenis_simpanan == 2 ? 'selected="selected"' : ''}} value="2">Simpanan Wajib</option>
                                 <option {{ $simpanan->jenis_simpanan == 3 ? 'selected="selected"' : ''}} value="3">Simpanan Sukarela</option>
                             </select>
-                        </div>
+                        </div> --}}
                         <div class="form-group">
                             <label>Pembayaran</label>
                             <select class="form-control select2" style="width: 100%;" name="status">
-                                <option {{ $simpanan->status == 0 ? 'selected="selected"' : '' }} value="0">Belum Bayar</option>
-                                <option {{ $simpanan->status == 1 ? 'selected="selected"' : ''}} value="1">Sudah Bayar</option>
+                                <option {{ $simpanan->status == 0 ? 'selected="selected"' : '' }} value="0">Belum Bayar
+                                </option>
+                                <option {{ $simpanan->status == 1 ? 'selected="selected"' : '' }} value="1">Sudah Bayar
+                                </option>
                             </select>
                         </div>
-                        <div class="form-group">
+                        {{-- <div class="form-group">
                             <label for="keterangan">Keterangan</label>
                             <input type="text" class="form-control" name="keterangan" id="keterangan" placeholder="Masukkan keterangan" value="{{ $simpanan->keterangan }}">
-                        </div>
+                        </div> --}}
                         <a href="{{ route('data.index') }}" class="btn btn-light">Kembali</a>&nbsp;
                         <button type="submit" class="btn btn-primary">Ubah</button>
                     </form>
@@ -102,14 +108,14 @@
                 reverse: true
             });
 
-            $('#tanggal').datetimepicker({
-                format: 'YYYY-MM-DD'
-            });
+            // $('#tanggal').datetimepicker({
+            //     format: 'YYYY-MM-DD'
+            // });
 
             $('.select2').select2();
 
             $.validator.setDefaults({
-                submitHandler: function () {
+                submitHandler: function() {
                     form.submit();
                 }
             });
@@ -121,7 +127,7 @@
                     },
                     nominal: {
                         required: true
-                    }, 
+                    },
                 },
                 messages: {
                     tanggal: "Tanggal wajib diisi",
@@ -140,6 +146,5 @@
                 }
             });
         })
-
     </script>
 @endsection

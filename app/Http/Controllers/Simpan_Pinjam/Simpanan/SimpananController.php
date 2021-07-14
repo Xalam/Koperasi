@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Simpan_Pinjam\Laporan\JurnalUmum;
 use App\Models\Simpan_Pinjam\Master\Akun\Akun;
 use App\Models\Simpan_Pinjam\Master\Anggota\Anggota;
+use App\Models\Simpan_Pinjam\Other\Notifikasi;
 use App\Models\Simpan_Pinjam\Simpanan\Saldo;
 use App\Models\Simpan_Pinjam\Simpanan\Simpanan;
 use Illuminate\Http\Request;
@@ -23,6 +24,8 @@ class SimpananController extends Controller
         $pokok      = $simpanan->where('jenis_simpanan', 1);
         $wajib      = $simpanan->where('jenis_simpanan', 2);
         $sukarela   = $simpanan->where('jenis_simpanan', 3);
+
+        $anggota    = Anggota::all();
 
         if (request()->ajax()) {
             switch (request()->filter) {
@@ -42,8 +45,8 @@ class SimpananController extends Controller
                                                 data-toggle="modal" data-target="#modalKonfirmasi" class="btn btn-info btn-sm">
                                                 <i class="far fa-plus-square"></i>&nbsp; Proses</a>' : '<span class="badge bg-success">Sudah Bayar</span>',
                             'keterangan'     => $value->keterangan == null ? '-' : $value->keterangan,
-                            'action'         => ($value->status == 0) ? '<a href="#mymodal" data-remote="' . route('data.modal', $value->id) . '" data-toggle="modal" data-target="#mymodal" class="btn btn-danger btn-sm"><i class="far fa-trash-alt"></i>&nbsp; Hapus</a>'
-                                : '<a href="' . route('data.print', $value->id) . '" class="btn btn-light btn-sm"><i class="fas fa-print"></i>&nbsp; Cetak</a>'
+                            'action'         => ($value->status == 0) ? '<span data-remote="' . route('data.modal', $value->id) . '" data-toggle="modal" data-target="#mymodal"><a href="#mymodal" class="btn btn-danger btn-sm" data-toggle="tooltip" data-placement="top" title="Hapus"><i class="far fa-trash-alt"></i></a></span>'
+                                : '<a href="' . route('data.print', $value->id) . '" class="btn btn-light btn-sm" data-toggle="tooltip" data-placement="top" title="Cetak"><i class="fas fa-print"></i></a>' . '<a href="' . route('data.edit', $value->id) . '" class="btn btn-sm btn-warning" data-toggle="tooltip" data-placement="top" title="Edit"><i class="fas fa-edit"></i></a>'
                         ];
                     }
                     return response()->json(compact('data'));
@@ -64,8 +67,8 @@ class SimpananController extends Controller
                                                 data-toggle="modal" data-target="#modalKonfirmasi" class="btn btn-info btn-sm">
                                                 <i class="far fa-plus-square"></i>&nbsp; Proses</a>' : '<span class="badge bg-success">Sudah Bayar</span>',
                             'keterangan'     => $value->keterangan == null ? '-' : $value->keterangan,
-                            'action'         => ($value->status == 0) ? '<a href="#mymodal" data-remote="' . route('data.modal', $value->id) . '" data-toggle="modal" data-target="#mymodal" class="btn btn-danger btn-sm"><i class="far fa-trash-alt"></i>&nbsp; Hapus</a>'
-                                : '<a href="' . route('data.print', $value->id) . '" class="btn btn-light btn-sm"><i class="fas fa-print"></i>&nbsp; Cetak</a>'
+                            'action'         => ($value->status == 0) ? '<span data-remote="' . route('data.modal', $value->id) . '" data-toggle="modal" data-target="#mymodal"><a href="#mymodal" class="btn btn-danger btn-sm" data-toggle="tooltip" data-placement="top" title="Hapus"><i class="far fa-trash-alt"></i></a></span>'
+                                : '<a href="' . route('data.print', $value->id) . '" class="btn btn-light btn-sm" data-toggle="tooltip" data-placement="top" title="Cetak"><i class="fas fa-print"></i></a>' . '<a href="' . route('data.edit', $value->id) . '" class="btn btn-sm btn-warning" data-toggle="tooltip" data-placement="top" title="Edit"><i class="fas fa-edit"></i></a>'
                         ];
                     }
                     return response()->json(compact('data'));
@@ -86,8 +89,8 @@ class SimpananController extends Controller
                                                 data-toggle="modal" data-target="#modalKonfirmasi" class="btn btn-info btn-sm">
                                                 <i class="far fa-plus-square"></i>&nbsp; Proses</a>' : '<span class="badge bg-success">Sudah Bayar</span>',
                             'keterangan'     => $value->keterangan == null ? '-' : $value->keterangan,
-                            'action'         => ($value->status == 0) ? '<a href="#mymodal" data-remote="' . route('data.modal', $value->id) . '" data-toggle="modal" data-target="#mymodal" class="btn btn-danger btn-sm"><i class="far fa-trash-alt"></i>&nbsp; Hapus</a>'
-                                : '<a href="' . route('data.print', $value->id) . '" class="btn btn-light btn-sm"><i class="fas fa-print"></i>&nbsp; Cetak</a>'
+                            'action'         => ($value->status == 0) ? '<span data-remote="' . route('data.modal', $value->id) . '" data-toggle="modal" data-target="#mymodal"><a href="#mymodal" class="btn btn-danger btn-sm" data-toggle="tooltip" data-placement="top" title="Hapus"><i class="far fa-trash-alt"></i></a></span>'
+                                : '<a href="' . route('data.print', $value->id) . '" class="btn btn-light btn-sm" data-toggle="tooltip" data-placement="top" title="Cetak"><i class="fas fa-print"></i></a>' . '<a href="' . route('data.edit', $value->id) . '" class="btn btn-sm btn-warning" data-toggle="tooltip" data-placement="top" title="Edit"><i class="fas fa-edit"></i></a>'
                         ];
                     }
                     return response()->json(compact('data'));
@@ -117,15 +120,15 @@ class SimpananController extends Controller
                                                 data-toggle="modal" data-target="#modalKonfirmasi" class="btn btn-info btn-sm">
                                                 <i class="far fa-plus-square"></i>&nbsp; Proses</a>' : '<span class="badge bg-success">Sudah Bayar</span>',
                             'keterangan'     => $value->keterangan == null ? '-' : $value->keterangan,
-                            'action'         => ($value->status == 0) ? '<a href="#mymodal" data-remote="' . route('data.modal', $value->id) . '" data-toggle="modal" data-target="#mymodal" class="btn btn-danger btn-sm"><i class="far fa-trash-alt"></i>&nbsp; Hapus</a>'
-                                : '<a href="' . route('data.print', $value->id) . '" class="btn btn-light btn-sm"><i class="fas fa-print"></i>&nbsp; Cetak</a>'
+                            'action'         => ($value->status == 0) ? '<span data-remote="' . route('data.modal', $value->id) . '" data-toggle="modal" data-target="#mymodal"><a href="#mymodal" class="btn btn-danger btn-sm" data-toggle="tooltip" data-placement="top" title="Hapus"><i class="far fa-trash-alt"></i></a></span>'
+                                : '<a href="' . route('data.print', $value->id) . '" class="btn btn-light btn-sm" data-toggle="tooltip" data-placement="top" title="Cetak"><i class="fas fa-print"></i></a>' . '<a href="' . route('data.edit', $value->id) . '" class="btn btn-sm btn-warning" data-toggle="tooltip" data-placement="top" title="Edit"><i class="fas fa-edit"></i></a>'
                         ];
                     }
                     return response()->json(compact('data'));
                     break;
             }
         }
-        return view('Simpan_Pinjam.simpanan.simpanan');
+        return view('Simpan_Pinjam.simpanan.simpanan', compact('anggota'));
     }
 
     /**
@@ -281,11 +284,11 @@ class SimpananController extends Controller
      */
     public function edit($id)
     {
-        // $simpanan = Simpanan::with('anggota')->findOrFail($id);
+        $simpanan = Simpanan::with('anggota')->findOrFail($id);
 
-        // return view('Simpan_Pinjam.simpanan.edit')->with([
-        //     'simpanan' => $simpanan
-        // ]);
+        return view('Simpan_Pinjam.simpanan.edit')->with([
+            'simpanan' => $simpanan
+        ]);
     }
 
     /**
@@ -411,6 +414,14 @@ class SimpananController extends Controller
 
         $simpanan->delete();
 
+        $notifikasi = new Notifikasi();
+
+        $notifikasi->create([
+            'id_anggota' => $simpanan->id_anggota,
+            'title'      => 'Penolakan Simpanan',
+            'content'    => 'Pengajuan simpanan Anda pada tanggal ' . date('d-m-Y', strtotime($simpanan->tanggal)) . ' sebesar Rp ' . number_format($simpanan->nominal, 0, '', '.') . ' ditolak.'
+        ]);
+
         return redirect()->route('data.index')->with([
             'success' => 'Simpanan anggota berhasil dihapus'
         ]);
@@ -531,5 +542,29 @@ class SimpananController extends Controller
         $simpanan = Simpanan::findOrFail($id);
 
         return view('Simpan_Pinjam.simpanan.modal-proses', compact('simpanan'));
+    }
+
+    public function edit_all(Request $request, $id)
+    {
+        $simpanan = Simpanan::findOrFail($id);
+
+        if ($request->status == 0) {
+            //Delete Jurnal
+            JurnalUmum::where('kode_jurnal', $simpanan->kode_jurnal)->delete();
+
+            $simpanan->kode_jurnal = null;
+            //Kurangi Saldo
+            $saldo = Saldo::where('id_anggota', $simpanan->id_anggota)->where('jenis_simpanan', $simpanan->jenis_simpanan)->first();
+
+            $saldo->saldo -= $simpanan->nominal;
+            $saldo->update();
+        }
+
+        $simpanan->status = $request->status;
+        $simpanan->update();
+
+        return redirect()->route('data.index')->with([
+            'success' => 'Berhasil mengubah data'
+        ]);
     }
 }

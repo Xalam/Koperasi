@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Simpan_Pinjam\Pinjaman;
 use App\Http\Controllers\Controller;
 use App\Models\Simpan_Pinjam\Laporan\JurnalUmum;
 use App\Models\Simpan_Pinjam\Master\Akun\Akun;
+use App\Models\Simpan_Pinjam\Other\Notifikasi;
 use App\Models\Simpan_Pinjam\Pinjaman\Angsuran;
 use App\Models\Simpan_Pinjam\Pinjaman\Pinjaman;
 use Illuminate\Http\Request;
@@ -444,6 +445,14 @@ class JatuhTempoController extends Controller
         $angsuran = Angsuran::findOrFail($id);
 
         $angsuran->delete();
+
+        $notifikasi = new Notifikasi();
+
+        $notifikasi->create([
+            'id_anggota' => $angsuran->pinjaman->id_anggota,
+            'title'      => 'Penolakan Pelunasan Sebelum Jatuh Tempo',
+            'content'    => 'Pengajuan pelunasan Anda pada tanggal ' . date('d-m-Y', strtotime($angsuran->tanggal)) . ' sebesar Rp ' . number_format($angsuran->total_bayar, 0, '', '.') . ' ditolak.'
+        ]);
 
         return redirect()->route('tempo.index')->with([
             'success' => 'Berhasil menghapus pengajuan angsuran'

@@ -28,9 +28,15 @@ Route::namespace('API')->group(function () {
 
         Route::get('pinjaman-history', 'Simpan_Pinjam\PinjamanController@history');
         Route::get('pinjaman-kode', 'Simpan_Pinjam\PinjamanController@kode');
+        Route::get('pinjaman-angsuran', 'Simpan_Pinjam\PinjamanController@angsuran_pinjaman');
 
         Route::post('angsuran', 'Simpan_Pinjam\PinjamanController@angsuran');
         Route::post('angsuran-lunas', 'Simpan_Pinjam\PinjamanController@angsuran_lunas');
+
+        Route::get('notifikasi', 'Simpan_Pinjam\NotifikasiController@index');
+        Route::get('notifikasi-unread', 'Simpan_Pinjam\NotifikasiController@unread');
+        Route::get('notifikasi/{id}', 'Simpan_Pinjam\NotifikasiController@detail');
+        Route::delete('notifikasi/delete', 'Simpan_Pinjam\NotifikasiController@delete');
     });
 
     Route::prefix('toko')->group(function () {

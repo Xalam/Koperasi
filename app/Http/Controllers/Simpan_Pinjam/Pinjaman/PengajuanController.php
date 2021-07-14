@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Simpan_Pinjam\Laporan\JurnalUmum;
 use App\Models\Simpan_Pinjam\Master\Akun\Akun;
 use App\Models\Simpan_Pinjam\Master\Anggota\Anggota;
+use App\Models\Simpan_Pinjam\Other\Notifikasi;
 use App\Models\Simpan_Pinjam\Pengaturan\Pengaturan;
 use App\Models\Simpan_Pinjam\Pinjaman\Pinjaman;
 use Illuminate\Http\Request;
@@ -376,6 +377,14 @@ class PengajuanController extends Controller
         $pinjaman = Pinjaman::findOrFail($id);
 
         $pinjaman->delete();
+
+        $notifikasi = new Notifikasi();
+
+        $notifikasi->create([
+            'id_anggota' => $pinjaman->id_anggota,
+            'title'      => 'Penolakan Pengajuan Pinjaman',
+            'content'    => 'Pengajuan pinjaman Anda pada tanggal ' . date('d-m-Y', strtotime($pinjaman->tanggal)) . ' sebesar Rp ' . number_format($pinjaman->nominal_pinjaman, 0, '', '.') . ' ditolak.'
+        ]);
 
         return redirect()->route('pengajuan.index')->with([
             'success' => 'Berhasil menghapus pengajuan pinjaman'
