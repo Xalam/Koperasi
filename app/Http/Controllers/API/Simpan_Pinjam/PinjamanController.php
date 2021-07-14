@@ -140,16 +140,22 @@ class PinjamanController extends Controller
         $idAnggota = getallheaders()['id'];
         $pinjaman = Pinjaman::where('lunas', 0)->where('id_anggota', $idAnggota)->orderBy('id', 'DESC')->first();
 
-        $bayarAngsuran  = $pinjaman->nominal_pinjaman / $pinjaman->tenor;
-        $tenorAngsuran  = $pinjaman->tenor - $pinjaman->angsuran_ke;
-        $bunga          = $pinjaman->nominal_pinjaman * ($pinjaman->bunga / 100);
-        $totalBayar     = $bayarAngsuran * $tenorAngsuran + $bunga;
+        $totalBayar = 0;
 
-        $data['id'] = $pinjaman->id;
-        $data['kode_pinjaman'] = $pinjaman->kode_pinjaman;
-        $data['total_bayar'] = $totalBayar;
+        if ($pinjaman) {
+            $bayarAngsuran  = $pinjaman->nominal_pinjaman / $pinjaman->tenor;
+            $tenorAngsuran  = $pinjaman->tenor - $pinjaman->angsuran_ke;
+            $bunga          = $pinjaman->nominal_pinjaman * ($pinjaman->bunga / 100);
+            $totalBayar     = $bayarAngsuran * $tenorAngsuran + $bunga;
 
-        return ResponseFormatter::success($data, 'Berhasil mendapatkan data');
+            $data['id'] = $pinjaman->id;
+            $data['kode_pinjaman'] = $pinjaman->kode_pinjaman;
+            $data['total_bayar'] = $totalBayar;
+
+            return ResponseFormatter::success($data, 'Berhasil mendapatkan data');
+        }
+
+        return ResponseFormatter::error('Tidak ada pinjaman');
     }
 
     public function angsuran(Request $request)
@@ -178,7 +184,7 @@ class PinjamanController extends Controller
             }
 
             $angsuran = new Angsuran();
-            $angsuran->kode_angsuran    = 'ASN-' . str_replace('-', '', date('Y-m-d')) . '-' . str_pad($id, 6, '0', STR_PAD_LEFT);
+            $angsuran->kode_angsuran    = 'ASN-' . str_replace('-', '', $request->tanggal) . '-' . str_pad($id, 6, '0', STR_PAD_LEFT);
             $angsuran->id_pinjaman      = $request->id_pinjaman;
             $angsuran->tanggal          = $request->tanggal;
             $angsuran->nominal_angsuran = $pinjamanUpdate->nominal_angsuran;
@@ -219,12 +225,12 @@ class PinjamanController extends Controller
             $potongan       = $bunga * $tenorAngsuran;
 
             $angsuran = new Angsuran();
-            $angsuran->kode_angsuran    = 'ASN-' . str_replace('-', '', date('Y-m-d')) . '-' . str_pad($id, 6, '0', STR_PAD_LEFT);
+            $angsuran->kode_angsuran    = 'ASN-' . str_replace('-', '', $request->tanggal) . '-' . str_pad($id, 6, '0', STR_PAD_LEFT);
             $angsuran->id_pinjaman      = $request->id_pinjaman;
             $angsuran->tanggal          = $request->tanggal;
             $angsuran->nominal_angsuran = $pinjamanUpdate->nominal_angsuran;
             $angsuran->sisa_angsuran    = 0;
-            $angsuran->sisa_bayar       = 0;
+            $angsuran->sisa_bayar       = $pinjamanUpdate->tenor - $pinjamanUpdate->angsuran_ke - 1;
             $angsuran->potongan         = str_replace(',', '', $potongan);
             $angsuran->status           = 0;
             $angsuran->lunas            = 0;

@@ -27,7 +27,8 @@
                         <div class="row">
                             <div class="col-12">
                                 <h4>
-                                    <small class="float-right" style="font-size: 10pt;">Tanggal Cetak: {{ date('d-m-Y H:i:s') }}</small>
+                                    <small class="float-right" style="font-size: 10pt;">Tanggal Cetak:
+                                        {{ date('d-m-Y H:i:s') }}</small>
                                 </h4>
                             </div>
                             <!-- /.col -->
@@ -92,7 +93,8 @@
                                     <tbody>
                                         <tr>
                                             <td>{{ $angsuran->pinjaman->kode_pinjaman }}</td>
-                                            <td>{{ number_format($angsuran->pinjaman->nominal_pinjaman, 2, ',', '.') }}</td>
+                                            <td>{{ number_format($angsuran->pinjaman->nominal_pinjaman, 2, ',', '.') }}
+                                            </td>
                                             <td>{{ number_format($angsuran->nominal_angsuran, 2, ',', '.') }}</td>
                                             <td>{{ $angsuran->pinjaman->tenor }}x</td>
                                             <td>{{ $angsuran->sisa_bayar }}x</td>
@@ -121,7 +123,7 @@
                                         </tr>
                                         <tr>
                                             <th style="width:50%">Angsuran Ke</th>
-                                            <td>{{ $angsuran->pinjaman->angsuran_ke }}
+                                            <td>{{ $angsuran->pinjaman->tenor - $angsuran->sisa_bayar }}
                                                 @if ($angsuran->lunas == 1)
                                                     (<b>LUNAS</b>)
                                                 @endif
@@ -136,11 +138,11 @@
                                             <td>
                                                 @php
                                                     $potongan = $angsuran->potongan;
-                                                    $ang      = $angsuran->nominal_angsuran;
-                                                    $tenor    = $angsuran->pinjaman->tenor;
-                                                    $ang_ke   = $angsuran->pinjaman->angsuran_ke;
+                                                    $ang = $angsuran->nominal_angsuran;
+                                                    $tenor = $angsuran->pinjaman->tenor;
+                                                    $ang_ke = $angsuran->pinjaman->angsuran_ke;
                                                     
-                                                    $result   = ($ang * ($tenor - $ang_ke)) - $potongan;
+                                                    $result = $ang * ($tenor - $ang_ke) - $potongan;
                                                 @endphp
                                                 Rp. {{ number_format($result, 2, ',', '.') }}</td>
                                         </tr>
@@ -154,7 +156,8 @@
                         <!-- this row will not appear when printing -->
                         <div class="row no-print">
                             <div class="col-12">
-                                <a href="{{ route('tempo.index') }}" class="btn btn-light float-right" style="margin-right: 5px;"><i></i> Kembali</a>
+                                <a href="{{ route('tempo.index') }}" class="btn btn-light float-right"
+                                    style="margin-right: 5px;"><i></i> Kembali</a>
                             </div>
                         </div>
                     </div>
@@ -164,7 +167,6 @@
     </div>
     <script>
         window.addEventListener("load", window.print());
-
     </script>
 </body>
 
