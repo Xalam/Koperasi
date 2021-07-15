@@ -34,7 +34,7 @@
                     $total_kredit = 0;
                     @endphp
                     @foreach ($akun as $data)
-                    <tr>
+                    <tr id="row-<?php echo $data->id ?>">
                         <th class="align-middle text-center">
                             <div>{{$i++}}</div>
                         </th>
@@ -69,8 +69,10 @@
                                 onclick="edit(<?php echo $data->id ?>)"><i class="fas fa-edit p-1"></i> Edit</a>
                             <a id=<?php echo "terapkan-" . $data->id ?> class="w-48 btn btn-sm btn-warning d-none"
                                 onclick="terapkan(<?php echo $data->id ?>)">Terapkan</a>
-                            <a id=<?php echo "hapus-" . $data->id ?> class="w-52 btn btn-sm btn-danger"
+                            <a id=<?php echo "hapus-" . $data->id ?> class="w-50 btn btn-sm btn-danger"
                                 onclick="show_popup_hapus(<?php echo $data->id ?>)"><i class="fas fa-trash-alt p-1"></i> Hapus</a>
+                            <a id=<?php echo "batal-" . $data->id ?> class="w-50 btn btn-sm btn-danger d-none"
+                                onclick="batal(<?php echo $data->id ?>)">Batal</a>
                         </td>
                     </tr>
                     @endforeach
@@ -119,40 +121,85 @@ function edit(id) {
     $("#kredit-" + id).addClass("d-none");
     $("#edit-kredit-" + id).removeClass("d-none");
     $("#edit-" + id).addClass("d-none");
+    $("#hapus-" + id).addClass("d-none");
     $("#terapkan-" + id).removeClass("d-none");
+    $("#batal-" + id).removeClass("d-none");
+}
+
+function batal(id) {
+    $("#kode-" + id).removeClass("d-none");
+    $("#edit-kode-" + id).val($("#kode-" + id).text());
+    $("#edit-kode-" + id).addClass("d-none");
+    $("#nama-" + id).removeClass("d-none");
+    $("#edit-nama-" + id).val($("#nama-" + id).text());
+    $("#edit-nama-" + id).addClass("d-none");
+    $("#debit-" + id).removeClass("d-none");
+    $("#edit-debit-" + id).val($("#debit-" + id).text());
+    $("#edit-debit-" + id).addClass("d-none");
+    $("#kredit-" + id).removeClass("d-none");
+    $("#edit-kredit-" + id).val($("#kredit-" + id).text());
+    $("#edit-kredit-" + id).addClass("d-none");
+    $("#edit-" + id).removeClass("d-none");
+    $("#hapus-" + id).removeClass("d-none");
+    $("#terapkan-" + id).addClass("d-none");
+    $("#batal-" + id).addClass("d-none");
 }
 
 function terapkan(id) {
-    $.ajax({
-        url: '/toko/master/akun/update/',
-        type: 'POST',
-        data: {
-            id: id,
-            kode: $('#edit-kode-' + id).val(),
-            nama: $('#edit-nama-' + id).val(),
-            debit: $('#edit-debit-' + id).val(),
-            kredit: $('#edit-kredit-' + id).val()
-        },
-        success: function(response) {
-            if (response.code == 200) {
-                $("#kode-" + id).removeClass("d-none");
-                $("#edit-kode-" + id).addClass("d-none");
-                $("#nama-" + id).removeClass("d-none");
-                $("#edit-nama-" + id).addClass("d-none");
-                $("#debit-" + id).removeClass("d-none");
-                $("#edit-debit-" + id).addClass("d-none");
-                $("#kredit-" + id).removeClass("d-none");
-                $("#edit-kredit-" + id).addClass("d-none");
-                $("#edit-" + id).removeClass("d-none");
-                $("#terapkan-" + id).addClass("d-none");
+    var allFilled = false;
+    var index = 0;
 
-                $("#kode-" + id).html(response.akun.kode);
-                $("#nama-" + id).html(response.akun.nama);
-                $("#debit-" + id).html(response.akun.debit);
-                $("#kredit-" + id).html(response.akun.kredit);
+    $('#row-' + id).find('input').each(function() {
+        if(!$(this).val()){
+            $(this).popover({content: "Tidak boleh kosong", placement: "top", trigger: "focus"}).popover('show');
+            allFilled = false;
+        } else {
+            if (index == 0) {
+                allFilled = true;
+            } else {
+                if (allFilled == true) {
+                    allFilled = true;
+                } else {
+                    return false;
+                }
             }
         }
+
+        index++;
     });
+
+    if (allFilled) {
+        $.ajax({
+            url: '/toko/master/akun/update/',
+            type: 'POST',
+            data: {
+                id: id,
+                kode: $('#edit-kode-' + id).val(),
+                nama: $('#edit-nama-' + id).val(),
+                debit: $('#edit-debit-' + id).val(),
+                kredit: $('#edit-kredit-' + id).val()
+            },
+            success: function(response) {
+                if (response.code == 200) {
+                    $("#kode-" + id).removeClass("d-none");
+                    $("#edit-kode-" + id).addClass("d-none");
+                    $("#nama-" + id).removeClass("d-none");
+                    $("#edit-nama-" + id).addClass("d-none");
+                    $("#debit-" + id).removeClass("d-none");
+                    $("#edit-debit-" + id).addClass("d-none");
+                    $("#kredit-" + id).removeClass("d-none");
+                    $("#edit-kredit-" + id).addClass("d-none");
+                    $("#edit-" + id).removeClass("d-none");
+                    $("#terapkan-" + id).addClass("d-none");
+
+                    $("#kode-" + id).html(response.akun.kode);
+                    $("#nama-" + id).html(response.akun.nama);
+                    $("#debit-" + id).html(response.akun.debit);
+                    $("#kredit-" + id).html(response.akun.kredit);
+                }
+            }
+        });
+    }
 }
 
 function hapus(id) {

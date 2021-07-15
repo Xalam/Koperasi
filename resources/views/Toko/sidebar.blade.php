@@ -15,6 +15,7 @@
                 <li>
                     <a href="/toko/dashboard"><i class="fas fa-th" aria-hidden="true"></i>Dashboard</a>
                 </li>
+                @if (auth()->user()->jabatan == 'Super_Admin' || auth()->user()->jabatan == 'Kanit')
                 <li class="sidebar-dropdown">
                     <a><i class="fas fa-server" aria-hidden="true"></i>Master</a>
                     <div class="sidebar-submenu">
@@ -27,8 +28,28 @@
                         </ul>
                     </div>
                 </li>
-            </ul>
-            <ul>
+                @endif
+                @if (auth()->user()->jabatan == 'Gudang')
+                <li class="sidebar-dropdown">
+                    <a><i class="fas fa-server" aria-hidden="true"></i>Master</a>
+                    <div class="sidebar-submenu">
+                        <ul>
+                            <li><a href="/toko/master/supplier">Supplier</a></li>
+                        </ul>
+                    </div>
+                </li>
+                @endif
+                @if (auth()->user()->jabatan == 'Kasir')
+                <li class="sidebar-dropdown">
+                    <a><i class="fas fa-server" aria-hidden="true"></i>Master</a>
+                    <div class="sidebar-submenu">
+                        <ul>
+                            <li><a href="/toko/master/anggota">Anggota</a></li>
+                        </ul>
+                    </div>
+                </li>
+                @endif
+                @if (auth()->user()->jabatan == 'Super_Admin')
                 <li class="sidebar-dropdown">
                     <a><i class="fas fa-receipt" aria-hidden="true"></i>Transaksi</a>
                     <div class="sidebar-submenu">
@@ -52,8 +73,44 @@
                         </ul>
                     </div>
                 </li>
-            </ul>
-            <ul>
+                @endif
+                @if (auth()->user()->jabatan == 'Kanit')
+                <li class="sidebar-dropdown">
+                    <a><i class="fas fa-receipt" aria-hidden="true"></i>Transaksi</a>
+                    <div class="sidebar-submenu">
+                        <ul>
+                            <li><a href="/toko/transaksi/konsinyasi">Konsinyasi</a></li>
+                            <li><a href="/toko/transaksi/hutang">Hutang</a></li>
+                            <li><a href="/toko/transaksi/piutang">Piutang</a></li>
+                            <li><a href="/toko/transaksi/jurnal">Jurnal</a></li>
+                            <li><a href="/toko/transaksi/pesanan-online">Pesanan Online</a></li>
+                        </ul>
+                    </div>
+                </li>
+                @endif
+                @if (auth()->user()->jabatan == 'Gudang')
+                <li class="sidebar-dropdown">
+                    <a><i class="fas fa-receipt" aria-hidden="true"></i>Transaksi</a>
+                    <div class="sidebar-submenu">
+                        <ul>
+                            <li><a href="/toko/transaksi/pembelian">Pembelian</a></li>
+                            <li><a href="/toko/transaksi/retur-pembelian">Retur Pembelian</a></li>
+                            <li><a href="/toko/transaksi/jurnal">Jurnal</a></li>
+                        </ul>
+                    </div>
+                </li>
+                @endif
+                @if (auth()->user()->jabatan == 'Kasir')
+                <li class="sidebar-dropdown">
+                    <a><i class="fas fa-receipt" aria-hidden="true"></i>Transaksi</a>
+                    <div class="sidebar-submenu">
+                        <ul>
+                            <li><a href="/toko/transaksi/penjualan">Penjualan</a></li>
+                        </ul>
+                    </div>
+                </li>
+                @endif
+                @if (auth()->user()->jabatan == 'Super_Admin' || auth()->user()->jabatan == 'Kanit')
                 <li class="sidebar-dropdown">
                     <a><i class="fas fa-book" aria-hidden="true"></i>Laporan</a>
                     <div class="sidebar-submenu">
@@ -77,6 +134,7 @@
                         </ul>
                     </div>
                 </li>
+                @endif
             </ul>
         </div>
     </div>

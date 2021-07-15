@@ -7,6 +7,7 @@ use App\Models\Toko\Master\Barang\BarangModel;
 use Illuminate\Http\Request;
 
 use App\Models\Toko\Master\Supplier\SupplierModel;
+use Illuminate\Support\Facades\Session;
 
 class SupplierController extends Controller
 {
@@ -49,7 +50,8 @@ class SupplierController extends Controller
     public function store(Request $request) {
         SupplierModel::create($request->all());
 
-        return redirect('/toko/master/supplier');
+        Session::flash('success', 'Berhasil');
+        return redirect()->to('/toko/master/supplier');
     }
 
     public function update(Request $request) {

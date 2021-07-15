@@ -27,6 +27,7 @@
                         <th>Daftar Barang</th>
                         <th>Jumlah Harga</th>
                         <th>Opsi</th>
+                        <th>Nota</th>
                     </tr>
                 </thead>
                 @if (count($pesanan_online) > 0)
@@ -43,22 +44,40 @@
                         <td class="align-middle">{{$data->nama_anggota}}</td>
                         <td class="align-middle text-center">{{$data->daftar_barang}}</td>
                         <td class="align-middle text-center">{{$data->jumlah_harga}}</td>
+
                         <td class="align-middle text-center">
+                            @if (auth()->user()->jabatan != 'Kanit')
                             <a id="<?php echo "check-" . $data->id; ?>" class="<?php 
                                     if ($data->proses == 0) {
                                         echo 'btn btn-sm btn-outline-success';
                                     } else {
                                         echo 'btn btn-sm btn-success';
                                     }
-                                ?>"
-                                onclick="checklist(<?php echo $data->id; ?>)"><?php 
+                                ?>" onclick="checklist(<?php echo $data->id; ?>)"><?php 
                                     if ($data->proses == 0) {
                                         echo 'Belum Diproses';
                                     } else {
                                         echo 'Sudah Diproses';
                                     }
                                 ?></a>
+                            @else
+                            <a class="<?php 
+                                    if ($data->proses == 0) {
+                                        echo 'btn btn-sm btn-outline-success';
+                                    } else {
+                                        echo 'btn btn-sm btn-success';
+                                    }
+                                ?>"><?php 
+                                    if ($data->proses == 0) {
+                                        echo 'Belum Diproses';
+                                    } else {
+                                        echo 'Sudah Diproses';
+                                    }
+                                ?></a>
+                            @endif
                         </td>
+                        <td class="align-middle text-center"><i class="text-success fas fa-print"
+                                style="cursor: pointer;" title="Print"></i></td>
                     </tr>
                     @endforeach
                 </tbody>

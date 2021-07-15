@@ -11,10 +11,12 @@
 
 @section('main')
 <div class="card m-6">
+    @if (auth()->user()->jabatan != 'Kanit')
     <div class="row-lg align-item-center">
         <button id="btn-daftar" class="btn btn-sm btn-primary col-lg-6" onclick="panel_daftar()">Daftar Utang</button>
         <button id="btn-bayar" class="btn btn-sm col-lg-6" onclick="panel_bayar()">Bayar Utang</button>
     </div>
+    @endif
     <div id="panel-bayar-utang" class="d-none">
         <p class="card-header bg-light">Tambah Angsuran</p>
         <div class="card-body">
@@ -79,7 +81,9 @@
                             <th>Jatuh Tempo</th>
                             <th>Nilai Hutang</th>
                             <th>Sisa Hutang</th>
+                            @if (auth()->user()->jabatan != 'Kanit')
                             <th>Opsi</th>
+                            @endif
                         </tr>
                     </thead>
                     @if (count($hutang) > 0)
@@ -100,10 +104,12 @@
                             <td class="align-middle text-center">{{$data->jatuh_tempo}}</td>
                             <td class="align-middle text-center">{{$data->jumlah_hutang}}</td>
                             <td class="align-middle text-center">{{$data->sisa_hutang}}</td>
+                            @if (auth()->user()->jabatan != 'Kanit')
                             <td class="align-middle text-center">
                                 <a id=<?php echo "bayar-" . $data->id ?> class="btn btn-sm btn-success"
                                     onclick="bayar(<?php echo $data->id ?>)">Bayar</a>
                             </td>
+                            @endif
                         </tr>
                         @endif
                         @endforeach

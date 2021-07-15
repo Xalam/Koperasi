@@ -1,7 +1,9 @@
 @extends('toko.layout')
 
 @section('main')
+@if (auth()->user()->jabatan != 'Kanit')
 <a href="{{url('toko/transaksi/jurnal-umum/create')}}" class="btn btn-sm btn-success mt-4 ms-4 pe-4"><i class="fas fa-plus"></i><b>Tambah</b></a>
+@endif
 <div class="card m-6">
     <p class="card-header bg-light">Daftar Jurnal</p>
     <div class="card-body">

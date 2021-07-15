@@ -22,22 +22,13 @@
 <body class="background-login">
     <div class='container-login align-item-center'>
         <div class="card-login">
-            <h4 class="text-center card-header p-3">Salepropos</h4>
+            <div class="card-header text-center">
+                <img src="{{ asset('assets/dist/img/logo-koperasi.png') }}" alt="Primkop Logo"
+                    class="brand-image img-circle elevation-3" style="opacity: .9; width: 60px; height: 60px;">
+                <h6 class="fw-bolder mt-3">Unit Toko Primkop Polrestabes Semarang</h6>
+            </div>
             <div class="card-body">
                 {!! Form::open(['url' => '/toko/login/store']) !!}
-                @if(session('errors'))
-                <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                    Something it's wrong:
-                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                        <span aria-hidden="true">×</span>
-                    </button>
-                    <ul>
-                        @foreach ($errors->all() as $error)
-                        <li>{{ $error }}</li>
-                        @endforeach
-                    </ul>
-                </div>
-                @endif
                 @if (Session::has('success'))
                 <div class="alert alert-success p-3">
                     {{ Session::get('success') }}
@@ -48,12 +39,15 @@
                     {{ Session::get('error') }}
                 </div>
                 @endif
-                {!! Form::label(null, 'Nama', ['class' => 'font-3 fw-bold']) !!}
+                {!! Form::label(null, 'Username', ['class' => 'font-3 fw-bold']) !!}
                 {!! Form::text('nama', null, ['class' => 'font-3 mb-2 form-control form-control-sm', 'placeholder' =>
-                'Input Nama', 'required']) !!}
+                'Username', 'required', 'oninvalid' => "this.setCustomValidity('Username tidak boleh kosong')"]) !!}
                 {!! Form::label(null, 'Password', ['class' => 'font-3 fw-bold']) !!}
-                {!! Form::password('password', ['class' => 'font-3 form-control form-control-sm', 'placeholder' =>
-                'Input Password', 'required']) !!}
+                {!! Form::password('password', ['class' => 'font-3 mb-2 form-control form-control-sm', 'placeholder' =>
+                'Password', 'required', 'oninvalid' => "this.setCustomValidity('Password tidak boleh kosong')"]) !!}
+                {!! Form::label(null, 'Jabatan', ['class' => 'font-3 fw-bold']) !!}
+                {!! Form::select('jabatan', ['Super_Admin' => 'Super Admin', 'Kanit' => 'Kanit', 'Gudang' => 'Gudang',
+                'Kasir' => 'Kasir'], null, ['class' => 'form-select form-select-sm mb-2']) !!}
                 <div class="d-grid gap-2 mt-2">
                     {!! Form::submit('Login', ['class' => 'btn btn-small btn-primary']) !!}
                 </div>

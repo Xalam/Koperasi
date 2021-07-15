@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 
 use App\Models\Toko\Master\Admin\AdminModel;
 use App\Models\Toko\Master\Barang\BarangModel;
-use App\Models\User;
+use App\Models\Toko\User;
 use Illuminate\Support\Facades\Hash;
 
 class AdminController extends Controller

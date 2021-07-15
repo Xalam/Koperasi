@@ -56,6 +56,7 @@
                         <th>Harga Jual</th>
                         <th>Jumlah Jual</th>
                         <th>Total Harga</th>
+                        <th>Nota</th>
                     </tr>
                 </thead>
                 @if (isset($laporan_penjualan) && count($laporan_penjualan) > 0)
@@ -72,7 +73,7 @@
                         <td class="align-middle">{{$data->kode_anggota}}</td>
                         <td class="align-middle">{{$data->nama_anggota}}</td>
                         <td class="align-middle text-center">{{$data->status}}</td>
-                        @else 
+                        @else
                         <td class="align-middle">Masyarakat Umum</td>
                         <td class="align-middle">Masyarakat Umum</td>
                         <td class="align-middle text-center">-</td>
@@ -82,6 +83,8 @@
                         <td class="align-middle text-center">{{$data->harga_jual}}</td>
                         <td class="align-middle text-center">{{$data->jumlah}}</td>
                         <td class="align-middle text-center">{{$data->total_harga}}</td>
+                        <td class="align-middle text-center"><i class="text-success fas fa-print"
+                                style="cursor: pointer;" title="Print"></i></td>
                     </tr>
                     @endforeach
                 </tbody>

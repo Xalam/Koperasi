@@ -61,7 +61,7 @@ class BarangController extends Controller
         ]);
 
         if ($request->file('foto')->isValid()) {
-            $request->file('foto')->move(public_path('document/toko/barang/foto/'), $request->input('nama') .'.' . $request->file('foto')->getClientOriginalExtension());
+            $request->file('foto')->move(public_path('storage/toko/barang/foto/'), $request->input('nama') .'.' . $request->file('foto')->getClientOriginalExtension());
         }
         
         return redirect('/toko/master/barang');
