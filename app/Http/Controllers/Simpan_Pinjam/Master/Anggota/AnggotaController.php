@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Simpan_Pinjam\Master\Anggota;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\Simpan_Pinjam\ResponseMessage;
 use App\Models\Simpan_Pinjam\Master\Anggota\Anggota;
 use App\Models\Simpan_Pinjam\Pengaturan\Pengaturan;
 use App\Models\Simpan_Pinjam\Pinjaman\Pinjaman;
@@ -94,6 +95,9 @@ class AnggotaController extends Controller
         $data = $request->all();
 
         $user = $data['username'];
+        $passwordClean = $data['password'];
+        $phoneNumber = $data['no_wa'];
+
         $kode_anggota = 'ANG-' . $user;
 
         $extension = $request->file('foto')->extension();
@@ -121,6 +125,17 @@ class AnggotaController extends Controller
             $saldo->jenis_simpanan = $i;
             $saldo->save();
         }
+
+        #Send Whatsapp
+        if ($phoneNumber[0] == '0') {
+            $subPhone = substr($phoneNumber, 1);
+            $number   = '62' . $subPhone;
+        } else {
+            $number = $phoneNumber;
+        }
+
+        $message = 'Login aplikasi Primkop Polrestabes Semarang dengan, Username : *' . $user . '* Password : *' . $passwordClean . '*';
+        ResponseMessage::send($number, $message);
 
         return redirect()->route('anggota.index')->with([
             'success' => 'Berhasil menambahkan anggota'

@@ -6,7 +6,7 @@
 </div>
 <div class="modal-body">
     <p>
-        Apakah Anda ingin menghapus angsuran pelunasan dari kode pinjaman
+        Apakah Anda ingin menghapus Pelunasan Sebelum Jatuh Tempo dari kode pinjaman
         <strong>{{ $angsuran->pinjaman->kode_pinjaman }}</strong> ?
     </p>
 </div>
