@@ -61,7 +61,7 @@
                                 <div class="sidebar-submenu2">
                                     <ul>
                                         <li><a href="/toko/transaksi/titip-jual">Titip Jual</a></li>
-                                        <li><a href="/toko/transaksi/konsinyasi">Konsinyasi</a></li>
+                                        <li><a href="/toko/transaksi/konsinyasi">Bayar Titip Jual</a></li>
                                     </ul>
                                 </div>
                             </li>
@@ -79,7 +79,7 @@
                     <a><i class="fas fa-receipt" aria-hidden="true"></i>Transaksi</a>
                     <div class="sidebar-submenu">
                         <ul>
-                            <li><a href="/toko/transaksi/konsinyasi">Konsinyasi</a></li>
+                            <li><a href="/toko/transaksi/konsinyasi">Bayar Titip Jual</a></li>
                             <li><a href="/toko/transaksi/hutang">Hutang</a></li>
                             <li><a href="/toko/transaksi/piutang">Piutang</a></li>
                             <li><a href="/toko/transaksi/jurnal">Jurnal</a></li>

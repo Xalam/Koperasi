@@ -9,6 +9,7 @@ use App\Http\Controllers\Toko\DataAkunController;
 use App\Http\Controllers\Toko\DataBarangController;
 use App\Http\Controllers\Toko\DataSupplierController;
 use App\Http\Controllers\Toko\DataAnggotaController;
+use App\Http\Controllers\Toko\KodeAdminController;
 use App\Http\Controllers\Toko\NomorTransaksiController;
 use App\Http\Controllers\Toko\NomorJurnalController;
 
@@ -62,6 +63,7 @@ Route::group(['prefix' => 'api'], function () {
     Route::get('/data-hutang-supplier/{id}', [DataSupplierController::class, 'dataHutangSupplier']);
     Route::get('/data-anggota/{id}', [DataAnggotaController::class, 'dataAnggota']);
     Route::get('/show-notification-penjualan', [PenjualanController::class, 'showNotification']);
+    Route::get('/kode-admin/{jabatan}', [KodeAdminController::class, 'kodeAdmin']);
     Route::get('/nomor-pembelian/{tanggal}', [NomorTransaksiController::class, 'nomorPembelian']);
     Route::get('/nomor-jurnal-pembelian/{tanggal}', [NomorJurnalController::class, 'nomorJurnalPembelian']);
     Route::get('/nomor-retur-pembelian/{tanggal}', [NomorTransaksiController::class, 'nomorReturPembelian']);

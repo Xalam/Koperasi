@@ -90,6 +90,28 @@
 @endsection
 
 @section('script')
+@if(Session::get('success'))
+<script>
+$(document).ready(function() {
+    const Toast = Swal.mixin({
+        toast: true,
+        position: 'middle',
+        showConfirmButton: false,
+        timer: 1000,
+        timerProgressBar: true
+    });
+
+    Toast.fire({
+        icon: 'success',
+        title: 'Berhasil',
+        text: 'Data Berhasil Disimpan'
+    });
+    setTimeout(function() {
+        window.location = "/toko/master/barang";
+    }, 1000);
+});
+</script>
+@endif
 <script>
 $(function() {
     $("input[name='margin']").change(function() {

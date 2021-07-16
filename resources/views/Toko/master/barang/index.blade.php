@@ -171,7 +171,7 @@ function terapkan(id) {
 
     if (allFilled) {
         $.ajax({
-            url: '/toko/master/barang/update/',
+            url: '/toko/master/barang/update',
             type: 'POST',
             data: {
                 id: id,
@@ -200,7 +200,9 @@ function terapkan(id) {
                     $("#expired-" + id).removeClass("d-none");
                     $("#edit-expired-" + id).addClass("d-none");
                     $("#edit-" + id).removeClass("d-none");
+                    $("#hapus-" + id).removeClass("d-none");
                     $("#terapkan-" + id).addClass("d-none");
+                    $("#batal-" + id).addClass("d-none");
 
                     $("#kode-" + id).html(response.barang.kode);
                     $("#nama-" + id).html(response.barang.nama);

@@ -4,7 +4,7 @@
 <div class="card m-6">
     <p class="card-header bg-light">Laporan Retur</p>
     <div class="card-body">
-        {!! Form::open( ['url' => '/toko/laporan/pendapatan', 'method' => 'GET']) !!}
+        {!! Form::open( ['url' => '/toko/laporan/retur-pembelian', 'method' => 'GET']) !!}
         <div class="row-lg align-item-center mb-2">
             {!! Form::label(null, 'Tanggal', ['class' => 'col-lg-2']) !!}
             {!! Form::date('tanggal', (isset($tanggal_awal) ? $tanggal_awal : $cur_date), ['class' => 'col-lg-2

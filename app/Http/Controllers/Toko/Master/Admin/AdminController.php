@@ -9,6 +9,7 @@ use App\Models\Toko\Master\Admin\AdminModel;
 use App\Models\Toko\Master\Barang\BarangModel;
 use App\Models\Toko\User;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Session;
 
 class AdminController extends Controller
 {
@@ -49,21 +50,30 @@ class AdminController extends Controller
     }
 
     public function store(Request $request) {
-        AdminModel::create([
-            'kode' => $request->input('kode'),
-            'nama' => $request->input('nama'),
-            'password' => Hash::make($request->input('password')),
-            'jabatan' => $request->input('jabatan')
-        ]);
+        $nameExist = AdminModel::where('jabatan', $request->jabatan)
+                                ->where('nama', $request->nama)
+                                ->get();
 
-        User::create([
-            'kode' => $request->input('kode'),
-            'nama' => $request->input('nama'),
-            'password' => Hash::make($request->input('password')),
-            'jabatan' => $request->input('jabatan')
-        ]);
-
-        return redirect('/toko/master/admin');
+        if (count($nameExist) > 0) {
+            Session::flash('failed', 'Nama admin sudah ada');
+        } else {
+            AdminModel::create([
+                'kode' => $request->input('kode'),
+                'nama' => $request->input('nama'),
+                'password' => Hash::make($request->input('password')),
+                'jabatan' => $request->input('jabatan')
+            ]);
+    
+            User::create([
+                'kode' => $request->input('kode'),
+                'nama' => $request->input('nama'),
+                'password' => Hash::make($request->input('password')),
+                'jabatan' => $request->input('jabatan')
+            ]);
+    
+            Session::flash('success', 'Berhasil');
+        }
+        return view('toko.master.admin.create');
     }
 
     public function update(Request $request) {
@@ -71,16 +81,27 @@ class AdminController extends Controller
 
         $admin = AdminModel::where('id', $request->id)->first();
 
-        User::where('kode', $admin->kode)->update($request->all());
+        AdminModel::where('kode', $admin->kode)->update([
+            'kode' => $request->input('kode'),
+            'nama' => $request->input('nama'),
+            'password' => Hash::make($request->input('password')),
+            'jabatan' => $request->input('jabatan')
+        ]);
+
+        User::where('kode', $admin->kode)->update([
+            'kode' => $request->input('kode'),
+            'nama' => $request->input('nama'),
+            'password' => Hash::make($request->input('password')),
+            'jabatan' => $request->input('jabatan')
+        ]);
 
         return response()->json(['code' => 200, 'admin' => $admin]);
     }
 
     public function delete(Request $request) {
-        AdminModel::where('id', $request->id)->delete();
-
         $admin = AdminModel::where('id', $request->id)->first();
 
+        AdminModel::where('id', $request->id)->delete();
         User::where('kode', $admin->kode)->delete();
 
         return response()->json(['code' => 200, 'admin' => $admin]);

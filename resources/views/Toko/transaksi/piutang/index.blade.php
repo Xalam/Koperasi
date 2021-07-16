@@ -108,7 +108,7 @@
                             @if (auth()->user()->jabatan != 'Kanit')
                             <td class="align-middle text-center">
                                 <a id=<?php echo "bayar-" . $data->id ?> class="btn btn-sm btn-success"
-                                    onclick="bayar(<?php echo $data->id ?>)">Bayar</a>
+                                    onclick="bayar(<?php echo $data->id ?>)">Terima</a>
                             </td>
                             @endif
                         </tr>
@@ -191,6 +191,19 @@ function terima_piutang() {
         },
         success: function(response) {
             if (response.code == 200) {
+                const Toast = Swal.mixin({
+                    toast: true,
+                    position: 'middle',
+                    showConfirmButton: false,
+                    timer: 2000,
+                    timerProgressBar: true
+                });
+
+                Toast.fire({
+                    icon: 'success',
+                    title: 'Proses Transaksi',
+                    text: response.message
+                });
                 tampil_daftar();
                 nomorTransaksi();
             }
@@ -264,7 +277,7 @@ function tampil_daftar() {
 
 function batal_transaksi() {
     $.ajax({
-        url: '/toko/transaksi/hutang/cancel/',
+        url: '/toko/transaksi/piutang/cancel/',
         type: 'POST',
         data: {
             nomor_beli: $('[name="nomor_beli"]').val(),

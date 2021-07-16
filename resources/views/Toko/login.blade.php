@@ -41,10 +41,12 @@
                 @endif
                 {!! Form::label(null, 'Username', ['class' => 'font-3 fw-bold']) !!}
                 {!! Form::text('nama', null, ['class' => 'font-3 mb-2 form-control form-control-sm', 'placeholder' =>
-                'Username', 'required', 'oninvalid' => "this.setCustomValidity('Username tidak boleh kosong')"]) !!}
+                'Username', 'required', 'oninvalid' => "this.setCustomValidity('Username tidak boleh kosong')",
+                'oninput' => "this.setCustomValidity('')"]) !!}
                 {!! Form::label(null, 'Password', ['class' => 'font-3 fw-bold']) !!}
                 {!! Form::password('password', ['class' => 'font-3 mb-2 form-control form-control-sm', 'placeholder' =>
-                'Password', 'required', 'oninvalid' => "this.setCustomValidity('Password tidak boleh kosong')"]) !!}
+                'Password', 'required', 'oninvalid' => "this.setCustomValidity('Password tidak boleh kosong')",
+                'oninput' => "this.setCustomValidity('')"]) !!}
                 {!! Form::label(null, 'Jabatan', ['class' => 'font-3 fw-bold']) !!}
                 {!! Form::select('jabatan', ['Super_Admin' => 'Super Admin', 'Kanit' => 'Kanit', 'Gudang' => 'Gudang',
                 'Kasir' => 'Kasir'], null, ['class' => 'form-select form-select-sm mb-2']) !!}

@@ -69,6 +69,12 @@
 @yield('script')
 
 <script type="text/javascript">
+$.ajaxSetup({
+    headers: {
+        'X-CSRF-Token': $('meta[name="csrf-token"]').attr('content')
+    }
+});
+
 $(document).ready(function() {
     $('#table-data').DataTable();
     setTimeout(showNotificationPenjualan(), 5000);

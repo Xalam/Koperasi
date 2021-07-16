@@ -122,7 +122,7 @@ class PiutangController extends Controller
             'kredit' => $request->input('terima_piutang')
         ]); 
         
-        return response()->json(['code'=>200]);
+        return response()->json(['code'=>200, 'message' => 'Pembayaran Piutang Berhasil']);
     }
 
     public function delete($id) {

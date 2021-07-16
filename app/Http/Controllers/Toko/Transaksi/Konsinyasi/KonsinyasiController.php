@@ -139,7 +139,7 @@ class KonsinyasiController extends Controller
             'kredit' => $angsuran
         ]); 
         
-        return response()->json(['code'=>200]);
+        return response()->json(['code'=>200, 'message' => 'Pembayaran Konsinyasi Berhasil']);
     }
 
     public function delete($id) {

@@ -25,7 +25,7 @@
                         <th>Alamat</th>
                         <th>Telepon</th>
                         <th>WA</th>
-                        <th>Jarak</th>
+                        <th>Jarak (km)</th>
                         <th>Email</th>
                         <th>Keterangan</th>
                         <th>Tempo</th>
@@ -194,7 +194,7 @@ function terapkan(id) {
     
     if (allFilled) {
         $.ajax({
-            url: '/toko/master/supplier/update/',
+            url: '/toko/master/supplier/update',
             type: 'POST',
             data: {
                 id: id,
@@ -229,7 +229,9 @@ function terapkan(id) {
                     $("#tempo-" + id).removeClass("d-none");
                     $("#edit-tempo-" + id).addClass("d-none");
                     $("#edit-" + id).removeClass("d-none");
+                    $("#hapus-" + id).removeClass("d-none");
                     $("#terapkan-" + id).addClass("d-none");
+                    $("#batal-" + id).addClass("d-none");
 
                     $("#kode-" + id).html(response.supplier.kode);
                     $("#nama-" + id).html(response.supplier.nama);

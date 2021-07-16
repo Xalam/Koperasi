@@ -10,7 +10,8 @@
 @endsection
 
 @section('main')
-<a href="{{url('toko/master/admin/create')}}" class="btn btn-sm btn-success mt-4 ms-4 pe-4"><i class="fas fa-plus"></i><b>Tambah</b></a>
+<a href="{{url('toko/master/admin/create')}}" class="btn btn-sm btn-success mt-4 ms-4 pe-4"><i
+        class="fas fa-plus"></i><b>Tambah</b></a>
 <div class="card m-6">
     <p class="card-header bg-light">Daftar Admin</p>
     <div class="card-body">
@@ -20,7 +21,7 @@
                     <tr>
                         <th>No</th>
                         <th>Kode Admin</th>
-                        <th>Nama Admin</th>
+                        <th>Username</th>
                         <th>Password</th>
                         <th>Jabatan</th>
                         <th class="w-20">Opsi</th>
@@ -52,7 +53,8 @@
                             <div id="password-<?php echo $data->id ?>">{{$data->password}}</div>
                         </td>
                         <td class="align-middle text-center">
-                            {!! Form::select('edit_jabatan', ['Admin' => 'Admin'], null, ['class' => 'd-none', 'id' =>
+                            {!! Form::select('edit_jabatan', ['Super_Admin' => 'Super Admin', 'Kanit' => 'Kanit',
+                            'Gudang' => 'Gudang', 'Kasir' => 'Kasir'], null, ['class' => 'd-none', 'id' =>
                             'edit-jabatan-'.$data->id]) !!}
                             <div id="jabatan-<?php echo $data->id ?>">{{$data->jabatan}}</div>
                         </td>
@@ -62,7 +64,8 @@
                             <a id=<?php echo "terapkan-" . $data->id ?> class="w-48 btn btn-sm btn-warning d-none"
                                 onclick="terapkan(<?php echo $data->id ?>)">Terapkan</a>
                             <a id=<?php echo "hapus-" . $data->id ?> class="w-50 btn btn-sm btn-danger"
-                                onclick="show_popup_hapus(<?php echo $data->id ?>)"><i class="fas fa-trash-alt p-1"></i> Hapus</a>
+                                onclick="show_popup_hapus(<?php echo $data->id ?>)"><i class="fas fa-trash-alt p-1"></i>
+                                Hapus</a>
                             <a id=<?php echo "batal-" . $data->id ?> class="w-50 btn btn-sm btn-danger d-none"
                                 onclick="batal(<?php echo $data->id ?>)">Batal</a>
                         </td>
@@ -117,8 +120,12 @@ function terapkan(id) {
     var index = 0;
 
     $('#row-' + id).find('input').each(function() {
-        if(!$(this).val()){
-            $(this).popover({content: "Tidak boleh kosong", placement: "top", trigger: "focus"}).popover('show');
+        if (!$(this).val()) {
+            $(this).popover({
+                content: "Tidak boleh kosong",
+                placement: "top",
+                trigger: "focus"
+            }).popover('show');
             allFilled = false;
         } else {
             if (index == 0) {
@@ -137,7 +144,7 @@ function terapkan(id) {
 
     if (allFilled) {
         $.ajax({
-            url: '/toko/master/admin/update/',
+            url: '/toko/master/admin/update',
             type: 'POST',
             data: {
                 id: id,
@@ -157,7 +164,9 @@ function terapkan(id) {
                     $("#jabatan-" + id).removeClass("d-none");
                     $("#edit-jabatan-" + id).addClass("d-none");
                     $("#edit-" + id).removeClass("d-none");
+                    $("#hapus-" + id).removeClass("d-none");
                     $("#terapkan-" + id).addClass("d-none");
+                    $("#batal-" + id).addClass("d-none");
 
                     $("#kode-" + id).html(response.admin.kode);
                     $("#nama-" + id).html(response.admin.nama);

@@ -77,10 +77,10 @@
                     <thead class="text-center">
                         <tr>
                             <th>No</th>
-                            <th>No Beli</th>
+                            <th>No Konsinyasi</th>
                             <th>Kode Supplier</th>
                             <th>Nama Supplier</th>
-                            <th>Tanggal Beli</th>
+                            <th>Tanggal Titip</th>
                             <th>Jatuh Tempo</th>
                             <th>Nilai Konsinyasi</th>
                             <th>Sisa Konsinyasi</th>
@@ -193,6 +193,20 @@ function bayar_konsinyasi() {
         },
         success: function(response) {
             if (response.code == 200) {
+                const Toast = Swal.mixin({
+                    toast: true,
+                    position: 'middle',
+                    showConfirmButton: false,
+                    timer: 2000,
+                    timerProgressBar: true
+                });
+
+                Toast.fire({
+                    icon: 'success',
+                    title: 'Proses Transaksi',
+                    text: response.message
+                });
+                
                 tampil_daftar();
                 nomorTransaksi();
             }

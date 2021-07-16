@@ -7,12 +7,6 @@
         {!! Form::open(['url' => '/toko/master/anggota/store', 'method' => 'post', 'enctype' => 'multipart/form-data'])
         !!}
         <div class="row-lg align-item-center mb-2">
-            {!! Form::label(null, 'Kode Anggota', ['class' => 'col-lg-2']) !!}
-            {!! Form::text('kd_anggota', null, ['class' => 'col-lg-4 form-control form-control-sm', 'required',
-            'oninvalid' => "this.setCustomValidity('Tidak boleh kosong')", 'oninput' => "this.setCustomValidity('')"])
-            !!}
-        </div>
-        <div class="row-lg align-item-center mb-2">
             {!! Form::label(null, 'Nama Anggota', ['class' => 'col-lg-2']) !!}
             {!! Form::text('nama_anggota', null, ['class' =>'col-lg-9 form-control form-control-sm', 'required',
             'oninvalid' => "this.setCustomValidity('Tidak boleh kosong')", 'oninput' => "this.setCustomValidity('')"])
@@ -119,6 +113,49 @@
 @endsection
 
 @section('script')
+@if(Session::get('success'))
+<script>
+$(document).ready(function() {
+    const Toast = Swal.mixin({
+        toast: true,
+        position: 'middle',
+        showConfirmButton: false,
+        timer: 1000,
+        timerProgressBar: true
+    });
+
+    Toast.fire({
+        icon: 'success',
+        title: 'Berhasil',
+        text: 'Data Berhasil Disimpan'
+    });
+    setTimeout(function() {
+        window.location = "/toko/master/anggota";
+    }, 1000);
+});
+</script>
+@elseif (Session::get('failed'))
+<script>
+$(document).ready(function() {
+    const Toast = Swal.mixin({
+        toast: true,
+        position: 'middle',
+        showConfirmButton: false,
+        timer: 2000,
+        timerProgressBar: true
+    });
+
+    Toast.fire({
+        icon: 'success',
+        title: 'Gagal',
+        text: '{{Session::get('failed')}}'
+    });
+    setTimeout(function() {
+        window.location = "/toko/master/anggota/create";
+    }, 2000);
+});
+</script>
+@endif
 <script>
 $('[name="gaji"]').change(function() {
     $('[name="limit_gaji"]').val(($('[name="gaji"]').val() * 2 / 3).toFixed(0));

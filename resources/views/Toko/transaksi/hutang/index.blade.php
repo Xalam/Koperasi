@@ -65,7 +65,7 @@
 
     <div id="panel-daftar-utang">
         <div class="d-flex bg-light">
-            <p class="card-header col-lg">Daftar Hutang</p>
+            <p class="card-header col-lg">Daftar Utang</p>
             <i class="card-header fas fa-sync text-success" style="cursor: pointer;" title="Refresh Page" onclick="location.reload()"></i>
         </div>
         <div class="card-body">
@@ -79,8 +79,8 @@
                             <th>Nama Supplier</th>
                             <th>Tanggal Beli</th>
                             <th>Jatuh Tempo</th>
-                            <th>Nilai Hutang</th>
-                            <th>Sisa Hutang</th>
+                            <th>Nilai Utang</th>
+                            <th>Sisa Utang</th>
                             @if (auth()->user()->jabatan != 'Kanit')
                             <th>Opsi</th>
                             @endif
@@ -134,7 +134,7 @@
                             <th>Nomor Jurnal</th>
                             <th>Tanggal</th>
                             <th>Angsuran</th>
-                            <th>Sisa Hutang</th>
+                            <th>Sisa Utang</th>
                             <th>Opsi</th>
                         </tr>
                     </thead>
@@ -148,6 +148,50 @@
 @endsection
 
 @section('script')
+@if(Session::get('success'))
+<script>
+$(document).ready(function() {
+    const Toast = Swal.mixin({
+        toast: true,
+        position: 'middle',
+        showConfirmButton: false,
+        timer: 2000,
+        timerProgressBar: true
+    });
+
+    Toast.fire({
+        icon: 'success',
+        title: 'Berhasil',
+        text: 'Data Berhasil Disimpan'
+    });
+    setTimeout(function() {
+        window.location = "/toko/transaksi/hutang";
+    }, 1000);
+});
+</script>
+@elseif (Session::get('failed'))
+<script>
+$(document).ready(function() {
+    const Toast = Swal.mixin({
+        toast: true,
+        position: 'middle',
+        showConfirmButton: false,
+        timer: 2000,
+        timerProgressBar: true
+    });
+
+    Toast.fire({
+        icon: 'success',
+        title: 'Gagal',
+        text: '{{Session::get('failed')}}'
+    });
+    setTimeout(function() {
+        window.location = "/toko/transaksi/hutang";
+    }, 2000);
+});
+</script>
+@endif
+
 <script src="{{ asset('js/base-url.js') }}"></script>
 <script src="{{ asset('js/nomor-angsuran.js') }}"></script>
 <script>
@@ -190,6 +234,20 @@ function bayar_hutang() {
         },
         success: function(response) {
             if (response.code == 200) {
+                const Toast = Swal.mixin({
+                    toast: true,
+                    position: 'middle',
+                    showConfirmButton: false,
+                    timer: 2000,
+                    timerProgressBar: true
+                });
+
+                Toast.fire({
+                    icon: 'success',
+                    title: 'Proses Transaksi',
+                    text: response.message
+                });
+
                 tampil_daftar();
                 nomorTransaksi();
             }

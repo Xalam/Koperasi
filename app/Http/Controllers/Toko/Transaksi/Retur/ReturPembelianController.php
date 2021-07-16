@@ -13,6 +13,7 @@ use App\Models\Toko\Transaksi\Retur\ReturPembelianBarangModel;
 use App\Models\Toko\Transaksi\Retur\ReturPembelianModel;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Session;
 
 class ReturPembelianController extends Controller
 {
@@ -80,99 +81,108 @@ class ReturPembelianController extends Controller
     }
 
     public function retur(Request $request) {
-        $nomor = $request->input('nomor');
+        $cur_date = "";
+        $nomor_beli = [];
 
-        ReturPembelianBarangModel::where('nomor', $nomor)->update(['submited' => 1]);
+        $nomor = $request->input('nomor');
 
         $data_barang = ReturPembelianBarangModel::where('nomor', $nomor)->get();
 
-        foreach ($data_barang as $data) {
-            $barang = BarangModel::where('id', $data->id_barang)->first();
+        if (count($data_barang) > 0) {
+            ReturPembelianBarangModel::where('nomor', $nomor)->update(['submited' => 1]);
 
-            BarangModel::where('id', $data->id_barang)->update([
-                'stok' => $barang->stok - $data->jumlah]);
-        }
+            foreach ($data_barang as $data) {
+                $barang = BarangModel::where('id', $data->id_barang)->first();
 
-        ReturPembelianModel::create([
-            'tanggal' => $request->input('tanggal'),
-            'nomor' => $request->input('nomor'),
-            'id_beli' => $request->input('id_beli'),
-            'id_supplier' => $request->input('nama_supplier'),
-            'jumlah_harga' => $request->input('jumlah_harga')
-        ]);
+                BarangModel::where('id', $data->id_barang)->update([
+                    'stok' => $barang->stok - $data->jumlah]);
+            }
 
-        $nomor_beli = PembelianModel::where('id', $request->input('id_beli'))->first()->nomor;
-        $jenis_pembayaran = PembelianModel::where('nomor', $nomor_beli)->first()->pembayaran;
-
-        $keterangan = "Retur pembelian barang.";
-
-        if ($jenis_pembayaran == 2) {
-            $persediaan = AkunModel::where('kode', 1131)->first();
-            $kas = AkunModel::where('kode', 1102)->first();
-
-            AkunModel::where('kode', 1131)->update([
-                'debit' => $persediaan->debit - $request->input('jumlah_harga')
-            ]);
-
-            AkunModel::where('kode', 1102)->update([
-                'debit' => $kas->debit + $request->input('jumlah_harga')
-            ]);
-            
-            JurnalModel::create([
-                'nomor' => $request->input('nomor_jurnal'),
+            ReturPembelianModel::create([
                 'tanggal' => $request->input('tanggal'),
-                'keterangan' => $keterangan,
-                'id_akun' => $kas->id,
-                'debit' => $request->input('jumlah_harga'),
-                'kredit' => 0
+                'nomor' => $request->input('nomor'),
+                'id_beli' => $request->input('id_beli'),
+                'id_supplier' => $request->input('nama_supplier'),
+                'jumlah_harga' => $request->input('jumlah_harga')
             ]);
 
-            JurnalModel::create([
-                'nomor' => $request->input('nomor_jurnal'),
-                'tanggal' => $request->input('tanggal'),
-                'keterangan' => $keterangan,
-                'id_akun' => $persediaan->id,
-                'debit' => 0,
-                'kredit' => $request->input('jumlah_harga')
-            ]); 
-        } else {
-            $persediaan = AkunModel::where('kode', 1131)->first();
-            $hutang = AkunModel::where('kode', 2101)->first();
+            $nomor_beli = PembelianModel::where('id', $request->input('id_beli'))->first()->nomor;
+            $jenis_pembayaran = PembelianModel::where('nomor', $nomor_beli)->first()->pembayaran;
 
-            AkunModel::where('kode', 1131)->update([
-                'debit' => $persediaan->debit - $request->input('jumlah_harga')
-            ]);
+            $keterangan = "Retur pembelian barang.";
 
-            AkunModel::where('kode', 2101)->update([
-                'kredit' => $hutang->kredit - $request->input('jumlah_harga')
-            ]);
+            if ($jenis_pembayaran == 2) {
+                $persediaan = AkunModel::where('kode', 1131)->first();
+                $kas = AkunModel::where('kode', 1102)->first();
 
-            $tanggal = Carbon::parse($request->input('tanggal'))->format('y-m-d');
+                AkunModel::where('kode', 1131)->update([
+                    'debit' => $persediaan->debit - $request->input('jumlah_harga')
+                ]);
 
-            HutangModel::where('nomor_beli', $nomor)->update([
-                'jumlah_hutang' => $request->input('jumlah_harga')
-            ]);
+                AkunModel::where('kode', 1102)->update([
+                    'debit' => $kas->debit + $request->input('jumlah_harga')
+                ]);
                 
-            JurnalModel::create([
-                'nomor' => $request->input('nomor_jurnal'),
-                'tanggal' => $request->input('tanggal'),
-                'keterangan' => $keterangan,
-                'id_akun' => $hutang->id,
-                'debit' => $request->input('jumlah_harga'),
-                'kredit' => 0
-            ]);
+                JurnalModel::create([
+                    'nomor' => $request->input('nomor_jurnal'),
+                    'tanggal' => $request->input('tanggal'),
+                    'keterangan' => $keterangan,
+                    'id_akun' => $kas->id,
+                    'debit' => $request->input('jumlah_harga'),
+                    'kredit' => 0
+                ]);
 
-            JurnalModel::create([
-                'nomor' => $request->input('nomor_jurnal'),
-                'tanggal' => $request->input('tanggal'),
-                'keterangan' => $keterangan,
-                'id_akun' => $persediaan->id,
-                'debit' => 0,
-                'kredit' => $request->input('jumlah_harga')
-            ]); 
+                JurnalModel::create([
+                    'nomor' => $request->input('nomor_jurnal'),
+                    'tanggal' => $request->input('tanggal'),
+                    'keterangan' => $keterangan,
+                    'id_akun' => $persediaan->id,
+                    'debit' => 0,
+                    'kredit' => $request->input('jumlah_harga')
+                ]); 
+            } else {
+                $persediaan = AkunModel::where('kode', 1131)->first();
+                $hutang = AkunModel::where('kode', 2101)->first();
+
+                AkunModel::where('kode', 1131)->update([
+                    'debit' => $persediaan->debit - $request->input('jumlah_harga')
+                ]);
+
+                AkunModel::where('kode', 2101)->update([
+                    'kredit' => $hutang->kredit - $request->input('jumlah_harga')
+                ]);
+
+                $tanggal = Carbon::parse($request->input('tanggal'))->format('y-m-d');
+
+                HutangModel::where('nomor_beli', $nomor)->update([
+                    'jumlah_hutang' => $request->input('jumlah_harga')
+                ]);
+                    
+                JurnalModel::create([
+                    'nomor' => $request->input('nomor_jurnal'),
+                    'tanggal' => $request->input('tanggal'),
+                    'keterangan' => $keterangan,
+                    'id_akun' => $hutang->id,
+                    'debit' => $request->input('jumlah_harga'),
+                    'kredit' => 0
+                ]);
+
+                JurnalModel::create([
+                    'nomor' => $request->input('nomor_jurnal'),
+                    'tanggal' => $request->input('tanggal'),
+                    'keterangan' => $keterangan,
+                    'id_akun' => $persediaan->id,
+                    'debit' => 0,
+                    'kredit' => $request->input('jumlah_harga')
+                ]); 
+            }
+            
+            Session::flash('success', 'Retur Barang Berhasil');
+        } else {
+            Session::flash('failed', 'Daftar Retur Pembelian Kosong');
         }
-        
-        return redirect('toko/transaksi/retur-pembelian');
+
+        return view('toko.transaksi.retur.index', compact('cur_date', 'nomor_beli'));
     }
 
     public function delete($id) {

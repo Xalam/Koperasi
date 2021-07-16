@@ -170,7 +170,7 @@ function terapkan(id) {
 
     if (allFilled) {
         $.ajax({
-            url: '/toko/master/akun/update/',
+            url: '/toko/master/akun/update',
             type: 'POST',
             data: {
                 id: id,
@@ -190,7 +190,9 @@ function terapkan(id) {
                     $("#kredit-" + id).removeClass("d-none");
                     $("#edit-kredit-" + id).addClass("d-none");
                     $("#edit-" + id).removeClass("d-none");
+                    $("#hapus-" + id).removeClass("d-none");
                     $("#terapkan-" + id).addClass("d-none");
+                    $("#batal-" + id).addClass("d-none");
 
                     $("#kode-" + id).html(response.akun.kode);
                     $("#nama-" + id).html(response.akun.nama);
