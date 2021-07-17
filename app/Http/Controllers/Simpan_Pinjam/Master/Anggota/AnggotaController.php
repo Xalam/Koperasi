@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Controllers\Simpan_Pinjam\ResponseMessage;
 use App\Models\Simpan_Pinjam\Master\Anggota\Anggota;
 use App\Models\Simpan_Pinjam\Pengaturan\Pengaturan;
+use App\Models\Simpan_Pinjam\Pinjaman\Angsuran;
 use App\Models\Simpan_Pinjam\Pinjaman\Pinjaman;
 use App\Models\Simpan_Pinjam\Simpanan\Saldo;
 use App\Models\Simpan_Pinjam\Simpanan\SaldoTarik;
@@ -102,7 +103,7 @@ class AnggotaController extends Controller
 
         $extension = $request->file('foto')->extension();
         $imageName = $user . '.' . $extension;
-        Storage::putFileAs('foto', $request->file('foto'), $imageName);
+        Storage::putFileAs('public/foto', $request->file('foto'), $imageName);
 
         // $request->foto->move(public_path('storage/foto'), $imageName);
 
@@ -194,13 +195,13 @@ class AnggotaController extends Controller
         if ($request->foto == null) {
             $anggota->foto == $anggota->foto;
         } else {
-            Storage::delete('foto/' . $anggota->foto);
+            Storage::delete('public/foto/' . $anggota->foto);
             // File::delete('storage/foto/' . $anggota->foto);
 
             $extension = $request->file('foto')->extension();
             $imageName = $user . '.' . $extension;
 
-            Storage::putFileAs('foto', $request->file('foto'), $imageName);
+            Storage::putFileAs('public/foto', $request->file('foto'), $imageName);
             // $request->foto->move(public_path('storage/foto'), $imageName);
 
             $data['foto'] = $imageName;
@@ -233,7 +234,7 @@ class AnggotaController extends Controller
         #Hapus anggota
         $anggota = Anggota::findOrFail($id);
 
-        Storage::delete('foto/' . $anggota->foto);
+        Storage::delete('public/foto/' . $anggota->foto);
 
         $anggota->delete();
 
@@ -242,18 +243,22 @@ class AnggotaController extends Controller
         $simpanan->where('id_anggota', $id)->delete();
 
         #Hapus saldo
-        $saldo = Saldo::select('id')->where('id_anggota', $id)->first();
+        $saldo = Saldo::select('id')->where('id_anggota', $id)->get();
         if ($saldo != null) {
             Saldo::where('id_anggota', $id)->delete();
-            SaldoTarik::where('id_saldo', $saldo->id)->delete();
+            foreach ($saldo as $key => $value) {
+                SaldoTarik::where('id_saldo', $value->id)->delete();
+            }
         }
 
         #Hapus pinjaman
-        $pinjaman = new Pinjaman();
-        $pinjaman->where('id_anggota', $id)->delete();
-
-        #Hapus angsuran
-
+        $pinjaman = Pinjaman::select('id')->where('id_anggota', $id)->get();
+        if ($pinjaman != null) {
+            Pinjaman::where('id_anggota', $id)->delete();
+            foreach ($pinjaman as $key => $value) {
+                Angsuran::where('id_pinjaman', $value->id)->delete();
+            }
+        }
 
         return redirect()->route('anggota.index')->with([
             'success' => 'Data anggota berhasil dihapus'

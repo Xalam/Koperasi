@@ -26,23 +26,24 @@
                 <!-- title row -->
                 <div class="row no-print">
                     <div class="col-12">
-                        <a href="{{ route('lap-pinjaman.print-show', $anggota->id) }}" rel="noopener" target="_blank" class="btn btn-info float-right"><i
-                                class="fas fa-print"></i> Print</a>
-                        <a href="{{ route('lap-pinjaman.index') }}" class="btn btn-default float-right" style="margin-right: 5px;"><i></i> Kembali</a>
+                        <a href="{{ route('lap-pinjaman.print-show', $anggota->id) }}" rel="noopener" target="_blank"
+                            class="btn btn-info float-right"><i class="fas fa-print"></i> Print</a>
+                        <a href="{{ route('lap-pinjaman.index') }}" class="btn btn-default float-right"
+                            style="margin-right: 5px;"><i></i> Kembali</a>
                     </div>
                 </div><br>
                 <div class="row" style="margin: 15px;">
-                    <img src="{{ asset('assets/dist/img/logo-koperasi.png') }}" alt="Primkop Logo" style="width: 80px; height: 80px;" class="brand-image img-circle elevation-2"
-                        style="opacity: .8">
-                        <div style="margin-left: 15px;">
-                            <h3><b>Primkop Polrestabes Semarang</b></h3>
-                            <address>
-                                Jl. Kaligarang No.1A, Barusari<br>
-                                Semarang<br>
-                                Phone: 0895-2458-3818<br>
-                                Email: -
-                            </address>
-                        </div>
+                    <img src="{{ asset('assets/dist/img/logo-koperasi.png') }}" alt="Primkop Logo"
+                        style="width: 80px; height: 80px;" class="brand-image img-circle elevation-2" style="opacity: .8">
+                    <div style="margin-left: 15px;">
+                        <h3><b>Primkop Polrestabes Semarang</b></h3>
+                        <address>
+                            Jl. Kaligarang No.1A, Barusari<br>
+                            Semarang<br>
+                            Phone: 0895-2458-3818<br>
+                            Email: -
+                        </address>
+                    </div>
                 </div>
                 <div class="text-center">
                     <h3><b>Laporan Pinjaman Anggota</b></h3><br>
@@ -50,8 +51,18 @@
                 </div>
                 <div>
                     <address>
-                        Kode Anggota: {{ $anggota->kd_anggota }} <br>
-                        Nama Anggota: {{ $anggota->nama_anggota }}
+                        <div class="col-12">
+                            <table class="table table-borderless">
+                                <tr>
+                                    <td width="15%">Kode Anggota</td>
+                                    <td>: {{ $anggota->kd_anggota }}</td>
+                                </tr>
+                                <tr>
+                                    <td width="15%">Nama Anggota</td>
+                                    <td>: {{ $anggota->nama_anggota }}</td>
+                                </tr>
+                            </table>
+                        </div>
                     </address>
                 </div>
                 <!-- Table row -->
@@ -77,24 +88,30 @@
                                     $no = 1;
                                 @endphp
                                 @foreach ($pinjaman as $pin)
-                                <tr>
-                                    <td class="text-center">{{ $no++ }}</td>
-                                    <td class="text-center">{{ $pin->kode_pinjaman }}</td>
-                                    <td class="text-center">{{ date('d-m-Y', strtotime($pin->tanggal)) }}</td>
-                                    <td class="text-center">{{ $pin->anggota->kd_anggota . ' / ' . $pin->anggota->nama_anggota }}</td>
-                                    <td class="text-right">{{ number_format($pin->nominal_pinjaman, 2, ',', '.') }}</td>
-                                    <td class="text-center">{{ $pin->tenor }}</td>
-                                    <td class="text-center">{{ $pin->tenor - $pin->angsuran_ke }}</td>
-                                    <td class="text-right">{{ number_format($pin->nominal_pinjaman / $pin->tenor, 2, ',', '.') }}</td>
-                                    <td class="text-right">{{ number_format(($pin->total_pinjaman - $pin->nominal_pinjaman) / $pin->tenor, 2, ',', '.') }}</td>
-                                    <td class="text-right">{{ number_format($pin->nominal_angsuran, 2, ',', '.') }}</td>
-                                </tr>
+                                    <tr>
+                                        <td class="text-center">{{ $no++ }}</td>
+                                        <td class="text-center">{{ $pin->kode_pinjaman }}</td>
+                                        <td class="text-center">{{ date('d-m-Y', strtotime($pin->tanggal)) }}</td>
+                                        <td class="text-center">
+                                            {{ $pin->anggota->kd_anggota . ' / ' . $pin->anggota->nama_anggota }}</td>
+                                        <td class="text-right">{{ number_format($pin->nominal_pinjaman, 2, ',', '.') }}
+                                        </td>
+                                        <td class="text-center">{{ $pin->tenor }}</td>
+                                        <td class="text-center">{{ $pin->tenor - $pin->angsuran_ke }}</td>
+                                        <td class="text-right">
+                                            {{ number_format($pin->nominal_pinjaman / $pin->tenor, 2, ',', '.') }}</td>
+                                        <td class="text-right">
+                                            {{ number_format(($pin->total_pinjaman - $pin->nominal_pinjaman) / $pin->tenor, 2, ',', '.') }}
+                                        </td>
+                                        <td class="text-right">{{ number_format($pin->nominal_angsuran, 2, ',', '.') }}
+                                        </td>
+                                    </tr>
                                 @endforeach
                             </tbody>
                         </table>
                     </div>
                     <!-- /.col -->
-                </div>                
+                </div>
             </div>
         </div>
     </div>

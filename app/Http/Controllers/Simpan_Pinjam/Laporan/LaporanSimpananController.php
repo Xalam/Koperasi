@@ -21,13 +21,13 @@ class LaporanSimpananController extends Controller
     {
         $idAnggota = $request->id_anggota;
 
-        $simpanan = Simpanan::where('id_anggota', $idAnggota)->get();
+        $simpanan = Simpanan::where('id_anggota', $idAnggota)->where('status', 1)->get();
         $anggota = Anggota::findOrFail($idAnggota);
 
         $saldoTarik = SaldoTarik::with('saldo')
             ->whereHas('saldo', function ($query) use ($idAnggota) {
                 $query->where('id_anggota', $idAnggota);
-            })->get();
+            })->where('status', 2)->get();
 
         if (sizeof($simpanan) == 0) {
             return redirect()->route('lap-simpanan.index')->with([
@@ -40,21 +40,21 @@ class LaporanSimpananController extends Controller
 
     public function print_all()
     {
-        $simpanan = Simpanan::get();
-        $saldoTarik = SaldoTarik::with('saldo')->get();
+        $simpanan = Simpanan::where('status', 1)->get();
+        $saldoTarik = SaldoTarik::with('saldo')->where('status', 2)->get();
 
         return view('Simpan_Pinjam.laporan.simpanan.print-all', compact('simpanan', 'saldoTarik'));
     }
 
     public function print_show($id)
     {
-        $simpanan = Simpanan::where('id_anggota', $id)->get();
+        $simpanan = Simpanan::where('id_anggota', $id)->where('status', 1)->get();
         $anggota = Anggota::findOrFail($id);
 
         $saldoTarik = SaldoTarik::with('saldo')
             ->whereHas('saldo', function ($query) use ($id) {
                 $query->where('id_anggota', $id);
-            })->get();
+            })->where('status', 2)->get();
 
         return view('Simpan_Pinjam.laporan.simpanan.print-show', compact('simpanan', 'anggota', 'saldoTarik'));
     }

@@ -376,7 +376,7 @@
                     gaji: "Gaji wajib diisi",
                     foto: {
                         extension: "Gunakan file berformat .jpg atau .jpeg atau png",
-                        filesize: "Ukuran file maksimal 2mb"
+                        filesize: "Ukuran file maksimal 500kb"
                     }
                 },
                 errorElement: 'span',
