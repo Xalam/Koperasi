@@ -33,7 +33,7 @@ class JurnalUmumController extends Controller
                     'nama_akun'  => $value->akun->nama_akun,
                     'debet'      => number_format($value->debet, 2, ',', '.'),
                     'kredit'     => number_format($value->kredit, 2, ',', '.'),
-                    'action'     => '<a href="'. route('jurnal.edit', $value->id) . '" class="btn btn-warning btn-sm"><i class="far fa-edit"></i>&nbsp; Edit</a>
+                    'action'     => '<a href="' . route('jurnal.edit', $value->id) . '" class="btn btn-warning btn-sm"><i class="far fa-edit"></i>&nbsp; Edit</a>
                                     &nbsp; <a href="#mymodalJurnal" data-remote="' . route('jurnal.modal', $value->id) . '" data-toggle="modal" data-target="#mymodalJurnal" class="btn btn-danger btn-sm"><i class="far fa-trash-alt"></i>&nbsp; Hapus</a>'
                 ];
             }
@@ -68,9 +68,10 @@ class JurnalUmumController extends Controller
         if ($check == null) {
             $id = 1;
         } else {
-            $id = $check->id + 1;
+            $substrKode = substr($check->kode_jurnal, 3);
+            $id   = $substrKode + 1;
         }
-        
+
         if (count($request->rows) > 0) {
             for ($i = 0; $i < count($request->rows); $i++) {
 
@@ -166,7 +167,7 @@ class JurnalUmumController extends Controller
         $reqEnd    = $request->end_date;
 
         if ($request->start_date != null & $request->end_date != null) {
-            
+
             $startDate = date('Y-m-d', strtotime($request->start_date));
             $endDate   = date('Y-m-d', strtotime($request->end_date));
 

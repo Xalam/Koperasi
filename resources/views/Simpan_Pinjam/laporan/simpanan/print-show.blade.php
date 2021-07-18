@@ -53,8 +53,18 @@
             </div>
             <div>
                 <address>
-                    Kode Anggota: {{ $anggota->kd_anggota }} <br>
-                    Nama Anggota: {{ $anggota->nama_anggota }}
+                    <div class="col-12">
+                        <table class="table table-borderless">
+                            <tr>
+                                <td width="15%">Kode Anggota</td>
+                                <td>: {{ $anggota->kd_anggota }}</td>
+                            </tr>
+                            <tr>
+                                <td width="15%">Nama Anggota</td>
+                                <td>: {{ $anggota->nama_anggota }}</td>
+                            </tr>
+                        </table>
+                    </div>
                 </address>
             </div>
             <!-- Table row -->

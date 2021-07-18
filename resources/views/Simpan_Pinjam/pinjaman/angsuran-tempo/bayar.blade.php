@@ -11,8 +11,8 @@
 
 @section('breadcrumb')
     <li class="breadcrumb-item"><a href="#">Pinjaman</a></li>
-    <li class="breadcrumb-item"><a href="{{ route('tempo.index') }}">Angsuran Jatuh Tempo</a></li>
-    <li class="breadcrumb-item active">Pembayaran Angsuran</li>
+    <li class="breadcrumb-item"><a href="{{ route('tempo.index') }}">Pelunasan Sebelum Jatuh Tempo</a></li>
+    <li class="breadcrumb-item active">Pembayaran Pelunasan Sebelum Jatuh Tempo</li>
 @endsection
 
 @section('content_main')

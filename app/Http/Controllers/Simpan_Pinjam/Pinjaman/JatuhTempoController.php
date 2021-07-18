@@ -41,6 +41,7 @@ class JatuhTempoController extends Controller
                     'status'        => (($value->status == 0) ? '<a href="#modalKonfirmasi" data-remote="' . route('tempo.konfirmasi', $value->id) . '" 
                            data-toggle="modal" data-target="#modalKonfirmasi" class="btn btn-primary btn-sm"><i class="far fa-plus-square"></i>&nbsp; Proses</a>' :
                         '<span class="badge badge-success">Disetujui</span>') . (($value->lunas == 1) ? '<span class="badge badge-success">Lunas</span>' : ''),
+                    'jurnal'        => (($value->kode_jurnal == null) ? '-' : $value->kode_jurnal),
                     'action'        => (($value->status == 1) ? '<a href="' . route('tempo.print-show', $value->id) . '" class="btn btn-light btn-sm"><i class="fas fa-print"></i>&nbsp; Cetak</a>' :
                         '<a href="#modalKonfirmasi" data-remote="' . route('tempo.modal', $value->id) . '" data-toggle="modal" data-target="#modalKonfirmasi" class="btn btn-danger btn-sm"><i class="fas fa-trash"></i>&nbsp; Hapus</a>')
                 ];
@@ -99,7 +100,7 @@ class JatuhTempoController extends Controller
         $angsuran->tanggal          = $request->tanggal;
         $angsuran->nominal_angsuran = $pinjamanUpdate->nominal_angsuran;
         $angsuran->sisa_angsuran    = 0;
-        $angsuran->sisa_bayar       = 0;
+        $angsuran->sisa_bayar       = $pinjamanUpdate->tenor - $pinjamanUpdate->angsuran_ke;
         $angsuran->potongan         = str_replace(',', '', $request->potongan);
         $angsuran->status           = 1;
         $angsuran->lunas            = 1;
@@ -274,13 +275,21 @@ class JatuhTempoController extends Controller
     {
         $angsuran = Angsuran::findOrFail($id);
 
-        $checkPinjaman = Pinjaman::where('id', $angsuran->id_pinjaman)->where('status', 0)->first();
+        $checkStatusPnj = Pinjaman::where('id', $angsuran->id_pinjaman)->where('status', 0)->first();
+        $checkLunasPnj  = Pinjaman::where('id', $angsuran->id_pinjaman)->where('status', 1)->where('lunas', 1)->first();
 
-        if (!$checkPinjaman) {
+        if (!$checkStatusPnj) {
             #Update Pinjaman
+
+            if ($checkLunasPnj) {
+                return redirect()->route('tempo.index')->with([
+                    'error' => 'Pinjaman sudah lunas, harap hapus dari daftar pengajuan'
+                ]);
+            }
+
             $pinjamanUpdate = Pinjaman::findOrFail($angsuran->id_pinjaman);
 
-            $pinjamanUpdate->angsuran_ke = $pinjamanUpdate->angsuran_ke += 1;
+            $pinjamanUpdate->angsuran_ke += 1;
             $pinjamanUpdate->lunas = 1;
 
             $pinjamanUpdate->update();
@@ -325,76 +334,9 @@ class JatuhTempoController extends Controller
 
             $kodeAngsuran = Angsuran::where('id', $id)->first();
 
-            #Pembulatan Pendapatan
-            $pendapatan = round(($kodeAngsuran->pinjaman->total_pinjaman - $kodeAngsuran->pinjaman->nominal_pinjaman) / $kodeAngsuran->pinjaman->tenor, 2);
-
-            $intNumberPen = (int) $pendapatan;
-
-            $ratusanPen = substr($intNumberPen, -3);
-
-            $bulatPen = $intNumberPen - $ratusanPen;
-            $newRatusanPen = 0;
-
-            if ($ratusanPen > 0 && $ratusanPen <= 100) {
-                $newRatusanPen = 100;
-            } else if ($ratusanPen > 100 && $ratusanPen <= 200) {
-                $newRatusanPen = 200;
-            } else if ($ratusanPen > 200 && $ratusanPen <= 300) {
-                $newRatusanPen = 300;
-            } else if ($ratusanPen > 300 && $ratusanPen <= 400) {
-                $newRatusanPen = 400;
-            } else if ($ratusanPen > 400 && $ratusanPen <= 500) {
-                $newRatusanPen = 500;
-            } else if ($ratusanPen > 500 && $ratusanPen <= 600) {
-                $newRatusanPen = 600;
-            } else if ($ratusanPen > 600 && $ratusanPen <= 700) {
-                $newRatusanPen = 700;
-            } else if ($ratusanPen > 700 && $ratusanPen <= 800) {
-                $newRatusanPen = 800;
-            } else if ($ratusanPen > 800 && $ratusanPen <= 900) {
-                $newRatusanPen = 900;
-            } else if ($ratusanPen > 900 && $ratusanPen <= 999) {
-                $newRatusanPen = 1000;
-            } else {
-                $newRatusanPen = $ratusanPen;
-            }
-
-            $newPendapatan = $bulatPen + $newRatusanPen;
-
-            #Pembulatan Piutang
-            $piutang = round($kodeAngsuran->pinjaman->nominal_pinjaman / $kodeAngsuran->pinjaman->tenor, 2);
-            $intNumberPi = (int) $piutang;
-
-            $ratusanPi = substr($intNumberPi, -3);
-
-            $bulatPi = $intNumberPi - $ratusanPi;
-            $newRatusanPi = 0;
-
-            if ($ratusanPi > 0 && $ratusanPi <= 100) {
-                $newRatusanPi = 100;
-            } else if ($ratusanPi > 100 && $ratusanPi <= 200) {
-                $newRatusanPi = 200;
-            } else if ($ratusanPi > 200 && $ratusanPi <= 300) {
-                $newRatusanPi = 300;
-            } else if ($ratusanPi > 300 && $ratusanPi <= 400) {
-                $newRatusanPi = 400;
-            } else if ($ratusanPi > 400 && $ratusanPi <= 500) {
-                $newRatusanPi = 500;
-            } else if ($ratusanPi > 500 && $ratusanPi <= 600) {
-                $newRatusanPi = 600;
-            } else if ($ratusanPi > 600 && $ratusanPi <= 700) {
-                $newRatusanPi = 700;
-            } else if ($ratusanPi > 700 && $ratusanPi <= 800) {
-                $newRatusanPi = 800;
-            } else if ($ratusanPi > 800 && $ratusanPi <= 900) {
-                $newRatusanPi = 900;
-            } else if ($ratusanPi > 900 && $ratusanPi <= 999) {
-                $newRatusanPi = 1000;
-            } else {
-                $newRatusanPi = $ratusanPi;
-            }
-
-            $newPiutang = $bulatPi + $newRatusanPi;
+            //Input Jurnal
+            $bunga = $kodeAngsuran->pinjaman->nominal_pinjaman * ($kodeAngsuran->pinjaman->bunga / 100);
+            $pokok = $kodeAngsuran->total_bayar - $bunga;
 
             #Simpan Jurnal Pendapatan
             $jurnal = new JurnalUmum();
@@ -403,7 +345,7 @@ class JatuhTempoController extends Controller
             $jurnal->tanggal        = date('Y-m-d');
             $jurnal->keterangan     = 'Angsuran ( ' . $kodeAngsuran->kode_angsuran . ' )';
             $jurnal->debet          = 0;
-            $jurnal->kredit         = $newPendapatan;
+            $jurnal->kredit         = $bunga;
             $jurnal->save();
 
             #Simpan Jurnal Piutang
@@ -413,7 +355,7 @@ class JatuhTempoController extends Controller
             $jurnal->tanggal        = date('Y-m-d');
             $jurnal->keterangan     = 'Angsuran ( ' . $kodeAngsuran->kode_angsuran . ' )';
             $jurnal->debet          = 0;
-            $jurnal->kredit         = $newPiutang;
+            $jurnal->kredit         = $pokok;
             $jurnal->save();
 
             #Simpan Jurnal Kas
@@ -422,13 +364,13 @@ class JatuhTempoController extends Controller
             $jurnal->id_akun        = $idKas;
             $jurnal->tanggal        = date('Y-m-d');
             $jurnal->keterangan     = 'Angsuran ( ' . $kodeAngsuran->kode_angsuran . ' )';
-            $jurnal->debet          = $kodeAngsuran->nominal_angsuran;
+            $jurnal->debet          = $kodeAngsuran->total_bayar;
             $jurnal->kredit         = 0;
             $jurnal->save();
 
             return redirect()->route('tempo.index');
         } else {
-            return redirect()->route('angsuran.index')->with([
+            return redirect()->route('tempo.index')->with([
                 'error' => 'Pinjaman belum disetujui'
             ]);
         }

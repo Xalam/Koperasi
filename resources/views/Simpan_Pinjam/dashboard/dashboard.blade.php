@@ -35,7 +35,7 @@
             <!-- small box -->
             <div class="small-box bg-success">
                 <div class="inner">
-                    <h3>Rp. {{ number_format($count_pinjaman, 2, ',', '.') }}</h3>
+                    <h3>Rp. {{ number_format($count_pinjaman, 0, '', '.') }}</h3>
 
                     <p>Total Pinjaman</p>
                 </div>
@@ -51,7 +51,7 @@
             <!-- small box -->
             <div class="small-box bg-maroon">
                 <div class="inner">
-                    <h3>Rp. {{ number_format($count_simpanan, 2, ',', '.') }}</h3>
+                    <h3>Rp. {{ number_format($count_simpanan, 0, '', '.') }}</h3>
 
                     <p>Total Simpanan</p>
                 </div>

@@ -118,7 +118,7 @@
                                         </tr>
                                         <tr>
                                             <th style="width:50%">Angsuran Ke</th>
-                                            <td>{{ $angsuran->pinjaman->angsuran_ke }}
+                                            <td>{{ $angsuran->pinjaman->tenor - $angsuran->sisa_bayar }}
                                                 @if ($angsuran->lunas == 1)
                                                     (<b>LUNAS</b>)
                                                 @endif

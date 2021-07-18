@@ -4,13 +4,13 @@
 
 @section('content_header', 'Pengajuan Pinjaman Anggota')
 
-@push('style')
-    <!-- DataTables -->
-    <link rel="stylesheet" href="{{ asset('assets/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css') }}">
-    <link rel="stylesheet" href="{{ asset('assets/plugins/datatables-responsive/css/responsive.bootstrap4.min.css') }}">
-    <link rel="stylesheet" href="{{ asset('assets/plugins/datatables-buttons/css/buttons.bootstrap4.min.css') }}">
-    <link rel="stylesheet" href="{{ asset('assets/plugins/toastr/toastr.min.css') }}">
-@endpush
+    @push('style')
+        <!-- DataTables -->
+        <link rel="stylesheet" href="{{ asset('assets/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css') }}">
+        <link rel="stylesheet" href="{{ asset('assets/plugins/datatables-responsive/css/responsive.bootstrap4.min.css') }}">
+        <link rel="stylesheet" href="{{ asset('assets/plugins/datatables-buttons/css/buttons.bootstrap4.min.css') }}">
+        <link rel="stylesheet" href="{{ asset('assets/plugins/toastr/toastr.min.css') }}">
+    @endpush
 
 @section('breadcrumb')
     <li class="breadcrumb-item"><a href="#">Pinjaman</a></li>
@@ -24,7 +24,8 @@
             <div class="card">
                 <div class="card-header">
                     <h3 class="card-title">Pengajuan Pinjaman (Proses)</h3>
-                    <a href="{{ route('pengajuan.create') }}" class="btn btn-sm btn-primary float-right">Tambah Pengajuan</a>
+                    <a href="{{ route('pengajuan.create') }}" class="btn btn-sm btn-primary float-right">Tambah
+                        Pengajuan</a>
                 </div>
                 <div class="card-body">
                     <table id="table-pinjaman" class="table table-bordered table-hover">
@@ -63,6 +64,7 @@
                                 <th class="text-center">Nama Anggota</th>
                                 <th class="text-center">Nominal Pinjaman</th>
                                 <th width="10%">Status</th>
+                                <th>Kode Jurnal</th>
                                 <th>Aksi</th>
                             </tr>
                         </thead>
@@ -91,37 +93,40 @@
                 "info": true,
                 "autoWidth": true,
                 "responsive": true,
-                "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]],
+                "lengthMenu": [
+                    [10, 25, 50, -1],
+                    [10, 25, 50, "All"]
+                ],
                 "deferRender": true,
-                "columnDefs": [
-                {
-                  "targets": 0,
-                  "className": "text-center",
-                },
-                {
-                  "targets": 1,
-                  "className": "text-center",
-                },
-                {
-                  "targets": 2,
-                  "className": "text-center",
-                },
-                {
-                  "targets": 3,
-                  "className": "text-center",
-                },
-                {
-                  "targets": 5,
-                  "className": "text-right",
-                },
-                {
-                  "targets": 6,
-                  "className": "text-center",
-                },
-                {
-                  "targets": 7,
-                  "className": "text-center",
-                }],
+                "columnDefs": [{
+                        "targets": 0,
+                        "className": "text-center",
+                    },
+                    {
+                        "targets": 1,
+                        "className": "text-center",
+                    },
+                    {
+                        "targets": 2,
+                        "className": "text-center",
+                    },
+                    {
+                        "targets": 3,
+                        "className": "text-center",
+                    },
+                    {
+                        "targets": 5,
+                        "className": "text-right",
+                    },
+                    {
+                        "targets": 6,
+                        "className": "text-center",
+                    },
+                    {
+                        "targets": 7,
+                        "className": "text-center",
+                    }
+                ],
                 "ajax": {
                     url: "{{ route('pengajuan.index') }}?type=waiting"
                 },
@@ -160,37 +165,45 @@
                 "info": true,
                 "autoWidth": true,
                 "responsive": true,
-                "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]],
+                "scrollX": true,
+                "lengthMenu": [
+                    [10, 25, 50, -1],
+                    [10, 25, 50, "All"]
+                ],
                 "deferRender": true,
-                "columnDefs": [
-                {
-                  "targets": 0,
-                  "className": "text-center",
-                },
-                {
-                  "targets": 1,
-                  "className": "text-center",
-                },
-                {
-                  "targets": 2,
-                  "className": "text-center",
-                },
-                {
-                  "targets": 3,
-                  "className": "text-center",
-                },
-                {
-                  "targets": 5,
-                  "className": "text-right",
-                },
-                {
-                  "targets": 6,
-                  "className": "text-center",
-                },
-                {
-                  "targets": 7,
-                  "className": "text-center",
-                }],
+                "columnDefs": [{
+                        "targets": 0,
+                        "className": "text-center",
+                    },
+                    {
+                        "targets": 1,
+                        "className": "text-center",
+                    },
+                    {
+                        "targets": 2,
+                        "className": "text-center",
+                    },
+                    {
+                        "targets": 3,
+                        "className": "text-center",
+                    },
+                    {
+                        "targets": 5,
+                        "className": "text-right",
+                    },
+                    {
+                        "targets": 6,
+                        "className": "text-center",
+                    },
+                    {
+                        "targets": 7,
+                        "className": "text-center",
+                    },
+                    {
+                        "targets": 8,
+                        "className": "text-center",
+                    }
+                ],
                 "ajax": {
                     url: "{{ route('pengajuan.index') }}?type=accept"
                 },
@@ -216,19 +229,20 @@
                         data: 'status'
                     },
                     {
+                        data: 'jurnal'
+                    },
+                    {
                         data: 'action',
                         orderable: false
                     }
                 ]
             });
         });
-
     </script>
 
     @if (session()->has('success'))
         <script>
             toastr.success("{{ session()->get('success') }}");
-
         </script>
     @endif
 
@@ -248,7 +262,6 @@
                 modal.find('.modal-content').load(button.data("remote"));
             });
         });
-
     </script>
 
     <div class="modal" id="modalKonfirmasi" tabindex="-1" role="dialog">

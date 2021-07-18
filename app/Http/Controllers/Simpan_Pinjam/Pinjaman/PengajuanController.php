@@ -61,6 +61,7 @@ class PengajuanController extends Controller
                             'nama'          => $value->anggota->nama_anggota,
                             'nominal'       => 'Rp. ' . number_format($value->nominal_pinjaman, 2, ',', '.'),
                             'status'        => (($value->lunas == 1) ? '<span class="badge badge-success">Lunas</span>' : '<span class="badge badge-danger">Belum Lunas</span>'),
+                            'jurnal'        => $value->kode_jurnal,
                             'action'        => '<a href="' . route('pengajuan.print', $value->id) . '" class="btn btn-light btn-sm"><i class="fas fa-print"></i>&nbsp; Cetak</a>'
                         ];
                     }
@@ -283,6 +284,7 @@ class PengajuanController extends Controller
         $checkAkunPiutang    = Akun::where('kode_akun', 1121)->first();
         $checkAkunPendapatan = Akun::where('kode_akun', 4101)->first();
         $checkAkunAsuransi   = Akun::where('kode_akun', 2115)->first();
+        $checkAkunProvisi    = Akun::where('kode_akun', 4203)->first();
 
         if ($checkAkunKas == null) {
             $idKas = 0;
@@ -306,6 +308,12 @@ class PengajuanController extends Controller
             $idAsuransi = 0;
         } else {
             $idAsuransi = $checkAkunAsuransi->id;
+        }
+
+        if ($checkAkunProvisi == null) {
+            $idProvisi = 0;
+        } else {
+            $idProvisi = $checkAkunProvisi->id;
         }
 
         #Check Jurnal
@@ -333,6 +341,16 @@ class PengajuanController extends Controller
         $jurnal->kredit         = $kodePinjaman->biaya_asuransi;
         $jurnal->save();
 
+        #Simpan Dana Provisi
+        $jurnal = new JurnalUmum();
+        $jurnal->kode_jurnal   = 'JU-' . str_pad($idJurnal, 6, '0', STR_PAD_LEFT);
+        $jurnal->id_akun        = $idProvisi;
+        $jurnal->tanggal        = date('Y-m-d');
+        $jurnal->keterangan     = 'Pinjaman ( ' . $kodePinjaman->kode_pinjaman . ' )';
+        $jurnal->debet          = 0;
+        $jurnal->kredit         = $kodePinjaman->biaya_provisi;
+        $jurnal->save();
+
         #Simpan Jurnal Pendapatan
         $jurnal = new JurnalUmum();
         $jurnal->kode_jurnal   = 'JU-' . str_pad($idJurnal, 6, '0', STR_PAD_LEFT);
@@ -350,7 +368,7 @@ class PengajuanController extends Controller
         $jurnal->tanggal        = date('Y-m-d');
         $jurnal->keterangan     = 'Pinjaman ( ' . $kodePinjaman->kode_pinjaman . ' )';
         $jurnal->debet          = 0;
-        $jurnal->kredit         = $kodePinjaman->nominal_pinjaman - $kodePinjaman->biaya_asuransi - $kodePinjaman->biaya_admin;
+        $jurnal->kredit         = $kodePinjaman->nominal_pinjaman - $kodePinjaman->biaya_asuransi - $kodePinjaman->biaya_admin - $kodePinjaman->biaya_provisi;
         $jurnal->save();
 
         #Simpan Jurnal Piutang
