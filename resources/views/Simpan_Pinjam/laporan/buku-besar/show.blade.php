@@ -108,7 +108,9 @@
     <script>
 
         $(function() {
-            $('#table-buku').DataTable();
+            $('#table-buku').DataTable({
+                "ordering": false
+            });
         });
 
     </script>
