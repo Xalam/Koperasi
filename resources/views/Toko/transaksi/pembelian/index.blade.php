@@ -141,6 +141,50 @@
 @endsection
 
 @section('script')
+@if(Session::get('success'))
+<script>
+$(document).ready(function() {
+    const Toast = Swal.mixin({
+        toast: true,
+        position: 'middle',
+        showConfirmButton: false,
+        timer: 2000,
+        timerProgressBar: true
+    });
+
+    Toast.fire({
+        icon: 'success',
+        title: 'Proses Transaksi',
+        text: '{{Session::get('success')}}'
+    });
+    setTimeout(function() {
+        window.location = "/toko/transaksi/pembelian";
+    }, 1000);
+});
+</script>
+@elseif (Session::get('failed'))
+<script>
+$(document).ready(function() {
+    const Toast = Swal.mixin({
+        toast: true,
+        position: 'middle',
+        showConfirmButton: false,
+        timer: 2000,
+        timerProgressBar: true
+    });
+
+    Toast.fire({
+        icon: 'success',
+        title: 'Proses Transaksi',
+        text: '{{Session::get('failed')}}'
+    });
+    setTimeout(function() {
+        window.location = "/toko/transaksi/pembelian";
+    }, 2000);
+});
+</script>
+@endif
+
 <script src="{{ asset('js/base-url.js') }}"></script>
 <script src="{{ asset('js/data-barang.js') }}"></script>
 <script src="{{ asset('js/data-supplier.js') }}"></script>
@@ -307,9 +351,11 @@ $(document).ready(function() {
         if ($(this).val() == 1) {
             $('[for="dibayar"]').addClass('d-none');
             $('[name="jumlah_bayar"]').addClass('d-none');
+            $('[name="jumlah_bayar"]').removeAttr('required');
         } else {
             $('[for="dibayar"]').removeClass('d-none');
             $('[name="jumlah_bayar"]').removeClass('d-none');
+            $('[name="jumlah_bayar"]').attr('required', true);
         }
     });
 

@@ -137,6 +137,50 @@
 @endsection
 
 @section('script')
+@if(Session::get('success'))
+<script>
+$(document).ready(function() {
+    const Toast = Swal.mixin({
+        toast: true,
+        position: 'middle',
+        showConfirmButton: false,
+        timer: 2000,
+        timerProgressBar: true
+    });
+
+    Toast.fire({
+        icon: 'success',
+        title: 'Proses Transaksi',
+        text: '{{Session::get('success')}}'
+    });
+    setTimeout(function() {
+        window.location = "/toko/transaksi/penjualan";
+    }, 1000);
+});
+</script>
+@elseif (Session::get('failed'))
+<script>
+$(document).ready(function() {
+    const Toast = Swal.mixin({
+        toast: true,
+        position: 'middle',
+        showConfirmButton: false,
+        timer: 2000,
+        timerProgressBar: true
+    });
+
+    Toast.fire({
+        icon: 'success',
+        title: 'Proses Transaksi',
+        text: '{{Session::get('failed')}}'
+    });
+    setTimeout(function() {
+        window.location = "/toko/transaksi/penjualan";
+    }, 2000);
+});
+</script>
+@endif
+
 <script src="{{ asset('js/base-url.js') }}"></script>
 <script src="{{ asset('js/data-barang-jual.js') }}"></script>
 <script src="{{ asset('js/data-anggota.js') }}"></script>
@@ -308,12 +352,14 @@ $(document).ready(function() {
         if ($(this).val() == 1) {
             $('[for="dibayar"]').addClass('d-none');
             $('[name="jumlah_bayar"]').addClass('d-none');
+            $('[name="jumlah_bayar"]').removeAttr('required');
             $('#jumlah-kembalian').addClass('d-none');
             $('#jumlah-harga').removeClass('col-lg-6');
             $('#jumlah-harga').addClass('col-lg-12');
         } else {
             $('[for="dibayar"]').removeClass('d-none');
             $('[name="jumlah_bayar"]').removeClass('d-none');
+            $('[name="jumlah_bayar"]').attr('required', true);
             $('#jumlah-kembalian').removeClass('d-none');
             $('#jumlah-harga').removeClass('col-lg-12');
             $('#jumlah-harga').addClass('col-lg-6');
@@ -347,10 +393,20 @@ $(document).ready(function() {
             $('[name="alamat"]').attr('readonly', true);
             $('[name="telepon"]').attr('readonly', true);
             $('[name="wa"]').attr('readonly', true);
+            $('[name="pembayaran"]').attr('readonly', true);
+            $('[name="pembayaran"]').val(1);
+            $('[name="pembayaran"]').children('option:selected').val(1);
+            $('[for="dibayar"]').addClass('d-none');
+            $('[name="jumlah_bayar"]').addClass('d-none');
+            $('[name="jumlah_bayar"]').removeAttr('required');
+            $('#jumlah-kembalian').addClass('d-none');
+            $('#jumlah-harga').removeClass('col-lg-6');
+            $('#jumlah-harga').addClass('col-lg-12');
         } else {
             $('[name="alamat"]').removeAttr('readonly');
             $('[name="telepon"]').removeAttr('readonly');
             $('[name="wa"]').removeAttr('readonly');
+            $('[name="pembayaran"]').removeAttr('readonly');
         }
     });
 
@@ -362,10 +418,20 @@ $(document).ready(function() {
             $('[name="alamat"]').attr('readonly', true);
             $('[name="telepon"]').attr('readonly', true);
             $('[name="wa"]').attr('readonly', true);
+            $('[name="pembayaran"]').attr('readonly', true);
+            $('[name="pembayaran"]').val(1);
+            $('[name="pembayaran"]').children('option:selected').val(1);
+            $('[for="dibayar"]').addClass('d-none');
+            $('[name="jumlah_bayar"]').addClass('d-none');
+            $('[name="jumlah_bayar"]').removeAttr('required');
+            $('#jumlah-kembalian').addClass('d-none');
+            $('#jumlah-harga').removeClass('col-lg-6');
+            $('#jumlah-harga').addClass('col-lg-12');
         } else {
             $('[name="alamat"]').removeAttr('readonly');
             $('[name="telepon"]').removeAttr('readonly');
             $('[name="wa"]').removeAttr('readonly');
+            $('[name="pembayaran"]').removeAttr('readonly');
         }
     });
 

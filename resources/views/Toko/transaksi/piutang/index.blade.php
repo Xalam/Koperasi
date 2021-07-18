@@ -11,11 +11,13 @@
 
 @section('main')
 <div class="card m-6">
+    @if (auth()->user()->jabatan != 'Kanit')
     <div class="row-lg align-item-center">
         <button id="btn-piutang" class="btn btn-sm btn-primary col-lg-6" onclick="panel_piutang()">Piutang</button>
         <button id="btn-terima-piutang" class="btn btn-sm col-lg-6" onclick="panel_terima_piutang()">Terima
             Piutang</button>
     </div>
+    @endif
     <div id="panel-terima-piutang" class="d-none">
         <p class="card-header bg-light">Tambah Angsuran</p>
         <div class="card-body">
@@ -81,7 +83,9 @@
                             <th>Jumlah Piutang</th>
                             <th>Terima Piutang</th>
                             <th>Sisa Piutang</th>
+                            @if (auth()->user()->jabatan != 'Kanit')
                             <th>Opsi</th>
+                            @endif
                         </tr>
                     </thead>
                     @if (count($piutang) > 0)
@@ -101,10 +105,12 @@
                             <td class="align-middle text-center">{{$data->jumlah_piutang}}</td>
                             <td class="align-middle text-center">{{$data->jumlah_terima_piutang}}</td>
                             <td class="align-middle text-center">{{$data->sisa_piutang}}</td>
+                            @if (auth()->user()->jabatan != 'Kanit')
                             <td class="align-middle text-center">
                                 <a id=<?php echo "bayar-" . $data->id ?> class="btn btn-sm btn-success"
-                                    onclick="bayar(<?php echo $data->id ?>)">Bayar</a>
+                                    onclick="bayar(<?php echo $data->id ?>)">Terima</a>
                             </td>
+                            @endif
                         </tr>
                         @endif
                         @endforeach
@@ -185,6 +191,19 @@ function terima_piutang() {
         },
         success: function(response) {
             if (response.code == 200) {
+                const Toast = Swal.mixin({
+                    toast: true,
+                    position: 'middle',
+                    showConfirmButton: false,
+                    timer: 2000,
+                    timerProgressBar: true
+                });
+
+                Toast.fire({
+                    icon: 'success',
+                    title: 'Proses Transaksi',
+                    text: response.message
+                });
                 tampil_daftar();
                 nomorTransaksi();
             }
@@ -258,7 +277,7 @@ function tampil_daftar() {
 
 function batal_transaksi() {
     $.ajax({
-        url: '/toko/transaksi/hutang/cancel/',
+        url: '/toko/transaksi/piutang/cancel/',
         type: 'POST',
         data: {
             nomor_beli: $('[name="nomor_beli"]').val(),

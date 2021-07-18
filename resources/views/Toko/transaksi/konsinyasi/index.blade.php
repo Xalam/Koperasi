@@ -11,10 +11,13 @@
 
 @section('main')
 <div class="card m-6">
+    @if (auth()->user()->jabatan != 'Kanit')
     <div class="row-lg align-item-center">
-        <button id="btn-daftar" class="btn btn-sm btn-primary col-lg-6" onclick="panel_daftar()">Daftar Konsinyasi</button>
+        <button id="btn-daftar" class="btn btn-sm btn-primary col-lg-6" onclick="panel_daftar()">Daftar
+            Konsinyasi</button>
         <button id="btn-bayar" class="btn btn-sm col-lg-6" onclick="panel_bayar()">Bayar Konsinyasi</button>
     </div>
+    @endif
     <div id="panel-bayar-konsinyasi" class="d-none">
         <p class="card-header bg-light">Tambah Angsuran</p>
         <div class="card-body">
@@ -43,7 +46,8 @@
             </div>
             <div class="row-lg align-item-center mb-2">
                 {!! Form::label(null, 'Sisa Konsinyasi', ['class' => 'col-lg-2']) !!}
-                {!! Form::number('sisa_konsinyasi', 0, ['class' => 'col-lg-2 form-control form-control-sm', 'readonly']) !!}
+                {!! Form::number('sisa_konsinyasi', 0, ['class' => 'col-lg-2 form-control form-control-sm', 'readonly'])
+                !!}
             </div>
             <div class="row-lg align-item-center mb-2">
                 {!! Form::label(null, 'Pelunasan', ['class' => 'col-lg-2 fw-bold']) !!}
@@ -64,7 +68,8 @@
     <div id="panel-daftar-konsinyasi">
         <div class="d-flex bg-light">
             <p class="card-header col-lg">Daftar Konsinyasi</p>
-            <i class="card-header fas fa-sync text-success" style="cursor: pointer;" title="Refresh Page" onclick="location.reload()"></i>
+            <i class="card-header fas fa-sync text-success" style="cursor: pointer;" title="Refresh Page"
+                onclick="location.reload()"></i>
         </div>
         <div class="card-body">
             <div class="table-responsive">
@@ -72,14 +77,16 @@
                     <thead class="text-center">
                         <tr>
                             <th>No</th>
-                            <th>No Beli</th>
+                            <th>No Konsinyasi</th>
                             <th>Kode Supplier</th>
                             <th>Nama Supplier</th>
-                            <th>Tanggal Beli</th>
+                            <th>Tanggal Titip</th>
                             <th>Jatuh Tempo</th>
                             <th>Nilai Konsinyasi</th>
                             <th>Sisa Konsinyasi</th>
+                            @if (auth()->user()->jabatan != 'Kanit')
                             <th>Opsi</th>
+                            @endif
                         </tr>
                     </thead>
                     @if (count($konsinyasi) > 0)
@@ -100,10 +107,12 @@
                             <td class="align-middle text-center">{{$data->jatuh_tempo}}</td>
                             <td class="align-middle text-center">{{$data->jumlah_konsinyasi}}</td>
                             <td class="align-middle text-center">{{$data->sisa_konsinyasi}}</td>
+                            @if (auth()->user()->jabatan != 'Kanit')
                             <td class="align-middle text-center">
                                 <a id=<?php echo "bayar-" . $data->id ?> class="btn btn-sm btn-success"
                                     onclick="bayar(<?php echo $data->id ?>)">Bayar</a>
                             </td>
+                            @endif
                         </tr>
                         @endif
                         @endforeach
@@ -184,6 +193,20 @@ function bayar_konsinyasi() {
         },
         success: function(response) {
             if (response.code == 200) {
+                const Toast = Swal.mixin({
+                    toast: true,
+                    position: 'middle',
+                    showConfirmButton: false,
+                    timer: 2000,
+                    timerProgressBar: true
+                });
+
+                Toast.fire({
+                    icon: 'success',
+                    title: 'Proses Transaksi',
+                    text: response.message
+                });
+                
                 tampil_daftar();
                 nomorTransaksi();
             }
@@ -293,7 +316,7 @@ $(document).ready(function() {
         if (parseInt($(this).val()) < 0) {
             $(this).val(0);
         }
-        
+
         if (parseInt($(this).val()) > parseInt($('[name="sisa_konsinyasi"]').val())) {
             $(this).val($('[name="sisa_konsinyasi"]').val());
         }
@@ -303,20 +326,21 @@ $(document).ready(function() {
         var allFilled = false;
         var skip = false;
 
-        document.getElementById('panel-bayar-konsinyasi').querySelectorAll('[required]').forEach(function(
-            i) {
-            if (!skip) {
-                if (!i.value) {
-                    i.focus();
-                    allFilled = false;
-                    skip = true;
+        document.getElementById('panel-bayar-konsinyasi').querySelectorAll('[required]').forEach(
+            function(
+                i) {
+                if (!skip) {
+                    if (!i.value) {
+                        i.focus();
+                        allFilled = false;
+                        skip = true;
+                    } else {
+                        allFilled = true;
+                    }
                 } else {
-                    allFilled = true;
+                    return;
                 }
-            } else {
-                return;
-            }
-        });
+            });
 
         if (allFilled) {
             bayar_konsinyasi();

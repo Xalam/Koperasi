@@ -10,7 +10,8 @@
 @endsection
 
 @section('main')
-<a href="{{url('toko/master/admin/create')}}" class="btn btn-sm btn-success mt-4 ms-4 pe-4"><i class="fas fa-plus"></i><b>Tambah</b></a>
+<a href="{{url('toko/master/admin/create')}}" class="btn btn-sm btn-success mt-4 ms-4 pe-4"><i
+        class="fas fa-plus"></i><b>Tambah</b></a>
 <div class="card m-6">
     <p class="card-header bg-light">Daftar Admin</p>
     <div class="card-body">
@@ -20,7 +21,7 @@
                     <tr>
                         <th>No</th>
                         <th>Kode Admin</th>
-                        <th>Nama Admin</th>
+                        <th>Username</th>
                         <th>Password</th>
                         <th>Jabatan</th>
                         <th class="w-20">Opsi</th>
@@ -32,7 +33,7 @@
                     $i = 1;
                     @endphp
                     @foreach ($admin as $data)
-                    <tr>
+                    <tr id="row-<?php echo $data->id ?>">
                         <th class="align-middle text-center">
                             <div>{{$i++}}</div>
                         </th>
@@ -52,7 +53,8 @@
                             <div id="password-<?php echo $data->id ?>">{{$data->password}}</div>
                         </td>
                         <td class="align-middle text-center">
-                            {!! Form::select('edit_jabatan', ['Admin' => 'Admin'], null, ['class' => 'd-none', 'id' =>
+                            {!! Form::select('edit_jabatan', ['Super_Admin' => 'Super Admin', 'Kanit' => 'Kanit',
+                            'Gudang' => 'Gudang', 'Kasir' => 'Kasir'], null, ['class' => 'd-none', 'id' =>
                             'edit-jabatan-'.$data->id]) !!}
                             <div id="jabatan-<?php echo $data->id ?>">{{$data->jabatan}}</div>
                         </td>
@@ -61,8 +63,11 @@
                                 onclick="edit(<?php echo $data->id ?>)"><i class="fas fa-edit p-1"></i> Edit</a>
                             <a id=<?php echo "terapkan-" . $data->id ?> class="w-48 btn btn-sm btn-warning d-none"
                                 onclick="terapkan(<?php echo $data->id ?>)">Terapkan</a>
-                            <a id=<?php echo "hapus-" . $data->id ?> class="w-52 btn btn-sm btn-danger"
-                                onclick="show_popup_hapus(<?php echo $data->id ?>)"><i class="fas fa-trash-alt p-1"></i> Hapus</a>
+                            <a id=<?php echo "hapus-" . $data->id ?> class="w-50 btn btn-sm btn-danger"
+                                onclick="show_popup_hapus(<?php echo $data->id ?>)"><i class="fas fa-trash-alt p-1"></i>
+                                Hapus</a>
+                            <a id=<?php echo "batal-" . $data->id ?> class="w-50 btn btn-sm btn-danger d-none"
+                                onclick="batal(<?php echo $data->id ?>)">Batal</a>
                         </td>
                     </tr>
                     @endforeach
@@ -86,40 +91,91 @@ function edit(id) {
     $("#jabatan-" + id).addClass("d-none");
     $("#edit-jabatan-" + id).removeClass("d-none");
     $("#edit-" + id).addClass("d-none");
+    $("#hapus-" + id).addClass("d-none");
     $("#terapkan-" + id).removeClass("d-none");
+    $("#batal-" + id).removeClass("d-none");
+}
+
+function batal(id) {
+    $("#kode-" + id).removeClass("d-none");
+    $("#edit-kode-" + id).val($("#kode-" + id).text());
+    $("#edit-kode-" + id).addClass("d-none");
+    $("#nama-" + id).removeClass("d-none");
+    $("#edit-nama-" + id).val($("#nama-" + id).text());
+    $("#edit-nama-" + id).addClass("d-none");
+    $("#password-" + id).removeClass("d-none");
+    $("#edit-password-" + id).val($("#password-" + id).text());
+    $("#edit-password-" + id).addClass("d-none");
+    $("#jabatan-" + id).removeClass("d-none");
+    $("#edit-jabatan-" + id).val($("#jabatan-" + id).text());
+    $("#edit-jabatan-" + id).addClass("d-none");
+    $("#edit-" + id).removeClass("d-none");
+    $("#hapus-" + id).removeClass("d-none");
+    $("#terapkan-" + id).addClass("d-none");
+    $("#batal-" + id).addClass("d-none");
 }
 
 function terapkan(id) {
-    $.ajax({
-        url: '/toko/master/admin/update/',
-        type: 'POST',
-        data: {
-            id: id,
-            kode: $('#edit-kode-' + id).val(),
-            nama: $('#edit-nama-' + id).val(),
-            password: $('#edit-password-' + id).val(),
-            jabatan: $('#edit-jabatan-' + id).val()
-        },
-        success: function(response) {
-            if (response.code == 200) {
-                $("#kode-" + id).removeClass("d-none");
-                $("#edit-kode-" + id).addClass("d-none");
-                $("#nama-" + id).removeClass("d-none");
-                $("#edit-nama-" + id).addClass("d-none");
-                $("#password-" + id).removeClass("d-none");
-                $("#edit-password-" + id).addClass("d-none");
-                $("#jabatan-" + id).removeClass("d-none");
-                $("#edit-jabatan-" + id).addClass("d-none");
-                $("#edit-" + id).removeClass("d-none");
-                $("#terapkan-" + id).addClass("d-none");
+    var allFilled = false;
+    var index = 0;
 
-                $("#kode-" + id).html(response.admin.kode);
-                $("#nama-" + id).html(response.admin.nama);
-                $("#password-" + id).html(response.admin.password);
-                $("#jabatan-" + id).html(response.admin.alamat);
+    $('#row-' + id).find('input').each(function() {
+        if (!$(this).val()) {
+            $(this).popover({
+                content: "Tidak boleh kosong",
+                placement: "top",
+                trigger: "focus"
+            }).popover('show');
+            allFilled = false;
+        } else {
+            if (index == 0) {
+                allFilled = true;
+            } else {
+                if (allFilled == true) {
+                    allFilled = true;
+                } else {
+                    return false;
+                }
             }
         }
+
+        index++;
     });
+
+    if (allFilled) {
+        $.ajax({
+            url: '/toko/master/admin/update',
+            type: 'POST',
+            data: {
+                id: id,
+                kode: $('#edit-kode-' + id).val(),
+                nama: $('#edit-nama-' + id).val(),
+                password: $('#edit-password-' + id).val(),
+                jabatan: $('#edit-jabatan-' + id).val()
+            },
+            success: function(response) {
+                if (response.code == 200) {
+                    $("#kode-" + id).removeClass("d-none");
+                    $("#edit-kode-" + id).addClass("d-none");
+                    $("#nama-" + id).removeClass("d-none");
+                    $("#edit-nama-" + id).addClass("d-none");
+                    $("#password-" + id).removeClass("d-none");
+                    $("#edit-password-" + id).addClass("d-none");
+                    $("#jabatan-" + id).removeClass("d-none");
+                    $("#edit-jabatan-" + id).addClass("d-none");
+                    $("#edit-" + id).removeClass("d-none");
+                    $("#hapus-" + id).removeClass("d-none");
+                    $("#terapkan-" + id).addClass("d-none");
+                    $("#batal-" + id).addClass("d-none");
+
+                    $("#kode-" + id).html(response.admin.kode);
+                    $("#nama-" + id).html(response.admin.nama);
+                    $("#password-" + id).html(response.admin.password);
+                    $("#jabatan-" + id).html(response.admin.alamat);
+                }
+            }
+        });
+    }
 }
 
 function hapus(id) {

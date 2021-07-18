@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Toko;
 
 use App\Http\Controllers\Controller;
 use App\Models\Toko\Master\Admin\AdminModel;
-use App\Models\User;
+use App\Models\Toko\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Crypt;
@@ -25,6 +25,7 @@ class AuthController extends Controller
         $data = [
             'nama'     => $request->input('nama'),
             'password'  => $request->input('password'),
+            'jabatan'  => $request->input('jabatan'),
         ];
   
         Auth::guard('toko')->attempt($data);
@@ -32,7 +33,7 @@ class AuthController extends Controller
         if (Auth::guard('toko')->check()) {
             return redirect()->to('/toko/dashboard');
         } else {
-            Session::flash('error', 'Nama atau password salah');
+            Session::flash('error', 'LOGIN GAGAL! Silahkan periksa dan coba lagi!');
             return redirect()->route('t-login');
         }
     }

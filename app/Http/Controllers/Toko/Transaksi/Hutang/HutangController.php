@@ -11,6 +11,7 @@ use App\Models\Toko\Transaksi\Hutang\HutangModel;
 use App\Models\Toko\Transaksi\Jurnal\JurnalModel;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Session;
 
 class HutangController extends Controller
 {
@@ -139,7 +140,7 @@ class HutangController extends Controller
             'kredit' => $angsuran
         ]); 
         
-        return response()->json(['code'=>200]);
+        return response()->json(['code'=>200, 'message' => 'Pembayaran Hutang Berhasil']);
     }
 
     public function delete($id) {

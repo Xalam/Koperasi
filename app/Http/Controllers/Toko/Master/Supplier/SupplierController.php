@@ -7,6 +7,7 @@ use App\Models\Toko\Master\Barang\BarangModel;
 use Illuminate\Http\Request;
 
 use App\Models\Toko\Master\Supplier\SupplierModel;
+use Illuminate\Support\Facades\Session;
 
 class SupplierController extends Controller
 {
@@ -42,14 +43,33 @@ class SupplierController extends Controller
                 ]);
             }
         }
+
+        $last_nomor = SupplierModel::all();
+
+        if (count($last_nomor) > 0) {
+            $kode = "SUP" . str_pad(count($last_nomor) + 1, 5, '0', STR_PAD_LEFT);
+        } else {
+            $kode = "SUP" . str_pad(strval(1), 5, '0', STR_PAD_LEFT);
+        }
         
-        return view('toko.master.supplier.create', compact('data_notified', 'data_notif'));
+        return view('toko.master.supplier.create', compact('data_notified', 'data_notif', 'kode'));
     }
 
     public function store(Request $request) {
-        SupplierModel::create($request->all());
+        $namaExist = SupplierModel::where('nama', $request->nama)->get();
+        $emailExist = SupplierModel::where('email', $request->email)->get();
 
-        return redirect('/toko/master/supplier');
+        if (count($namaExist) > 0) {
+            Session::flash('failed', 'Nama supplier sudah ada');
+
+        } else if (count($emailExist) > 0) {
+            Session::flash('failed', 'Email supplier sudah ada');
+        } else {
+            SupplierModel::create($request->all());
+    
+            Session::flash('success', 'Berhasil');
+        }
+        return view('toko.master.supplier.create');
     }
 
     public function update(Request $request) {

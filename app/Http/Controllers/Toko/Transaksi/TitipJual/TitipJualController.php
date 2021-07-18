@@ -14,6 +14,7 @@ use App\Models\Toko\Transaksi\Hutang\HutangModel;
 use App\Models\Toko\Transaksi\Jurnal\JurnalModel;
 use App\Models\Toko\Transaksi\TitipJual\TitipJualModel;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Session;
 
 class TitipJualController extends Controller
 {
@@ -116,76 +117,88 @@ class TitipJualController extends Controller
     }
 
     public function buy(Request $request) {
-        $nomor = $request->input('nomor');
+        $barang = [];
+        $cur_date = "";
+        $kode_supplier = [];
+        $kode_barang = [];
+        $pembayaran = [];
+        $supplier = [];
 
-        TitipJualDetailModel::where('nomor', $nomor)->update(['submited' => 1]);
+        $nomor = $request->input('nomor');
 
         $data_barang = TitipJualDetailModel::where('nomor', $nomor)->get();
 
+        if (count($data_barang) > 0) {
+            TitipJualDetailModel::where('nomor', $nomor)->update(['submited' => 1]);
 
-        foreach ($data_barang as $data) {
-            $barang = BarangModel::where('id', $data->id_barang)->first();
+            foreach ($data_barang as $data) {
+                $barang = BarangModel::where('id', $data->id_barang)->first();
 
-            BarangModel::where('id', $data->id_barang)->update([
-                'hpp' => ($barang->stok * $barang->hpp + $data->total_harga) / ($barang->stok + $data->jumlah),
-                'stok' => $barang->stok + $data->jumlah]);
+                BarangModel::where('id', $data->id_barang)->update([
+                    'hpp' => ($barang->stok * $barang->hpp + $data->total_harga) / ($barang->stok + $data->jumlah),
+                    'stok' => $barang->stok + $data->jumlah]);
+            }
+
+            $persediaan_konsinyasi = AkunModel::where('kode', 1131)->first();
+            $hutang_konsinyasi = AkunModel::where('kode', 2102)->first();
+
+            AkunModel::where('kode', 1131)->update([
+                'debit' => $persediaan_konsinyasi->debit + $request->input('jumlah_harga')
+            ]);
+
+            AkunModel::where('kode', 2102)->update([
+                'debit' => $hutang_konsinyasi->debit + $request->input('jumlah_harga')
+            ]);
+
+            $jumlah_bayar = 0;
+            $jumlah_kembalian = 0;
+
+            $tanggal = Carbon::parse($request->input('tanggal'))->format('y-m-d');
+
+            HutangModel::create([
+                'nomor_beli' => $request->input('nomor'),
+                'id_supplier' => $request->input('kode_supplier'),
+                'jumlah_hutang' => $request->input('jumlah_harga'),
+                'jatuh_tempo' => Carbon::parse($tanggal)->addDays($request->input('tempo')),
+                'sisa_hutang' => $request->input('jumlah_harga')
+            ]);
+
+            $keterangan = "Titip Jual barang secara kredit.";
+
+            JurnalModel::create([
+                'nomor' => $request->input('nomor_jurnal'),
+                'tanggal' => $request->input('tanggal'),
+                'keterangan' => $keterangan,
+                'id_akun' => $persediaan_konsinyasi->id,
+                'debit' => $request->input('jumlah_harga'),
+                'kredit' => 0
+            ]); 
+                
+            JurnalModel::create([
+                'nomor' => $request->input('nomor_jurnal'),
+                'tanggal' => $request->input('tanggal'),
+                'keterangan' => $keterangan,
+                'id_akun' => $hutang_konsinyasi->id,
+                'debit' => 0,
+                'kredit' => $request->input('jumlah_harga')
+            ]);
+            
+            TitipJualModel::create([
+                'tanggal' => $request->input('tanggal'),
+                'nomor' => $request->input('nomor'),
+                'id_supplier' => $request->input('kode_supplier'),
+                'jumlah_harga' => $request->input('jumlah_harga'),
+                'jumlah_bayar' => $jumlah_bayar,
+                'jumlah_kembalian' => $jumlah_kembalian,
+                'pembayaran' => $request->input('pembayaran')
+            ]);
+            
+            Session::flash('success', 'Titip Jual Barang Berhasil');
+        } else {
+            Session::flash('failed', 'Daftar Titip Jual Kosong');
         }
 
-        $persediaan_konsinyasi = AkunModel::where('kode', 1131)->first();
-        $hutang_konsinyasi = AkunModel::where('kode', 2102)->first();
-
-        AkunModel::where('kode', 1131)->update([
-            'debit' => $persediaan_konsinyasi->debit + $request->input('jumlah_harga')
-        ]);
-
-        AkunModel::where('kode', 2102)->update([
-            'debit' => $hutang_konsinyasi->debit + $request->input('jumlah_harga')
-        ]);
-
-        $jumlah_bayar = 0;
-        $jumlah_kembalian = 0;
-
-        $tanggal = Carbon::parse($request->input('tanggal'))->format('y-m-d');
-
-        HutangModel::create([
-            'nomor_beli' => $request->input('nomor'),
-            'id_supplier' => $request->input('kode_supplier'),
-            'jumlah_hutang' => $request->input('jumlah_harga'),
-            'jatuh_tempo' => Carbon::parse($tanggal)->addDays($request->input('tempo')),
-            'sisa_hutang' => $request->input('jumlah_harga')
-        ]);
-
-        $keterangan = "Titip Jual barang secara kredit.";
-
-        JurnalModel::create([
-            'nomor' => $request->input('nomor_jurnal'),
-            'tanggal' => $request->input('tanggal'),
-            'keterangan' => $keterangan,
-            'id_akun' => $persediaan_konsinyasi->id,
-            'debit' => $request->input('jumlah_harga'),
-            'kredit' => 0
-        ]); 
-            
-        JurnalModel::create([
-            'nomor' => $request->input('nomor_jurnal'),
-            'tanggal' => $request->input('tanggal'),
-            'keterangan' => $keterangan,
-            'id_akun' => $hutang_konsinyasi->id,
-            'debit' => 0,
-            'kredit' => $request->input('jumlah_harga')
-        ]);
-        
-        TitipJualModel::create([
-            'tanggal' => $request->input('tanggal'),
-            'nomor' => $request->input('nomor'),
-            'id_supplier' => $request->input('kode_supplier'),
-            'jumlah_harga' => $request->input('jumlah_harga'),
-            'jumlah_bayar' => $jumlah_bayar,
-            'jumlah_kembalian' => $jumlah_kembalian,
-            'pembayaran' => $request->input('pembayaran')
-        ]);
-        
-        return redirect('toko/transaksi/titip-jual');
+        return view('toko.transaksi.titip_jual.index', compact('barang', 'cur_date', 'kode_barang', 'kode_supplier', 'pembayaran', 'supplier'));
     }
 
     public function delete($id) {

@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 
 use App\Models\Toko\Master\Akun\AkunModel;
 use App\Models\Toko\Master\Barang\BarangModel;
+use Illuminate\Support\Facades\Session;
 
 class AkunController extends Controller
 {
@@ -65,7 +66,8 @@ class AkunController extends Controller
             ]);
         }
 
-        return redirect('/toko/master/akun');
+        Session::flash('success', 'Berhasil');
+        return view('toko.master.akun.create');
     }
 
     public function update(Request $request) {

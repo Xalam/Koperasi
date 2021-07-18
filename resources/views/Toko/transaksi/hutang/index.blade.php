@@ -11,10 +11,12 @@
 
 @section('main')
 <div class="card m-6">
+    @if (auth()->user()->jabatan != 'Kanit')
     <div class="row-lg align-item-center">
         <button id="btn-daftar" class="btn btn-sm btn-primary col-lg-6" onclick="panel_daftar()">Daftar Utang</button>
         <button id="btn-bayar" class="btn btn-sm col-lg-6" onclick="panel_bayar()">Bayar Utang</button>
     </div>
+    @endif
     <div id="panel-bayar-utang" class="d-none">
         <p class="card-header bg-light">Tambah Angsuran</p>
         <div class="card-body">
@@ -63,7 +65,7 @@
 
     <div id="panel-daftar-utang">
         <div class="d-flex bg-light">
-            <p class="card-header col-lg">Daftar Hutang</p>
+            <p class="card-header col-lg">Daftar Utang</p>
             <i class="card-header fas fa-sync text-success" style="cursor: pointer;" title="Refresh Page" onclick="location.reload()"></i>
         </div>
         <div class="card-body">
@@ -77,9 +79,11 @@
                             <th>Nama Supplier</th>
                             <th>Tanggal Beli</th>
                             <th>Jatuh Tempo</th>
-                            <th>Nilai Hutang</th>
-                            <th>Sisa Hutang</th>
+                            <th>Nilai Utang</th>
+                            <th>Sisa Utang</th>
+                            @if (auth()->user()->jabatan != 'Kanit')
                             <th>Opsi</th>
+                            @endif
                         </tr>
                     </thead>
                     @if (count($hutang) > 0)
@@ -100,10 +104,12 @@
                             <td class="align-middle text-center">{{$data->jatuh_tempo}}</td>
                             <td class="align-middle text-center">{{$data->jumlah_hutang}}</td>
                             <td class="align-middle text-center">{{$data->sisa_hutang}}</td>
+                            @if (auth()->user()->jabatan != 'Kanit')
                             <td class="align-middle text-center">
                                 <a id=<?php echo "bayar-" . $data->id ?> class="btn btn-sm btn-success"
                                     onclick="bayar(<?php echo $data->id ?>)">Bayar</a>
                             </td>
+                            @endif
                         </tr>
                         @endif
                         @endforeach
@@ -128,7 +134,7 @@
                             <th>Nomor Jurnal</th>
                             <th>Tanggal</th>
                             <th>Angsuran</th>
-                            <th>Sisa Hutang</th>
+                            <th>Sisa Utang</th>
                             <th>Opsi</th>
                         </tr>
                     </thead>
@@ -142,6 +148,50 @@
 @endsection
 
 @section('script')
+@if(Session::get('success'))
+<script>
+$(document).ready(function() {
+    const Toast = Swal.mixin({
+        toast: true,
+        position: 'middle',
+        showConfirmButton: false,
+        timer: 2000,
+        timerProgressBar: true
+    });
+
+    Toast.fire({
+        icon: 'success',
+        title: 'Berhasil',
+        text: 'Data Berhasil Disimpan'
+    });
+    setTimeout(function() {
+        window.location = "/toko/transaksi/hutang";
+    }, 1000);
+});
+</script>
+@elseif (Session::get('failed'))
+<script>
+$(document).ready(function() {
+    const Toast = Swal.mixin({
+        toast: true,
+        position: 'middle',
+        showConfirmButton: false,
+        timer: 2000,
+        timerProgressBar: true
+    });
+
+    Toast.fire({
+        icon: 'success',
+        title: 'Gagal',
+        text: '{{Session::get('failed')}}'
+    });
+    setTimeout(function() {
+        window.location = "/toko/transaksi/hutang";
+    }, 2000);
+});
+</script>
+@endif
+
 <script src="{{ asset('js/base-url.js') }}"></script>
 <script src="{{ asset('js/nomor-angsuran.js') }}"></script>
 <script>
@@ -184,6 +234,20 @@ function bayar_hutang() {
         },
         success: function(response) {
             if (response.code == 200) {
+                const Toast = Swal.mixin({
+                    toast: true,
+                    position: 'middle',
+                    showConfirmButton: false,
+                    timer: 2000,
+                    timerProgressBar: true
+                });
+
+                Toast.fire({
+                    icon: 'success',
+                    title: 'Proses Transaksi',
+                    text: response.message
+                });
+
                 tampil_daftar();
                 nomorTransaksi();
             }

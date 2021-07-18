@@ -117,7 +117,7 @@
             </table>
         </div>
         <div class="d-grid gap-2 mb-2">
-            {!! Form::submit('Beli', ['class' => 'btn btn-sm btn-success']) !!}
+            {!! Form::submit('Titip Jual', ['class' => 'btn btn-sm btn-success']) !!}
         </div>
         <div class="d-grid gap-2">
             <a id="batal" class="btn btn-sm btn-danger">Batal</a>
@@ -128,6 +128,50 @@
 @endsection
 
 @section('script')
+@if(Session::get('success'))
+<script>
+$(document).ready(function() {
+    const Toast = Swal.mixin({
+        toast: true,
+        position: 'middle',
+        showConfirmButton: false,
+        timer: 2000,
+        timerProgressBar: true
+    });
+
+    Toast.fire({
+        icon: 'success',
+        title: 'Proses Transaksi',
+        text: '{{Session::get('success')}}'
+    });
+    setTimeout(function() {
+        window.location = "/toko/transaksi/titip-jual";
+    }, 1000);
+});
+</script>
+@elseif (Session::get('failed'))
+<script>
+$(document).ready(function() {
+    const Toast = Swal.mixin({
+        toast: true,
+        position: 'middle',
+        showConfirmButton: false,
+        timer: 2000,
+        timerProgressBar: true
+    });
+
+    Toast.fire({
+        icon: 'success',
+        title: 'Proses Transaksi',
+        text: '{{Session::get('failed')}}'
+    });
+    setTimeout(function() {
+        window.location = "/toko/transaksi/titip-jual";
+    }, 2000);
+});
+</script>
+@endif
+
 <script src="{{ asset('js/base-url.js') }}"></script>
 <script src="{{ asset('js/data-barang.js') }}"></script>
 <script src="{{ asset('js/data-supplier.js') }}"></script>

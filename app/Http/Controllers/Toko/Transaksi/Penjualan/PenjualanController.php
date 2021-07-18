@@ -14,6 +14,7 @@ use App\Models\Toko\Transaksi\Piutang\PiutangModel;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Session;
 
 class PenjualanController extends Controller
 {
@@ -115,176 +116,189 @@ class PenjualanController extends Controller
     }
 
     public function sell(Request $request) {
+        $anggota = [];
+        $barang = [];
+        $cur_date = "";
+        $kode_anggota = [];
+        $kode_barang = [];
+        $pembayaran = [];
+
         $nomor = $request->input('nomor');
         $tanggal = $request->input('tanggal');
 
-        PenjualanBarangModel::where('nomor', $nomor)->update(['submited' => 1]);
-
         $data_barang = PenjualanBarangModel::where('nomor', $nomor)->get();
 
-        foreach ($data_barang as $data) {
-            $barang = BarangModel::where('id', $data->id_barang)->first();
+        if (count($data_barang) > 0) {
+            PenjualanBarangModel::where('nomor', $nomor)->update(['submited' => 1]);
 
-            BarangModel::where('id', $data->id_barang)->update([
-                'stok' => $barang->stok - $data->jumlah]);
-        }
+            foreach ($data_barang as $data) {
+                $barang = BarangModel::where('id', $data->id_barang)->first();
 
-        if ($request->input('pembayaran') == 2) {
-            $kas = AkunModel::where('kode', 1102)->first();
-            $pendapatan = AkunModel::where('kode', 4102)->first();
+                BarangModel::where('id', $data->id_barang)->update([
+                    'stok' => $barang->stok - $data->jumlah]);
+            }
 
-            AkunModel::where('kode', 1102)->update([
-                'debit' => $kas->debit + $request->input('jumlah_harga')
-            ]);
+            if ($request->input('pembayaran') == 2) {
+                $kas = AkunModel::where('kode', 1102)->first();
+                $pendapatan = AkunModel::where('kode', 4102)->first();
 
-            AkunModel::where('kode', 4102)->update([
-                'kredit' => $pendapatan->kredit + $request->input('jumlah_harga')
-            ]);
+                AkunModel::where('kode', 1102)->update([
+                    'debit' => $kas->debit + $request->input('jumlah_harga')
+                ]);
 
-            $persediaan = AkunModel::where('kode', 1131)->first();
-            $hpp = AkunModel::where('kode', 5101)->first();
+                AkunModel::where('kode', 4102)->update([
+                    'kredit' => $pendapatan->kredit + $request->input('jumlah_harga')
+                ]);
 
-            $jumlah_hpp = PenjualanBarangModel::join('barang', 'barang.id', '=', 'detail_jual.id_barang')
-                                                ->select('detail_jual.*', DB::raw('SUM(barang.hpp*detail_jual.jumlah) AS total_hpp'))
-                                                ->where('detail_jual.nomor', $nomor)->first(); 
+                $persediaan = AkunModel::where('kode', 1131)->first();
+                $hpp = AkunModel::where('kode', 5101)->first();
 
-            AkunModel::where('kode', 1131)->update([
-                'debit' => $persediaan->debit - $jumlah_hpp->total_hpp
-            ]);
+                $jumlah_hpp = PenjualanBarangModel::join('barang', 'barang.id', '=', 'detail_jual.id_barang')
+                                                    ->select('detail_jual.*', DB::raw('SUM(barang.hpp*detail_jual.jumlah) AS total_hpp'))
+                                                    ->where('detail_jual.nomor', $nomor)->first(); 
 
-            AkunModel::where('kode', 5101)->update([
-                'debit' => $hpp->debit + $jumlah_hpp->total_hpp
-            ]);
+                AkunModel::where('kode', 1131)->update([
+                    'debit' => $persediaan->debit - $jumlah_hpp->total_hpp
+                ]);
+
+                AkunModel::where('kode', 5101)->update([
+                    'debit' => $hpp->debit + $jumlah_hpp->total_hpp
+                ]);
+                
+                $keterangan = "Penjualan barang secara tunai.";
+                    
+                JurnalModel::create([
+                    'nomor' => $request->input('nomor_jurnal'),
+                    'tanggal' => $tanggal,
+                    'keterangan' => $keterangan,
+                    'id_akun' => $hpp->id,
+                    'debit' => $jumlah_hpp->total_hpp,
+                    'kredit' => 0
+                ]); 
+                    
+                JurnalModel::create([
+                    'nomor' => $request->input('nomor_jurnal'),
+                    'tanggal' => $request->input('tanggal'),
+                    'keterangan' => $keterangan,
+                    'id_akun' => $kas->id,
+                    'debit' => $request->input('jumlah_harga'),
+                    'kredit' => 0
+                ]); 
+
+                JurnalModel::create([
+                    'nomor' => $request->input('nomor_jurnal'),
+                    'tanggal' => $tanggal,
+                    'keterangan' => $keterangan,
+                    'id_akun' => $persediaan->id,
+                    'debit' => 0,
+                    'kredit' => $jumlah_hpp->total_hpp
+                ]); 
+                    
+                JurnalModel::create([
+                    'nomor' => $request->input('nomor_jurnal'),
+                    'tanggal' => $request->input('tanggal'),
+                    'keterangan' => $keterangan,
+                    'id_akun' => $pendapatan->id,
+                    'debit' => 0,
+                    'kredit' => $request->input('jumlah_harga')
+                ]);
+
+                $jumlah_bayar = $request->input('jumlah_bayar');
+                $jumlah_kembalian = $request->input('jumlah_kembalian');
+            } else {
+                $piutang = AkunModel::where('kode', 1122)->first();
+                $pendapatan = AkunModel::where('kode', 4102)->first();
+
+                AkunModel::where('kode', 1122)->update([
+                    'debit' => $piutang->debit + $request->input('jumlah_harga')
+                ]);
+
+                AkunModel::where('kode', 4102)->update([
+                    'kredit' => $pendapatan->kredit + $request->input('jumlah_harga')
+                ]);
+
+                $persediaan = AkunModel::where('kode', 1131)->first();
+                $hpp = AkunModel::where('kode', 5101)->first();
+
+                $jumlah_hpp = PenjualanBarangModel::join('barang', 'barang.id', '=', 'detail_jual.id_barang')
+                                                    ->select('detail_jual.*', DB::raw('SUM(barang.hpp*detail_jual.jumlah) AS total_hpp'))
+                                                    ->where('detail_jual.nomor', $nomor)->first(); 
+
+                AkunModel::where('kode', 1131)->update([
+                    'debit' => $persediaan->debit - $jumlah_hpp->total_hpp
+                ]);
+
+                AkunModel::where('kode', 5101)->update([
+                    'debit' => $hpp->debit + $jumlah_hpp->total_hpp
+                ]);
+
+                PiutangModel::create([
+                    'nomor_jual' => $request->input('nomor'),
+                    'id_anggota' => $request->input('kode_anggota'),
+                    'jumlah_piutang' => $request->input('jumlah_harga'),
+                    'sisa_piutang' => $request->input('jumlah_harga')
+                ]);
+                
+                $keterangan = "Penjualan barang secara kredit.";
+
+                JurnalModel::create([
+                    'nomor' => $request->input('nomor_jurnal'),
+                    'tanggal' => $request->input('tanggal'),
+                    'keterangan' => $keterangan,
+                    'id_akun' => $piutang->id,
+                    'debit' => $request->input('jumlah_harga'),
+                    'kredit' => 0
+                ]); 
+                    
+                JurnalModel::create([
+                    'nomor' => $request->input('nomor_jurnal'),
+                    'tanggal' => $request->input('tanggal'),
+                    'keterangan' => $keterangan,
+                    'id_akun' => $hpp->id,
+                    'debit' => $jumlah_hpp->total_hpp,
+                    'kredit' => 0
+                ]);
+                    
+                JurnalModel::create([
+                    'nomor' => $request->input('nomor_jurnal'),
+                    'tanggal' => $request->input('tanggal'),
+                    'keterangan' => $keterangan,
+                    'id_akun' => $pendapatan->id,
+                    'debit' => 0,
+                    'kredit' => $request->input('jumlah_harga')
+                ]); 
+                    
+                JurnalModel::create([
+                    'nomor' => $request->input('nomor_jurnal'),
+                    'tanggal' => $request->input('tanggal'),
+                    'keterangan' => $keterangan,
+                    'id_akun' => $persediaan->id,
+                    'debit' => 0,
+                    'kredit' => $jumlah_hpp->total_hpp
+                ]); 
+
+                $jumlah_bayar = 0;
+                $jumlah_kembalian = 0;
+            }
             
-            $keterangan = "Penjualan barang secara tunai.";
-                
-            JurnalModel::create([
-                'nomor' => $request->input('nomor_jurnal'),
-                'tanggal' => $tanggal,
-                'keterangan' => $keterangan,
-                'id_akun' => $hpp->id,
-                'debit' => $jumlah_hpp->total_hpp,
-                'kredit' => 0
-            ]); 
-                
-            JurnalModel::create([
-                'nomor' => $request->input('nomor_jurnal'),
+            PenjualanModel::create([
                 'tanggal' => $request->input('tanggal'),
-                'keterangan' => $keterangan,
-                'id_akun' => $kas->id,
-                'debit' => $request->input('jumlah_harga'),
-                'kredit' => 0
-            ]); 
-
-            JurnalModel::create([
-                'nomor' => $request->input('nomor_jurnal'),
-                'tanggal' => $tanggal,
-                'keterangan' => $keterangan,
-                'id_akun' => $persediaan->id,
-                'debit' => 0,
-                'kredit' => $jumlah_hpp->total_hpp
-            ]); 
-                
-            JurnalModel::create([
-                'nomor' => $request->input('nomor_jurnal'),
-                'tanggal' => $request->input('tanggal'),
-                'keterangan' => $keterangan,
-                'id_akun' => $pendapatan->id,
-                'debit' => 0,
-                'kredit' => $request->input('jumlah_harga')
-            ]);
-
-            $jumlah_bayar = $request->input('jumlah_bayar');
-            $jumlah_kembalian = $request->input('jumlah_kembalian');
-        } else {
-            $piutang = AkunModel::where('kode', 1122)->first();
-            $pendapatan = AkunModel::where('kode', 4102)->first();
-
-            AkunModel::where('kode', 1122)->update([
-                'debit' => $piutang->debit + $request->input('jumlah_harga')
-            ]);
-
-            AkunModel::where('kode', 4102)->update([
-                'kredit' => $pendapatan->kredit + $request->input('jumlah_harga')
-            ]);
-
-            $persediaan = AkunModel::where('kode', 1131)->first();
-            $hpp = AkunModel::where('kode', 5101)->first();
-
-            $jumlah_hpp = PenjualanBarangModel::join('barang', 'barang.id', '=', 'detail_jual.id_barang')
-                                                ->select('detail_jual.*', DB::raw('SUM(barang.hpp*detail_jual.jumlah) AS total_hpp'))
-                                                ->where('detail_jual.nomor', $nomor)->first(); 
-
-            AkunModel::where('kode', 1131)->update([
-                'debit' => $persediaan->debit - $jumlah_hpp->total_hpp
-            ]);
-
-            AkunModel::where('kode', 5101)->update([
-                'debit' => $hpp->debit + $jumlah_hpp->total_hpp
-            ]);
-
-            PiutangModel::create([
-                'nomor_jual' => $request->input('nomor'),
+                'nomor' => $request->input('nomor'),
+                'nomor_jurnal' => $request->input('nomor_jurnal'),
                 'id_anggota' => $request->input('kode_anggota'),
-                'jumlah_piutang' => $request->input('jumlah_harga'),
-                'sisa_piutang' => $request->input('jumlah_harga')
+                'jumlah_harga' => $request->input('jumlah_harga'),
+                'jumlah_bayar' => $jumlah_bayar,
+                'jumlah_kembalian' => $jumlah_kembalian,
+                'pembayaran' => $request->input('pembayaran'),
+                'notified' => 1
             ]);
             
-            $keterangan = "Penjualan barang secara kredit.";
-
-            JurnalModel::create([
-                'nomor' => $request->input('nomor_jurnal'),
-                'tanggal' => $request->input('tanggal'),
-                'keterangan' => $keterangan,
-                'id_akun' => $piutang->id,
-                'debit' => $request->input('jumlah_harga'),
-                'kredit' => 0
-            ]); 
-                
-            JurnalModel::create([
-                'nomor' => $request->input('nomor_jurnal'),
-                'tanggal' => $request->input('tanggal'),
-                'keterangan' => $keterangan,
-                'id_akun' => $hpp->id,
-                'debit' => $jumlah_hpp->total_hpp,
-                'kredit' => 0
-            ]);
-                
-            JurnalModel::create([
-                'nomor' => $request->input('nomor_jurnal'),
-                'tanggal' => $request->input('tanggal'),
-                'keterangan' => $keterangan,
-                'id_akun' => $pendapatan->id,
-                'debit' => 0,
-                'kredit' => $request->input('jumlah_harga')
-            ]); 
-                
-            JurnalModel::create([
-                'nomor' => $request->input('nomor_jurnal'),
-                'tanggal' => $request->input('tanggal'),
-                'keterangan' => $keterangan,
-                'id_akun' => $persediaan->id,
-                'debit' => 0,
-                'kredit' => $jumlah_hpp->total_hpp
-            ]); 
-
-            $jumlah_bayar = 0;
-            $jumlah_kembalian = 0;
+            Session::flash('success', 'Penjualan Barang Berhasil');
+        } else {
+            Session::flash('failed', 'Daftar Penjualan Kosong');
         }
-        
-        PenjualanModel::create([
-            'tanggal' => $request->input('tanggal'),
-            'nomor' => $request->input('nomor'),
-            'nomor_jurnal' => $request->input('nomor_jurnal'),
-            'id_anggota' => $request->input('kode_anggota'),
-            'jumlah_harga' => $request->input('jumlah_harga'),
-            'jumlah_bayar' => $jumlah_bayar,
-            'jumlah_kembalian' => $jumlah_kembalian,
-            'pembayaran' => $request->input('pembayaran'),
-            'notified' => 1
-        ]);
-        
-        return redirect('toko/transaksi/penjualan');
+
+        return view('toko.transaksi.penjualan.index', compact('barang', 'cur_date', 'kode_barang', 'kode_anggota', 'pembayaran', 'anggota'));
     }
 
     public function delete($id) {

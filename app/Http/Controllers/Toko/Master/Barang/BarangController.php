@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 
 use App\Models\Toko\Master\Barang\BarangModel;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Session;
 
 class BarangController extends Controller
 {
@@ -61,10 +62,11 @@ class BarangController extends Controller
         ]);
 
         if ($request->file('foto')->isValid()) {
-            $request->file('foto')->move(public_path('document/toko/barang/foto/'), $request->input('nama') .'.' . $request->file('foto')->getClientOriginalExtension());
+            $request->file('foto')->move(public_path('storage/toko/barang/foto/'), $request->input('nama') .'.' . $request->file('foto')->getClientOriginalExtension());
         }
         
-        return redirect('/toko/master/barang');
+        Session::flash('success', 'Berhasil');
+        return view('toko.master.barang.create');
     }
 
     public function update(Request $request) {

@@ -6,11 +6,15 @@ use App\Http\Controllers\Controller;
 use App\Models\Toko\Transaksi\Hutang\HutangDetailModel;
 use App\Models\Toko\Transaksi\Hutang\HutangModel;
 use App\Models\Toko\Transaksi\Konsinyasi\KonsinyasiDetailModel;
+use App\Models\Toko\Transaksi\Pembelian\PembelianBarangModel;
 use App\Models\Toko\Transaksi\Pembelian\PembelianModel;
+use App\Models\Toko\Transaksi\Penjualan\PenjualanBarangModel;
 use App\Models\Toko\Transaksi\Penjualan\PenjualanModel;
 use App\Models\Toko\Transaksi\Piutang\PiutangDetailModel;
+use App\Models\Toko\Transaksi\Retur\ReturPembelianBarangModel;
 use App\Models\Toko\Transaksi\Retur\ReturPembelianModel;
 use App\Models\Toko\Transaksi\TitipJual\TitipJualDetailModel;
+use App\Models\Toko\Transaksi\TitipJual\TitipJualModel;
 use Illuminate\Http\Request;
 
 class NomorTransaksiController extends Controller
@@ -23,6 +27,9 @@ class NomorTransaksiController extends Controller
         } else {
             $nomor = "B" . $tanggal . str_pad(strval(1), 6, '0', STR_PAD_LEFT);
         }
+
+        PembelianModel::where('nomor', $nomor)->delete();
+        PembelianBarangModel::where('nomor', $nomor)->delete();
         
         return $nomor;
     }
@@ -35,6 +42,9 @@ class NomorTransaksiController extends Controller
         } else {
             $nomor = "R" . $tanggal . str_pad(strval(1), 6, '0', STR_PAD_LEFT);
         }
+
+        ReturPembelianModel::where('nomor', $nomor)->delete();
+        ReturPembelianBarangModel::where('nomor', $nomor)->delete();
         
         return $nomor;
     }
@@ -47,6 +57,9 @@ class NomorTransaksiController extends Controller
         } else {
             $nomor = "J" . $tanggal . str_pad(strval(1), 6, '0', STR_PAD_LEFT);
         }
+
+        PenjualanModel::where('nomor', $nomor)->delete();
+        PenjualanBarangModel::where('nomor', $nomor)->delete();
         
         return $nomor;
     }
@@ -83,6 +96,9 @@ class NomorTransaksiController extends Controller
         } else {
             $nomor = "T" . $tanggal . str_pad(strval(1), 6, '0', STR_PAD_LEFT);
         }
+
+        TitipJualModel::where('nomor', $nomor)->delete();
+        TitipJualDetailModel::where('nomor', $nomor)->delete();
         
         return $nomor;
     }
