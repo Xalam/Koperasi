@@ -35,29 +35,33 @@
         </div>
         <div class="row-lg align-item-center mb-2">
             {!! Form::label(null, 'Kode Barang', ['class' => 'col-lg-2']) !!}
-            {!! Form::select('kode_barang', [], null, ['class' => 'col-lg-4 form-select form-select-sm', 'required'])
+            {!! Form::select('kode_barang', [], null, ['class' => 'col-lg-4 form-select form-select-sm', 'required',
+            'disabled'])
             !!}
         </div>
         <div class="row-lg align-item-center mb-2">
             {!! Form::label(null, 'Nama Barang', ['class' => 'col-lg-2']) !!}
-            {!! Form::select('nama_barang', [], null, ['class' => 'col-lg-9 form-select form-select-sm', 'required'])
+            {!! Form::select('nama_barang', [], null, ['class' => 'col-lg-9 form-select form-select-sm', 'required',
+            'disabled'])
             !!}
         </div>
         <div class="row-lg align-item-center mb-2">
             {!! Form::label(null, 'Harga Beli', ['class' => 'col-lg-2']) !!}
-            {!! Form::number('harga_beli', null, ['class' => 'col-lg-2 form-control form-control-sm', 'readonly' =>
+            {!! Form::number('harga_beli', 0, ['class' => 'col-lg-2 form-control form-control-sm', 'readonly' =>
             'readonly', 'required']) !!}
         </div>
         <div class="row-lg align-item-center mb-2">
             {!! Form::label(null, 'Jumlah Retur', ['class' => 'col-lg-2']) !!}
-            {!! Form::number('jumlah', null, ['class' => 'col-lg-1 form-control form-control-sm', 'required']) !!}
+            {!! Form::number('jumlah', 0, ['class' => 'col-lg-1 form-control form-control-sm', 'required', 'readonly'])
+            !!}
             {!! Form::label(null, 'Maksimal Retur : 0', ['class' => 'offset-lg-1 col-lg-auto', 'id' =>
             'text-maksimal-retur']) !!}
             {!! Form::number('maksimal_retur', null, ['class' => 'col-lg-1 form-control form-control-sm d-none']) !!}
         </div>
         <div class="row-lg align-item-center mb-2">
             {!! Form::label(null, 'Jumlah Harga', ['class' => 'col-lg-2 d-none']) !!}
-            {!! Form::text('jumlah_harga', null, ['class' => 'col-lg-2 form-control form-control-sm d-none']) !!}
+            {!! Form::text('jumlah_harga', null, ['class' => 'col-lg-2 form-control form-control-sm d-none', 'required',
+            'readonly']) !!}
         </div>
         <div class="d-grid gap-2">
             <a id="tambah" class="btn btn-small btn-primary">Tambah</a>
@@ -111,7 +115,7 @@ $(document).ready(function() {
     Toast.fire({
         icon: 'success',
         title: 'Proses Transaksi',
-        text: '{{Session::get('success')}}'
+        text: `{{Session::get('success')}}`
     });
     setTimeout(function() {
         window.location = "/toko/transaksi/retur-pembelian";
@@ -130,9 +134,9 @@ $(document).ready(function() {
     });
 
     Toast.fire({
-        icon: 'success',
+        icon: 'error',
         title: 'Proses Transaksi',
-        text: '{{Session::get('failed')}}'
+        text: `{{Session::get('failed')}}`
     });
     setTimeout(function() {
         window.location = "/toko/transaksi/retur-pembelian";
@@ -172,15 +176,23 @@ function tambah_daftar() {
                     $.get(`${base_url}api/data-retur-detail-barang/${nomor_beli}/${id_barang}`,
                         function(data, status) {
                             $('[name="harga_beli"]').val(data.harga);
-                            $('#text-maksimal-retur').text('Maksimal Retur : ' + parseInt(data.jumlah_beli - data.jumlah_retur));
-                            $('[name="maksimal_retur"]').val(parseInt(data.jumlah_beli - data.jumlah_retur));
+                            $('#text-maksimal-retur').text('Maksimal Retur : ' + parseInt(data
+                                .jumlah_beli - data.jumlah_retur));
+                            $('[name="maksimal_retur"]').val(parseInt(data.jumlah_beli - data
+                                .jumlah_retur));
                         });
                 } else {
                     $('[name="nama_barang"]').val("");
                     $('[name="harga_beli"]').val("");
                 }
 
-                $('[name="jumlah"]').val(0);
+                if (parseInt(data.jumlah_beli - data.jumlah_retur) <= 0) {
+                    $('[name="jumlah"]').attr('readonly', true);
+                    $('[name="jumlah"]').val(0);
+                } else {
+                    $('[name="jumlah"]').removeAttr('readonly');
+                    $('[name="jumlah"]').val(1);
+                }
             }
         }
     });
@@ -194,6 +206,31 @@ function hapus_daftar($id) {
             if (response.code == 200) {
                 close_popup_hapus();
                 tampil_daftar();
+
+                const id_barang = $('[name="kode_barang"]').val();
+                const nomor_beli = $('[name="id_beli"] option:selected').text();
+                if (id_barang != '') {
+                    $('[name="nama_barang"]').val(id_barang);
+                    $.get(`${base_url}api/data-retur-detail-barang/${nomor_beli}/${id_barang}`,
+                        function(data, status) {
+                            $('[name="harga_beli"]').val(data.harga);
+                            $('#text-maksimal-retur').text('Maksimal Retur : ' + parseInt(data
+                                .jumlah_beli - data.jumlah_retur));
+                            $('[name="maksimal_retur"]').val(parseInt(data.jumlah_beli - data
+                                .jumlah_retur));
+                        });
+                } else {
+                    $('[name="nama_barang"]').val("");
+                    $('[name="harga_beli"]').val("");
+                }
+
+                if (parseInt(data.jumlah_beli - data.jumlah_retur) <= 0) {
+                    $('[name="jumlah"]').attr('readonly', true);
+                    $('[name="jumlah"]').val(0);
+                } else {
+                    $('[name="jumlah"]').removeAttr('readonly');
+                    $('[name="jumlah"]').val(1);
+                }
             }
         }
     });
@@ -299,8 +336,8 @@ $(document).ready(function() {
     });
 
     $('[name="jumlah"]').change(function() {
-        if ($(this).val() < 0) {
-            $(this).val(0);
+        if ($(this).val() < 1) {
+            $(this).val(1);
         }
 
         if (parseInt($(this).val()) > parseInt($('[name="maksimal_retur"]').val())) {

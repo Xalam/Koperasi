@@ -30,7 +30,7 @@ class DataBarangController extends Controller
                                         $join->on('detail_retur.id_barang', '=', 'detail_beli.id_barang')
                                             ->on('detail_beli.nomor', '=', 'detail_retur.nomor_beli');
                                     })
-                                ->select(DB::raw('IFNULL(detail_retur.jumlah, 0)  AS jumlah_retur'), 
+                                ->select(DB::raw('IFNULL(SUM(detail_retur.jumlah), 0)  AS jumlah_retur'), 
                                         'detail_beli.jumlah AS jumlah_beli', 'detail_beli.harga_satuan AS harga')
                                 ->where('detail_beli.nomor', $nomor)
                                 ->where('detail_beli.id_barang', $id)

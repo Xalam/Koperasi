@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Toko\Laporan\Pendapatan;
 
+use App\Exports\Toko\Laporan\LaporanPendapatanExport;
 use App\Http\Controllers\Controller;
 use App\Models\Toko\Master\Barang\BarangModel;
 use App\Models\Toko\Transaksi\Jurnal\JurnalModel;
@@ -73,21 +74,44 @@ class LaporanPendapatanController extends Controller
     public function print($tanggal) {
         if ($tanggal) {
             $laporan_pendapatan = JurnalModel::join('akun', 'akun.id', '=', 'jurnal.id_akun')
-                                                ->select('jurnal.tanggal AS tanggal', 'akun.kode AS kode_akun', 
-                                                'akun.nama AS nama_akun', 'jurnal.debit+jurnal.kredit AS jumlah')
+                                                ->select('jurnal.tanggal AS tanggal', 'jurnal.keterangan AS keterangan', 'akun.kode AS kode_akun', 
+                                                'akun.nama AS nama_akun', DB::raw('SUM(jurnal.debit) AS debit'), DB::raw('SUM(jurnal.kredit) AS kredit'))
                                                 ->where('jurnal.tanggal', $tanggal)
-                                                ->get();                            
+                                                ->where(function($i) {
+                                                    $i->where('akun.kode', 'like', '4%')
+                                                        ->orWhere('akun.kode', 'like', '5%')
+                                                        ->orWhere('akun.kode', 'like', '6%');
+                                                })
+                                                ->groupBy('akun.kode')
+                                                ->get();
+                                                
+            $pemasukan = JurnalModel::join('akun', 'akun.id', '=', 'jurnal.id_akun')
+                                                ->select('jurnal.tanggal AS tanggal', 
+                                                DB::raw('IFNULL(SUM(jurnal.debit+jurnal.kredit), 0) AS jumlah'))
+                                                ->where('jurnal.tanggal', $tanggal)
+                                                ->where('akun.kode', 'like', '4%')
+                                                ->groupBy('jurnal.tanggal')
+                                                ->first();
+                                                
+            $pengeluaran = JurnalModel::join('akun', 'akun.id', '=', 'jurnal.id_akun')
+                                                ->select('jurnal.tanggal AS tanggal', 
+                                                DB::raw('IFNULL(SUM(jurnal.debit+jurnal.kredit), 0) AS jumlah'))
+                                                ->where('jurnal.tanggal', $tanggal)
+                                                ->where('akun.kode', 'like', '5%')
+                                                ->orWhere('akun.kode', 'like', '6%')
+                                                ->groupBy('jurnal.tanggal')
+                                                ->first();                         
         }
 
-        return view ('toko.laporan.pendapatan.print', compact('laporan_pendapatan', 'tanggal'));
+        return view ('toko.laporan.pendapatan.print', compact('laporan_pendapatan', 'pemasukan', 'pengeluaran', 'tanggal'));
         
         // $pdf = PDF::loadview('toko.laporan.pembelian.print', ['laporan_pembelian'=>$laporan_pembelian]);
         // return $pdf->download('Laporan Pembelian ' . $pembayaran . $tanggal . '.pdf');
     }
 
     public function export($tanggal) {
-        return Excel::download(new JurnalModel(
+        return Excel::download(new LaporanPendapatanExport(
                                     $tanggal
-                                ), 'Laporan Retur Pembelian ' . $tanggal . '.xlsx');
+                                ), 'Laporan Laba Rugi ' . $tanggal . '.xlsx');
     }
 }

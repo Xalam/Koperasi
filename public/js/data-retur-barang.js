@@ -4,6 +4,9 @@ $('[name="id_beli"]').change(function () {
         $('[name="kode_barang"]').empty();
         $('[name="nama_barang"]').empty();
         $.get(`${base_url}api/data-retur-barang/${id_beli}`, function (data, status) {
+            $('[name="kode_barang"]').removeAttr('disabled');
+            $('[name="nama_barang"]').removeAttr('disabled');
+
             $('[name="kode_barang"]').append(`<option value="">-- Pilih Kode Barang --</option>`);
             $('[name="nama_barang"]').append(`<option value="">-- Pilih Nama Barang --</option>`);
             data.forEach(x => {
@@ -14,6 +17,11 @@ $('[name="id_beli"]').change(function () {
     } else {
         $('[name="kode_barang"]').empty();
         $('[name="nama_barang"]').empty();
+        $('[name="kode_barang"]').attr('disabled', true);
+        $('[name="nama_barang"]').attr('disabled', true);
+        $('[name="jumlah"]').val(0);
+        $('[name="harga_beli"]').val(0);
+        $('[name="jumlah"]').attr('readonly', true);
     }
 });
 
@@ -23,6 +31,9 @@ function data_retur_barang() {
         $('[name="kode_barang"]').empty();
         $('[name="nama_barang"]').empty();
         $.get(`${base_url}api/data-retur-barang/${id_beli}`, function (data, status) {
+            $('[name="kode_barang"]').removeAttr('disabled');
+            $('[name="nama_barang"]').removeAttr('disabled');
+
             $('[name="kode_barang"]').append(`<option value="">-- Pilih Kode Barang --</option>`);
             $('[name="nama_barang"]').append(`<option value="">-- Pilih Nama Barang --</option>`);
             data.forEach(x => {
@@ -33,6 +44,11 @@ function data_retur_barang() {
     } else {
         $('[name="kode_barang"]').empty();
         $('[name="nama_barang"]').empty();
+        $('[name="kode_barang"]').attr('disabled', true);
+        $('[name="nama_barang"]').attr('disabled', true);
+        $('[name="jumlah"]').val(0);
+        $('[name="harga_beli"]').val(0);
+        $('[name="jumlah"]').attr('readonly', true);
     }
 }
 
@@ -45,10 +61,19 @@ $('[name="kode_barang"]').change(function () {
             $('[name="harga_beli"]').val(data.harga);
             $('#text-maksimal-retur').text('Maksimal Retur : ' + parseInt(data.jumlah_beli - data.jumlah_retur));
             $('[name="maksimal_retur"]').val(parseInt(data.jumlah_beli - data.jumlah_retur));
+            if (parseInt(data.jumlah_beli - data.jumlah_retur) <= 0) {
+                $('[name="jumlah"]').attr('readonly', true);
+                $('[name="jumlah"]').val(0);
+            } else {
+                $('[name="jumlah"]').removeAttr('readonly');
+                $('[name="jumlah"]').val(1);
+            }
         });
     } else {
         $('[name="nama_barang"]').val("");
         $('[name="harga_beli"]').val("");
+        $('[name="jumlah"]').val(0);
+        $('[name="jumlah"]').attr('readonly', true);
     }
 });
 
@@ -61,9 +86,18 @@ $('[name="nama_barang"]').change(function () {
             $('[name="harga_beli"]').val(data.harga);
             $('#text-maksimal-retur').text('Maksimal Retur : ' + parseInt(data.jumlah_beli - data.jumlah_retur));
             $('[name="maksimal_retur"]').val(parseInt(data.jumlah_beli - data.jumlah_retur));
+            if (parseInt(data.jumlah_beli - data.jumlah_retur) <= 0) {
+                $('[name="jumlah"]').attr('readonly', true);
+                $('[name="jumlah"]').val(0);
+            } else {
+                $('[name="jumlah"]').removeAttr('readonly');
+                $('[name="jumlah"]').val(1);
+            }
         });
     } else {
         $('[name="kode_barang"]').val("");
         $('[name="harga_beli"]').val("");
+        $('[name="jumlah"]').val(0);
+        $('[name="jumlah"]').attr('readonly', true);
     }
 });

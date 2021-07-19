@@ -102,9 +102,9 @@ $(document).ready(function() {
     });
 
     Toast.fire({
-        icon: 'success',
-        title: 'Berhasil',
-        text: 'Data Berhasil Disimpan'
+        icon: 'error',
+        title: 'Gagal',
+        text: `{{Session::get('failed')}}`
     });
     setTimeout(function() {
         window.location = "/toko/master/barang";

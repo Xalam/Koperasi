@@ -121,6 +121,8 @@ class PembelianController extends Controller
         $kode_barang = [];
         $pembayaran = [];
         $supplier = [];
+        $data_notified = [];
+        $data_notif = [];
 
         $nomor = $request->input('nomor');
 
@@ -234,7 +236,7 @@ class PembelianController extends Controller
             Session::flash('failed', 'Daftar Pembelian Kosong');
         }
 
-        return view('toko.transaksi.pembelian.index', compact('barang', 'cur_date', 'kode_barang', 'kode_supplier', 'pembayaran', 'supplier'));
+        return view('toko.transaksi.pembelian.index', compact('barang', 'cur_date', 'data_notified', 'data_notif', 'kode_barang', 'kode_supplier', 'pembayaran', 'supplier'));
     }
 
     public function delete($id) {

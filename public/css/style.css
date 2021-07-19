@@ -37,6 +37,7 @@ body {
 .alert-message {
     color: #333;
     font-size: 12px;
+    margin-bottom: 6px;
 }
 
 .align-item-center {

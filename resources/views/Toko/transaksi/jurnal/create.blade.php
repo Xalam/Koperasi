@@ -118,9 +118,9 @@ $(document).ready(function() {
     });
 
     Toast.fire({
-        icon: 'success',
+        icon: 'error',
         title: 'Proses Penyimpanan',
-        text: '{{Session::get('failed')}}'
+        text: `{{Session::get('failed')}}`
     });
     setTimeout(function() {
         window.location = "/toko/transaksi/jurnal-umum/create";

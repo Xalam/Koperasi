@@ -43,16 +43,15 @@
                     <div class="alert-close close" data-dismiss="alert" aria-label="close">
                         <i class="fas fa-times" aria-hidden="true"></i>
                     </div>
-                    <p class="alert-message"><b>Pemberitahuan Persediaan Barang</b> <br> Persediaan {{$data->nama}}
-                        kurang
-                        dari stok minimal</p>
+                    <p class="alert-message"><b>Pemberitahuan Persediaan Barang</b> <br> Persediaan
+                        <b class="text-danger">{{$data->nama}}</b> kurang dari stok minimal.</p>
                 </div>
                 @endif
                 @endforeach
         </div>
         @endif
     </div>
-    
+
     <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.9.2/umd/popper.js"></script>
@@ -250,6 +249,15 @@ jQuery(function($) {
     $("#show-sidebar").click(function() {
         $(".page-wrapper").addClass("toggled");
     });
+
+    $('input[type="number"]').change(function() {
+        if ($(this).val() < 0 || $(this).val() == '') {
+            $(this).val(0);
+        };
+    });
+
+    $('input').attr('oninvalid', `this.setCustomValidity('Tidak boleh kosong')`);
+    $('input').attr('oninput', `this.setCustomValidity('')`);
 
     $(window).resize(function() {
         if (window.innerWidth < 1280 && $('.page-wrapper').hasClass('toggled')) {

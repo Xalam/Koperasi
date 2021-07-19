@@ -37,15 +37,15 @@
         </div>
         <div class="row-lg align-item-center mb-2">
             {!! Form::label(null, 'Alamat', ['class' => 'col-lg-2']) !!}
-            {!! Form::text('alamat', null, ['class' => 'col-lg-9 form-control form-control-sm', 'required']) !!}
+            {!! Form::text('alamat', null, ['class' => 'col-lg-9 form-control form-control-sm', 'required', 'readonly']) !!}
         </div>
         <div class="row-lg align-item-center mb-2">
             {!! Form::label(null, 'Nomor Telepon', ['class' => 'col-lg-2']) !!}
-            {!! Form::number('telepon', null, ['class' => 'col-lg-2 form-control form-control-sm', 'required']) !!}
+            {!! Form::number('telepon', null, ['class' => 'col-lg-2 form-control form-control-sm', 'required', 'readonly']) !!}
         </div>
         <div class="row-lg align-item-center mb-2">
             {!! Form::label(null, 'Nomor WA', ['class' => 'col-lg-2']) !!}
-            {!! Form::number('wa', null, ['class' => 'col-lg-2 form-control form-control-sm', 'required']) !!}
+            {!! Form::number('wa', null, ['class' => 'col-lg-2 form-control form-control-sm', 'required', 'readonly']) !!}
         </div>
         <br>
         <div class="row-lg mb-2">
@@ -59,7 +59,7 @@
             <div class="col-lg-6">
                 {!! Form::label(null, 'Pembayaran', ['class' => 'fw-bold']) !!}
                 <div class="row-lg text-center">
-                    {!! Form::number('jumlah_harga', null, ['class' => 'd-none']) !!}
+                    {!! Form::number('jumlah_harga', 0, ['class' => 'd-none']) !!}
                     <h3 id="jumlah-harga" class="color-danger col-lg">Rp. 0,-</h3>
                 </div>
             </div>
@@ -73,7 +73,7 @@
             </div>
             <div class="col-lg-2">
                 {!! Form::label(null, 'Sisa Stok', null) !!}
-                {!! Form::number('stok', 0, ['class' => 'col-lg-12 form-control form-control-sm', 'required']) !!}
+                {!! Form::number('stok', 0, ['class' => 'col-lg-12 form-control form-control-sm', 'required', 'readonly']) !!}
             </div>
             <div class="col-lg-2">
                 {!! Form::label(null, 'Harga Satuan', null) !!}
@@ -82,11 +82,11 @@
             </div>
             <div class="col-lg-2">
                 {!! Form::label(null, 'Jumlah', null) !!}
-                {!! Form::number('jumlah', 0, ['class' => 'col-lg-12 form-control form-control-sm', 'required']) !!}
+                {!! Form::number('jumlah', 1, ['class' => 'col-lg-12 form-control form-control-sm', 'required']) !!}
             </div>
             <div class="col-lg-2">
                 {!! Form::label(null, 'Total Harga', null) !!}
-                {!! Form::number('total_harga', 0, ['class' => 'col-lg-12 form-control form-control-sm', 'required'])
+                {!! Form::number('total_harga', 0, ['class' => 'col-lg-12 form-control form-control-sm', 'required', 'readonly'])
                 !!}
             </div>
         </div>
@@ -142,7 +142,7 @@ $(document).ready(function() {
     Toast.fire({
         icon: 'success',
         title: 'Proses Transaksi',
-        text: '{{Session::get('success')}}'
+        text: `{{Session::get('success')}}`
     });
     setTimeout(function() {
         window.location = "/toko/transaksi/titip-jual";
@@ -161,9 +161,9 @@ $(document).ready(function() {
     });
 
     Toast.fire({
-        icon: 'success',
+        icon: 'error',
         title: 'Proses Transaksi',
-        text: '{{Session::get('failed')}}'
+        text: `{{Session::get('failed')}}`
     });
     setTimeout(function() {
         window.location = "/toko/transaksi/titip-jual";
@@ -320,10 +320,15 @@ $(document).ready(function() {
     $('#table-penjualan').DataTable();
 
     $('[name="jumlah"]').change(function() {
-        if (parseInt($(this).val()) < 0) {
-            $(this).val(0);
+        if ($(this).val() < 1) {
+            $(this).val(1);
         }
+
         $('[name="total_harga"]').val($('[name="harga_satuan"]').val() * $(this).val());
+    });
+
+    $('[name="harga_satuan"]').change(function() {
+        $('[name="total_harga"]').val($('[name="jumlah"]').val() * $(this).val());
     });
 
     $('[name="kode_barang"]').change(function() {

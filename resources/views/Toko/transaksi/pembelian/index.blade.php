@@ -37,15 +37,15 @@
         </div>
         <div class="row-lg align-item-center mb-2">
             {!! Form::label(null, 'Alamat', ['class' => 'col-lg-2']) !!}
-            {!! Form::text('alamat', null, ['class' => 'col-lg-9 form-control form-control-sm', 'required']) !!}
+            {!! Form::text('alamat', null, ['class' => 'col-lg-9 form-control form-control-sm', 'required', 'readonly']) !!}
         </div>
         <div class="row-lg align-item-center mb-2">
             {!! Form::label(null, 'Nomor Telepon', ['class' => 'col-lg-2']) !!}
-            {!! Form::number('telepon', null, ['class' => 'col-lg-2 form-control form-control-sm', 'required']) !!}
+            {!! Form::number('telepon', null, ['class' => 'col-lg-2 form-control form-control-sm', 'required', 'readonly']) !!}
         </div>
         <div class="row-lg align-item-center mb-2">
             {!! Form::label(null, 'Nomor WA', ['class' => 'col-lg-2']) !!}
-            {!! Form::number('wa', null, ['class' => 'col-lg-2 form-control form-control-sm', 'required']) !!}
+            {!! Form::number('wa', null, ['class' => 'col-lg-2 form-control form-control-sm', 'required', 'readonly']) !!}
         </div>
         <br>
         <div class="row-lg mb-2">
@@ -74,7 +74,7 @@
             </div>
             <div class="col-lg-6">
                 {!! Form::label('dibayar', 'Dibayar', ['class' => 'col-lg-12 d-none']) !!}
-                {!! Form::text('jumlah_bayar', null, ['class' => 'col-lg-12 form-control form-control-sm d-none']) !!}
+                {!! Form::number('jumlah_bayar', 0, ['class' => 'col-lg-12 form-control form-control-sm d-none']) !!}
             </div>
         </div>
         <hr class="mt-2 mb-2">
@@ -86,7 +86,7 @@
             </div>
             <div class="col-lg-2">
                 {!! Form::label(null, 'Sisa Stok', null) !!}
-                {!! Form::number('stok', 0, ['class' => 'col-lg-12 form-control form-control-sm', 'required']) !!}
+                {!! Form::number('stok', 0, ['class' => 'col-lg-12 form-control form-control-sm', 'required', 'readonly']) !!}
             </div>
             <div class="col-lg-2">
                 {!! Form::label(null, 'Harga Satuan', null) !!}
@@ -95,11 +95,11 @@
             </div>
             <div class="col-lg-2">
                 {!! Form::label(null, 'Jumlah', null) !!}
-                {!! Form::number('jumlah', 0, ['class' => 'col-lg-12 form-control form-control-sm', 'required']) !!}
+                {!! Form::number('jumlah', 0, ['class' => 'col-lg-12 form-control form-control-sm', 'required', 'readonly']) !!}
             </div>
             <div class="col-lg-2">
                 {!! Form::label(null, 'Total Harga', null) !!}
-                {!! Form::number('total_harga', 0, ['class' => 'col-lg-12 form-control form-control-sm', 'required'])
+                {!! Form::number('total_harga', 0, ['class' => 'col-lg-12 form-control form-control-sm', 'required', 'readonly'])
                 !!}
             </div>
         </div>
@@ -153,9 +153,9 @@ $(document).ready(function() {
     });
 
     Toast.fire({
-        icon: 'success',
+        icon: 'error',
         title: 'Proses Transaksi',
-        text: '{{Session::get('success')}}'
+        text: `{{Session::get('success')}}`
     });
     setTimeout(function() {
         window.location = "/toko/transaksi/pembelian";
@@ -176,7 +176,7 @@ $(document).ready(function() {
     Toast.fire({
         icon: 'success',
         title: 'Proses Transaksi',
-        text: '{{Session::get('failed')}}'
+        text: `{{Session::get('failed')}}`
     });
     setTimeout(function() {
         window.location = "/toko/transaksi/pembelian";
@@ -262,15 +262,9 @@ function tampil_daftar() {
                     $('[name="tanggal"]').attr('readonly', true);
                     $('[name="kode_supplier"]').attr('readonly', true);
                     $('[name="nama_supplier"]').attr('readonly', true);
-                    $('[name="alamat"]').attr('readonly', true);
-                    $('[name="telepon"]').attr('readonly', true);
-                    $('[name="wa"]').attr('readonly', true);
                 } else {
                     $('[name="kode_supplier"]').removeAttr('readonly');
                     $('[name="nama_supplier"]').removeAttr('readonly');
-                    $('[name="alamat"]').removeAttr('readonly');
-                    $('[name="telepon"]').removeAttr('readonly');
-                    $('[name="wa"]').removeAttr('readonly');
                 }
 
                 $('#jumlah-harga').html("Rp. " + jumlah_harga + ",-");
@@ -360,11 +354,15 @@ $(document).ready(function() {
     });
 
     $('[name="jumlah"]').change(function() {
-        if ($(this).val() < 0) {
-            $(this).val(0);
+        if ($(this).val() < 1) {
+            $(this).val(1);
         }
 
         $('[name="total_harga"]').val($('[name="harga_satuan"]').val() * $(this).val());
+    });
+
+    $('[name="harga_satuan"]').change(function() {
+        $('[name="total_harga"]').val($('[name="jumlah"]').val() * $(this).val());
     });
 
     $('[name="kode_barang"]').change(function() {

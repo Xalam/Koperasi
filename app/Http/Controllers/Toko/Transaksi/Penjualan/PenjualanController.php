@@ -122,6 +122,8 @@ class PenjualanController extends Controller
         $kode_anggota = [];
         $kode_barang = [];
         $pembayaran = [];
+        $data_notified = [];
+        $data_notif = [];
 
         $nomor = $request->input('nomor');
         $tanggal = $request->input('tanggal');
@@ -298,7 +300,7 @@ class PenjualanController extends Controller
             Session::flash('failed', 'Daftar Penjualan Kosong');
         }
 
-        return view('toko.transaksi.penjualan.index', compact('barang', 'cur_date', 'kode_barang', 'kode_anggota', 'pembayaran', 'anggota'));
+        return view('toko.transaksi.penjualan.index', compact('barang', 'cur_date', 'data_notified', 'data_notif', 'kode_barang', 'kode_anggota', 'pembayaran', 'anggota'));
     }
 
     public function delete($id) {
