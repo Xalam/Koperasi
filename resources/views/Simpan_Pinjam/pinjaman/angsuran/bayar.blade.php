@@ -29,7 +29,7 @@
                                     <th>Kode Anggota</th>
                                     <th>Nama Anggota</th>
                                     <th>Angsuran#</th>
-                                    <th>Sisa Tenor</th>
+                                    <th>Sisa Angsuran (x)</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -79,7 +79,8 @@
                             <input type="hidden" name="id_pinjaman" value="{{ $data->id }}">
                             <button class="btn btn-info float-right"><i class="fas fa-credit-card"></i>&nbsp; Bayar</button>
                         </form>
-                        <a href="{{ route('angsuran.index') }}" class="btn btn-default float-right" style="margin-right: 5px;"><i></i> Kembali</a>
+                        <a href="{{ route('angsuran.index') }}" class="btn btn-default float-right"
+                            style="margin-right: 5px;"><i></i> Kembali</a>
                     </div>
                 </div>
             </div>

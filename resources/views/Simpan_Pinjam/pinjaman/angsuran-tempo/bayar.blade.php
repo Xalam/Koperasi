@@ -12,7 +12,7 @@
 @section('breadcrumb')
     <li class="breadcrumb-item"><a href="#">Pinjaman</a></li>
     <li class="breadcrumb-item"><a href="{{ route('tempo.index') }}">Pelunasan Sebelum Jatuh Tempo</a></li>
-    <li class="breadcrumb-item active">Pembayaran Pelunasan Sebelum Jatuh Tempo</li>
+    <li class="breadcrumb-item active">Pembayaran</li>
 @endsection
 
 @section('content_main')
@@ -32,7 +32,7 @@
                                     <th>Pokok Pinjaman</th>
                                     <th>Bunga</th>
                                     <th>Jangka Waktu</th>
-                                    <th>Sisa </th>
+                                    <th>Sisa Angsuran</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -52,69 +52,73 @@
                 </div>
                 <!-- /.row -->
 
-            <form id="form-angsuran" action="{{ route('tempo.store') }}" method="post" enctype="multipart/form-data">
-                @csrf
-                <div class="row">
-                    <!-- accepted payments column -->
-                    <div class="col-6">
+                <form id="form-angsuran" action="{{ route('tempo.store') }}" method="post" enctype="multipart/form-data">
+                    @csrf
+                    <div class="row">
+                        <!-- accepted payments column -->
+                        <div class="col-6">
 
-                    </div>
-                    <!-- /.col -->
-                    <div class="col-6">
-                        <div class="">
-                            <table class="table">
-                                <tr>
-                                    <th style="width:50%">Tanggal Pelunasan</th>
-                                    <td>
-                                        <div class="input-group date" id="tanggal" data-target-input="nearest">
-                                            <input type="text" class="form-control datetimepicker-input"
-                                                data-target="#tanggal" name="tanggal" placeholder="Tanggal" />
-                                            <div class="input-group-append" data-target="#tanggal"
-                                                data-toggle="datetimepicker">
-                                                <div class="input-group-text"><i class="fa fa-calendar"></i></div>
-                                            </div>
-                                        </div>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <th style="width:50%">Potongan</th>
-                                    <td>
-                                        <div class="input-group">
-                                            <input type="text" class="form-control" placeholder="Potongan" id="potongan" disabled>
-                                            <input type="text" class="form-control" name="potongan" id="hide-potongan" hidden>
-                                        </div>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <th style="width:50%">Jumlah Bayar</th>
-                                    <td>
-                                        <input type="text" class="form-control" id="total-bayar" disabled>
-                                        <input type="text" class="form-control" name="total_bayar" id="hide-bayar" hidden>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <th style="width:50%">Keterangan</th>
-                                    <td>
-                                        <input type="text" class="form-control" name="keterangan" placeholder="Keterangan">
-                                    </td>
-                                </tr>
-                            </table>
                         </div>
+                        <!-- /.col -->
+                        <div class="col-6">
+                            <div class="">
+                                <table class="table">
+                                    <tr>
+                                        <th style="width:50%">Tanggal Pelunasan</th>
+                                        <td>
+                                            <div class="input-group date" id="tanggal" data-target-input="nearest">
+                                                <input type="text" class="form-control datetimepicker-input"
+                                                    data-target="#tanggal" name="tanggal" placeholder="Tanggal" />
+                                                <div class="input-group-append" data-target="#tanggal"
+                                                    data-toggle="datetimepicker">
+                                                    <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th style="width:50%">Potongan</th>
+                                        <td>
+                                            <div class="input-group">
+                                                <input type="text" class="form-control" placeholder="Potongan" id="potongan"
+                                                    disabled>
+                                                <input type="text" class="form-control" name="potongan" id="hide-potongan"
+                                                    hidden>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th style="width:50%">Jumlah Bayar</th>
+                                        <td>
+                                            <input type="text" class="form-control" id="total-bayar" disabled>
+                                            <input type="text" class="form-control" name="total_bayar" id="hide-bayar"
+                                                hidden>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th style="width:50%">Keterangan</th>
+                                        <td>
+                                            <input type="text" class="form-control" name="keterangan"
+                                                placeholder="Keterangan">
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                        <!-- /.col -->
                     </div>
-                    <!-- /.col -->
-                </div>
-                <!-- /.row -->
+                    <!-- /.row -->
 
-                <!-- this row will not appear when printing -->
-                <div class="row no-print">
-                    <div class="col-12">
+                    <!-- this row will not appear when printing -->
+                    <div class="row no-print">
+                        <div class="col-12">
                             <input type="hidden" name="id_pinjaman" value="{{ $data->id }}">
                             <button class="btn btn-info float-right"><i class="fas fa-credit-card"></i>&nbsp; Bayar</button>
-                        <a href="{{ route('angsuran.index') }}" class="btn btn-default float-right"
-                            style="margin-right: 5px;"><i></i> Kembali</a>
+                            <a href="{{ route('angsuran.index') }}" class="btn btn-default float-right"
+                                style="margin-right: 5px;"><i></i> Kembali</a>
+                        </div>
                     </div>
-                </div>
-            </form>
+                </form>
             </div>
         </div>
     </div>
@@ -172,8 +176,10 @@
         });
 
         function formatMoney(n) {
-            return new Intl.NumberFormat("id-ID", { style: "currency", currency: "IDR" }).format(n);
+            return new Intl.NumberFormat("id-ID", {
+                style: "currency",
+                currency: "IDR"
+            }).format(n);
         }
-
     </script>
 @endsection
