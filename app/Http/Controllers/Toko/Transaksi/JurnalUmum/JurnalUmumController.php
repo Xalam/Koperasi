@@ -98,6 +98,8 @@ class JurnalUmumController extends Controller
         $cur_date = "";
         $kode_akun = [];
         $nama_akun = [];
+        $data_notified = [];
+        $data_notif = [];
 
         $nomor = $request->input('nomor');
 
@@ -150,7 +152,7 @@ class JurnalUmumController extends Controller
             Session::flash('failed', 'Daftar Jurnal Umum Kosong');
         }
         
-        return view('toko.transaksi.jurnal.create', compact('cur_date', 'kode_akun', 'nama_akun'));
+        return view('toko.transaksi.jurnal.create', compact('cur_date', 'data_notified', 'data_notif', 'kode_akun', 'nama_akun'));
     }
 
     public function delete($id) {

@@ -230,6 +230,8 @@ Route::group(['prefix' => 'toko'], function () {
 
             Route::group(['prefix' => 'pendapatan'], function () {
                 Route::get('/', [LaporanPendapatanController::class, 'index']);
+                Route::get('/print/{tanggal}', [LaporanPendapatanController::class, 'print']);
+                Route::get('/export/{tanggal}', [LaporanPendapatanController::class, 'export']);
             });
         });
 

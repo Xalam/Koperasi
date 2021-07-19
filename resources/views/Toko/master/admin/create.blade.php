@@ -8,7 +8,7 @@
         <div class="row-lg align-item-center mb-2">
             {!! Form::label(null, 'Kode Admin', ['class' => 'col-lg-2']) !!}
             {!! Form::text('kode', null, ['class' => 'col-lg-4 form-control form-control-sm', 'required',
-            'oninvalid' => "this.setCustomValidity('Tidak boleh kosong')", 'oninput' => "this.setCustomValidity('')"])
+            'oninvalid' => "this.setCustomValidity('Tidak boleh kosong')", 'oninput' => "this.setCustomValidity('')", 'readonly'])
             !!}
         </div>
         <div class="row-lg align-item-center mb-2">
@@ -74,9 +74,9 @@ $(document).ready(function() {
     });
 
     Toast.fire({
-        icon: 'success',
+        icon: 'error',
         title: 'Gagal',
-        text: '{{session('failed')}}'
+        text: `{{Session::get('failed')}}`
     });
     setTimeout(function() {
         window.location = "/toko/master/admin/create";

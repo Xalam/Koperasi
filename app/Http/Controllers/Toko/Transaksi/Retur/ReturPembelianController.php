@@ -69,7 +69,8 @@ class ReturPembelianController extends Controller
                                         ->where('id_barang', $request->id_barang)->first();
 
         if ($barang) {
-            ReturPembelianBarangModel::where('id_barang', $request->id_barang)->update([
+            ReturPembelianBarangModel::where('nomor', $request->nomor)
+                                        ->where('id_barang', $request->id_barang)->update([
                 'jumlah' => $barang->jumlah + $request->jumlah, 
                 'total_harga' => $barang->total_harga + $request->total_harga
                 ]);
@@ -83,6 +84,8 @@ class ReturPembelianController extends Controller
     public function retur(Request $request) {
         $cur_date = "";
         $nomor_beli = [];
+        $data_notified = [];
+        $data_notif = [];
 
         $nomor = $request->input('nomor');
 
@@ -106,8 +109,7 @@ class ReturPembelianController extends Controller
                 'jumlah_harga' => $request->input('jumlah_harga')
             ]);
 
-            $nomor_beli = PembelianModel::where('id', $request->input('id_beli'))->first()->nomor;
-            $jenis_pembayaran = PembelianModel::where('nomor', $nomor_beli)->first()->pembayaran;
+            $jenis_pembayaran = PembelianModel::where('id', $request->input('id_beli'))->first()->pembayaran;
 
             $keterangan = "Retur pembelian barang.";
 
@@ -182,7 +184,7 @@ class ReturPembelianController extends Controller
             Session::flash('failed', 'Daftar Retur Pembelian Kosong');
         }
 
-        return view('toko.transaksi.retur.index', compact('cur_date', 'nomor_beli'));
+        return view('toko.transaksi.retur.index', compact('cur_date', 'data_notified', 'data_notif', 'nomor_beli'));
     }
 
     public function delete($id) {

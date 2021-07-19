@@ -33,39 +33,41 @@
 </head>
 
 <body>
-    <table class="table table-striped table-bordered table-hover nowrap">
+    <table id="table-data" class="table table-striped table-bordered table-hover nowrap">
         <thead class="text-center">
             <tr>
                 <th>No</th>
-                <th>Nomor Retur</th>
-                <th>Tanggal Retur</th>
-                <th>Nomor Beli</th>
-                <th>Kode Barang</th>
-                <th>Nama Barang</th>
-                <th>HPP</th>
-                <th>Jumlah Retur</th>
-                <th>Total Harga</th>
+                <th>Kode Akun</th>
+                <th>Nama Akun</th>
+                <th>Debit</th>
+                <th>Kredit</th>
             </tr>
         </thead>
-        @if (isset($laporan_retur_pembelian) && count($laporan_retur_pembelian) > 0)
+        @if (isset($laporan_pendapatan) && count($laporan_pendapatan) > 0)
         <tbody>
             @php
             $i = 1;
             @endphp
-            @foreach ($laporan_retur_pembelian AS $data)
+            @foreach ($laporan_pendapatan AS $data)
             <tr>
                 <th class="align-middle text-center">{{$i++}}</th>
-                <td class="align-middle text-center">{{$data->nomor}}</td>
-                <td class="align-middle">{{$data->tanggal}}</td>
-                <td class="align-middle text-center">{{$data->nomor_beli}}</td>
-                <td class="align-middle text-center">{{$data->kode_barang}}</td>
-                <td class="align-middle text-center">{{$data->nama_barang}}</td>
-                <td class="align-middle text-center">{{$data->hpp}}</td>
-                <td class="align-middle text-center">{{$data->jumlah}}</td>
-                <td class="align-middle text-center">{{$data->total_harga}}</td>
+                <td class="align-middle text-center">{{$data->kode_akun}}</td>
+                <td class="align-middle text-center">{{$data->nama_akun}}</td>
+                <td class="align-middle">{{$data->debit}}</td>
+                <td class="align-middle text-center">{{$data->kredit}}</td>
             </tr>
             @endforeach
         </tbody>
+        <tr>
+            @if ($pemasukan->jumlah-$pengeluaran->jumlah < 0) <th colspan="4" class="align-middle">Rugi</th>
+                @else
+                <th colspan="4" class="align-middle">Laba</th>
+                @endif
+                <th class="d-none"></th>
+                <th class="d-none"></th>
+                <th class="d-none"></th>
+                <th class="align-middle text-center">{{$pemasukan->jumlah-$pengeluaran->jumlah}}</th>
+        </tr>
         @endif
     </table>
 </body>

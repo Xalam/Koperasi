@@ -35,15 +35,18 @@
         </div>
         <div class="row-lg align-item-center mb-2">
             {!! Form::label(null, 'Alamat', ['class' => 'col-lg-2']) !!}
-            {!! Form::text('alamat', null, ['class' => 'col-lg-9 form-control form-control-sm', 'required']) !!}
+            {!! Form::text('alamat', null, ['class' => 'col-lg-9 form-control form-control-sm', 'required', 'readonly'])
+            !!}
         </div>
         <div class="row-lg align-item-center mb-2">
             {!! Form::label(null, 'Nomor Telepon', ['class' => 'col-lg-2']) !!}
-            {!! Form::number('telepon', null, ['class' => 'col-lg-2 form-control form-control-sm', 'required']) !!}
+            {!! Form::number('telepon', null, ['class' => 'col-lg-2 form-control form-control-sm', 'required',
+            'readonly']) !!}
         </div>
         <div class="row-lg align-item-center mb-2">
             {!! Form::label(null, 'Nomor WA', ['class' => 'col-lg-2']) !!}
-            {!! Form::number('wa', null, ['class' => 'col-lg-2 form-control form-control-sm', 'required']) !!}
+            {!! Form::number('wa', null, ['class' => 'col-lg-2 form-control form-control-sm', 'required', 'readonly'])
+            !!}
         </div>
         <br>
         <div class="row-lg mb-2">
@@ -72,7 +75,7 @@
             </div>
             <div class="col-lg-6">
                 {!! Form::label('dibayar', 'Dibayar', ['class' => 'col-lg-12 d-none']) !!}
-                {!! Form::text('jumlah_bayar', null, ['class' => 'col-lg-12 form-control form-control-sm d-none']) !!}
+                {!! Form::number('jumlah_bayar', 0, ['class' => 'col-lg-12 form-control form-control-sm d-none']) !!}
             </div>
         </div>
         <hr class="mt-2 mb-2">
@@ -84,19 +87,22 @@
             </div>
             <div class="col-lg-2">
                 {!! Form::label(null, 'Sisa Stok', null) !!}
-                {!! Form::number('stok', 0, ['class' => 'col-lg-12 form-control form-control-sm']) !!}
+                {!! Form::number('stok', 0, ['class' => 'col-lg-12 form-control form-control-sm', 'required',
+                'readonly']) !!}
             </div>
             <div class="col-lg-2">
                 {!! Form::label(null, 'Harga Satuan', null) !!}
-                {!! Form::number('harga_satuan', 0, ['class' => 'col-lg-12 form-control form-control-sm']) !!}
+                {!! Form::number('harga_satuan', 0, ['class' => 'col-lg-12 form-control form-control-sm', 'required', 'readonly'])
+                !!}
             </div>
             <div class="col-lg-2">
                 {!! Form::label(null, 'Jumlah', null) !!}
-                {!! Form::number('jumlah', 0, ['class' => 'col-lg-12 form-control form-control-sm']) !!}
+                {!! Form::number('jumlah', 0, ['class' => 'col-lg-12 form-control form-control-sm', 'required', 'readonly']) !!}
             </div>
             <div class="col-lg-2">
                 {!! Form::label(null, 'Total Harga', null) !!}
-                {!! Form::number('total_harga', 0, ['class' => 'col-lg-12 form-control form-control-sm']) !!}
+                {!! Form::number('total_harga', 0, ['class' => 'col-lg-12 form-control form-control-sm', 'required',
+                'readonly']) !!}
             </div>
         </div>
         <div class="d-grid gap-2">
@@ -151,7 +157,7 @@ $(document).ready(function() {
     Toast.fire({
         icon: 'success',
         title: 'Proses Transaksi',
-        text: '{{Session::get('success')}}'
+        text: `{{Session::get('success')}}`
     });
     setTimeout(function() {
         window.location = "/toko/transaksi/penjualan";
@@ -170,9 +176,9 @@ $(document).ready(function() {
     });
 
     Toast.fire({
-        icon: 'success',
+        icon: 'error',
         title: 'Proses Transaksi',
-        text: '{{Session::get('failed')}}'
+        text: `{{Session::get('failed')}}`
     });
     setTimeout(function() {
         window.location = "/toko/transaksi/penjualan";
@@ -203,7 +209,7 @@ function tambah_daftar() {
         success: function(response) {
             if (response.code == 200) {
                 tampil_daftar();
-                $('[name="jumlah"]').val(0);
+                $('[name="jumlah"]').val(1);
                 $('[name="total_harga"]').val(0);
             }
         }
@@ -259,15 +265,9 @@ function tampil_daftar() {
                     $('[name="tanggal"]').attr('readonly', true);
                     $('[name="kode_anggota"]').attr('readonly', true);
                     $('[name="nama_anggota"]').attr('readonly', true);
-                    $('[name="alamat"]').attr('readonly', true);
-                    $('[name="telepon"]').attr('readonly', true);
-                    $('[name="wa"]').attr('readonly', true);
                 } else {
                     $('[name="kode_anggota"]').removeAttr('readonly');
                     $('[name="nama_anggota"]').removeAttr('readonly');
-                    $('[name="alamat"]').removeAttr('readonly');
-                    $('[name="telepon"]').removeAttr('readonly');
-                    $('[name="wa"]').removeAttr('readonly');
                 }
 
                 $('#jumlah-harga').html("Rp. " + jumlah_harga + ",-");
@@ -348,6 +348,24 @@ $(document).ready(function() {
         tampil_daftar();
     });
 
+    $('[name="pembayaran"]').parent().click(function() {
+        if (parseInt($('[name="kode_anggota"]').children('option:selected').val()) == 0) {
+            const Toast = Swal.mixin({
+                toast: true,
+                position: 'middle',
+                showConfirmButton: false,
+                timer: 2000,
+                timerProgressBar: true
+            });
+
+            Toast.fire({
+                icon: 'warning',
+                title: 'Metode Pembayaran',
+                text: 'Kredit hanya dapat digunakan oleh anggota'
+            });
+        }
+    });
+
     $('[name="pembayaran"]').change(function() {
         if ($(this).val() == 1) {
             $('[for="dibayar"]').addClass('d-none');
@@ -367,8 +385,8 @@ $(document).ready(function() {
     });
 
     $('[name="jumlah"]').change(function() {
-        if (parseInt($(this).val()) < 0) {
-            $(this).val(0);
+        if ($(this).val() < 1) {
+            $(this).val(1);
         }
 
         if (parseInt($(this).val()) > parseInt($('[name="stok"]').val())) {
@@ -377,8 +395,8 @@ $(document).ready(function() {
         $('[name="total_harga"]').val($('[name="harga_satuan"]').val() * $(this).val());
     });
 
-    $('[name="kode_barang"]').change(function() {
-        $('[name="total_harga"]').val($('[name="harga_satuan"]').val() * $('[name="jumlah"]').val());
+    $('[name="harga_satuan"]').change(function() {
+        $('[name="total_harga"]').val($('[name="jumlah"]').val() * $(this).val());
     });
 
     $('[name="jumlah_bayar"]').change(function() {
@@ -386,51 +404,38 @@ $(document).ready(function() {
     });
 
     $('[name="kode_anggota"]').change(function() {
-        if ($(this).children('option:selected').val() == 0) {
+        if (parseInt($(this).children('option:selected').val()) == 0) {
             $('[name="alamat"]').val('-');
             $('[name="telepon"]').val('0');
             $('[name="wa"]').val('0');
-            $('[name="alamat"]').attr('readonly', true);
-            $('[name="telepon"]').attr('readonly', true);
-            $('[name="wa"]').attr('readonly', true);
             $('[name="pembayaran"]').attr('readonly', true);
-            $('[name="pembayaran"]').val(1);
-            $('[name="pembayaran"]').children('option:selected').val(1);
-            $('[for="dibayar"]').addClass('d-none');
-            $('[name="jumlah_bayar"]').addClass('d-none');
-            $('[name="jumlah_bayar"]').removeAttr('required');
+            $('[name="pembayaran"]').val(2);
+            $('[name="pembayaran"]').children('option:selected').val(2);
+            $('[for="dibayar"]').removeClass('d-none');
+            $('[name="jumlah_bayar"]').removeClass('d-none');
+            $('[name="jumlah_bayar"]').attr('required', true);
             $('#jumlah-kembalian').addClass('d-none');
             $('#jumlah-harga').removeClass('col-lg-6');
             $('#jumlah-harga').addClass('col-lg-12');
         } else {
-            $('[name="alamat"]').removeAttr('readonly');
-            $('[name="telepon"]').removeAttr('readonly');
-            $('[name="wa"]').removeAttr('readonly');
             $('[name="pembayaran"]').removeAttr('readonly');
         }
     });
 
     $('[name="nama_anggota"]').change(function() {
-        if ($(this).children('option:selected').val() == 0) {
+        if (parseInt($(this).children('option:selected').val()) == 0) {
             $('[name="alamat"]').val('-');
             $('[name="telepon"]').val('0');
             $('[name="wa"]').val('0');
-            $('[name="alamat"]').attr('readonly', true);
-            $('[name="telepon"]').attr('readonly', true);
-            $('[name="wa"]').attr('readonly', true);
-            $('[name="pembayaran"]').attr('readonly', true);
-            $('[name="pembayaran"]').val(1);
-            $('[name="pembayaran"]').children('option:selected').val(1);
-            $('[for="dibayar"]').addClass('d-none');
-            $('[name="jumlah_bayar"]').addClass('d-none');
-            $('[name="jumlah_bayar"]').removeAttr('required');
+            $('[name="pembayaran"]').val(2);
+            $('[name="pembayaran"]').children('option:selected').val(2);
+            $('[for="dibayar"]').removeAttr('d-none');
+            $('[name="jumlah_bayar"]').removeAttr('d-none');
+            $('[name="jumlah_bayar"]').attr('required', true);
             $('#jumlah-kembalian').addClass('d-none');
             $('#jumlah-harga').removeClass('col-lg-6');
             $('#jumlah-harga').addClass('col-lg-12');
         } else {
-            $('[name="alamat"]').removeAttr('readonly');
-            $('[name="telepon"]').removeAttr('readonly');
-            $('[name="wa"]').removeAttr('readonly');
             $('[name="pembayaran"]').removeAttr('readonly');
         }
     });
