@@ -17,6 +17,13 @@
 
 <body>
     <div class="wrapper">
+        <!-- this row will not appear when printing -->
+        <div class="row no-print">
+            <div class="col-12">
+                <a href="{{ route('angsuran.index') }}" class="btn btn-default" style="margin: 10px;"><i></i>
+                    Kembali</a>
+            </div>
+        </div>
         <!-- Main content -->
         <section class="invoice">
             <div class="row">
@@ -27,7 +34,8 @@
                         <div class="row">
                             <div class="col-12">
                                 <h4>
-                                    <small class="float-right" style="font-size: 10pt;">Tanggal Cetak: {{ date('d-m-Y H:i:s') }}</small>
+                                    <small class="float-right" style="font-size: 10pt;">Tanggal Cetak:
+                                        {{ date('d-m-Y H:i:s') }}</small>
                                 </h4>
                             </div>
                             <!-- /.col -->
@@ -91,7 +99,8 @@
                                     <tbody>
                                         <tr>
                                             <td>{{ $angsuran->pinjaman->kode_pinjaman }}</td>
-                                            <td>{{ number_format($angsuran->pinjaman->nominal_pinjaman, 2, ',', '.') }}</td>
+                                            <td>{{ number_format($angsuran->pinjaman->nominal_pinjaman, 2, ',', '.') }}
+                                            </td>
                                             <td>{{ $angsuran->pinjaman->tenor }} x</td>
                                             <td>{{ $angsuran->pinjaman->bunga }} %</td>
                                         </tr>
@@ -126,7 +135,8 @@
                                         </tr>
                                         <tr>
                                             <th style="width:50%">Jumlah#</th>
-                                            <td>Rp. {{ number_format($angsuran->nominal_angsuran, 2, ',', '.') }}</td>
+                                            <td>Rp. {{ number_format($angsuran->nominal_angsuran, 2, ',', '.') }}
+                                            </td>
                                         </tr>
                                     </table>
                                 </div>
@@ -134,13 +144,6 @@
                             <!-- /.col -->
                         </div>
                         <!-- /.row -->
-
-                        <!-- this row will not appear when printing -->
-                        <div class="row no-print">
-                            <div class="col-12">
-                                <a href="{{ route('angsuran.index') }}" class="btn btn-default float-right" style="margin-right: 5px;"><i></i> Kembali</a>
-                            </div>
-                        </div>
                     </div>
                 </div>
             </div>
@@ -148,7 +151,6 @@
     </div>
     <script>
         window.addEventListener("load", window.print());
-
     </script>
 </body>
 

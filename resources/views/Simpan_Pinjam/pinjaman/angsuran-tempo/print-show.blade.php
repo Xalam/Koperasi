@@ -17,6 +17,13 @@
 
 <body>
     <div class="wrapper">
+        <!-- this row will not appear when printing -->
+        <div class="row no-print">
+            <div class="col-12">
+                <a href="{{ route('tempo.index') }}" class="btn btn-default" style="margin: 10px;"><i></i>
+                    Kembali</a>
+            </div>
+        </div>
         <!-- Main content -->
         <section class="invoice">
             <div class="row">
@@ -86,8 +93,8 @@
                                             <th>Kode Pinjaman</th>
                                             <th>Pokok Pinjaman</th>
                                             <th>Angsuran#</th>
-                                            <th>Tenor</th>
-                                            <th>Sisa Tenor</th>
+                                            <th>Jangka Waktu</th>
+                                            <th>Sisa</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -136,15 +143,7 @@
                                         <tr>
                                             <th style="width:50%">Jumlah Bayar Lunas</th>
                                             <td>
-                                                @php
-                                                    $potongan = $angsuran->potongan;
-                                                    $ang = $angsuran->nominal_angsuran;
-                                                    $tenor = $angsuran->pinjaman->tenor;
-                                                    $ang_ke = $angsuran->pinjaman->angsuran_ke;
-                                                    
-                                                    $result = $ang * ($tenor - $ang_ke) - $potongan;
-                                                @endphp
-                                                Rp. {{ number_format($result, 2, ',', '.') }}</td>
+                                                Rp. {{ number_format($angsuran->total_bayar, 2, ',', '.') }}</td>
                                         </tr>
                                     </table>
                                 </div>
@@ -153,13 +152,6 @@
                         </div>
                         <!-- /.row -->
 
-                        <!-- this row will not appear when printing -->
-                        <div class="row no-print">
-                            <div class="col-12">
-                                <a href="{{ route('tempo.index') }}" class="btn btn-light float-right"
-                                    style="margin-right: 5px;"><i></i> Kembali</a>
-                            </div>
-                        </div>
                     </div>
                 </div>
             </div>
