@@ -25,7 +25,7 @@
                 {!! Form::label(null, 'Tanggal', ['class' => 'col-lg-2']) !!}
                 {!! Form::date('tanggal', $cur_date, ['class' => 'col-lg-2 form-control form-control-sm', 'required'])
                 !!}
-                {!! Form::label(null, 'No. Beli', ['class' => 'offset-lg-2 col-lg-2']) !!}
+                {!! Form::label(null, 'No. Konsinyasi', ['class' => 'offset-lg-2 col-lg-2']) !!}
                 {!! Form::select('nomor_beli', $pembayaran, null, ['class' => 'col-lg-3 form-control form-control-sm',
                 'readonly'])
                 !!}

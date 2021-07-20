@@ -318,6 +318,23 @@ class PenjualanController extends Controller
         return response()->json(['code'=>200]);
     }
 
+    public function nota() {
+        $pembeli = PenjualanModel::join('tb_anggota', 'tb_anggota.id', '=', 'penjualan.id_anggota')
+                                    ->select('tb_anggota.nama_anggota AS nama_anggota', 'penjualan.*')
+                                    ->orderBy('id', 'desc')
+                                    ->limit(1)
+                                    ->get();
+
+        $last_nomor = PenjualanModel::orderBy('id', 'desc')->first()->nomor;
+
+        $penjualan = PenjualanBarangModel::join('barang', 'barang.id', '=', 'detail_jual.id_barang')
+                                            ->select('barang.nama AS nama_barang', 'barang.harga_jual AS harga_jual',
+                                                    'detail_jual.jumlah AS jumlah', 'detail_jual.total_harga AS total_harga')
+                                            ->where('nomor', $last_nomor)->get();
+
+        return view('toko.transaksi.penjualan.nota', compact('pembeli', 'penjualan'));
+    }
+
     public function showNotification() {
         $data = PenjualanModel::join('tb_anggota', 'tb_anggota.id', '=', 'penjualan.id_anggota')
                                 ->select('penjualan.*', 'tb_anggota.nama_anggota')

@@ -146,22 +146,28 @@
 @if(Session::get('success'))
 <script>
 $(document).ready(function() {
-    const Toast = Swal.mixin({
-        toast: true,
-        position: 'middle',
-        showConfirmButton: false,
-        timer: 2000,
-        timerProgressBar: true
-    });
-
-    Toast.fire({
+    Swal.fire({
         icon: 'success',
-        title: 'Proses Transaksi',
-        text: `{{Session::get('success')}}`
+        title: '<b>Proses Transaksi</b>',
+        text: `{{Session::get('success')}}`,
+        position: 'middle',
+        showConfirmButton: true,
+        showCancelButton: true,
+        confirmButtonText: 'Cetak Nota',
+        cancelButtonText: 'Tutup',
+        timer: 3000,
+        timerProgressBar: true,
+        didOpen: (toast) => {
+            toast.addEventListener('mouseenter', Swal.stopTimer)
+            toast.addEventListener('mouseleave', Swal.resumeTimer)
+        }
+    }).then((result) => {
+        if (result.isConfirmed) {
+            window.open("{{url('toko/transaksi/penjualan/nota')}}");
+        } else {
+            window.location.reload();
+        }
     });
-    setTimeout(function() {
-        window.location = "/toko/transaksi/penjualan";
-    }, 1000);
 });
 </script>
 @elseif (Session::get('failed'))
@@ -181,7 +187,7 @@ $(document).ready(function() {
         text: `{{Session::get('failed')}}`
     });
     setTimeout(function() {
-        window.location = "/toko/transaksi/penjualan";
+        window.location.reload();
     }, 2000);
 });
 </script>

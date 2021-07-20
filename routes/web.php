@@ -114,6 +114,7 @@ Route::group(['prefix' => 'toko'], function () {
                 Route::post('/store', [PenjualanController::class, 'store']);
                 Route::post('/jual', [PenjualanController::class, 'sell']);
                 Route::post('/cancel', [PenjualanController::class, 'cancel']);
+                Route::get('/nota', [PenjualanController::class, 'nota']);
                 Route::get('/{nomor}', [PenjualanController::class, 'show']);
                 Route::post('/delete/{nomor}', [PenjualanController::class, 'delete']);
             });
