@@ -13,6 +13,7 @@ class KonsinyasiDetailModel extends Model
 
     protected $fillable = [
         'nomor',
+        'nomor_titip_jual',
         'nomor_jurnal',
         'tanggal',
         'id_konsinyasi',

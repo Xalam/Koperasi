@@ -74,8 +74,8 @@ $(document).ready(function() {
     });
 
     Toast.fire({
-        icon: 'error',
-        title: 'Gagal',
+        icon: 'success',
+        title: 'Berhasil',
         text: `{{Session::get('failed')}}`
     });
     setTimeout(function() {

@@ -253,4 +253,23 @@ class PembelianController extends Controller
         
         return response()->json(['code'=>200]);
     }
+
+    public function nota() {
+        $supplier = PembelianModel::leftJoin('supplier', 'supplier.id', '=', 'pembelian.id_supplier')
+                                    ->select('supplier.kode AS kode_supplier', 'supplier.nama AS nama_supplier', 
+                                            'supplier.alamat AS alamat_supplier', 'pembelian.*')
+                                    ->orderBy('id', 'desc')
+                                    ->limit(1)
+                                    ->get();
+
+        $last_nomor = PembelianModel::orderBy('id', 'desc')->first()->nomor;
+
+        $pembelian = PembelianBarangModel::join('barang', 'barang.id', '=', 'detail_beli.id_barang')
+                                            ->select('barang.nama AS nama_barang', 'barang.kode AS kode_barang', 'barang.satuan AS satuan', 
+                                                    'detail_beli.jumlah AS jumlah', 'detail_beli.harga_satuan AS harga_satuan', 
+                                                    'detail_beli.total_harga AS total_harga')
+                                            ->where('nomor', $last_nomor)->get();
+
+        return view('toko.transaksi.pembelian.nota', compact('supplier', 'pembelian'));
+    }
 }

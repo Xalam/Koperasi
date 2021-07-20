@@ -164,8 +164,9 @@ $(document).ready(function() {
     }).then((result) => {
         if (result.isConfirmed) {
             window.open("{{url('toko/transaksi/penjualan/nota')}}");
+            window.location = "{{url('toko/transaksi/pembelian')}}";
         } else {
-            window.location.reload();
+            window.location = "{{url('toko/transaksi/pembelian')}}";
         }
     });
 });

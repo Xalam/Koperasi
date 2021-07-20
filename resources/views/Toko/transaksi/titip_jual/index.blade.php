@@ -249,15 +249,9 @@ function tampil_daftar() {
                     $('[name="tanggal"]').attr('readonly', true);
                     $('[name="kode_supplier"]').attr('readonly', true);
                     $('[name="nama_supplier"]').attr('readonly', true);
-                    $('[name="alamat"]').attr('readonly', true);
-                    $('[name="telepon"]').attr('readonly', true);
-                    $('[name="wa"]').attr('readonly', true);
                 } else {
                     $('[name="kode_supplier"]').removeAttr('readonly');
                     $('[name="nama_supplier"]').removeAttr('readonly');
-                    $('[name="alamat"]').removeAttr('readonly');
-                    $('[name="telepon"]').removeAttr('readonly');
-                    $('[name="wa"]').removeAttr('readonly');
                 }
 
                 $('#jumlah-harga').html("Rp. " + jumlah_harga + ",-");

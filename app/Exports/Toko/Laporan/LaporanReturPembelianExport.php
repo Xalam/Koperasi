@@ -11,16 +11,15 @@ class LaporanReturPembelianExport implements FromCollection, WithHeadings {
     /**
     * @return \Illuminate\Support\Collection
     */
-    protected $tanggal_awal, $tanggal_akhir;
+    protected $tanggal;
 
-    function __construct($tanggal_awal, $tanggal_akhir) {
-        $this->tanggal_awal = $tanggal_awal;
-        $this->tanggal_akhir = $tanggal_akhir;
+    function __construct($tanggal) {
+        $this->tanggal = $tanggal;
     }
 
     public function collection() {
-        if ($this->tanggal_awal && $this->tanggal_akhir) {
-            return ReturPembelianModel::whereBetween('retur.tanggal', [$this->tanggal_awal, $this->tanggal_akhir])
+        if ($this->tanggal) {
+            return ReturPembelianModel::where('retur.tanggal', $this->tanggal)
                                                 ->join('detail_retur', 'detail_retur.nomor', '=', 'retur.nomor')
                                                 ->join('pembelian', 'pembelian.id', '=', 'retur.id_beli')
                                                 ->join('barang', 'barang.id', '=', 'detail_retur.id_barang')

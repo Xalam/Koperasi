@@ -105,6 +105,7 @@ Route::group(['prefix' => 'toko'], function () {
                 Route::post('/store', [PembelianController::class, 'store']);
                 Route::post('/beli', [PembelianController::class, 'buy']);
                 Route::post('/cancel', [PembelianController::class, 'cancel']);
+                Route::get('/nota', [PembelianController::class, 'nota']);
                 Route::get('/{nomor}', [PembelianController::class, 'show']);
                 Route::post('/delete/{nomor}', [PembelianController::class, 'delete']);
             });
@@ -124,6 +125,7 @@ Route::group(['prefix' => 'toko'], function () {
                 Route::post('/store', [ReturPembelianController::class, 'store']);
                 Route::post('/retur', [ReturPembelianController::class, 'retur']);
                 Route::post('/cancel', [ReturPembelianController::class, 'cancel']);
+                Route::get('/nota', [ReturPembelianController::class, 'nota']);
                 Route::get('/{nomor}', [ReturPembelianController::class, 'show']);
                 Route::post('/delete/{nomor}', [ReturPembelianController::class, 'delete']);
             });
@@ -140,7 +142,7 @@ Route::group(['prefix' => 'toko'], function () {
                 Route::get('/', [KonsinyasiController::class, 'index']);
                 Route::post('/store', [KonsinyasiController::class, 'store']);
                 Route::post('/cancel', [KonsinyasiController::class, 'cancel']);
-                Route::get('/{nomor_beli}', [KonsinyasiController::class, 'show']);
+                Route::get('/{nomor_titip_jual}', [KonsinyasiController::class, 'show']);
                 Route::post('/delete/{nomor}', [KonsinyasiController::class, 'delete']);
             });
 
@@ -157,6 +159,7 @@ Route::group(['prefix' => 'toko'], function () {
                 Route::post('/store', [TitipJualController::class, 'store']);
                 Route::post('/cancel', [TitipJualController::class, 'cancel']);
                 Route::post('/buy', [TitipJualController::class, 'buy']);
+                Route::get('/nota', [TitipJualController::class, 'nota']);
                 Route::get('/{nomor_jual}', [TitipJualController::class, 'show']);
                 Route::post('/delete/{nomor}', [TitipJualController::class, 'delete']);
             });
@@ -195,18 +198,21 @@ Route::group(['prefix' => 'toko'], function () {
 
             Route::group(['prefix' => 'pembelian'], function () {
                 Route::get('/', [LaporanPembelianController::class, 'index']);
+                Route::get('/nota/{nomor}', [LaporanPembelianController::class, 'nota']);
                 Route::get('/print/{type}/{awal}/{akhir}', [LaporanPembelianController::class, 'print']);
                 Route::get('/export/{type}/{awal}/{akhir}', [LaporanPembelianController::class, 'export']);
             });
 
             Route::group(['prefix' => 'retur-pembelian'], function () {
                 Route::get('/', [LaporanReturPembelianController::class, 'index']);
+                Route::get('/nota/{nomor}', [LaporanReturPembelianController::class, 'nota']);
                 Route::get('/print/{awal}/{akhir}', [LaporanReturPembelianController::class, 'print']);
                 Route::get('/export/{awal}/{akhir}', [LaporanReturPembelianController::class, 'export']);
             });
 
             Route::group(['prefix' => 'penjualan'], function () {
                 Route::get('/', [LaporanPenjualanController::class, 'index']);
+                Route::get('/nota/{nomor}', [LaporanPenjualanController::class, 'nota']);
                 Route::get('/print/{type}/{awal}/{akhir}', [LaporanPenjualanController::class, 'print']);
                 Route::get('/export/{type}/{awal}/{akhir}', [LaporanPenjualanController::class, 'export']);
             });

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Toko\Laporan\Retur;
 use App\Exports\Toko\Laporan\LaporanReturPembelianExport;
 use App\Http\Controllers\Controller;
 use App\Models\Toko\Master\Barang\BarangModel;
+use App\Models\Toko\Transaksi\Retur\ReturPembelianBarangModel;
 use App\Models\Toko\Transaksi\Retur\ReturPembelianModel;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -31,11 +32,10 @@ class LaporanReturPembelianController extends Controller
 
         $data_notif = BarangModel::where('alert_status', 1)->get();
 
-        $tanggal_awal = $request->input('tanggal_awal');
-        $tanggal_akhir = $request->input('tanggal_akhir');
+        $tanggal = $request->input('tanggal');
         
-        if ($tanggal_awal && $tanggal_akhir) {
-            $laporan_retur_pembelian = ReturPembelianModel::whereBetween('retur.tanggal', [$tanggal_awal, $tanggal_akhir])
+        if ($tanggal) {
+            $laporan_retur_pembelian = ReturPembelianModel::where('retur.tanggal', $tanggal)
                                                         ->join('detail_retur', 'detail_retur.nomor', '=', 'retur.nomor')
                                                         ->join('pembelian', 'pembelian.id', '=', 'retur.id_beli')
                                                         ->join('barang', 'barang.id', '=', 'detail_retur.id_barang')
@@ -45,15 +45,15 @@ class LaporanReturPembelianController extends Controller
                                                                 'detail_retur.total_harga AS total_harga')
                                                         ->get();
                                                 
-            return view ('toko.laporan.retur.index', compact('cur_date', 'laporan_retur_pembelian', 'data_notified', 'data_notif', 'tanggal_awal', 'tanggal_akhir'));
+            return view ('toko.laporan.retur.index', compact('cur_date', 'laporan_retur_pembelian', 'data_notified', 'data_notif', 'tanggal'));
         } else {
-            return view ('toko.laporan.retur.index', compact('cur_date', 'data_notified', 'data_notif'));
+            return view ('toko.laporan.retur.index', compact('cur_date', 'data_notified', 'data_notif', 'tanggal'));
         }
     }
 
-    public function print($tanggal_awal, $tanggal_akhir) {
-        if ($tanggal_awal && $tanggal_akhir) {
-            $laporan_retur_pembelian = ReturPembelianModel::whereBetween('retur.tanggal', [$tanggal_awal, $tanggal_akhir])
+    public function print($tanggal) {
+        if ($tanggal) {
+            $laporan_retur_pembelian = ReturPembelianModel::where('retur.tanggal', $tanggal)
                                                         ->join('detail_retur', 'detail_retur.nomor', '=', 'retur.nomor')
                                                         ->join('pembelian', 'pembelian.id', '=', 'retur.id_beli')
                                                         ->join('barang', 'barang.id', '=', 'detail_retur.id_barang')
@@ -64,16 +64,32 @@ class LaporanReturPembelianController extends Controller
                                                         ->get();
         }
 
-        return view ('toko.laporan.retur.print', compact('laporan_retur_pembelian', 'tanggal_awal', 'tanggal_akhir'));
+        return view ('toko.laporan.retur.print', compact('laporan_retur_pembelian', 'tanggal'));
         
         // $pdf = PDF::loadview('toko.laporan.pembelian.print', ['laporan_pembelian'=>$laporan_pembelian]);
         // return $pdf->download('Laporan Pembelian ' . $pembayaran . $tanggal . '.pdf');
     }
 
-    public function export($tanggal_awal, $tanggal_akhir) {
+    public function nota($nomor) {
+        $supplier = ReturPembelianModel::leftJoin('supplier', 'supplier.id', '=', 'pembelian.id_supplier')
+                                    ->select('supplier.kode AS kode_supplier', 'supplier.nama AS nama_supplier', 
+                                            'supplier.alamat AS alamat_supplier', 'pembelian.*')
+                                    ->where('nomor', $nomor)
+                                    ->limit(1)
+                                    ->get();
+
+        $pembelian = ReturPembelianBarangModel::join('barang', 'barang.id', '=', 'detail_beli.id_barang')
+                                            ->select('barang.nama AS nama_barang', 'barang.kode AS kode_barang', 'barang.satuan AS satuan', 
+                                                    'detail_beli.jumlah AS jumlah', 'detail_beli.harga_satuan AS harga_satuan', 
+                                                    'detail_beli.total_harga AS total_harga')
+                                            ->where('nomor', $nomor)->get();
+
+        return view('toko.laporan.retur.nota', compact('supplier', 'pembelian'));
+    }
+
+    public function export($tanggal) {
         return Excel::download(new LaporanReturPembelianExport(
-                                    $tanggal_awal, 
-                                    $tanggal_akhir
-                                ), 'Laporan Retur Pembelian ' . $tanggal_awal . ' Sampai ' . $tanggal_akhir . '.xlsx');
+                                    $tanggal 
+                                ), 'Laporan Retur Pembelian ' . $tanggal . '.xlsx');
     }
 }

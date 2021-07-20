@@ -50,6 +50,7 @@
                         <th>Harga Beli</th>
                         <th>Jumlah Beli</th>
                         <th>Total Harga</th>
+                        <th>Opsi</th>
                     </tr>
                 </thead>
                 @if (isset($laporan_pembelian) && count($laporan_pembelian) > 0)
@@ -68,6 +69,8 @@
                         <td class="align-middle text-center">{{$data->harga_satuan}}</td>
                         <td class="align-middle text-center">{{$data->jumlah}}</td>
                         <td class="align-middle text-center">{{$data->total_harga}}</td>
+                        <td class="align-middle text-center"><a href="<?php echo url('toko/laporan/pembelian/nota/' . $data->nomor); ?>" target="_blank"><i class="text-success fas fa-print"
+                                style="cursor: pointer;" title="Print"></i></a></td>
                     </tr>
                     @endforeach
                 </tbody>

@@ -319,8 +319,8 @@ class PenjualanController extends Controller
     }
 
     public function nota() {
-        $pembeli = PenjualanModel::join('tb_anggota', 'tb_anggota.id', '=', 'penjualan.id_anggota')
-                                    ->select('tb_anggota.nama_anggota AS nama_anggota', 'penjualan.*')
+        $pembeli = PenjualanModel::leftJoin('tb_anggota', 'tb_anggota.id', '=', 'penjualan.id_anggota')
+                                    ->select(DB::raw('IFNULL(tb_anggota.nama_anggota, "Masyarakat Umum") AS nama_anggota'), 'penjualan.*')
                                     ->orderBy('id', 'desc')
                                     ->limit(1)
                                     ->get();

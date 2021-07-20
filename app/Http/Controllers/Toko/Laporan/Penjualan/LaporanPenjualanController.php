@@ -6,6 +6,7 @@ use App\Exports\Toko\Laporan\LaporanPenjualanExport;
 use App\Http\Controllers\Controller;
 use App\Models\Toko\Master\Barang\BarangModel;
 use App\Models\Toko\Transaksi\PembayaranModel;
+use App\Models\Toko\Transaksi\Penjualan\PenjualanBarangModel;
 use App\Models\Toko\Transaksi\Penjualan\PenjualanModel;
 use Barryvdh\DomPDF\Facade as PDF;
 use Carbon\Carbon;
@@ -126,6 +127,20 @@ class LaporanPenjualanController extends Controller
         
         // $pdf = PDF::loadview('toko.laporan.penjualan.print', ['laporan_penjualan'=>$laporan_penjualan]);
         // return $pdf->download('Laporan Penjualan ' . $pembayaran . $tanggal . '.pdf');
+    }
+
+    public function nota($nomor) {
+        $pembeli = PenjualanModel::leftJoin('tb_anggota', 'tb_anggota.id', '=', 'penjualan.id_anggota')
+                                    ->select(DB::raw('IFNULL(tb_anggota.nama_anggota, "Masyarakat Umum") AS nama_anggota'), 'penjualan.*')
+                                    ->where('nomor', $nomor)
+                                    ->get();
+
+        $penjualan = PenjualanBarangModel::join('barang', 'barang.id', '=', 'detail_jual.id_barang')
+                                            ->select('barang.nama AS nama_barang', 'barang.harga_jual AS harga_jual',
+                                                    'detail_jual.jumlah AS jumlah', 'detail_jual.total_harga AS total_harga')
+                                            ->where('nomor', $nomor)->get();
+
+        return view('toko.laporan.penjualan.nota', compact('pembeli', 'penjualan'));
     }
 
     public function export($type_pembayaran, $tanggal_awal, $tanggal_akhir) {

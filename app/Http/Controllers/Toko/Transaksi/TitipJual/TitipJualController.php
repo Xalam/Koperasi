@@ -12,6 +12,7 @@ use App\Models\Toko\Transaksi\TitipJual\TitipJualDetailModel;
 use App\Models\Toko\Master\Supplier\SupplierModel;
 use App\Models\Toko\Transaksi\Hutang\HutangModel;
 use App\Models\Toko\Transaksi\Jurnal\JurnalModel;
+use App\Models\Toko\Transaksi\Konsinyasi\KonsinyasiModel;
 use App\Models\Toko\Transaksi\TitipJual\TitipJualModel;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Session;
@@ -157,12 +158,12 @@ class TitipJualController extends Controller
 
             $tanggal = Carbon::parse($request->input('tanggal'))->format('y-m-d');
 
-            HutangModel::create([
-                'nomor_beli' => $request->input('nomor'),
+            KonsinyasiModel::create([
+                'nomor_titip_jual' => $request->input('nomor'),
                 'id_supplier' => $request->input('kode_supplier'),
-                'jumlah_hutang' => $request->input('jumlah_harga'),
+                'jumlah_konsinyasi' => $request->input('jumlah_harga'),
                 'jatuh_tempo' => Carbon::parse($tanggal)->addDays($request->input('tempo')),
-                'sisa_hutang' => $request->input('jumlah_harga')
+                'sisa_konsinyasi' => $request->input('jumlah_harga')
             ]);
 
             $keterangan = "Titip Jual barang secara kredit.";

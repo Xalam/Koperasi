@@ -144,22 +144,29 @@
 @if(Session::get('success'))
 <script>
 $(document).ready(function() {
-    const Toast = Swal.mixin({
-        toast: true,
+    Swal.fire({
+        icon: 'success',
+        title: '<b>Proses Transaksi</b>',
+        text: `{{Session::get('success')}}`,
         position: 'middle',
-        showConfirmButton: false,
-        timer: 2000,
-        timerProgressBar: true
+        showConfirmButton: true,
+        showCancelButton: true,
+        confirmButtonText: 'Cetak Nota',
+        cancelButtonText: 'Tutup',
+        timer: 3000,
+        timerProgressBar: true,
+        didOpen: (toast) => {
+            toast.addEventListener('mouseenter', Swal.stopTimer)
+            toast.addEventListener('mouseleave', Swal.resumeTimer)
+        }
+    }).then((result) => {
+        if (result.isConfirmed) {
+            window.open("{{url('toko/transaksi/pembelian/nota')}}");
+            window.location = "{{url('toko/transaksi/pembelian')}}";
+        } else {
+            window.location = "{{url('toko/transaksi/pembelian')}}";
+        }
     });
-
-    Toast.fire({
-        icon: 'error',
-        title: 'Proses Transaksi',
-        text: `{{Session::get('success')}}`
-    });
-    setTimeout(function() {
-        window.location = "/toko/transaksi/pembelian";
-    }, 1000);
 });
 </script>
 @elseif (Session::get('failed'))

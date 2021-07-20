@@ -12,7 +12,7 @@ class KonsinyasiModel extends Model
     protected $table = 'konsinyasi';
 
     protected $fillable = [
-        'nomor_beli',
+        'nomor_titip_jual',
         'id_supplier',
         'jumlah_konsinyasi',
         'jumlah_angsuran',

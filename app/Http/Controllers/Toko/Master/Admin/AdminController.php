@@ -50,6 +50,17 @@ class AdminController extends Controller
     }
 
     public function store(Request $request) {
+        $data_notif = BarangModel::where('alert_status', 1)->get();
+
+        $data_notified = BarangModel::all();
+        foreach ($data_notified AS $data) {
+            if ($data->stok <= $data->stok_minimal) {
+                BarangModel::where('id', $data->id)->update([
+                    'alert_status' => 1
+                ]);
+            }
+        }
+        
         $nameExist = AdminModel::where('jabatan', $request->jabatan)
                                 ->where('nama', $request->nama)
                                 ->get();
@@ -73,7 +84,7 @@ class AdminController extends Controller
     
             Session::flash('success', 'Berhasil');
         }
-        return view('toko.master.admin.create');
+        return view('toko.master.admin.create', compact('data_notified', 'data_notif'));
     }
 
     public function update(Request $request) {

@@ -56,6 +56,17 @@ class SupplierController extends Controller
     }
 
     public function store(Request $request) {
+        $data_notif = BarangModel::where('alert_status', 1)->get();
+
+        $data_notified = BarangModel::all();
+        foreach ($data_notified AS $data) {
+            if ($data->stok <= $data->stok_minimal) {
+                BarangModel::where('id', $data->id)->update([
+                    'alert_status' => 1
+                ]);
+            }
+        }
+        
         $namaExist = SupplierModel::where('nama', $request->nama)->get();
         $emailExist = SupplierModel::where('email', $request->email)->get();
 
@@ -69,7 +80,7 @@ class SupplierController extends Controller
     
             Session::flash('success', 'Berhasil');
         }
-        return view('toko.master.supplier.create');
+        return view('toko.master.supplier.create', compact('data_notified', 'data_notif'));
     }
 
     public function update(Request $request) {

@@ -83,8 +83,8 @@
                         <td class="align-middle text-center">{{$data->harga_jual}}</td>
                         <td class="align-middle text-center">{{$data->jumlah}}</td>
                         <td class="align-middle text-center">{{$data->total_harga}}</td>
-                        <td class="align-middle text-center"><i class="text-success fas fa-print"
-                                style="cursor: pointer;" title="Print"></i></td>
+                        <td class="align-middle text-center"><a href="<?php echo url('toko/laporan/penjualan/nota/' . $data->nomor); ?>" target="_blank"><i class="text-success fas fa-print"
+                                style="cursor: pointer;" title="Print"></i></a></td>
                     </tr>
                     @endforeach
                 </tbody>

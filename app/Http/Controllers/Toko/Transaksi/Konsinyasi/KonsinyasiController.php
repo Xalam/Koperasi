@@ -32,18 +32,6 @@ class KonsinyasiController extends Controller
 
         $data_notif = BarangModel::where('alert_status', 1)->get();
 
-        $data_konsinyasi = KonsinyasiModel::all();
-
-        if (count($data_konsinyasi) > 0) {
-            $pembayaran[''] = "-- Pilih Nomor Beli --";
-        } else {
-            $pembayaran[''] = "-- Tidak Ada Data Konsinyasi --";
-        }
-            
-        foreach ($data_konsinyasi as $data) {
-            $pembayaran[$data->id] = $data->nomor_beli;
-        }
-
         $data_supplier = SupplierModel::orderBy('nama')
                                         ->get();
 
@@ -61,32 +49,32 @@ class KonsinyasiController extends Controller
         }
 
         $konsinyasi = KonsinyasiModel::join('supplier', 'supplier.id', '=', 'konsinyasi.id_supplier')
-                            ->join('pembelian', 'pembelian.nomor', '=', 'konsinyasi.nomor_beli')
-                            ->select('konsinyasi.*', 'pembelian.tanggal AS tanggal_beli', 
+                            ->join('titip_jual', 'titip_jual.nomor', '=', 'konsinyasi.nomor_titip_jual')
+                            ->select('konsinyasi.*', 'titip_jual.tanggal AS tanggal_titip_jual', 
                             'supplier.kode AS kode_supplier', 'supplier.nama AS nama_supplier')
                             ->get();
 
-        return view('toko.transaksi.konsinyasi.index', compact('cur_date', 'data_notified', 'data_notif', 'konsinyasi', 'kode_supplier', 'pembayaran', 'supplier'));
+        return view('toko.transaksi.konsinyasi.index', compact('cur_date', 'data_notified', 'data_notif', 'konsinyasi', 'kode_supplier', 'supplier'));
     }
     
-    public function show($nomor_beli) {
+    public function show($nomor_titip_jual) {
         $detail_konsinyasi = KonsinyasiDetailModel::join('konsinyasi', 'konsinyasi.id', '=', 'detail_konsinyasi.id_konsinyasi')
-                                    ->select('detail_konsinyasi.*', 'konsinyasi.nomor_beli AS nomor_konsinyasi')
-                                    ->where('detail_konsinyasi.id_konsinyasi', $nomor_beli)
+                                    ->select('detail_konsinyasi.*', 'konsinyasi.nomor_titip_jual AS nomor_titip_jual')
+                                    ->where('detail_konsinyasi.nomor_titip_jual', $nomor_titip_jual)
                                     ->get();
 
         $supplier_konsinyasi = KonsinyasiModel::join('supplier', 'supplier.id', '=', 'konsinyasi.id_supplier')
                                     ->select('supplier.nama AS nama_supplier', 'supplier.id AS id_supplier', 
                                     'supplier.kode AS kode_supplier', 'konsinyasi.sisa_konsinyasi AS sisa_konsinyasi',
                                     'konsinyasi.jumlah_konsinyasi AS jumlah_konsinyasi')
-                                    ->where('konsinyasi.id', $nomor_beli)
+                                    ->where('konsinyasi.nomor_titip_jual', $nomor_titip_jual)
                                     ->first();
 
         return response()->json(['code'=>200, 'detail_konsinyasi' => $detail_konsinyasi, 'supplier_konsinyasi' => $supplier_konsinyasi]);
     }
 
     public function store(Request $request) {
-        $id_konsinyasi = $request->input('id_konsinyasi');
+        $id_konsinyasi = KonsinyasiModel::where('nomor_titip_jual', $request->nomor_titip_jual)->first()->id;
         $angsuran = $request->input('angsuran');
         $sisa_konsinyasi = $request->input('sisa_konsinyasi');
 
@@ -117,7 +105,14 @@ class KonsinyasiController extends Controller
             'kredit' => $konsinyasi->kredit - $angsuran
         ]);
 
-        KonsinyasiDetailModel::create($request->all());
+        KonsinyasiDetailModel::create([
+            'nomor' => $request->nomor,
+            'nomor_titip_jual' => $request->nomor_titip_jual,
+            'nomor_jurnal' => $request->nomor_jurnal,
+            'tanggal' => $request->tanggal,
+            'id_konsinyasi' => $id_konsinyasi,
+            'angsuran' => $request->angsuran,
+        ]);
             
         $keterangan = "Penerimaan angsuran.";
 

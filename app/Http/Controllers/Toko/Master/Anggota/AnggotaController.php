@@ -50,6 +50,17 @@ class AnggotaController extends Controller
     }
 
     public function store(Request $request) {
+        $data_notif = BarangModel::where('alert_status', 1)->get();
+
+        $data_notified = BarangModel::all();
+        foreach ($data_notified AS $data) {
+            if ($data->stok <= $data->stok_minimal) {
+                BarangModel::where('id', $data->id)->update([
+                    'alert_status' => 1
+                ]);
+            }
+        }
+        
         $dataExist = AnggotaModel::where('username', $request->username)->get();
 
         if (count($dataExist) <= 0) {
@@ -82,7 +93,7 @@ class AnggotaController extends Controller
         } else {
             Session::flash('failed', 'Username sudah ada');
         }
-        return view('toko.master.anggota.create');
+        return view('toko.master.anggota.create', compact('data_notified', 'data_notif'));
     }
 
     public function update(Request $request) {

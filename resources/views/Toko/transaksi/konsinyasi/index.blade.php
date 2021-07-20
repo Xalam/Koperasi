@@ -11,7 +11,7 @@
 
 @section('main')
 <div class="card m-6">
-    @if (auth()->user()->jabatan != 'Kanit')
+    @if (auth()->user()->jabatan == 'Super_Admin')
     <div class="row-lg align-item-center">
         <button id="btn-daftar" class="btn btn-sm btn-primary col-lg-6" onclick="panel_daftar()">Daftar
             Konsinyasi</button>
@@ -25,8 +25,8 @@
                 {!! Form::label(null, 'Tanggal', ['class' => 'col-lg-2']) !!}
                 {!! Form::date('tanggal', $cur_date, ['class' => 'col-lg-2 form-control form-control-sm', 'required'])
                 !!}
-                {!! Form::label(null, 'No. Konsinyasi', ['class' => 'offset-lg-2 col-lg-2']) !!}
-                {!! Form::select('nomor_beli', $pembayaran, null, ['class' => 'col-lg-3 form-control form-control-sm',
+                {!! Form::label(null, 'No. Titip Jual', ['class' => 'offset-lg-2 col-lg-2']) !!}
+                {!! Form::text('nomor_titip_jual', null, ['class' => 'col-lg-3 form-control form-control-sm',
                 'readonly'])
                 !!}
                 {!! Form::text('nomor', null, ['class' => 'd-none', 'readonly'])!!}
@@ -77,14 +77,14 @@
                     <thead class="text-center">
                         <tr>
                             <th>No</th>
-                            <th>No Konsinyasi</th>
+                            <th>No Titip Jual</th>
                             <th>Kode Supplier</th>
                             <th>Nama Supplier</th>
                             <th>Tanggal Titip</th>
                             <th>Jatuh Tempo</th>
                             <th>Nilai Konsinyasi</th>
                             <th>Sisa Konsinyasi</th>
-                            @if (auth()->user()->jabatan != 'Kanit')
+                            @if (auth()->user()->jabatan == 'Super_Admin')
                             <th>Opsi</th>
                             @endif
                         </tr>
@@ -100,17 +100,17 @@
                             <th class="align-middle text-center">
                                 <p>{{$i++}}</p>
                             </th>
-                            <td class="align-middle text-center">{{$data->nomor_beli}}</td>
+                            <td class="align-middle text-center">{{$data->nomor_titip_jual}}</td>
                             <td class="align-middle">{{$data->kode_supplier}}</td>
                             <td class="align-middle text-center">{{$data->nama_supplier}}</td>
-                            <td class="align-middle text-center">{{$data->tanggal_beli}}</td>
+                            <td class="align-middle text-center">{{$data->tanggal_titip_jual}}</td>
                             <td class="align-middle text-center">{{$data->jatuh_tempo}}</td>
                             <td class="align-middle text-center">{{$data->jumlah_konsinyasi}}</td>
                             <td class="align-middle text-center">{{$data->sisa_konsinyasi}}</td>
-                            @if (auth()->user()->jabatan != 'Kanit')
+                            @if (auth()->user()->jabatan == 'Super_Admin')
                             <td class="align-middle text-center">
-                                <a id=<?php echo "bayar-" . $data->id ?> class="btn btn-sm btn-success"
-                                    onclick="bayar(<?php echo $data->id ?>)">Bayar</a>
+                                <a id=<?php echo "bayar-" . $data->nomor_titip_jual ?> class="btn btn-sm btn-success"
+                                    onclick="bayar('<?php echo $data->nomor_titip_jual ?>')">Bayar</a>
                             </td>
                             @endif
                         </tr>
@@ -172,8 +172,8 @@ function panel_bayar() {
     $('#panel-daftar-bayar-konsinyasi').removeClass('d-none');
 }
 
-function bayar($id) {
-    $('[name="nomor_beli"]').val($id);
+function bayar($nomor_titip_jual) {
+    $('[name="nomor_titip_jual"]').val($nomor_titip_jual);
     tampil_daftar();
     panel_bayar();
 }
@@ -184,9 +184,9 @@ function bayar_konsinyasi() {
         type: 'POST',
         data: {
             nomor: $('[name="nomor"]').val(),
+            nomor_titip_jual: $('[name="nomor_titip_jual"]').val(),
             nomor_jurnal: $('[name="nomor_jurnal"]').val(),
             tanggal: $('[name="tanggal"]').val(),
-            id_konsinyasi: $('[name="nomor_beli"]').val(),
             angsuran: $('[name="angsuran"]').val(),
             sisa_konsinyasi: $('[name="sisa_konsinyasi"]').val() - $('[name="angsuran"]').val(),
             _token: $('meta[name="csrf-token"]').attr('content')
@@ -229,10 +229,10 @@ function hapus_daftar($id) {
 
 function tampil_daftar() {
     var i = 1;
-    nomor_beli = $('[name="nomor_beli"]').val();
+    nomor_titip_jual = $('[name="nomor_titip_jual"]').val();
 
     $.ajax({
-        url: '/toko/transaksi/konsinyasi/' + nomor_beli,
+        url: '/toko/transaksi/konsinyasi/' + nomor_titip_jual,
         type: 'GET',
         success: function(response) {
             if (response.code == 200) {

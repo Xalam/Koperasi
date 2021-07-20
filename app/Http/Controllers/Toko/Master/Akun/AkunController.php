@@ -49,6 +49,17 @@ class AkunController extends Controller
     }
 
     public function store(Request $request) {
+        $data_notif = BarangModel::where('alert_status', 1)->get();
+
+        $data_notified = BarangModel::all();
+        foreach ($data_notified AS $data) {
+            if ($data->stok <= $data->stok_minimal) {
+                BarangModel::where('id', $data->id)->update([
+                    'alert_status' => 1
+                ]);
+            }
+        }
+        
         $jenis_akun = AkunJenisModel::where('id', substr($request->input('kode'), 0, 1))->first();
         if ($jenis_akun->nama == 'Debit') {
             AkunModel::create([
@@ -67,7 +78,7 @@ class AkunController extends Controller
         }
 
         Session::flash('success', 'Berhasil');
-        return view('toko.master.akun.create');
+        return view('toko.master.akun.create', compact('data_notified', 'data_notif'));
     }
 
     public function update(Request $request) {

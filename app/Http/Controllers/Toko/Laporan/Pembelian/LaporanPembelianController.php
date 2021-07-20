@@ -6,6 +6,7 @@ use App\Exports\Toko\Laporan\LaporanPembelianExport;
 use App\Http\Controllers\Controller;
 use App\Models\Toko\Master\Barang\BarangModel;
 use App\Models\Toko\Transaksi\PembayaranModel;
+use App\Models\Toko\Transaksi\Pembelian\PembelianBarangModel;
 use App\Models\Toko\Transaksi\Pembelian\PembelianModel;
 use Barryvdh\DomPDF\Facade as PDF;
 use Carbon\Carbon;
@@ -122,6 +123,23 @@ class LaporanPembelianController extends Controller
         
         // $pdf = PDF::loadview('toko.laporan.pembelian.print', ['laporan_pembelian'=>$laporan_pembelian]);
         // return $pdf->download('Laporan Pembelian ' . $pembayaran . $tanggal . '.pdf');
+    }
+
+    public function nota($nomor) {
+        $supplier = PembelianModel::leftJoin('supplier', 'supplier.id', '=', 'pembelian.id_supplier')
+                                    ->select('supplier.kode AS kode_supplier', 'supplier.nama AS nama_supplier', 
+                                            'supplier.alamat AS alamat_supplier', 'pembelian.*')
+                                    ->where('nomor', $nomor)
+                                    ->limit(1)
+                                    ->get();
+
+        $pembelian = PembelianBarangModel::join('barang', 'barang.id', '=', 'detail_beli.id_barang')
+                                            ->select('barang.nama AS nama_barang', 'barang.kode AS kode_barang', 'barang.satuan AS satuan', 
+                                                    'detail_beli.jumlah AS jumlah', 'detail_beli.harga_satuan AS harga_satuan', 
+                                                    'detail_beli.total_harga AS total_harga')
+                                            ->where('nomor', $nomor)->get();
+
+        return view('toko.laporan.pembelian.nota', compact('supplier', 'pembelian'));
     }
 
     public function export($type_pembayaran, $tanggal_awal, $tanggal_akhir) {
