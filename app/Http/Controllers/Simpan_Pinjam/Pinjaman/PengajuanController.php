@@ -3,12 +3,16 @@
 namespace App\Http\Controllers\Simpan_Pinjam\Pinjaman;
 
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\Simpan_Pinjam\Utils\Ratusan;
+use App\Http\Controllers\Simpan_Pinjam\Utils\ResponseMessage;
+use App\Http\Controllers\Simpan_Pinjam\Utils\SaveJurnalUmum;
 use App\Models\Simpan_Pinjam\Laporan\JurnalUmum;
 use App\Models\Simpan_Pinjam\Master\Akun\Akun;
 use App\Models\Simpan_Pinjam\Master\Anggota\Anggota;
 use App\Models\Simpan_Pinjam\Other\Notifikasi;
 use App\Models\Simpan_Pinjam\Pengaturan\Pengaturan;
 use App\Models\Simpan_Pinjam\Pinjaman\Pinjaman;
+use App\Models\Toko\Transaksi\Piutang\PiutangModel;
 use Illuminate\Http\Request;
 
 class PengajuanController extends Controller
@@ -120,38 +124,7 @@ class PengajuanController extends Controller
         #Rumus Angsuran
         $angsuran = ($nominal / $request->tenor) + ($nominal * ($request->bunga / 100));
 
-        $intNumber = (int) $angsuran;
-
-        $ratusan = substr($intNumber, -3);
-
-        $bulat = $intNumber - $ratusan;
-        $newRatusan = 0;
-
-        if ($ratusan > 0 && $ratusan <= 100) {
-            $newRatusan = 100;
-        } else if ($ratusan > 100 && $ratusan <= 200) {
-            $newRatusan = 200;
-        } else if ($ratusan > 200 && $ratusan <= 300) {
-            $newRatusan = 300;
-        } else if ($ratusan > 300 && $ratusan <= 400) {
-            $newRatusan = 400;
-        } else if ($ratusan > 400 && $ratusan <= 500) {
-            $newRatusan = 500;
-        } else if ($ratusan > 500 && $ratusan <= 600) {
-            $newRatusan = 600;
-        } else if ($ratusan > 600 && $ratusan <= 700) {
-            $newRatusan = 700;
-        } else if ($ratusan > 700 && $ratusan <= 800) {
-            $newRatusan = 800;
-        } else if ($ratusan > 800 && $ratusan <= 900) {
-            $newRatusan = 900;
-        } else if ($ratusan > 900 && $ratusan <= 999) {
-            $newRatusan = 1000;
-        } else {
-            $newRatusan = $ratusan;
-        }
-
-        $uangAngsuran = $bulat + $newRatusan;
+        $uangAngsuran = Ratusan::edit_ratusan($angsuran);
 
         #Biaya Provisi & Asuransi
         $provisi     = Pengaturan::where('id', 3)->first();
@@ -330,56 +303,32 @@ class PengajuanController extends Controller
         $pinjaman->update();
 
         $kodePinjaman = Pinjaman::where('id', $id)->first();
+        $kodeJurnal   = 'JU-' . str_pad($idJurnal, 6, '0', STR_PAD_LEFT);
+        $keterangan   = 'Pinjaman ( ' . $kodePinjaman->kode_pinjaman . ' )';
 
         #Simpan Dana Asuransi
-        $jurnal = new JurnalUmum();
-        $jurnal->kode_jurnal   = 'JU-' . str_pad($idJurnal, 6, '0', STR_PAD_LEFT);
-        $jurnal->id_akun        = $idAsuransi;
-        $jurnal->tanggal        = date('Y-m-d');
-        $jurnal->keterangan     = 'Pinjaman ( ' . $kodePinjaman->kode_pinjaman . ' )';
-        $jurnal->debet          = 0;
-        $jurnal->kredit         = $kodePinjaman->biaya_asuransi;
-        $jurnal->save();
+        SaveJurnalUmum::save($kodeJurnal, $idAsuransi, $keterangan, 0, $kodePinjaman->biaya_asuransi);
 
         #Simpan Dana Provisi
-        $jurnal = new JurnalUmum();
-        $jurnal->kode_jurnal   = 'JU-' . str_pad($idJurnal, 6, '0', STR_PAD_LEFT);
-        $jurnal->id_akun        = $idProvisi;
-        $jurnal->tanggal        = date('Y-m-d');
-        $jurnal->keterangan     = 'Pinjaman ( ' . $kodePinjaman->kode_pinjaman . ' )';
-        $jurnal->debet          = 0;
-        $jurnal->kredit         = $kodePinjaman->biaya_provisi;
-        $jurnal->save();
+        SaveJurnalUmum::save($kodeJurnal, $idProvisi, $keterangan, 0, $kodePinjaman->biaya_provisi);
 
         #Simpan Jurnal Pendapatan
-        $jurnal = new JurnalUmum();
-        $jurnal->kode_jurnal   = 'JU-' . str_pad($idJurnal, 6, '0', STR_PAD_LEFT);
-        $jurnal->id_akun        = $idPendapatan;
-        $jurnal->tanggal        = date('Y-m-d');
-        $jurnal->keterangan     = 'Pinjaman ( ' . $kodePinjaman->kode_pinjaman . ' )';
-        $jurnal->debet          = 0;
-        $jurnal->kredit         = $kodePinjaman->biaya_admin;
-        $jurnal->save();
+        SaveJurnalUmum::save($kodeJurnal, $idPendapatan, $keterangan, 0, $kodePinjaman->biaya_admin);
 
         #Simpan Jurnal Kas
-        $jurnal = new JurnalUmum();
-        $jurnal->kode_jurnal   = 'JU-' . str_pad($idJurnal, 6, '0', STR_PAD_LEFT);
-        $jurnal->id_akun        = $idKas;
-        $jurnal->tanggal        = date('Y-m-d');
-        $jurnal->keterangan     = 'Pinjaman ( ' . $kodePinjaman->kode_pinjaman . ' )';
-        $jurnal->debet          = 0;
-        $jurnal->kredit         = $kodePinjaman->nominal_pinjaman - $kodePinjaman->biaya_asuransi - $kodePinjaman->biaya_admin - $kodePinjaman->biaya_provisi;
-        $jurnal->save();
+        $kredit = $kodePinjaman->nominal_pinjaman - $kodePinjaman->biaya_asuransi - $kodePinjaman->biaya_admin - $kodePinjaman->biaya_provisi;
+
+        SaveJurnalUmum::save($kodeJurnal, $idKas, $keterangan, 0, $kredit);
 
         #Simpan Jurnal Piutang
-        $jurnal = new JurnalUmum();
-        $jurnal->kode_jurnal   = 'JU-' . str_pad($idJurnal, 6, '0', STR_PAD_LEFT);
-        $jurnal->id_akun        = $idPiutang;
-        $jurnal->tanggal        = date('Y-m-d');
-        $jurnal->keterangan     = 'Pinjaman ( ' . $kodePinjaman->kode_pinjaman . ' )';
-        $jurnal->debet          = $kodePinjaman->nominal_pinjaman;
-        $jurnal->kredit         = 0;
-        $jurnal->save();
+        SaveJurnalUmum::save($kodeJurnal, $idPiutang, $keterangan, $kodePinjaman->nominal_pinjaman, 0);
+
+        #Send Whatsapp
+        $anggotaSend = Anggota::where('id', $kodePinjaman->id_anggota)->first();
+        $phoneNumber = $anggotaSend->no_wa;
+
+        $message = 'Pengajuan pinjaman atas nama (' . $anggotaSend->nama_anggota . ') sebesar : *Rp ' . number_format($kodePinjaman->nominal_pinjaman, 0, '', '.') . '* telah disetujui.';
+        ResponseMessage::send($phoneNumber, $message);
 
         return redirect()->route('pengajuan.index');
     }
@@ -439,9 +388,10 @@ class PengajuanController extends Controller
 
     public function limit(Request $request)
     {
+        $piutang = PiutangModel::where('id_anggota', $request->id)->first();
         $anggota = Anggota::select('limit_gaji')->where('id', $request->id)->first();
         $data = array(
-            'limit' => $anggota->limit_gaji
+            'limit' => $anggota->limit_gaji - $piutang->sisa_piutang
         );
 
         return response()->json($data);

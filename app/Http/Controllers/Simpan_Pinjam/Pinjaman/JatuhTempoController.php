@@ -3,8 +3,12 @@
 namespace App\Http\Controllers\Simpan_Pinjam\Pinjaman;
 
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\Simpan_Pinjam\Utils\Ratusan;
+use App\Http\Controllers\Simpan_Pinjam\Utils\ResponseMessage;
+use App\Http\Controllers\Simpan_Pinjam\Utils\SaveJurnalUmum;
 use App\Models\Simpan_Pinjam\Laporan\JurnalUmum;
 use App\Models\Simpan_Pinjam\Master\Akun\Akun;
+use App\Models\Simpan_Pinjam\Master\Anggota\Anggota;
 use App\Models\Simpan_Pinjam\Other\Notifikasi;
 use App\Models\Simpan_Pinjam\Pinjaman\Angsuran;
 use App\Models\Simpan_Pinjam\Pinjaman\Pinjaman;
@@ -139,103 +143,31 @@ class JatuhTempoController extends Controller
         #Pembulatan Pendapatan
         $pendapatan = round(($kodeAngsuran->pinjaman->total_pinjaman - $kodeAngsuran->pinjaman->nominal_pinjaman) / $kodeAngsuran->pinjaman->tenor, 2);
 
-        $intNumberPen = (int) $pendapatan;
-
-        $ratusanPen = substr($intNumberPen, -3);
-
-        $bulatPen = $intNumberPen - $ratusanPen;
-        $newRatusanPen = 0;
-
-        if ($ratusanPen > 0 && $ratusanPen <= 100) {
-            $newRatusanPen = 100;
-        } else if ($ratusanPen > 100 && $ratusanPen <= 200) {
-            $newRatusanPen = 200;
-        } else if ($ratusanPen > 200 && $ratusanPen <= 300) {
-            $newRatusanPen = 300;
-        } else if ($ratusanPen > 300 && $ratusanPen <= 400) {
-            $newRatusanPen = 400;
-        } else if ($ratusanPen > 400 && $ratusanPen <= 500) {
-            $newRatusanPen = 500;
-        } else if ($ratusanPen > 500 && $ratusanPen <= 600) {
-            $newRatusanPen = 600;
-        } else if ($ratusanPen > 600 && $ratusanPen <= 700) {
-            $newRatusanPen = 700;
-        } else if ($ratusanPen > 700 && $ratusanPen <= 800) {
-            $newRatusanPen = 800;
-        } else if ($ratusanPen > 800 && $ratusanPen <= 900) {
-            $newRatusanPen = 900;
-        } else if ($ratusanPen > 900 && $ratusanPen <= 999) {
-            $newRatusanPen = 1000;
-        } else {
-            $newRatusanPen = $ratusanPen;
-        }
-
-        $newPendapatan = $bulatPen + $newRatusanPen;
+        $newPendapatan = Ratusan::edit_ratusan($pendapatan);
 
         #Pembulatan Piutang
         $piutang = round($kodeAngsuran->pinjaman->nominal_pinjaman / $kodeAngsuran->pinjaman->tenor, 2);
-        $intNumberPi = (int) $piutang;
 
-        $ratusanPi = substr($intNumberPi, -3);
+        $newPiutang = Ratusan::edit_ratusan($piutang);
 
-        $bulatPi = $intNumberPi - $ratusanPi;
-        $newRatusanPi = 0;
-
-        if ($ratusanPi > 0 && $ratusanPi <= 100) {
-            $newRatusanPi = 100;
-        } else if ($ratusanPi > 100 && $ratusanPi <= 200) {
-            $newRatusanPi = 200;
-        } else if ($ratusanPi > 200 && $ratusanPi <= 300) {
-            $newRatusanPi = 300;
-        } else if ($ratusanPi > 300 && $ratusanPi <= 400) {
-            $newRatusanPi = 400;
-        } else if ($ratusanPi > 400 && $ratusanPi <= 500) {
-            $newRatusanPi = 500;
-        } else if ($ratusanPi > 500 && $ratusanPi <= 600) {
-            $newRatusanPi = 600;
-        } else if ($ratusanPi > 600 && $ratusanPi <= 700) {
-            $newRatusanPi = 700;
-        } else if ($ratusanPi > 700 && $ratusanPi <= 800) {
-            $newRatusanPi = 800;
-        } else if ($ratusanPi > 800 && $ratusanPi <= 900) {
-            $newRatusanPi = 900;
-        } else if ($ratusanPi > 900 && $ratusanPi <= 999) {
-            $newRatusanPi = 1000;
-        } else {
-            $newRatusanPi = $ratusanPi;
-        }
-
-        $newPiutang = $bulatPi + $newRatusanPi;
+        $kodeJurnal = 'JU-' . str_pad($idJurnal, 6, '0', STR_PAD_LEFT);
+        $keterangan = 'Angsuran ( ' . $kodeAngsuran->kode_angsuran . ' )';
 
         #Simpan Jurnal Pendapatan
-        $jurnal = new JurnalUmum();
-        $jurnal->kode_jurnal   = 'JU-' . str_pad($idJurnal, 6, '0', STR_PAD_LEFT);
-        $jurnal->id_akun        = $idPendapatan;
-        $jurnal->tanggal        = date('Y-m-d');
-        $jurnal->keterangan     = 'Angsuran ( ' . $kodeAngsuran->kode_angsuran . ' )';
-        $jurnal->debet          = 0;
-        $jurnal->kredit         = $newPendapatan;
-        $jurnal->save();
+        SaveJurnalUmum::save($kodeJurnal, $idPendapatan, $keterangan, 0, $newPendapatan);
 
         #Simpan Jurnal Piutang
-        $jurnal = new JurnalUmum();
-        $jurnal->kode_jurnal   = 'JU-' . str_pad($idJurnal, 6, '0', STR_PAD_LEFT);
-        $jurnal->id_akun        = $idPiutang;
-        $jurnal->tanggal        = date('Y-m-d');
-        $jurnal->keterangan     = 'Angsuran ( ' . $kodeAngsuran->kode_angsuran . ' )';
-        $jurnal->debet          = 0;
-        $jurnal->kredit         = $newPiutang;
-        $jurnal->save();
+        SaveJurnalUmum::save($kodeJurnal, $idPiutang, $keterangan, 0, $newPiutang);
 
         #Simpan Jurnal Kas
-        $jurnal = new JurnalUmum();
-        $jurnal->kode_jurnal   = 'JU-' . str_pad($idJurnal, 6, '0', STR_PAD_LEFT);
-        $jurnal->id_akun        = $idKas;
-        $jurnal->tanggal        = date('Y-m-d');
-        $jurnal->keterangan     = 'Angsuran ( ' . $kodeAngsuran->kode_angsuran . ' )';
-        $jurnal->debet          = $kodeAngsuran->nominal_angsuran;
-        $jurnal->kredit         = 0;
-        $jurnal->save();
+        SaveJurnalUmum::save($kodeJurnal, $idKas, $keterangan, $kodeAngsuran->nominal_angsuran, 0);
+
+        #Send Whatsapp
+        $anggotaSend = Anggota::where('id', $kodeAngsuran->pinjaman->id_anggota)->first();
+        $phoneNumber = $anggotaSend->no_wa;
+
+        $message = 'Pelunasan pinjaman atas nama (' . $anggotaSend->nama_anggota . ') telah dibayar. Sebesar  : *Rp ' . number_format($kodeAngsuran->total_bayar, 0, '', '.') . '*';
+        ResponseMessage::send($phoneNumber, $message);
 
         return redirect()->route('tempo.index')->with([
             'success' => 'Berhasil melunasi angsuran'
@@ -338,35 +270,24 @@ class JatuhTempoController extends Controller
             $bunga = $kodeAngsuran->pinjaman->nominal_pinjaman * ($kodeAngsuran->pinjaman->bunga / 100);
             $pokok = $kodeAngsuran->total_bayar - $bunga;
 
+            $kodeJurnal = 'JU-' . str_pad($idJurnal, 6, '0', STR_PAD_LEFT);
+            $keterangan = 'Angsuran ( ' . $kodeAngsuran->kode_angsuran . ' )';
+
             #Simpan Jurnal Pendapatan
-            $jurnal = new JurnalUmum();
-            $jurnal->kode_jurnal   = 'JU-' . str_pad($idJurnal, 6, '0', STR_PAD_LEFT);
-            $jurnal->id_akun        = $idPendapatan;
-            $jurnal->tanggal        = date('Y-m-d');
-            $jurnal->keterangan     = 'Angsuran ( ' . $kodeAngsuran->kode_angsuran . ' )';
-            $jurnal->debet          = 0;
-            $jurnal->kredit         = $bunga;
-            $jurnal->save();
+            SaveJurnalUmum::save($kodeJurnal, $idPendapatan, $keterangan, 0, $bunga);
 
             #Simpan Jurnal Piutang
-            $jurnal = new JurnalUmum();
-            $jurnal->kode_jurnal   = 'JU-' . str_pad($idJurnal, 6, '0', STR_PAD_LEFT);
-            $jurnal->id_akun        = $idPiutang;
-            $jurnal->tanggal        = date('Y-m-d');
-            $jurnal->keterangan     = 'Angsuran ( ' . $kodeAngsuran->kode_angsuran . ' )';
-            $jurnal->debet          = 0;
-            $jurnal->kredit         = $pokok;
-            $jurnal->save();
+            SaveJurnalUmum::save($kodeJurnal, $idPiutang, $keterangan, 0, $pokok);
 
             #Simpan Jurnal Kas
-            $jurnal = new JurnalUmum();
-            $jurnal->kode_jurnal   = 'JU-' . str_pad($idJurnal, 6, '0', STR_PAD_LEFT);
-            $jurnal->id_akun        = $idKas;
-            $jurnal->tanggal        = date('Y-m-d');
-            $jurnal->keterangan     = 'Angsuran ( ' . $kodeAngsuran->kode_angsuran . ' )';
-            $jurnal->debet          = $kodeAngsuran->total_bayar;
-            $jurnal->kredit         = 0;
-            $jurnal->save();
+            SaveJurnalUmum::save($kodeJurnal, $idKas, $keterangan, $kodeAngsuran->total_bayar, 0);
+
+            #Send Whatsapp
+            $anggotaSend = Anggota::where('id', $kodeAngsuran->pinjaman->id_anggota)->first();
+            $phoneNumber = $anggotaSend->no_wa;
+
+            $message = 'Pelunasan pinjaman atas nama (' . $anggotaSend->nama_anggota . ') telah dibayar. Sebesar  : *Rp ' . number_format($kodeAngsuran->total_bayar, 0, '', '.') . '*';
+            ResponseMessage::send($phoneNumber, $message);
 
             return redirect()->route('tempo.index');
         } else {
