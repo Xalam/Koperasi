@@ -96,3 +96,12 @@
         </div>
     </div>
 </nav>
+
+@section('script')
+<script>
+$('.close').click(function() {
+    $total_notif--;
+    $('#notification-count').text($total_notif);
+});
+</script>
+@endsection

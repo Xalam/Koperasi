@@ -36,6 +36,9 @@
                     $i = 1;
                     @endphp
                     @foreach ($pesanan_online as $data)
+                    @php
+                    $barang = explode(', ', $data->daftar_barang);
+                    @endphp
                     <tr>
                         <th class="align-middle text-center">
                             <p>{{$i++}}</p>

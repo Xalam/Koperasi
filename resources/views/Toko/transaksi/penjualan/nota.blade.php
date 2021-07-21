@@ -96,7 +96,7 @@
                 </tr>
                 <tr>
                     <td colspan="4" class="text-center">
-                        <b>{{($data->pembelian == 1) ? 'Kredit' : 'Tunai'}}</b>
+                        <b>{{($data->pembayaran == 1) ? 'Kredit' : 'Tunai'}}</b>
                         <br>
                         ======= {{$data->created_at}} =======
                         <br>
