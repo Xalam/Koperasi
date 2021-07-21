@@ -19,7 +19,7 @@ class KeuanganController extends Controller
         $asetLancar         = Akun::whereIn('kode_akun', [1101, 1102, 1111, 1112, 1121, 1122, 1123, 1124, 1125, 1126, 1127, 1131, 1141])->select('id', 'nama_akun', 'saldo')->get();
         $penyertaan         = Akun::whereIn('kode_akun', [1201, 1202])->select('id', 'nama_akun', 'saldo')->get();
         $asetTidakLancar    = Akun::whereIn('kode_akun', [1301, 1302, 1311, 1321, 1312, 1322, 1313, 1323, 1314, 1324, 1315, 1325, 1316, 1326])->select('id', 'nama_akun', 'saldo')->get();
-        $kewajibanPendek    = Akun::whereIn('kode_akun', [2101, 2111, 2112, 2113, 2114, 2115, 2116, 2117, 2121])->select('id', 'nama_akun', 'saldo')->get();
+        $kewajibanPendek    = Akun::whereIn('kode_akun', [2101, 2102, 2111, 2112, 2113, 2114, 2115, 2116, 2117, 2121])->select('id', 'nama_akun', 'saldo')->get();
         $kewajibanPanjang   = Akun::whereIn('kode_akun', [2201])->select('id', 'nama_akun', 'saldo')->get();
         $ekuitas            = Akun::whereIn('kode_akun', [3101, 3102, 3111, 3112, 3113, 3121, 3122, 3131])->select('id', 'nama_akun', 'saldo')->get();
 
@@ -42,7 +42,7 @@ class KeuanganController extends Controller
 
             #Aset Lancar
             for ($i = 0; $i < sizeof($asetLancar); $i++) {
-                $jur = JurnalUmum::selectRaw('SUM(debet) as debet, SUM(kredit) as kredit')->where('id_akun', $asetLancar[$i]->id)->first();
+                $jur = JurnalUmum::selectRaw('SUM(debet) as debet, SUM(kredit) as kredit')->where('id_akun', $asetLancar[$i]->id)->whereYear('tanggal', date('Y'))->first();
 
                 $calculate = $asetLancar[$i]->saldo - $jur->kredit + $jur->debet;
 
@@ -51,7 +51,7 @@ class KeuanganController extends Controller
 
             #Penyertaan
             for ($i = 0; $i < sizeof($penyertaan); $i++) {
-                $jur = JurnalUmum::selectRaw('SUM(debet) as debet, SUM(kredit) as kredit')->where('id_akun', $penyertaan[$i]->id)->first();
+                $jur = JurnalUmum::selectRaw('SUM(debet) as debet, SUM(kredit) as kredit')->where('id_akun', $penyertaan[$i]->id)->whereYear('tanggal', date('Y'))->first();
 
                 $calculate = $penyertaan[$i]->saldo - $jur->kredit + $jur->debet;
 
@@ -60,7 +60,7 @@ class KeuanganController extends Controller
 
             #Aset Tidak Lancar
             for ($i = 0; $i < sizeof($asetTidakLancar); $i++) {
-                $jur = JurnalUmum::selectRaw('SUM(debet) as debet, SUM(kredit) as kredit')->where('id_akun', $asetTidakLancar[$i]->id)->first();
+                $jur = JurnalUmum::selectRaw('SUM(debet) as debet, SUM(kredit) as kredit')->where('id_akun', $asetTidakLancar[$i]->id)->whereYear('tanggal', date('Y'))->first();
 
                 $calculate = $asetTidakLancar[$i]->saldo - $jur->kredit + $jur->debet;
 
@@ -69,7 +69,7 @@ class KeuanganController extends Controller
 
             #Kewajiban Pendek
             for ($i = 0; $i < sizeof($kewajibanPendek); $i++) {
-                $jur = JurnalUmum::selectRaw('SUM(debet) as debet, SUM(kredit) as kredit')->where('id_akun', $kewajibanPendek[$i]->id)->first();
+                $jur = JurnalUmum::selectRaw('SUM(debet) as debet, SUM(kredit) as kredit')->where('id_akun', $kewajibanPendek[$i]->id)->whereYear('tanggal', date('Y'))->first();
 
                 $calculate = $kewajibanPendek[$i]->saldo - $jur->kredit + $jur->debet;
 
@@ -78,7 +78,7 @@ class KeuanganController extends Controller
 
             #Kewajiban Panjang            
             for ($i = 0; $i < sizeof($kewajibanPanjang); $i++) {
-                $jur = JurnalUmum::selectRaw('SUM(debet) as debet, SUM(kredit) as kredit')->where('id_akun', $kewajibanPanjang[$i]->id)->first();
+                $jur = JurnalUmum::selectRaw('SUM(debet) as debet, SUM(kredit) as kredit')->where('id_akun', $kewajibanPanjang[$i]->id)->whereYear('tanggal', date('Y'))->first();
 
                 $calculate = $kewajibanPanjang[$i]->saldo - $jur->kredit + $jur->debet;
 
@@ -87,7 +87,7 @@ class KeuanganController extends Controller
 
             #Ekuitas
             for ($i = 0; $i < sizeof($ekuitas); $i++) {
-                $jur = JurnalUmum::selectRaw('SUM(debet) as debet, SUM(kredit) as kredit')->where('id_akun', $ekuitas[$i]->id)->first();
+                $jur = JurnalUmum::selectRaw('SUM(debet) as debet, SUM(kredit) as kredit')->where('id_akun', $ekuitas[$i]->id)->whereYear('tanggal', date('Y'))->first();
 
                 $calculate = $ekuitas[$i]->saldo - $jur->kredit + $jur->debet;
 
@@ -101,24 +101,44 @@ class KeuanganController extends Controller
             $sumPanjang     = array_sum($saldoPanjang);
             $sumEkuitas     = array_sum($saldoEkuitas);
 
-            $shu = Akun::selectRaw('tb_akun.kode_akun, tb_akun.nama_akun, SUM(tb_jurnal.debet) as debet, SUM(tb_jurnal.kredit) as kredit')->leftJoin('tb_jurnal', function($join){
-                $join->on('tb_akun.id', 'tb_jurnal.id_akun'); 
+            $shu = Akun::selectRaw('tb_akun.kode_akun, tb_akun.nama_akun, SUM(tb_jurnal.debet) as debet, SUM(tb_jurnal.kredit) as kredit')->leftJoin('tb_jurnal', function ($join) {
+                $join->on('tb_akun.id', 'tb_jurnal.id_akun');
             })
-            ->whereIn('tb_akun.id', [$idSimpanPinjam->id, $idUnitToko->id, $idFotoCopy->id, $idRuko->id, $idArisan->id, $idHPP->id])
-            ->whereYear('tanggal', date('Y'))
-            ->groupBy('tb_akun.id')
-            ->get();
+                ->whereIn('tb_akun.id', [$idSimpanPinjam->id, $idUnitToko->id, $idFotoCopy->id, $idRuko->id, $idArisan->id, $idHPP->id])
+                ->whereYear('tanggal', date('Y'))
+                ->groupBy('tb_akun.id')
+                ->get();
 
             $shuTotal = $shu->sum('kredit') - $shu->sum('debet');
 
-            return view('Simpan_Pinjam.laporan.keuangan.show', compact('asetLancar', 'penyertaan', 'asetTidakLancar', 'kewajibanPendek', 'kewajibanPanjang', 'ekuitas', 'saldoLancar', 'saldoPenyertaan', 'saldoTidakLancar',
-                        'saldoPendek', 'saldoPanjang', 'saldoEkuitas', 'sumLancar', 'sumPenyertaan', 'sumTidakLancar', 'sumPendek', 'sumPanjang', 'sumEkuitas', 'shuTotal'));
+            return view('Simpan_Pinjam.laporan.keuangan.show', compact(
+                'asetLancar',
+                'penyertaan',
+                'asetTidakLancar',
+                'kewajibanPendek',
+                'kewajibanPanjang',
+                'ekuitas',
+                'saldoLancar',
+                'saldoPenyertaan',
+                'saldoTidakLancar',
+                'saldoPendek',
+                'saldoPanjang',
+                'saldoEkuitas',
+                'sumLancar',
+                'sumPenyertaan',
+                'sumTidakLancar',
+                'sumPendek',
+                'sumPanjang',
+                'sumEkuitas',
+                'shuTotal'
+            ));
         } else {
 
             $reqStart   = $request->start_date;
             $reqEnd     = $request->end_date;
             $startDate  = date('Y-m-d', strtotime($reqStart));
             $endDate    = date('Y-m-d', strtotime($reqEnd));
+            $year       = date('Y', strtotime($reqEnd));
 
             #Aset Lancar
             for ($i = 0; $i < sizeof($asetLancar); $i++) {
@@ -181,18 +201,39 @@ class KeuanganController extends Controller
             $sumPanjang     = array_sum($saldoPanjang);
             $sumEkuitas     = array_sum($saldoEkuitas);
 
-            $shu = Akun::selectRaw('tb_akun.kode_akun, tb_akun.nama_akun, SUM(tb_jurnal.debet) as debet, SUM(tb_jurnal.kredit) as kredit')->leftJoin('tb_jurnal', function($join){
-                $join->on('tb_akun.id', 'tb_jurnal.id_akun'); 
+            $shu = Akun::selectRaw('tb_akun.kode_akun, tb_akun.nama_akun, SUM(tb_jurnal.debet) as debet, SUM(tb_jurnal.kredit) as kredit')->leftJoin('tb_jurnal', function ($join) {
+                $join->on('tb_akun.id', 'tb_jurnal.id_akun');
             })
-            ->whereIn('tb_akun.id', [$idSimpanPinjam->id, $idUnitToko->id, $idFotoCopy->id, $idRuko->id, $idArisan->id, $idHPP->id])
-            ->whereYear('tanggal', date('Y'))
-            ->groupBy('tb_akun.id')
-            ->get();
+                ->whereIn('tb_akun.id', [$idSimpanPinjam->id, $idUnitToko->id, $idFotoCopy->id, $idRuko->id, $idArisan->id, $idHPP->id])
+                ->whereYear('tanggal', $year)
+                ->groupBy('tb_akun.id')
+                ->get();
 
             $shuTotal = $shu->sum('kredit') - $shu->sum('debet');
 
-            return view('Simpan_Pinjam.laporan.keuangan.show', compact('asetLancar', 'penyertaan', 'asetTidakLancar', 'kewajibanPendek', 'kewajibanPanjang', 'ekuitas', 'saldoLancar', 'saldoPenyertaan', 'saldoTidakLancar',
-                        'saldoPendek', 'saldoPanjang', 'saldoEkuitas', 'sumLancar', 'sumPenyertaan', 'sumTidakLancar', 'sumPendek', 'sumPanjang', 'sumEkuitas', 'reqStart', 'reqEnd', 'shuTotal'));
+            return view('Simpan_Pinjam.laporan.keuangan.show', compact(
+                'asetLancar',
+                'penyertaan',
+                'asetTidakLancar',
+                'kewajibanPendek',
+                'kewajibanPanjang',
+                'ekuitas',
+                'saldoLancar',
+                'saldoPenyertaan',
+                'saldoTidakLancar',
+                'saldoPendek',
+                'saldoPanjang',
+                'saldoEkuitas',
+                'sumLancar',
+                'sumPenyertaan',
+                'sumTidakLancar',
+                'sumPendek',
+                'sumPanjang',
+                'sumEkuitas',
+                'reqStart',
+                'reqEnd',
+                'shuTotal'
+            ));
         }
     }
 
@@ -201,7 +242,7 @@ class KeuanganController extends Controller
         $asetLancar         = Akun::whereIn('kode_akun', [1101, 1102, 1111, 1112, 1121, 1122, 1123, 1124, 1125, 1126, 1127, 1131, 1141])->select('id', 'nama_akun', 'saldo')->get();
         $penyertaan         = Akun::whereIn('kode_akun', [1201, 1202])->select('id', 'nama_akun', 'saldo')->get();
         $asetTidakLancar    = Akun::whereIn('kode_akun', [1301, 1302, 1311, 1321, 1312, 1322, 1313, 1323, 1314, 1324, 1315, 1325, 1316, 1326])->select('id', 'nama_akun', 'saldo')->get();
-        $kewajibanPendek    = Akun::whereIn('kode_akun', [2101, 2111, 2112, 2113, 2114, 2115, 2116, 2117, 2121])->select('id', 'nama_akun', 'saldo')->get();
+        $kewajibanPendek    = Akun::whereIn('kode_akun', [2101, 2102, 2111, 2112, 2113, 2114, 2115, 2116, 2117, 2121])->select('id', 'nama_akun', 'saldo')->get();
         $kewajibanPanjang   = Akun::whereIn('kode_akun', [2201])->select('id', 'nama_akun', 'saldo')->get();
         $ekuitas            = Akun::whereIn('kode_akun', [3101, 3102, 3111, 3112, 3113, 3121, 3122, 3131])->select('id', 'nama_akun', 'saldo')->get();
 
@@ -224,7 +265,7 @@ class KeuanganController extends Controller
 
             #Aset Lancar
             for ($i = 0; $i < sizeof($asetLancar); $i++) {
-                $jur = JurnalUmum::selectRaw('SUM(debet) as debet, SUM(kredit) as kredit')->where('id_akun', $asetLancar[$i]->id)->first();
+                $jur = JurnalUmum::selectRaw('SUM(debet) as debet, SUM(kredit) as kredit')->where('id_akun', $asetLancar[$i]->id)->whereYear('tanggal', date('Y'))->first();
 
                 $calculate = $asetLancar[$i]->saldo - $jur->kredit + $jur->debet;
 
@@ -233,7 +274,7 @@ class KeuanganController extends Controller
 
             #Penyertaan
             for ($i = 0; $i < sizeof($penyertaan); $i++) {
-                $jur = JurnalUmum::selectRaw('SUM(debet) as debet, SUM(kredit) as kredit')->where('id_akun', $penyertaan[$i]->id)->first();
+                $jur = JurnalUmum::selectRaw('SUM(debet) as debet, SUM(kredit) as kredit')->where('id_akun', $penyertaan[$i]->id)->whereYear('tanggal', date('Y'))->first();
 
                 $calculate = $penyertaan[$i]->saldo - $jur->kredit + $jur->debet;
 
@@ -242,7 +283,7 @@ class KeuanganController extends Controller
 
             #Aset Tidak Lancar
             for ($i = 0; $i < sizeof($asetTidakLancar); $i++) {
-                $jur = JurnalUmum::selectRaw('SUM(debet) as debet, SUM(kredit) as kredit')->where('id_akun', $asetTidakLancar[$i]->id)->first();
+                $jur = JurnalUmum::selectRaw('SUM(debet) as debet, SUM(kredit) as kredit')->where('id_akun', $asetTidakLancar[$i]->id)->whereYear('tanggal', date('Y'))->first();
 
                 $calculate = $asetTidakLancar[$i]->saldo - $jur->kredit + $jur->debet;
 
@@ -251,7 +292,7 @@ class KeuanganController extends Controller
 
             #Kewajiban Pendek
             for ($i = 0; $i < sizeof($kewajibanPendek); $i++) {
-                $jur = JurnalUmum::selectRaw('SUM(debet) as debet, SUM(kredit) as kredit')->where('id_akun', $kewajibanPendek[$i]->id)->first();
+                $jur = JurnalUmum::selectRaw('SUM(debet) as debet, SUM(kredit) as kredit')->where('id_akun', $kewajibanPendek[$i]->id)->whereYear('tanggal', date('Y'))->first();
 
                 $calculate = $kewajibanPendek[$i]->saldo - $jur->kredit + $jur->debet;
 
@@ -260,7 +301,7 @@ class KeuanganController extends Controller
 
             #Kewajiban Panjang            
             for ($i = 0; $i < sizeof($kewajibanPanjang); $i++) {
-                $jur = JurnalUmum::selectRaw('SUM(debet) as debet, SUM(kredit) as kredit')->where('id_akun', $kewajibanPanjang[$i]->id)->first();
+                $jur = JurnalUmum::selectRaw('SUM(debet) as debet, SUM(kredit) as kredit')->where('id_akun', $kewajibanPanjang[$i]->id)->whereYear('tanggal', date('Y'))->first();
 
                 $calculate = $kewajibanPanjang[$i]->saldo - $jur->kredit + $jur->debet;
 
@@ -269,7 +310,7 @@ class KeuanganController extends Controller
 
             #Ekuitas
             for ($i = 0; $i < sizeof($ekuitas); $i++) {
-                $jur = JurnalUmum::selectRaw('SUM(debet) as debet, SUM(kredit) as kredit')->where('id_akun', $ekuitas[$i]->id)->first();
+                $jur = JurnalUmum::selectRaw('SUM(debet) as debet, SUM(kredit) as kredit')->where('id_akun', $ekuitas[$i]->id)->whereYear('tanggal', date('Y'))->first();
 
                 $calculate = $ekuitas[$i]->saldo - $jur->kredit + $jur->debet;
 
@@ -283,24 +324,44 @@ class KeuanganController extends Controller
             $sumPanjang     = array_sum($saldoPanjang);
             $sumEkuitas     = array_sum($saldoEkuitas);
 
-            $shu = Akun::selectRaw('tb_akun.kode_akun, tb_akun.nama_akun, SUM(tb_jurnal.debet) as debet, SUM(tb_jurnal.kredit) as kredit')->leftJoin('tb_jurnal', function($join){
-                $join->on('tb_akun.id', 'tb_jurnal.id_akun'); 
+            $shu = Akun::selectRaw('tb_akun.kode_akun, tb_akun.nama_akun, SUM(tb_jurnal.debet) as debet, SUM(tb_jurnal.kredit) as kredit')->leftJoin('tb_jurnal', function ($join) {
+                $join->on('tb_akun.id', 'tb_jurnal.id_akun');
             })
-            ->whereIn('tb_akun.id', [$idSimpanPinjam->id, $idUnitToko->id, $idFotoCopy->id, $idRuko->id, $idArisan->id, $idHPP->id])
-            ->whereYear('tanggal', date('Y'))
-            ->groupBy('tb_akun.id')
-            ->get();
+                ->whereIn('tb_akun.id', [$idSimpanPinjam->id, $idUnitToko->id, $idFotoCopy->id, $idRuko->id, $idArisan->id, $idHPP->id])
+                ->whereYear('tanggal', date('Y'))
+                ->groupBy('tb_akun.id')
+                ->get();
 
             $shuTotal = $shu->sum('kredit') - $shu->sum('debet');
 
-            return view('Simpan_Pinjam.laporan.keuangan.print-show', compact('asetLancar', 'penyertaan', 'asetTidakLancar', 'kewajibanPendek', 'kewajibanPanjang', 'ekuitas', 'saldoLancar', 'saldoPenyertaan', 'saldoTidakLancar',
-                        'saldoPendek', 'saldoPanjang', 'saldoEkuitas', 'sumLancar', 'sumPenyertaan', 'sumTidakLancar', 'sumPendek', 'sumPanjang', 'sumEkuitas', 'shuTotal'));
+            return view('Simpan_Pinjam.laporan.keuangan.print-show', compact(
+                'asetLancar',
+                'penyertaan',
+                'asetTidakLancar',
+                'kewajibanPendek',
+                'kewajibanPanjang',
+                'ekuitas',
+                'saldoLancar',
+                'saldoPenyertaan',
+                'saldoTidakLancar',
+                'saldoPendek',
+                'saldoPanjang',
+                'saldoEkuitas',
+                'sumLancar',
+                'sumPenyertaan',
+                'sumTidakLancar',
+                'sumPendek',
+                'sumPanjang',
+                'sumEkuitas',
+                'shuTotal'
+            ));
         } else {
 
             $reqStart   = $request->start_date;
             $reqEnd     = $request->end_date;
             $startDate  = date('Y-m-d', strtotime($reqStart));
             $endDate    = date('Y-m-d', strtotime($reqEnd));
+            $year       = date('Y', strtotime($reqEnd));
 
             #Aset Lancar
             for ($i = 0; $i < sizeof($asetLancar); $i++) {
@@ -363,18 +424,39 @@ class KeuanganController extends Controller
             $sumPanjang     = array_sum($saldoPanjang);
             $sumEkuitas     = array_sum($saldoEkuitas);
 
-            $shu = Akun::selectRaw('tb_akun.kode_akun, tb_akun.nama_akun, SUM(tb_jurnal.debet) as debet, SUM(tb_jurnal.kredit) as kredit')->leftJoin('tb_jurnal', function($join){
-                $join->on('tb_akun.id', 'tb_jurnal.id_akun'); 
+            $shu = Akun::selectRaw('tb_akun.kode_akun, tb_akun.nama_akun, SUM(tb_jurnal.debet) as debet, SUM(tb_jurnal.kredit) as kredit')->leftJoin('tb_jurnal', function ($join) {
+                $join->on('tb_akun.id', 'tb_jurnal.id_akun');
             })
-            ->whereIn('tb_akun.id', [$idSimpanPinjam->id, $idUnitToko->id, $idFotoCopy->id, $idRuko->id, $idArisan->id, $idHPP->id])
-            ->whereYear('tanggal', date('Y'))
-            ->groupBy('tb_akun.id')
-            ->get();
+                ->whereIn('tb_akun.id', [$idSimpanPinjam->id, $idUnitToko->id, $idFotoCopy->id, $idRuko->id, $idArisan->id, $idHPP->id])
+                ->whereYear('tanggal', $year)
+                ->groupBy('tb_akun.id')
+                ->get();
 
             $shuTotal = $shu->sum('kredit') - $shu->sum('debet');
 
-            return view('Simpan_Pinjam.laporan.keuangan.print-show', compact('asetLancar', 'penyertaan', 'asetTidakLancar', 'kewajibanPendek', 'kewajibanPanjang', 'ekuitas', 'saldoLancar', 'saldoPenyertaan', 'saldoTidakLancar',
-                        'saldoPendek', 'saldoPanjang', 'saldoEkuitas', 'sumLancar', 'sumPenyertaan', 'sumTidakLancar', 'sumPendek', 'sumPanjang', 'sumEkuitas', 'reqStart', 'reqEnd', 'shuTotal'));
+            return view('Simpan_Pinjam.laporan.keuangan.print-show', compact(
+                'asetLancar',
+                'penyertaan',
+                'asetTidakLancar',
+                'kewajibanPendek',
+                'kewajibanPanjang',
+                'ekuitas',
+                'saldoLancar',
+                'saldoPenyertaan',
+                'saldoTidakLancar',
+                'saldoPendek',
+                'saldoPanjang',
+                'saldoEkuitas',
+                'sumLancar',
+                'sumPenyertaan',
+                'sumTidakLancar',
+                'sumPendek',
+                'sumPanjang',
+                'sumEkuitas',
+                'reqStart',
+                'reqEnd',
+                'shuTotal'
+            ));
         }
     }
 }

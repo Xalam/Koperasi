@@ -18,7 +18,7 @@
 @section('breadcrumb')
     <li class="breadcrumb-item"><a href="#">Laporan</a></li>
     <li class="breadcrumb-item"><a href="{{ route('keuangan.index') }}">Posisi Keuangan</a></li>
-        <li class="breadcrumb-item active">Tampil Posisi Keuangan</li>
+    <li class="breadcrumb-item active">Tampil Posisi Keuangan</li>
 @endsection
 
 @section('content_main')
@@ -29,8 +29,10 @@
         <div class="col-6 text-right">
             <form action="{{ route('keuangan.print-show') }}" method="post" enctype="multipart/form-data">
                 @csrf
-                <input type="text" class="form-control form-control-sm" name="start_date" id="start-date" value="{{ (isset($reqStart)) ? $reqStart : '' }}" hidden>
-                <input type="text" class="form-control form-control-sm" name="end_date" id="end-date" value="{{ (isset($reqEnd)) ? $reqEnd : '' }}" hidden>
+                <input type="text" class="form-control form-control-sm" name="start_date" id="start-date"
+                    value="{{ isset($reqStart) ? $reqStart : '' }}" hidden>
+                <input type="text" class="form-control form-control-sm" name="end_date" id="end-date"
+                    value="{{ isset($reqEnd) ? $reqEnd : '' }}" hidden>
                 <button type="submit" id="btn-cetak" class="btn btn-info"><i class="fas fa-print"></i>&nbsp;Cetak</button>
             </form>
         </div>
@@ -45,9 +47,10 @@
                     </div>
                     <div class="col-12 text-right">
                         @if (isset($reqStart) && isset($reqEnd))
-                            <h3 class="card-title" style="float: right;">Tanggal: {{ $reqStart }} / {{ $reqEnd }}</h3>
+                            <h3 class="card-title" style="float: right;">Tanggal: {{ $reqStart }} / {{ $reqEnd }}
+                            </h3>
                         @else
-                            
+
                         @endif
                     </div>
                 </div>
@@ -108,7 +111,9 @@
                             </tr>
                             <tr>
                                 <td><b>TOTAL ASET</b></td>
-                                <td class="text-right"><b>{{ number_format($sumLancar + $sumTidakLancar + $sumPenyertaan, 2, ',', '.') }}</b></td>
+                                <td class="text-right">
+                                    <b>{{ number_format($sumLancar + $sumTidakLancar + $sumPenyertaan, 2, ',', '.') }}</b>
+                                </td>
                             </tr>
                             <tr>
                                 <td><b>KEWAJIBAN & EKUITAS</b></td>
@@ -122,18 +127,19 @@
                                 <tr>
                                     <td>{{ $value->nama_akun }}</td>
                                     @if ($saldoPendek[$key] < 0)
-                                    <td class="text-right">{{ number_format($saldoPendek[$key] * -1, 2, ',', '.') }}</td>
+                                        <td class="text-right">{{ number_format($saldoPendek[$key] * -1, 2, ',', '.') }}
+                                        </td>
                                     @else
-                                    <td class="text-right">{{ number_format($saldoPendek[$key], 2, ',', '.') }}</td>  
+                                        <td class="text-right">{{ number_format($saldoPendek[$key], 2, ',', '.') }}</td>
                                     @endif
                                 </tr>
                             @endforeach
                             <tr>
                                 <td><b>Total Kewajiban Jangka Pendek</b></td>
                                 @if ($sumPendek < 0)
-                                <td class="text-right"><b>{{ number_format($sumPendek * -1, 2, ',', '.') }}</b></td>
+                                    <td class="text-right"><b>{{ number_format($sumPendek * -1, 2, ',', '.') }}</b></td>
                                 @else
-                                <td class="text-right"><b>{{ number_format($sumPendek, 2, ',', '.') }}</b></td>  
+                                    <td class="text-right"><b>{{ number_format($sumPendek, 2, ',', '.') }}</b></td>
                                 @endif
                             </tr>
                             <tr>
@@ -144,9 +150,10 @@
                                 <tr>
                                     <td>{{ $value->nama_akun }}</td>
                                     @if ($saldoPanjang[$key] < 0)
-                                    <td class="text-right">{{ number_format($saldoPanjang[$key] * -1, 2, ',', '.') }}</td>
+                                        <td class="text-right">{{ number_format($saldoPanjang[$key] * -1, 2, ',', '.') }}
+                                        </td>
                                     @else
-                                    <td class="text-right">{{ number_format($saldoPanjang[$key], 2, ',', '.') }}</td>  
+                                        <td class="text-right">{{ number_format($saldoPanjang[$key], 2, ',', '.') }}</td>
                                     @endif
                                 </tr>
                             @endforeach
@@ -157,9 +164,13 @@
                             <tr>
                                 <td><b>TOTAL KEWAJIBAN</b></td>
                                 @if ($sumPendek + $sumPanjang < 0)
-                                <td class="text-right"><b>{{ number_format($sumPendek + $sumPanjang * -1, 2, ',', '.') }}</b></td>
+                                    <td class="text-right">
+                                        <b>{{ number_format($sumPendek + $sumPanjang * -1, 2, ',', '.') }}</b>
+                                    </td>
                                 @else
-                                <td class="text-right"><b>{{ number_format($sumPendek + $sumPanjang, 2, ',', '.') }}</b></td>  
+                                    <td class="text-right">
+                                        <b>{{ number_format($sumPendek + $sumPanjang, 2, ',', '.') }}</b>
+                                    </td>
                                 @endif
                             </tr>
                             <tr>
@@ -170,34 +181,39 @@
                                 <tr>
                                     <td>{{ $value->nama_akun }}</td>
                                     @if ($saldoEkuitas[$key] < 0)
-                                    <td class="text-right">{{ number_format($saldoEkuitas[$key] * -1, 2, ',', '.') }}</td>
+                                        <td class="text-right">{{ number_format($saldoEkuitas[$key] * -1, 2, ',', '.') }}
+                                        </td>
                                     @else
-                                    <td class="text-right">{{ number_format($saldoEkuitas[$key], 2, ',', '.') }}</td>  
+                                        <td class="text-right">{{ number_format($saldoEkuitas[$key], 2, ',', '.') }}</td>
                                     @endif
                                 </tr>
                             @endforeach
                             <tr>
                                 <td><b>TOTAL EKUITAS</b></td>
                                 @if ($sumEkuitas < 0)
-                                <td class="text-right"><b>{{ number_format($sumEkuitas * -1, 2, ',', '.') }}</b></td>
+                                    <td class="text-right"><b>{{ number_format($sumEkuitas * -1, 2, ',', '.') }}</b></td>
                                 @else
-                                <td class="text-right"><b>{{ number_format($sumEkuitas, 2, ',', '.') }}</b></td>  
+                                    <td class="text-right"><b>{{ number_format($sumEkuitas, 2, ',', '.') }}</b></td>
                                 @endif
                             </tr>
                             <tr>
-                                <td><b>SHU {{ date('Y') }}</b></td>
+                                <td><b>SHU {{ isset($reqEnd) ? date('Y', strtotime($reqEnd)) : date('Y') }}</b></td>
                                 @if ($shuTotal < 0)
-                                <td class="text-right"><b>{{ number_format($shuTotal * -1, 2, ',', '.') }}</b></td>
+                                    <td class="text-right"><b>{{ number_format($shuTotal * -1, 2, ',', '.') }}</b></td>
                                 @else
-                                <td class="text-right"><b>{{ number_format($shuTotal, 2, ',', '.') }}</b></td>  
+                                    <td class="text-right"><b>{{ number_format($shuTotal, 2, ',', '.') }}</b></td>
                                 @endif
                             </tr>
                             <tr>
                                 <td><b>TOTAL KEWAJIBAN & EKUITAS</b></td>
                                 @if ($sumPendek + $sumPanjang + $sumEkuitas < 0)
-                                <td class="text-right"><b>{{ number_format(($sumPendek + $sumPanjang + $sumEkuitas) * -1, 2, ',', '.') }}</b></td>
+                                    <td class="text-right">
+                                        <b>{{ number_format(($sumPendek + $sumPanjang + $sumEkuitas) * -1, 2, ',', '.') }}</b>
+                                    </td>
                                 @else
-                                <td class="text-right"><b>{{ number_format($sumPendek + $sumPanjang + $sumEkuitas, 2, ',', '.') }}</b></td>  
+                                    <td class="text-right">
+                                        <b>{{ number_format($sumPendek + $sumPanjang + $sumEkuitas, 2, ',', '.') }}</b>
+                                    </td>
                                 @endif
                             </tr>
                         </tbody>
@@ -209,7 +225,7 @@
 @endsection
 
 @push('before-script')
-    
+
 @endpush
 
 @section('script')
@@ -220,7 +236,6 @@
     <script src="{{ asset('assets/plugins/datatables-responsive/js/responsive.bootstrap4.min.js') }}"></script>
     <script src="{{ asset('assets/plugins/toastr/toastr.min.js') }}"></script>
     <script>
-
         $(function() {
             $('#table-keuangan').DataTable({
                 "paging": false,
@@ -229,12 +244,11 @@
                 "lengthChange": false
             });
         });
-
     </script>
 
     @if (session()->has('error'))
         <script>
-            
+
         </script>
     @endif
 @endsection

@@ -1,13 +1,24 @@
 <?php
 
-namespace App\Http\Controllers\Simpan_Pinjam;
+namespace App\Http\Controllers\Simpan_Pinjam\Utils;
 
 use Illuminate\Support\Facades\Http;
 
 class ResponseMessage
 {
-    public static function send($number = null, $message = null)
+    public static function send($phoneNumber = null, $message = null)
     {
+        if ($phoneNumber == null) {
+            $number = $phoneNumber;
+        } else {
+            if ($phoneNumber[0] == '0') {
+                $subPhone = substr($phoneNumber, 1);
+                $number   = '62' . $subPhone;
+            } else {
+                $number = $phoneNumber;
+            }
+        }
+
         $response = Http::withHeaders([
             'Accept' => 'application/json',
             'Content-Type' => 'application/x-www-form-urlencoded'

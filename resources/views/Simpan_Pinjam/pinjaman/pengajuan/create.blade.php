@@ -4,14 +4,14 @@
 
 @section('content_header', 'Tambah Pengajuan Pinjaman')
 
-@push('style')
-    <link rel="stylesheet"
-        href="{{ asset('assets/plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css') }}">
-    <link rel="stylesheet" href="{{ asset('assets/plugins/select2/css/select2.min.css') }}">
-    <link rel="stylesheet" href="{{ asset('assets/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css') }}">
-    <!-- SweetAlert2 -->
-    <link rel="stylesheet" href="{{ asset('assets/plugins/sweetalert2-theme-bootstrap-4/bootstrap-4.min.css') }}">
-@endpush
+    @push('style')
+        <link rel="stylesheet"
+            href="{{ asset('assets/plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css') }}">
+        <link rel="stylesheet" href="{{ asset('assets/plugins/select2/css/select2.min.css') }}">
+        <link rel="stylesheet" href="{{ asset('assets/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css') }}">
+        <!-- SweetAlert2 -->
+        <link rel="stylesheet" href="{{ asset('assets/plugins/sweetalert2-theme-bootstrap-4/bootstrap-4.min.css') }}">
+    @endpush
 
 @section('breadcrumb')
     <li class="breadcrumb-item"><a href="#">Pinjaman</a></li>
@@ -29,7 +29,8 @@
                 <div class="card-body col-md-6 mx-auto">
                     <form id="form-pengajuan" action="{{ route('pengajuan.store') }}" role="form" method="post">
                         @csrf
-                        <input type="text" class="form-control" name="kode_simpanan" id="kode_simpanan" placeholder="Masukkan kode" hidden>
+                        <input type="text" class="form-control" name="kode_simpanan" id="kode_simpanan"
+                            placeholder="Masukkan kode" hidden>
                         <div class="form-group">
                             <label>Nama Anggota</label>
                             <select class="form-control select2" style="width: 100%;" name="id_anggota" id="id-anggota">
@@ -44,7 +45,8 @@
                             <div class="form-group">
                                 <label>Limit</label>
                                 <div class="input-group">
-                                    <input type="text" class="form-control" placeholder="Limit Gaji" id="limit" disabled>
+                                    <input type="text" class="form-control" placeholder="Limit - Piutang Toko" id="limit"
+                                        disabled>
                                     <input type="hidden" class="form-control" id="limit-gaji">
                                 </div>
                             </div>
@@ -52,7 +54,7 @@
                                 <label>Tanggal</label>
                                 <div class="input-group date" id="tanggal" data-target-input="nearest">
                                     <input type="text" class="form-control datetimepicker-input" data-target="#tanggal"
-                                        name="tanggal" placeholder="Tanggal"/>
+                                        name="tanggal" placeholder="Tanggal" />
                                     <div class="input-group-append" data-target="#tanggal" data-toggle="datetimepicker">
                                         <div class="input-group-text"><i class="fa fa-calendar"></i></div>
                                     </div>
@@ -98,18 +100,21 @@
                                 <div class="input-group">
                                     <input type="text" class="form-control" placeholder="Angsuran" id="angsuran" disabled>
                                 </div>
-                                <span id="danger-limit" style="visibility: hidden;" class="text-danger text-sm">Angsuran tidak boleh melebihi limit</span>
+                                <span id="danger-limit" style="visibility: hidden;" class="text-danger text-sm">Angsuran
+                                    tidak boleh melebihi limit</span>
                             </div>
                             <div class="form-group" style="margin-top: -15px;">
                                 <label>Biaya Provisi</label>
                                 <div class="input-group">
-                                    <input type="text" class="form-control" placeholder="Biaya provisi" id="biaya-provisi" name="biaya_provisi" disabled>
+                                    <input type="text" class="form-control" placeholder="Biaya provisi" id="biaya-provisi"
+                                        name="biaya_provisi" disabled>
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label>Biaya Asuransi</label>
                                 <div class="input-group">
-                                    <input type="text" class="form-control" placeholder="Biaya asuransi" id="biaya-asuransi" name="biaya_asuransi" disabled>
+                                    <input type="text" class="form-control" placeholder="Biaya asuransi" id="biaya-asuransi"
+                                        name="biaya_asuransi" disabled>
                                 </div>
                             </div>
                         </div>
@@ -156,7 +161,9 @@
                 reverse: true
             });
 
-            $('#bunga').inputmask('decimal', { rightAlign: false });
+            $('#bunga').inputmask('decimal', {
+                rightAlign: false
+            });
 
             $('#tanggal').datetimepicker({
                 format: 'YYYY-MM-DD'
@@ -165,7 +172,7 @@
             $('.select2').select2();
 
             $.validator.setDefaults({
-                submitHandler: function () {
+                submitHandler: function() {
                     form.submit();
                 }
             });
@@ -216,7 +223,8 @@
                     url: '{{ route('pengajuan.limit') }}',
                     data: {
                         '_token': '{{ csrf_token() }}',
-                        'id':id},
+                        'id': id
+                    },
                     success: function(data) {
                         console.log(data.limit);
                         $('#limit').attr('value', formatMoney(data.limit));
@@ -225,10 +233,10 @@
                 })
             });
 
-            $("#bunga").change(function(){
+            $("#bunga").change(function() {
                 $('#hide-bunga').attr('value', $(this).val());
             });
-            $("#tenor").change(function(){
+            $("#tenor").change(function() {
                 $('#hide-tenor').attr('value', $(this).val());
             });
 
@@ -237,7 +245,7 @@
                 let bunga = $('#hide-bunga').val();
                 let tenor = $('#hide-tenor').val();
                 let limit = $('#limit-gaji').val();
-                
+
                 let newJumPinjaman = 0;
                 let newBunga = 0;
                 let newTenor = 0;
@@ -274,23 +282,23 @@
 
                 if (ratusan > 0 && ratusan <= 100) {
                     newRatusan = 100;
-                } else if(ratusan > 100 && ratusan <= 200) {
+                } else if (ratusan > 100 && ratusan <= 200) {
                     $newRatusan = 200;
-                } else if(ratusan > 200 && ratusan <= 300) {
+                } else if (ratusan > 200 && ratusan <= 300) {
                     newRatusan = 300;
-                } else if(ratusan > 300 && ratusan <= 400) {
+                } else if (ratusan > 300 && ratusan <= 400) {
                     newRatusan = 400;
-                } else if(ratusan > 400 && ratusan <= 500) {
+                } else if (ratusan > 400 && ratusan <= 500) {
                     newRatusan = 500;
-                } else if(ratusan > 500 && ratusan <= 600) {
+                } else if (ratusan > 500 && ratusan <= 600) {
                     newRatusan = 600;
-                } else if(ratusan > 600 && ratusan <= 700) {
+                } else if (ratusan > 600 && ratusan <= 700) {
                     newRatusan = 700;
-                } else if(ratusan > 700 && ratusan <= 800) {
+                } else if (ratusan > 700 && ratusan <= 800) {
                     newRatusan = 800;
-                } else if(ratusan > 800 && ratusan <= 900) {
+                } else if (ratusan > 800 && ratusan <= 900) {
                     newRatusan = 900;
-                } else if(ratusan > 900 && ratusan <= 999) {
+                } else if (ratusan > 900 && ratusan <= 999) {
                     newRatusan = 1000;
                 } else {
                     newRatusan = ratusan;
@@ -299,12 +307,17 @@
                 uang = bulat + newRatusan;
 
                 $('#angsuran').attr('value', formatMoney(uang));
-                $('#biaya-provisi').attr('value', formatMoney(newJumPinjaman * parseFloat('{{ $prov }}') / 100));
-                $('#biaya-asuransi').attr('value', formatMoney(newJumPinjaman * parseFloat('{{ $asur }}') / 100));
+                $('#biaya-provisi').attr('value', formatMoney(newJumPinjaman * parseFloat(
+                    '{{ $prov }}') / 100));
+                $('#biaya-asuransi').attr('value', formatMoney(newJumPinjaman * parseFloat(
+                    '{{ $asur }}') / 100));
             });
 
             function formatMoney(n) {
-                return new Intl.NumberFormat("id-ID", { style: "currency", currency: "IDR" }).format(n);
+                return new Intl.NumberFormat("id-ID", {
+                    style: "currency",
+                    currency: "IDR"
+                }).format(n);
             }
 
             $('input.number').keyup(function(event) {
@@ -315,17 +328,16 @@
                 }
             });
         })
-
     </script>
 
     @if (session()->has('error'))
-    <script>
-        Swal.fire({
-            title: 'Error!',
-            text: '{{ session()->get('error') }}',
-            icon: 'error',
-            confirmButtonText: 'OK'
-        })
-    </script>
+        <script>
+            Swal.fire({
+                title: 'Error!',
+                text: '{{ session()->get('error') }}',
+                icon: 'error',
+                confirmButtonText: 'OK'
+            })
+        </script>
     @endif
 @endsection

@@ -4,11 +4,12 @@
 
 @section('content_header', 'Tambah Anggota')
 
-@push('style')
-    <link rel="stylesheet" href="{{ asset('assets/plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css') }}">
-    <link rel="stylesheet" href="{{ asset('assets/plugins/select2/css/select2.min.css') }}">
-    <link rel="stylesheet" href="{{ asset('assets/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css') }}">
-@endpush
+    @push('style')
+        <link rel="stylesheet"
+            href="{{ asset('assets/plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css') }}">
+        <link rel="stylesheet" href="{{ asset('assets/plugins/select2/css/select2.min.css') }}">
+        <link rel="stylesheet" href="{{ asset('assets/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css') }}">
+    @endpush
 
 @section('breadcrumb')
     <li class="breadcrumb-item"><a href="#">Master</a></li>
@@ -24,8 +25,8 @@
                     <h3 class="card-title">Tambah Anggota</h3>
                 </div>
                 <div class="card-body col-md-6 mx-auto">
-                    <form id="form-anggota" action="{{ route('anggota.store') }}" role="form" method="post" enctype="multipart/form-data"
-                        autocomplete="off">
+                    <form id="form-anggota" action="{{ route('anggota.store') }}" role="form" method="post"
+                        enctype="multipart/form-data" autocomplete="off">
                         @csrf
                         <div class="form-group">
                             <input type="text" class="form-control" id="kode-anggota" name="kd_anggota"
@@ -34,7 +35,7 @@
                         <div class="form-group">
                             <label for="nama-anggota">Nama Anggota</label>
                             <input type="text" class="form-control" id="nama-anggota" name="nama_anggota"
-                                placeholder="Nama anggota">
+                                placeholder="Nama anggota" value="{{ old('nama_anggota') }}">
                             @if ($errors->has('nama_anggota'))
                                 <span class="text-danger">{{ $errors->first('nama_anggota') }}</span>
                             @endif
@@ -42,40 +43,45 @@
                         <div class="form-group">
                             <label for="pria">Jenis Kelamin</label>
                             <div class="custom-control custom-radio">
-                                <input class="custom-control-input" type="radio" id="radio-pria" name="jenis_kelamin" 
-                                value="Pria" checked>
+                                <input class="custom-control-input" type="radio" id="radio-pria" name="jenis_kelamin"
+                                    value="Pria" @if (old('jenis_kelamin') == 'Pria') checked @elseif (old('jenis_kelamin') == '') checked @endif>
                                 <label for="radio-pria" class="custom-control-label">Pria</label>
                             </div>
                             <div class="custom-control custom-radio">
                                 <input class="custom-control-input" type="radio" id="radio-wanita" name="jenis_kelamin"
-                                    value="Wanita">
+                                    value="Wanita" @if (old('jenis_kelamin') == 'Wanita') checked @endif>
                                 <label for="radio-wanita" class="custom-control-label">Wanita</label>
                             </div>
                         </div>
                         <div class="form-group">
                             <label>Agama</label>
                             <select class="form-control select2" style="width: 100%;" name="agama">
-                                <option selected="selected" value="Lainnya">Lainnya</option>
-                                <option value="Islam">Islam</option>
-                                <option value="Kristen">Kristen</option>
-                                <option value="Katolik">Katolik</option>
-                                <option value="Hindu">Hindu</option>
-                                <option value="Buddha">Buddha</option>
-                                <option value="Khonghucu">Khonghucu</option>
+                                <option @if (old('agama') == 'Lainnya') selected="selected" @elseif (old('agama') == '') selected="selected" @endif value="Lainnya">Lainnya</option>
+                                <option @if (old('agama') == 'Islam') selected="selected" @endif value="Islam">Islam</option>
+                                <option @if (old('agama') == 'Kristen') selected="selected" @endif value="Kristen">Kristen
+                                </option>
+                                <option @if (old('agama') == 'Katolik') selected="selected" @endif value="Katolik">Katolik
+                                </option>
+                                <option @if (old('agama') == 'Hindu') selected="selected" @endif value="Hindu">Hindu</option>
+                                <option @if (old('agama') == 'Buddha') selected="selected" @endif value="Buddha">Buddha
+                                </option>
+                                <option @if (old('agama') == 'Khonghucu') selected="selected" @endif value="Khonghucu">Khonghucu
+                                </option>
                             </select>
                         </div>
                         <div class="form-group">
                             <label for="tempat-lahir">Tempat Lahir</label>
                             <input type="text" class="form-control" id="tempat-lahir" name="tempat_lahir"
-                                placeholder="Tempat lahir">
-                                @if ($errors->has('tempat_lahir'))
+                                placeholder="Tempat lahir" value="{{ old('tempat_lahir') }}">
+                            @if ($errors->has('tempat_lahir'))
                                 <span class="text-danger">{{ $errors->first('tempat_lahir') }}</span>
                             @endif
                         </div>
                         <div class="form-group">
                             <label>Tanggal Lahir</label>
                             <div class="input-group date" id="tanggal-lahir" data-target-input="nearest">
-                                <input type="text" class="form-control datetimepicker-input" data-target="#tanggal-lahir" name="tanggal_lahir" placeholder="Tanggal lahir"/>
+                                <input type="text" class="form-control datetimepicker-input" data-target="#tanggal-lahir"
+                                    name="tanggal_lahir" placeholder="Tanggal lahir" value="{{ old('tanggal_lahir') }}" />
                                 <div class="input-group-append" data-target="#tanggal-lahir" data-toggle="datetimepicker">
                                     <div class="input-group-text"><i class="fa fa-calendar"></i></div>
                                 </div>
@@ -83,7 +89,8 @@
                         </div>
                         <div class="form-group">
                             <label for="alamat">Alamat</label>
-                            <input type="text" class="form-control" id="alamat" name="alamat" placeholder="Alamat">
+                            <input type="text" class="form-control" id="alamat" name="alamat" placeholder="Alamat"
+                                value="{{ old('alamat') }}">
                             @if ($errors->has('alamat'))
                                 <span class="text-danger">{{ $errors->first('alamat') }}</span>
                             @endif
@@ -95,7 +102,8 @@
                                 <div class="input-group-prepend">
                                     <span class="input-group-text"><i class="fas fa-phone"></i></span>
                                 </div>
-                                <input type="text" class="form-control number" placeholder="No Handphone" name="no_hp">
+                                <input type="text" class="form-control number" placeholder="No Handphone" name="no_hp"
+                                    value="{{ old('no_hp') }}">
                             </div>
                             @if ($errors->has('no_hp'))
                                 <span class="text-danger">{{ $errors->first('no_hp') }}</span>
@@ -108,7 +116,8 @@
                                 <div class="input-group-prepend">
                                     <span class="input-group-text"><i class="fab fa-whatsapp"></i></span>
                                 </div>
-                                <input type="text" class="form-control number" placeholder="No Whatsapp" name="no_wa">
+                                <input type="text" class="form-control number" placeholder="No Whatsapp" name="no_wa"
+                                    value="{{ old('no_wa') }}">
                             </div>
                             @if ($errors->has('no_wa'))
                                 <span class="text-danger">{{ $errors->first('no_wa') }}</span>
@@ -117,27 +126,31 @@
                         <div class="form-group">
                             <label>Status Pernikahan</label>
                             <select class="form-control select2" style="width: 100%;" name="status">
-                                <option selected="selected" value="belum_kawin">Belum Menikah</option>
-                                <option value="kawin">Menikah</option>
+                                <option @if (old('status') == 'belum_kawin') selected="selected" @elseif (old('status') == '') selected="selected" @endif value="belum_kawin">Belum Menikah</option>
+                                <option @if (old('status') == 'kawin') selected="selected" @endif value="kawin">Menikah
+                                </option>
                             </select>
                         </div>
                         <div class="form-group">
                             <label for="jabatan">Jabatan</label>
-                            <input type="text" class="form-control" id="jabatan" name="jabatan" placeholder="Jabatan">
+                            <input type="text" class="form-control" id="jabatan" name="jabatan" placeholder="Jabatan"
+                                value="{{ old('jabatan') }}">
                             @if ($errors->has('jabatan'))
                                 <span class="text-danger">{{ $errors->first('jabatan') }}</span>
                             @endif
                         </div>
                         <div class="form-group">
                             <label for="email">Email</label>
-                            <input type="email" class="form-control" id="email" name="email" placeholder="Email">
+                            <input type="email" class="form-control" id="email" name="email" placeholder="Email"
+                                value="{{ old('email') }}">
                             @if ($errors->has('email'))
                                 <span class="text-danger">{{ $errors->first('email') }}</span>
                             @endif
                         </div>
                         <div class="form-group">
                             <label for="username">Username (NRP)</label>
-                            <input type="text" class="form-control number" placeholder="Nomor Registrasi Pokok" name="username">
+                            <input type="text" class="form-control number" placeholder="Nomor Registrasi Pokok"
+                                name="username" value="{{ old('username') }}">
                             @if ($errors->has('username'))
                                 <span class="text-danger">{{ $errors->first('username') }}</span>
                             @endif
@@ -145,9 +158,11 @@
                         <div class="form-group">
                             <label for="password">Password</label>
                             <div class="input-group" id="password">
-                                <input type="password" class="form-control" name="password" placeholder="Password">
+                                <input type="password" class="form-control" name="password" placeholder="Password"
+                                    value="{{ old('password') }}">
                                 <div class="input-group-append">
-                                    <a href="" class="input-group-text"><i class="fas fa-eye-slash" aria-hidden="true"></i></a>
+                                    <a href="" class="input-group-text"><i class="fas fa-eye-slash"
+                                            aria-hidden="true"></i></a>
                                 </div>
                             </div>
                             @if ($errors->has('password'))
@@ -157,11 +172,15 @@
                         <div class="form-group">
                             <label>Role</label>
                             <select class="form-control select2" style="width: 100%;" name="role">
-                                <option selected="selected" value="anggota">Anggota</option>
-                                <option value="bendahara">Bendahara</option>
-                                <option value="bendahara_pusat">Bendahara Pusat</option>
-                                <option value="ketua_koperasi">Ketua Koperasi</option>
-                                <option value="simpan_pinjam">Unit Simpan Pinjam</option>
+                                <option @if (old('role') == 'anggota') selected="selected" @elseif (old('role') == '') selected="selected" @endif value="anggota">Anggota</option>
+                                <option @if (old('role') == 'bendahara') selected="selected" @endif value="bendahara">Bendahara
+                                </option>
+                                <option @if (old('role') == 'bendahara_pusat') selected="selected" @endif value="bendahara_pusat">
+                                    Bendahara Pusat</option>
+                                <option @if (old('role') == 'ketua_koperasi') selected="selected" @endif value="ketua_koperasi">Ketua
+                                    Koperasi</option>
+                                <option @if (old('role') == 'simpan_pinjam') selected="selected" @endif value="simpan_pinjam">Unit
+                                    Simpan Pinjam</option>
                             </select>
                         </div>
                         <div class="row cal-gaji">
@@ -171,8 +190,8 @@
                                     <div class="input-group-prepend">
                                         <span class="input-group-text">Rp</span>
                                     </div>
-                                    <input type="text" class="form-control" placeholder="Gaji" id="gaji"
-                                        name="gaji">
+                                    <input type="text" class="form-control" placeholder="Gaji" id="gaji" name="gaji"
+                                        value="{{ old('gaji') }}">
                                 </div>
                                 @if ($errors->has('gaji'))
                                     <span class="text-danger">{{ $errors->first('gaji') }}</span>
@@ -180,9 +199,9 @@
                             </div>
                             <div class="form-group col-md-6">
                                 <label>Limit</label>
-                                <input type="text" class="form-control" placeholder="Limit" id="limit"
-                                        disabled>
-                                <input type="hidden" name="limit_gaji" id="limit-gaji">
+                                <input type="text" class="form-control" placeholder="Limit" id="limit" disabled
+                                    value="{{ 'Rp ' . number_format(old('limit_gaji'), 2, ',', '.') }}">
+                                <input type="text" name="limit_gaji" id="limit-gaji" value="{{ old('limit_gaji') }}">
                             </div>
                         </div>
                         <div class="form-group">
@@ -193,7 +212,8 @@
                                     <label class="custom-file-label" for="input-foto">Pilih file</label>
                                 </div>
                             </div>
-                            <img id="preview-foto" src="https://www.riobeauty.co.uk/images/product_image_not_found.gif" alt="Preview Image" style="max-height: 150px; margin-top: 10px">
+                            <img id="preview-foto" src="https://www.riobeauty.co.uk/images/product_image_not_found.gif"
+                                alt="Preview Image" style="max-height: 150px; margin-top: 10px">
                             @if ($errors->has('foto'))
                                 <span class="text-danger">{{ $errors->first('foto') }}</span>
                             @endif
@@ -243,12 +263,12 @@
                 event.preventDefault();
                 if ($('#password input').attr("type") == "text") {
                     $('#password input').attr('type', 'password');
-                    $('#password i').addClass( "fa-eye-slash" );
-                    $('#password i').removeClass( "fa-eye" );
+                    $('#password i').addClass("fa-eye-slash");
+                    $('#password i').removeClass("fa-eye");
                 } else if ($('#password input').attr("type") == "password") {
                     $('#password input').attr('type', 'text');
-                    $('#password i').removeClass( "fa-eye-slash" );
-                    $('#password i').addClass( "fa-eye" );
+                    $('#password i').removeClass("fa-eye-slash");
+                    $('#password i').addClass("fa-eye");
                 }
             });
 
@@ -263,33 +283,36 @@
                 }
 
                 let simWajib = @php echo($wajib); @endphp;
-                
+
                 let result = 2 / 3 * newGaji - simWajib;
                 $('#limit').attr('value', formatMoney(result));
                 $('#limit-gaji').attr('value', (result.toFixed(2)));
             });
 
             function formatMoney(n) {
-                return new Intl.NumberFormat("id-ID", { style: "currency", currency: "IDR" }).format(n);
+                return new Intl.NumberFormat("id-ID", {
+                    style: "currency",
+                    currency: "IDR"
+                }).format(n);
             }
 
             $('input[name="jenis_kelamin"]:checked').val();
 
             $('#input-foto').change(function() {
                 let reader = new FileReader();
-                reader.onload = (e) => { 
-                    $('#preview-foto').attr('src', e.target.result); 
+                reader.onload = (e) => {
+                    $('#preview-foto').attr('src', e.target.result);
                 }
-         
-                reader.readAsDataURL(this.files[0]); 
+
+                reader.readAsDataURL(this.files[0]);
             });
 
-            $.validator.addMethod('filesize', function (value, element, param) {
+            $.validator.addMethod('filesize', function(value, element, param) {
                 return this.optional(element) || (element.files[0].size <= param)
-            },'Ukuran file tidak boleh lebih dari 500 kb'); 
+            }, 'Ukuran file tidak boleh lebih dari 500 kb');
 
             $.validator.setDefaults({
-                submitHandler: function () {
+                submitHandler: function() {
                     form.submit();
                 }
             });
@@ -372,6 +395,5 @@
                 }
             });
         })
-
     </script>
 @endsection

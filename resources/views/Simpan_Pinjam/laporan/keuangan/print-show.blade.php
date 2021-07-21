@@ -16,17 +16,20 @@
 
     <style>
         tr {
-            height: 10px; 
+            height: 10px;
             border-bottom: 1px solid #ccc;
         }
+
     </style>
 </head>
+
 <body>
     <div class="wrapper">
         <!-- Main content -->
         <div class="row no-print">
             <div class="col-12">
-                <a href="{{ route('keuangan.index') }}" class="btn btn-default" style="margin: 10px;"><i></i> Kembali</a>
+                <a href="{{ route('keuangan.index') }}" class="btn btn-default" style="margin: 10px;"><i></i>
+                    Kembali</a>
             </div>
         </div>
         <div class="invoice p-3 mb-3">
@@ -40,17 +43,17 @@
                 <!-- /.col -->
             </div>
             <div class="row" style="margin: 15px;">
-                <img src="{{ asset('assets/dist/img/logo-koperasi.png') }}" alt="Primkop Logo" style="width: 80px; height: 80px;" class="brand-image img-circle elevation-2"
-                    style="opacity: .8">
-                    <div style="margin-left: 15px;">
-                        <h3><b>Primkop Polrestabes Semarang</b></h3>
-                        <address>
-                            Jl. Kaligarang No.1A, Barusari<br>
-                            Semarang<br>
-                            Phone: 0895-2458-3818<br>
-                            Email: -
-                        </address>
-                    </div>
+                <img src="{{ asset('assets/dist/img/logo-koperasi.png') }}" alt="Primkop Logo"
+                    style="width: 80px; height: 80px;" class="brand-image img-circle elevation-2" style="opacity: .8">
+                <div style="margin-left: 15px;">
+                    <h3><b>Primkop Polrestabes Semarang</b></h3>
+                    <address>
+                        Jl. Kaligarang No.1A, Barusari<br>
+                        Semarang<br>
+                        Phone: 0895-2458-3818<br>
+                        Email: -
+                    </address>
+                </div>
             </div>
             <div class="text-center">
                 <h3><b>Laporan Posisi Keuangan</b></h3><br>
@@ -59,7 +62,7 @@
             <div>
                 <address>
                     @if (isset($reqStart) && isset($reqEnd))
-                        Periode : {{ $reqStart }} / {{ $reqEnd }}   
+                        Periode : {{ $reqStart }} / {{ $reqEnd }}
                     @else
                         Sampai Tanggal : {{ date('d-m-Y') }}
                     @endif
@@ -101,7 +104,8 @@
                             @foreach ($penyertaan as $key => $value)
                                 <tr>
                                     <td>{{ $value->nama_akun }}</td>
-                                    <td class="text-right">{{ number_format($saldoPenyertaan[$key], 2, ',', '.') }}</td>
+                                    <td class="text-right">{{ number_format($saldoPenyertaan[$key], 2, ',', '.') }}
+                                    </td>
                                 </tr>
                             @endforeach
                             <tr>
@@ -115,7 +119,8 @@
                             @foreach ($asetTidakLancar as $key => $value)
                                 <tr>
                                     <td>{{ $value->nama_akun }}</td>
-                                    <td class="text-right">{{ number_format($saldoTidakLancar[$key], 2, ',', '.') }}</td>
+                                    <td class="text-right">{{ number_format($saldoTidakLancar[$key], 2, ',', '.') }}
+                                    </td>
                                 </tr>
                             @endforeach
                             <tr>
@@ -124,7 +129,9 @@
                             </tr>
                             <tr>
                                 <td><b>TOTAL ASET</b></td>
-                                <td class="text-right"><b>{{ number_format($sumLancar + $sumTidakLancar + $sumPenyertaan, 2, ',', '.') }}</b></td>
+                                <td class="text-right">
+                                    <b>{{ number_format($sumLancar + $sumTidakLancar + $sumPenyertaan, 2, ',', '.') }}</b>
+                                </td>
                             </tr>
                             <tr>
                                 <td><b>KEWAJIBAN & EKUITAS</b></td>
@@ -138,18 +145,21 @@
                                 <tr>
                                     <td>{{ $value->nama_akun }}</td>
                                     @if ($saldoPendek[$key] < 0)
-                                    <td class="text-right">{{ number_format($saldoPendek[$key] * -1, 2, ',', '.') }}</td>
+                                        <td class="text-right">
+                                            {{ number_format($saldoPendek[$key] * -1, 2, ',', '.') }}</td>
                                     @else
-                                    <td class="text-right">{{ number_format($saldoPendek[$key], 2, ',', '.') }}</td>  
+                                        <td class="text-right">{{ number_format($saldoPendek[$key], 2, ',', '.') }}
+                                        </td>
                                     @endif
                                 </tr>
                             @endforeach
                             <tr>
                                 <td><b>Total Kewajiban Jangka Pendek</b></td>
                                 @if ($sumPendek < 0)
-                                <td class="text-right"><b>{{ number_format($sumPendek * -1, 2, ',', '.') }}</b></td>
+                                    <td class="text-right"><b>{{ number_format($sumPendek * -1, 2, ',', '.') }}</b>
+                                    </td>
                                 @else
-                                <td class="text-right"><b>{{ number_format($sumPendek, 2, ',', '.') }}</b></td>  
+                                    <td class="text-right"><b>{{ number_format($sumPendek, 2, ',', '.') }}</b></td>
                                 @endif
                             </tr>
                             <tr>
@@ -160,9 +170,11 @@
                                 <tr>
                                     <td>{{ $value->nama_akun }}</td>
                                     @if ($saldoPanjang[$key] < 0)
-                                    <td class="text-right">{{ number_format($saldoPanjang[$key] * -1, 2, ',', '.') }}</td>
+                                        <td class="text-right">
+                                            {{ number_format($saldoPanjang[$key] * -1, 2, ',', '.') }}</td>
                                     @else
-                                    <td class="text-right">{{ number_format($saldoPanjang[$key], 2, ',', '.') }}</td>  
+                                        <td class="text-right">{{ number_format($saldoPanjang[$key], 2, ',', '.') }}
+                                        </td>
                                     @endif
                                 </tr>
                             @endforeach
@@ -174,34 +186,42 @@
                                 <tr>
                                     <td>{{ $value->nama_akun }}</td>
                                     @if ($saldoEkuitas[$key] < 0)
-                                    <td class="text-right">{{ number_format($saldoEkuitas[$key] * -1, 2, ',', '.') }}</td>
+                                        <td class="text-right">
+                                            {{ number_format($saldoEkuitas[$key] * -1, 2, ',', '.') }}</td>
                                     @else
-                                    <td class="text-right">{{ number_format($saldoEkuitas[$key], 2, ',', '.') }}</td>  
+                                        <td class="text-right">{{ number_format($saldoEkuitas[$key], 2, ',', '.') }}
+                                        </td>
                                     @endif
                                 </tr>
                             @endforeach
                             <tr>
                                 <td><b>Total Ekuitas</b></td>
                                 @if ($sumEkuitas < 0)
-                                <td class="text-right"><b>{{ number_format($sumEkuitas * -1, 2, ',', '.') }}</b></td>
+                                    <td class="text-right"><b>{{ number_format($sumEkuitas * -1, 2, ',', '.') }}</b>
+                                    </td>
                                 @else
-                                <td class="text-right"><b>{{ number_format($sumEkuitas, 2, ',', '.') }}</b></td>  
+                                    <td class="text-right"><b>{{ number_format($sumEkuitas, 2, ',', '.') }}</b></td>
                                 @endif
                             </tr>
                             <tr>
-                                <td><b>SHU {{ date('Y') }}</b></td>
+                                <td><b>SHU {{ isset($reqEnd) ? date('Y', strtotime($reqEnd)) : date('Y') }}</b></td>
                                 @if ($shuTotal < 0)
-                                <td class="text-right"><b>{{ number_format($shuTotal * -1, 2, ',', '.') }}</b></td>
+                                    <td class="text-right"><b>{{ number_format($shuTotal * -1, 2, ',', '.') }}</b>
+                                    </td>
                                 @else
-                                <td class="text-right"><b>{{ number_format($shuTotal, 2, ',', '.') }}</b></td>  
+                                    <td class="text-right"><b>{{ number_format($shuTotal, 2, ',', '.') }}</b></td>
                                 @endif
                             </tr>
                             <tr>
                                 <td><b>TOTAL KEWAJIBAN & EKUITAS</b></td>
                                 @if ($sumPendek + $sumPanjang + $sumEkuitas < 0)
-                                <td class="text-right"><b>{{ number_format(($sumPendek + $sumPanjang + $sumEkuitas) * -1, 2, ',', '.') }}</b></td>
+                                    <td class="text-right">
+                                        <b>{{ number_format(($sumPendek + $sumPanjang + $sumEkuitas) * -1, 2, ',', '.') }}</b>
+                                    </td>
                                 @else
-                                <td class="text-right"><b>{{ number_format($sumPendek + $sumPanjang + $sumEkuitas, 2, ',', '.') }}</b></td>  
+                                    <td class="text-right">
+                                        <b>{{ number_format($sumPendek + $sumPanjang + $sumEkuitas, 2, ',', '.') }}</b>
+                                    </td>
                                 @endif
                             </tr>
                         </tbody>
@@ -214,7 +234,6 @@
     </div>
     <script>
         window.addEventListener("load", window.print());
-
     </script>
 </body>
 

@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Simpan_Pinjam\Simpanan;
 
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\Simpan_Pinjam\Utils\ResponseMessage;
+use App\Http\Controllers\Simpan_Pinjam\Utils\SaveJurnalUmum;
 use App\Models\Simpan_Pinjam\Laporan\JurnalUmum;
 use App\Models\Simpan_Pinjam\Master\Akun\Akun;
 use App\Models\Simpan_Pinjam\Master\Anggota\Anggota;
@@ -158,15 +160,11 @@ class TarikSaldoController extends Controller
 
                 $penarikan = SaldoTarik::where('id', $id)->first();
 
+                $kodeJurnal = 'JU-' . str_pad($idJurnal, 6, '0', STR_PAD_LEFT);
+                $keterangan = 'Penarikan ( ' . $penarikan->saldo->anggota->nama_anggota . ' )';
+
                 #Simpan Jurnal Kas
-                $jurnal = new JurnalUmum();
-                $jurnal->kode_jurnal   = 'JU-' . str_pad($idJurnal, 6, '0', STR_PAD_LEFT);
-                $jurnal->id_akun        = $checkAkunKas->id;
-                $jurnal->tanggal        = date('Y-m-d');
-                $jurnal->keterangan     = 'Penarikan ( ' . $penarikan->saldo->anggota->nama_anggota . ' )';
-                $jurnal->debet          = 0;
-                $jurnal->kredit         = $penarikan->nominal;
-                $jurnal->save();
+                SaveJurnalUmum::save($kodeJurnal, $checkAkunKas->id, $keterangan, 0, $penarikan->nominal);
 
                 if ($saldo->jenis_simpanan == 1) {
                     $idJenisSimpanan = $checkSimPokok->id;
@@ -176,14 +174,7 @@ class TarikSaldoController extends Controller
                     $idJenisSimpanan = $checkSimSukarela->id;
                 }
                 #Simpan Jurnal Simpanan
-                $jurnal = new JurnalUmum();
-                $jurnal->kode_jurnal   = 'JU-' . str_pad($idJurnal, 6, '0', STR_PAD_LEFT);
-                $jurnal->id_akun        = $idJenisSimpanan;
-                $jurnal->tanggal        = date('Y-m-d');
-                $jurnal->keterangan     = 'Penarikan ( ' . $penarikan->saldo->anggota->nama_anggota . ' )';
-                $jurnal->debet          = $penarikan->nominal;
-                $jurnal->kredit         = 0;
-                $jurnal->save();
+                SaveJurnalUmum::save($kodeJurnal, $idJenisSimpanan, $keterangan, $penarikan->nominal, 0);
 
                 $saldo->update([
                     'saldo' => $saldo->saldo - $tarikSaldo->nominal
@@ -192,6 +183,20 @@ class TarikSaldoController extends Controller
                 $tarikSaldo->update([
                     'kode_jurnal' => 'JU-' . str_pad($idJurnal, 6, '0', STR_PAD_LEFT)
                 ]);
+
+                #Send Whatsapp
+                if ($saldo->jenis_simpanan == 1) {
+                    $simpananName = 'Simpanan Pokok';
+                } else if ($saldo->jenis_simpanan == 2) {
+                    $simpananName = 'Simpanan Wajib';
+                } else {
+                    $simpananName = 'Simpanan Sukarela';
+                }
+
+                $phoneNumber = $penarikan->saldo->anggota->no_wa;
+
+                $message = 'Penarikan ' . $simpananName . ' atas nama (' . $penarikan->saldo->anggota->nama_anggota . ') sebesar : *Rp ' . number_format($tarikSaldo->nominal, 0, '', '.') . '* telah disetujui. Saldo akhir : *Rp ' . number_format($saldo->saldo - $tarikSaldo->nominal, 0, '', '.') . '*';
+                ResponseMessage::send($phoneNumber, $message);
             }
         } else {
             $error = 'error';

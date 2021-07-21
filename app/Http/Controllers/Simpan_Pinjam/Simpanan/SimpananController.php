@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Simpan_Pinjam\Simpanan;
 
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\Simpan_Pinjam\Utils\ResponseMessage;
+use App\Http\Controllers\Simpan_Pinjam\Utils\SaveJurnalUmum;
 use App\Models\Simpan_Pinjam\Laporan\JurnalUmum;
 use App\Models\Simpan_Pinjam\Master\Akun\Akun;
 use App\Models\Simpan_Pinjam\Master\Anggota\Anggota;
@@ -216,25 +218,18 @@ class SimpananController extends Controller
             } else {
                 $idSimpan = $idSukarela;
             }
+
+            $kodeJurnal = 'JU-' . str_pad($idJurnal, 6, '0', STR_PAD_LEFT);
+            $keterangan = 'Simpanan ( ' . $kodeSimpanan->kode_simpanan . ' )';
+
             #Simpan Jurnal Simpanan
-            $jurnal = new JurnalUmum();
-            $jurnal->kode_jurnal    = 'JU-' . str_pad($idJurnal, 6, '0', STR_PAD_LEFT);
-            $jurnal->id_akun        = $idSimpan;
-            $jurnal->tanggal        = date('Y-m-d');
-            $jurnal->keterangan     = 'Simpanan ( ' . $kodeSimpanan->kode_simpanan . ' )';
-            $jurnal->debet          = 0;
-            $jurnal->kredit         = $kodeSimpanan->nominal;
-            $jurnal->save();
+            SaveJurnalUmum::save($kodeJurnal, $idSimpan, $keterangan, 0, $kodeSimpanan->nominal);
 
             #Simpan Jurnal Kas
-            $jurnal = new JurnalUmum();
-            $jurnal->kode_jurnal    = 'JU-' . str_pad($idJurnal, 6, '0', STR_PAD_LEFT);
-            $jurnal->id_akun        = $idKas;
-            $jurnal->tanggal        = date('Y-m-d');
-            $jurnal->keterangan     = 'Simpanan ( ' . $kodeSimpanan->kode_simpanan . ' )';
-            $jurnal->debet          = $kodeSimpanan->nominal;
-            $jurnal->kredit         = 0;
-            $jurnal->save();
+            SaveJurnalUmum::save($kodeJurnal, $idKas, $keterangan, $kodeSimpanan->nominal, 0);
+
+            $anggotaSend = Anggota::where('id', $kodeSimpanan->id_anggota)->first();
+            $phoneNumber = $anggotaSend->no_wa;
 
             #Update Saldo
             if ($kodeSimpanan->jenis_simpanan == 3) {
@@ -244,6 +239,10 @@ class SimpananController extends Controller
                 $checkSaldo->update([
                     'saldo' => $checkSaldo->saldo + $kodeSimpanan->nominal
                 ]);
+
+                #Send Whatsapp
+                $message = 'Simpanan Sukarela atas nama (' . $anggotaSend->nama_anggota . ') sebesar : *Rp ' . number_format($kodeSimpanan->nominal, 0, '', '.') . '* telah ditambahkan. Saldo akhir : *Rp ' . number_format($checkSaldo->saldo + $kodeSimpanan->nominal, 0, '', '.') . '*';
+                ResponseMessage::send($phoneNumber, $message);
             } elseif ($kodeSimpanan->jenis_simpanan == 2) {
                 $checkSaldo = Saldo::where('id_anggota', $kodeSimpanan->id_anggota)
                     ->where('jenis_simpanan', 2)->first();
@@ -251,6 +250,10 @@ class SimpananController extends Controller
                 $checkSaldo->update([
                     'saldo' => $checkSaldo->saldo + $kodeSimpanan->nominal
                 ]);
+
+                #Send Whatsapp
+                $message = 'Simpanan Wajib atas nama (' . $anggotaSend->nama_anggota . ') sebesar : *Rp ' . number_format($kodeSimpanan->nominal, 0, '', '.') . '* telah ditambahkan. Saldo akhir : *Rp ' . number_format($checkSaldo->saldo + $kodeSimpanan->nominal, 0, '', '.') . '*';
+                ResponseMessage::send($phoneNumber, $message);
             } else {
                 $checkSaldo = Saldo::where('id_anggota', $kodeSimpanan->id_anggota)
                     ->where('jenis_simpanan', 1)->first();
@@ -258,6 +261,10 @@ class SimpananController extends Controller
                 $checkSaldo->update([
                     'saldo' => $checkSaldo->saldo + $kodeSimpanan->nominal
                 ]);
+
+                #Send Whatsapp
+                $message = 'Simpanan Pokok atas nama (' . $anggotaSend->nama_anggota . ') sebesar : *Rp ' . number_format($kodeSimpanan->nominal, 0, '', '.') . '* telah ditambahkan. Saldo akhir : *Rp ' . number_format($checkSaldo->saldo + $kodeSimpanan->nominal, 0, '', '.') . '*';
+                ResponseMessage::send($phoneNumber, $message);
             }
         }
         return redirect()->route('data.index')->with([
@@ -354,25 +361,18 @@ class SimpananController extends Controller
             } else {
                 $idSimpan = $idSukarela;
             }
+
+            $kodeJurnal = 'JU-' . str_pad($idJurnal, 6, '0', STR_PAD_LEFT);
+            $keterangan = 'Simpanan ( ' . $kodeSimpanan->kode_simpanan . ' )';
+
             #Simpan Jurnal Simpanan
-            $jurnal = new JurnalUmum();
-            $jurnal->kode_jurnal    = 'JU-' . str_pad($idJurnal, 6, '0', STR_PAD_LEFT);
-            $jurnal->id_akun        = $idSimpan;
-            $jurnal->tanggal        = date('Y-m-d');
-            $jurnal->keterangan     = 'Simpanan ( ' . $kodeSimpanan->kode_simpanan . ' )';
-            $jurnal->debet          = 0;
-            $jurnal->kredit         = $kodeSimpanan->nominal;
-            $jurnal->save();
+            SaveJurnalUmum::save($kodeJurnal, $idSimpan, $keterangan, 0, $kodeSimpanan->nominal);
 
             #Simpan Jurnal Kas
-            $jurnal = new JurnalUmum();
-            $jurnal->kode_jurnal    = 'JU-' . str_pad($idJurnal, 6, '0', STR_PAD_LEFT);
-            $jurnal->id_akun        = $idKas;
-            $jurnal->tanggal        = date('Y-m-d');
-            $jurnal->keterangan     = 'Simpanan ( ' . $kodeSimpanan->kode_simpanan . ' )';
-            $jurnal->debet          = $kodeSimpanan->nominal;
-            $jurnal->kredit         = 0;
-            $jurnal->save();
+            SaveJurnalUmum::save($kodeJurnal, $idKas, $keterangan, $kodeSimpanan->nominal, 0);
+
+            $anggotaSend = Anggota::where('id', $kodeSimpanan->id_anggota)->first();
+            $phoneNumber = $anggotaSend->no_wa;
 
             #Update Saldo
             if ($kodeSimpanan->jenis_simpanan == 3) {
@@ -382,6 +382,10 @@ class SimpananController extends Controller
                 $checkSaldo->update([
                     'saldo' => $checkSaldo->saldo + $kodeSimpanan->nominal
                 ]);
+
+                #Send Whatsapp
+                $message = 'Simpanan Sukarela atas nama (' . $anggotaSend->nama_anggota . ') sebesar : *Rp ' . number_format($kodeSimpanan->nominal, 0, '', '.') . '* telah ditambahkan. Saldo akhir : *Rp ' . number_format($checkSaldo->saldo + $kodeSimpanan->nominal, 0, '', '.') . '*';
+                ResponseMessage::send($phoneNumber, $message);
             } elseif ($kodeSimpanan->jenis_simpanan == 2) {
                 $checkSaldo = Saldo::where('id_anggota', $kodeSimpanan->id_anggota)
                     ->where('jenis_simpanan', 2)->first();
@@ -389,6 +393,10 @@ class SimpananController extends Controller
                 $checkSaldo->update([
                     'saldo' => $checkSaldo->saldo + $kodeSimpanan->nominal
                 ]);
+
+                #Send Whatsapp
+                $message = 'Simpanan Wajib atas nama (' . $anggotaSend->nama_anggota . ') sebesar : *Rp ' . number_format($kodeSimpanan->nominal, 0, '', '.') . '* telah ditambahkan. Saldo akhir : *Rp ' . number_format($checkSaldo->saldo + $kodeSimpanan->nominal, 0, '', '.') . '*';
+                ResponseMessage::send($phoneNumber, $message);
             } else {
                 $checkSaldo = Saldo::where('id_anggota', $kodeSimpanan->id_anggota)
                     ->where('jenis_simpanan', 1)->first();
@@ -396,6 +404,10 @@ class SimpananController extends Controller
                 $checkSaldo->update([
                     'saldo' => $checkSaldo->saldo + $kodeSimpanan->nominal
                 ]);
+
+                #Send Whatsapp
+                $message = 'Simpanan Pokok atas nama (' . $anggotaSend->nama_anggota . ') sebesar : *Rp ' . number_format($kodeSimpanan->nominal, 0, '', '.') . '* telah ditambahkan. Saldo akhir : *Rp ' . number_format($checkSaldo->saldo + $kodeSimpanan->nominal, 0, '', '.') . '*';
+                ResponseMessage::send($phoneNumber, $message);
             }
         }
 
@@ -504,25 +516,14 @@ class SimpananController extends Controller
 
             $kodeSimpanan = Simpanan::orderBy('id', 'DESC')->first();
 
+            $kodeJurnal = 'JU-' . str_pad($idJurnal, 6, '0', STR_PAD_LEFT);
+            $keterangan = 'Simpanan ( ' . $kodeSimpanan->kode_simpanan . ' )';
+
             #Simpan Jurnal Simpanan Wajib
-            $jurnal = new JurnalUmum();
-            $jurnal->kode_jurnal   = 'JU-' . str_pad($idJurnal, 6, '0', STR_PAD_LEFT);
-            $jurnal->id_akun        = $idWajib;
-            $jurnal->tanggal        = date('Y-m-d');
-            $jurnal->keterangan     = 'Simpanan ( ' . $kodeSimpanan->kode_simpanan . ' )';
-            $jurnal->debet          = 0;
-            $jurnal->kredit         = $kodeSimpanan->nominal;
-            $jurnal->save();
+            SaveJurnalUmum::save($kodeJurnal, $idWajib, $keterangan, 0, $kodeSimpanan->nominal);
 
             #Simpan Jurnal Kas
-            $jurnal = new JurnalUmum();
-            $jurnal->kode_jurnal   = 'JU-' . str_pad($idJurnal, 6, '0', STR_PAD_LEFT);
-            $jurnal->id_akun        = $idKas;
-            $jurnal->tanggal        = date('Y-m-d');
-            $jurnal->keterangan     = 'Simpanan ( ' . $kodeSimpanan->kode_simpanan . ' )';
-            $jurnal->debet          = $kodeSimpanan->nominal;
-            $jurnal->kredit         = 0;
-            $jurnal->save();
+            SaveJurnalUmum::save($kodeJurnal, $idKas, $keterangan, $kodeSimpanan->nominal, 0);
 
             $checkSaldo = Saldo::where('id_anggota', $kodeSimpanan->id_anggota)
                 ->where('jenis_simpanan', 2)->first();

@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Simpan_Pinjam\Master\Anggota;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\Http\Controllers\Simpan_Pinjam\ResponseMessage;
+use App\Http\Controllers\Simpan_Pinjam\Utils\ResponseMessage;
 use App\Models\Simpan_Pinjam\Master\Anggota\Anggota;
 use App\Models\Simpan_Pinjam\Pengaturan\Pengaturan;
 use App\Models\Simpan_Pinjam\Pinjaman\Angsuran;
@@ -78,13 +78,15 @@ class AnggotaController extends Controller
     {
         #Insert data Anggota
         $rules = [
-            'email'         => 'unique:tb_anggota',
-            'username'      => 'unique:tb_anggota',
+            'email'     => 'unique:tb_anggota',
+            'username'  => 'unique:tb_anggota',
+            'no_wa'     => 'unique:tb_anggota'
         ];
 
         $messages = [
-            'email.unique'          => 'Email sudah terdaftar',
-            'username.unique'       => 'Username sudah terdaftar',
+            'email.unique'     => 'Email sudah terdaftar',
+            'username.unique'  => 'Username sudah terdaftar',
+            'no_wa.unique'     => 'No Whatsapp sudah terdaftar'
         ];
 
         $validator = Validator::make($request->all(), $rules, $messages);
@@ -128,15 +130,8 @@ class AnggotaController extends Controller
         }
 
         #Send Whatsapp
-        if ($phoneNumber[0] == '0') {
-            $subPhone = substr($phoneNumber, 1);
-            $number   = '62' . $subPhone;
-        } else {
-            $number = $phoneNumber;
-        }
-
         $message = 'Login aplikasi Primkop Polrestabes Semarang dengan, Username : *' . $user . '* Password : *' . $passwordClean . '*';
-        ResponseMessage::send($number, $message);
+        ResponseMessage::send($phoneNumber, $message);
 
         return redirect()->route('anggota.index')->with([
             'success' => 'Berhasil menambahkan anggota'

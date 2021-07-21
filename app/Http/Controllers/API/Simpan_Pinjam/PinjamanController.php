@@ -4,6 +4,7 @@ namespace App\Http\Controllers\API\Simpan_Pinjam;
 
 use App\Http\Controllers\API\ResponseFormatter;
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\Simpan_Pinjam\Utils\Ratusan;
 use App\Models\Simpan_Pinjam\Master\Anggota\Anggota;
 use App\Models\Simpan_Pinjam\Pengaturan\Pengaturan;
 use App\Models\Simpan_Pinjam\Pinjaman\Angsuran;
@@ -148,9 +149,10 @@ class PinjamanController extends Controller
             $bunga          = $pinjaman->nominal_pinjaman * ($pinjaman->bunga / 100);
             $totalBayar     = $bayarAngsuran * $tenorAngsuran + $bunga;
 
+            $resultBayar = Ratusan::edit_ratusan($totalBayar);
             $data['id'] = $pinjaman->id;
             $data['kode_pinjaman'] = $pinjaman->kode_pinjaman;
-            $data['total_bayar'] = $totalBayar;
+            $data['total_bayar'] = $resultBayar;
 
             return ResponseFormatter::success($data, 'Berhasil mendapatkan data');
         }
