@@ -21,6 +21,28 @@
     <!-- overlayScrollbars -->
     <link rel="stylesheet" href="{{ asset('assets/plugins/overlayScrollbars/css/OverlayScrollbars.min.css') }}">
 
+    <style>
+        #pulsate {
+            animation: pulse 1s ease infinite;
+        }
+
+        #pulsate-child {
+            border-radius: 30%;
+        }
+
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+                opacity: 1;
+            }
+
+            100% {
+                transform: scale(1.1);
+                opacity: 1;
+            }
+        }
+
+    </style>
     @stack('custom-style')
 </head>
 
@@ -84,7 +106,22 @@
     <script src="{{ asset('assets/dist/js/demo.js') }}"></script>
     <!-- AdminLTE dashboard demo (This is only for demo purposes) -->
     {{-- <script src="{{ asset('assets/dist/js/pages/dashboard.js') }}"></script> --}}
+    <!-- Pusher -->
+    <script src="https://js.pusher.com/7.0/pusher.min.js"></script>
 
+    <script>
+        Pusher.logToConsole = true;
+
+        var pusher = new Pusher('45750234e475d705a290', {
+            cluster: 'ap1'
+        });
+
+        var channel = pusher.subscribe('my-channel');
+
+        channel.bind('my-event', function(data) {
+            alert(JSON.stringify(data));
+        });
+    </script>
     @yield('script')
 </body>
 

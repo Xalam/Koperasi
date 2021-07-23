@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\API\Simpan_Pinjam;
 
+use App\Events\PusherNotification;
 use App\Http\Controllers\API\ResponseFormatter;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\Simpan_Pinjam\Utils\Ratusan;
@@ -93,6 +94,9 @@ class PinjamanController extends Controller
                         $pinjaman->save();
 
                         $data = Pinjaman::orderBy('id', 'DESC')->first();
+
+                        event(new PusherNotification('Notifikasi Baru'));
+
                         return ResponseFormatter::success($data, 'Berhasil menambah pengajuan pinjaman');
                     }
                 }
@@ -112,6 +116,9 @@ class PinjamanController extends Controller
                 $pinjaman->save();
 
                 $data = Pinjaman::orderBy('id', 'DESC')->first();
+
+                event(new PusherNotification('Notifikasi Baru'));
+
                 return ResponseFormatter::success($data, 'Berhasil menambah pengajuan pinjaman');
             }
         }

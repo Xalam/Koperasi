@@ -117,6 +117,7 @@
                             <p>
                                 Pinjaman
                                 <i class="right fas fa-angle-left"></i>
+                                <span class="right badge badge-danger" id="pulsate">New!</span>
                             </p>
                         </a>
                         <ul class="nav nav-treeview">
@@ -125,6 +126,7 @@
                                     class="nav-link {{ request()->is('simpan-pinjam/pinjaman/pengajuan*') ? ' active' : '' }}">
                                     <i class="far fa-circle nav-icon"></i>
                                     <p>Pengajuan Pinjaman</p>
+                                    <span class="right badge badge-danger badge-pill" id="pulsate-child">&nbsp;</span>
                                 </a>
                             </li>
                             <li class="nav-item">

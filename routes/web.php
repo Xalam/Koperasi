@@ -109,7 +109,7 @@ Route::group(['prefix' => 'toko'], function () {
                 Route::post('/delete/{nomor}', [PembelianController::class, 'delete']);
             });
 
-            Route::group(['prefix' => 'penjualan','middleware' => ['auth:toko', 'checkjabatan:Kanit,Super_Admin']], function () {
+            Route::group(['prefix' => 'penjualan', 'middleware' => ['auth:toko', 'checkjabatan:Kanit,Super_Admin']], function () {
                 Route::get('/', [PenjualanController::class, 'index']);
                 Route::post('/store', [PenjualanController::class, 'store']);
                 Route::post('/jual', [PenjualanController::class, 'sell']);
