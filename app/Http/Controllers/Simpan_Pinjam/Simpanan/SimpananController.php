@@ -47,8 +47,8 @@ class SimpananController extends Controller
                                                 data-toggle="modal" data-target="#modalKonfirmasi" class="btn btn-info btn-sm">
                                                 <i class="far fa-plus-square"></i>&nbsp; Proses</a>' : '<span class="badge bg-success">Sudah Bayar</span>',
                             'keterangan'     => $value->keterangan == null ? '-' : $value->keterangan,
-                            'action'         => ($value->status == 0) ? '<span data-remote="' . route('data.modal', $value->id) . '" data-toggle="modal" data-target="#mymodal"><a href="#mymodal" class="btn btn-danger btn-sm" data-toggle="tooltip" data-placement="top" title="Hapus"><i class="far fa-trash-alt"></i></a></span>'
-                                : '<a href="' . route('data.print', $value->id) . '" class="btn btn-light btn-sm" data-toggle="tooltip" data-placement="top" title="Cetak"><i class="fas fa-print"></i></a>' . '<a href="' . route('data.edit', $value->id) . '" class="btn btn-sm btn-warning" data-toggle="tooltip" data-placement="top" title="Edit"><i class="fas fa-edit"></i></a>'
+                            'action'         => ($value->status == 0) ? '<span data-remote="' . route('data.modal', $value->id) . '" data-toggle="modal" data-target="#mymodal"><a href="#mymodal" class="btn btn-danger btn-sm" data-toggle="tooltip" data-placement="top" title="Hapus"><i class="fas fa-trash"></i></a></span>'
+                                : '<a href="' . route('data.print', $value->id) . '" class="btn btn-default btn-sm" data-toggle="tooltip" data-placement="top" title="Cetak"><i class="fas fa-print"></i></a>' . '<a href="' . route('data.edit', $value->id) . '" class="btn btn-sm btn-warning" data-toggle="tooltip" data-placement="top" title="Edit"><i class="fas fa-edit"></i></a>'
                         ];
                     }
                     return response()->json(compact('data'));
@@ -69,8 +69,8 @@ class SimpananController extends Controller
                                                 data-toggle="modal" data-target="#modalKonfirmasi" class="btn btn-info btn-sm">
                                                 <i class="far fa-plus-square"></i>&nbsp; Proses</a>' : '<span class="badge bg-success">Sudah Bayar</span>',
                             'keterangan'     => $value->keterangan == null ? '-' : $value->keterangan,
-                            'action'         => ($value->status == 0) ? '<span data-remote="' . route('data.modal', $value->id) . '" data-toggle="modal" data-target="#mymodal"><a href="#mymodal" class="btn btn-danger btn-sm" data-toggle="tooltip" data-placement="top" title="Hapus"><i class="far fa-trash-alt"></i></a></span>'
-                                : '<a href="' . route('data.print', $value->id) . '" class="btn btn-light btn-sm" data-toggle="tooltip" data-placement="top" title="Cetak"><i class="fas fa-print"></i></a>' . '<a href="' . route('data.edit', $value->id) . '" class="btn btn-sm btn-warning" data-toggle="tooltip" data-placement="top" title="Edit"><i class="fas fa-edit"></i></a>'
+                            'action'         => ($value->status == 0) ? '<span data-remote="' . route('data.modal', $value->id) . '" data-toggle="modal" data-target="#mymodal"><a href="#mymodal" class="btn btn-danger btn-sm" data-toggle="tooltip" data-placement="top" title="Hapus"><i class="fas fa-trash"></i></a></span>'
+                                : '<a href="' . route('data.print', $value->id) . '" class="btn btn-default btn-sm" data-toggle="tooltip" data-placement="top" title="Cetak"><i class="fas fa-print"></i></a>' . '<a href="' . route('data.edit', $value->id) . '" class="btn btn-sm btn-warning" data-toggle="tooltip" data-placement="top" title="Edit"><i class="fas fa-edit"></i></a>'
                         ];
                     }
                     return response()->json(compact('data'));
@@ -91,8 +91,8 @@ class SimpananController extends Controller
                                                 data-toggle="modal" data-target="#modalKonfirmasi" class="btn btn-info btn-sm">
                                                 <i class="far fa-plus-square"></i>&nbsp; Proses</a>' : '<span class="badge bg-success">Sudah Bayar</span>',
                             'keterangan'     => $value->keterangan == null ? '-' : $value->keterangan,
-                            'action'         => ($value->status == 0) ? '<span data-remote="' . route('data.modal', $value->id) . '" data-toggle="modal" data-target="#mymodal"><a href="#mymodal" class="btn btn-danger btn-sm" data-toggle="tooltip" data-placement="top" title="Hapus"><i class="far fa-trash-alt"></i></a></span>'
-                                : '<a href="' . route('data.print', $value->id) . '" class="btn btn-light btn-sm" data-toggle="tooltip" data-placement="top" title="Cetak"><i class="fas fa-print"></i></a>' . '<a href="' . route('data.edit', $value->id) . '" class="btn btn-sm btn-warning" data-toggle="tooltip" data-placement="top" title="Edit"><i class="fas fa-edit"></i></a>'
+                            'action'         => ($value->status == 0) ? '<span data-remote="' . route('data.modal', $value->id) . '" data-toggle="modal" data-target="#mymodal"><a href="#mymodal" class="btn btn-danger btn-sm" data-toggle="tooltip" data-placement="top" title="Hapus"><i class="fas fa-trash"></i></a></span>'
+                                : '<a href="' . route('data.print', $value->id) . '" class="btn btn-default btn-sm" data-toggle="tooltip" data-placement="top" title="Cetak"><i class="fas fa-print"></i></a>' . '<a href="' . route('data.edit', $value->id) . '" class="btn btn-sm btn-warning" data-toggle="tooltip" data-placement="top" title="Edit"><i class="fas fa-edit"></i></a>'
                         ];
                     }
                     return response()->json(compact('data'));
@@ -122,8 +122,8 @@ class SimpananController extends Controller
                                                 data-toggle="modal" data-target="#modalKonfirmasi" class="btn btn-info btn-sm">
                                                 <i class="far fa-plus-square"></i>&nbsp; Proses</a>' : '<span class="badge bg-success">Sudah Bayar</span>',
                             'keterangan'     => $value->keterangan == null ? '-' : $value->keterangan,
-                            'action'         => ($value->status == 0) ? '<span data-remote="' . route('data.modal', $value->id) . '" data-toggle="modal" data-target="#mymodal"><a href="#mymodal" class="btn btn-danger btn-sm" data-toggle="tooltip" data-placement="top" title="Hapus"><i class="far fa-trash-alt"></i></a></span>'
-                                : '<a href="' . route('data.print', $value->id) . '" class="btn btn-light btn-sm" data-toggle="tooltip" data-placement="top" title="Cetak"><i class="fas fa-print"></i></a>' . '<a href="' . route('data.edit', $value->id) . '" class="btn btn-sm btn-warning" data-toggle="tooltip" data-placement="top" title="Edit"><i class="fas fa-edit"></i></a>'
+                            'action'         => ($value->status == 0) ? '<span data-remote="' . route('data.modal', $value->id) . '" data-toggle="modal" data-target="#mymodal"><a href="#mymodal" class="btn btn-danger btn-sm" data-toggle="tooltip" data-placement="top" title="Hapus"><i class="fas fa-trash"></i></a></span>'
+                                : '<a href="' . route('data.print', $value->id) . '" class="btn btn-default btn-sm" data-toggle="tooltip" data-placement="top" title="Cetak"><i class="fas fa-print"></i></a>' . '<a href="' . route('data.edit', $value->id) . '" class="btn btn-sm btn-warning" data-toggle="tooltip" data-placement="top" title="Edit"><i class="fas fa-edit"></i></a>'
                         ];
                     }
                     return response()->json(compact('data'));
@@ -241,7 +241,7 @@ class SimpananController extends Controller
                 ]);
 
                 #Send Whatsapp
-                $message = 'Simpanan Sukarela atas nama (' . $anggotaSend->nama_anggota . ') sebesar : *Rp ' . number_format($kodeSimpanan->nominal, 0, '', '.') . '* telah ditambahkan. Saldo akhir : *Rp ' . number_format($checkSaldo->saldo + $kodeSimpanan->nominal, 0, '', '.') . '*';
+                $message = 'Simpanan Sukarela atas nama (' . $anggotaSend->nama_anggota . ') sebesar : *Rp ' . number_format($kodeSimpanan->nominal, 0, '', '.') . '* telah ditambahkan. Saldo akhir : *Rp ' . number_format($checkSaldo->saldo, 0, '', '.') . '*';
                 ResponseMessage::send($phoneNumber, $message);
             } elseif ($kodeSimpanan->jenis_simpanan == 2) {
                 $checkSaldo = Saldo::where('id_anggota', $kodeSimpanan->id_anggota)
@@ -252,7 +252,7 @@ class SimpananController extends Controller
                 ]);
 
                 #Send Whatsapp
-                $message = 'Simpanan Wajib atas nama (' . $anggotaSend->nama_anggota . ') sebesar : *Rp ' . number_format($kodeSimpanan->nominal, 0, '', '.') . '* telah ditambahkan. Saldo akhir : *Rp ' . number_format($checkSaldo->saldo + $kodeSimpanan->nominal, 0, '', '.') . '*';
+                $message = 'Simpanan Wajib atas nama (' . $anggotaSend->nama_anggota . ') sebesar : *Rp ' . number_format($kodeSimpanan->nominal, 0, '', '.') . '* telah ditambahkan. Saldo akhir : *Rp ' . number_format($checkSaldo->saldo, 0, '', '.') . '*';
                 ResponseMessage::send($phoneNumber, $message);
             } else {
                 $checkSaldo = Saldo::where('id_anggota', $kodeSimpanan->id_anggota)
@@ -263,7 +263,7 @@ class SimpananController extends Controller
                 ]);
 
                 #Send Whatsapp
-                $message = 'Simpanan Pokok atas nama (' . $anggotaSend->nama_anggota . ') sebesar : *Rp ' . number_format($kodeSimpanan->nominal, 0, '', '.') . '* telah ditambahkan. Saldo akhir : *Rp ' . number_format($checkSaldo->saldo + $kodeSimpanan->nominal, 0, '', '.') . '*';
+                $message = 'Simpanan Pokok atas nama (' . $anggotaSend->nama_anggota . ') sebesar : *Rp ' . number_format($kodeSimpanan->nominal, 0, '', '.') . '* telah ditambahkan. Saldo akhir : *Rp ' . number_format($checkSaldo->saldo, 0, '', '.') . '*';
                 ResponseMessage::send($phoneNumber, $message);
             }
         }
@@ -384,7 +384,7 @@ class SimpananController extends Controller
                 ]);
 
                 #Send Whatsapp
-                $message = 'Simpanan Sukarela atas nama (' . $anggotaSend->nama_anggota . ') sebesar : *Rp ' . number_format($kodeSimpanan->nominal, 0, '', '.') . '* telah ditambahkan. Saldo akhir : *Rp ' . number_format($checkSaldo->saldo + $kodeSimpanan->nominal, 0, '', '.') . '*';
+                $message = 'Simpanan Sukarela atas nama (' . $anggotaSend->nama_anggota . ') sebesar : *Rp ' . number_format($kodeSimpanan->nominal, 0, '', '.') . '* telah ditambahkan. Saldo akhir : *Rp ' . number_format($checkSaldo->saldo, 0, '', '.') . '*';
                 ResponseMessage::send($phoneNumber, $message);
             } elseif ($kodeSimpanan->jenis_simpanan == 2) {
                 $checkSaldo = Saldo::where('id_anggota', $kodeSimpanan->id_anggota)
@@ -395,7 +395,7 @@ class SimpananController extends Controller
                 ]);
 
                 #Send Whatsapp
-                $message = 'Simpanan Wajib atas nama (' . $anggotaSend->nama_anggota . ') sebesar : *Rp ' . number_format($kodeSimpanan->nominal, 0, '', '.') . '* telah ditambahkan. Saldo akhir : *Rp ' . number_format($checkSaldo->saldo + $kodeSimpanan->nominal, 0, '', '.') . '*';
+                $message = 'Simpanan Wajib atas nama (' . $anggotaSend->nama_anggota . ') sebesar : *Rp ' . number_format($kodeSimpanan->nominal, 0, '', '.') . '* telah ditambahkan. Saldo akhir : *Rp ' . number_format($checkSaldo->saldo, 0, '', '.') . '*';
                 ResponseMessage::send($phoneNumber, $message);
             } else {
                 $checkSaldo = Saldo::where('id_anggota', $kodeSimpanan->id_anggota)
@@ -406,7 +406,7 @@ class SimpananController extends Controller
                 ]);
 
                 #Send Whatsapp
-                $message = 'Simpanan Pokok atas nama (' . $anggotaSend->nama_anggota . ') sebesar : *Rp ' . number_format($kodeSimpanan->nominal, 0, '', '.') . '* telah ditambahkan. Saldo akhir : *Rp ' . number_format($checkSaldo->saldo + $kodeSimpanan->nominal, 0, '', '.') . '*';
+                $message = 'Simpanan Pokok atas nama (' . $anggotaSend->nama_anggota . ') sebesar : *Rp ' . number_format($kodeSimpanan->nominal, 0, '', '.') . '* telah ditambahkan. Saldo akhir : *Rp ' . number_format($checkSaldo->saldo, 0, '', '.') . '*';
                 ResponseMessage::send($phoneNumber, $message);
             }
         }
@@ -531,6 +531,13 @@ class SimpananController extends Controller
             $checkSaldo->update([
                 'saldo' => $checkSaldo->saldo + $kodeSimpanan->nominal
             ]);
+
+            #Send Whatsapp
+            $anggotaSend = Anggota::where('id', $anggota[$i])->first();
+            $phoneNumber = $anggotaSend->no_wa;
+
+            $message = 'Simpanan Wajib atas nama (' . $anggotaSend->nama_anggota . ') sebesar : *Rp ' . number_format($kodeSimpanan->nominal, 0, '', '.') . '* telah ditambahkan. Saldo akhir : *Rp ' . number_format($checkSaldo->saldo, 0, '', '.') . '*';
+            ResponseMessage::send($phoneNumber, $message);
         }
 
         return redirect()->route('data.index')->with([

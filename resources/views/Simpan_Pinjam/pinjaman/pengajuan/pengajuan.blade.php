@@ -23,9 +23,13 @@
         <div class="col-12">
             <div class="card">
                 <div class="card-header">
-                    <h3 class="card-title">Pengajuan Pinjaman (Proses)</h3>
+                    <h3 class="card-title"><b>Pinjaman</b> <b class="text-warning">(Proses)</b></h3>
                     <a href="{{ route('pengajuan.create') }}" class="btn btn-sm btn-primary float-right">Tambah
                         Pengajuan</a>
+                    <br><span class="text-secondary">Silahkan klik <button class="btn btn-info btn-xs"><i
+                                class="far fa-plus-square"></i>&nbsp;Proses</button> untuk menyetujui atau <button
+                            class="btn btn-danger btn-xs"><i class="fas fa-trash"></i></button> untuk menolak
+                        pengajuan pinjaman berikut.</span>
                 </div>
                 <div class="card-body">
                     <table id="table-pinjaman" class="table table-bordered table-hover">
@@ -35,9 +39,9 @@
                                 <th>Kode Pinjaman</th>
                                 <th>Kode Anggota</th>
                                 <th>Tanggal</th>
-                                <th class="text-right">Nama Anggota</th>
-                                <th class="text-right">Nominal Pinjaman</th>
-                                <th width="10%">Status Acc</th>
+                                <th class="text-center">Nama Anggota</th>
+                                <th class="text-center">Nominal Pinjaman</th>
+                                <th>Status</th>
                                 <th>Aksi</th>
                             </tr>
                         </thead>
@@ -51,7 +55,11 @@
         <div class="col-12">
             <div class="card">
                 <div class="card-header">
-                    <h3 class="card-title">Pengajuan Pinjaman (Disetujui)</h3>
+                    <h3 class="card-title"><b>Pinjaman</b> <b class="text-success">(Disetujui)</b></h3>
+                    <br><span class="text-secondary">Silahkan klik <button class="btn btn-success btn-xs"><i
+                                class="far fa-check-square"></i>&nbsp;Cair</button> pada pengajuan pinjaman berikut apabila
+                        uang
+                        telah dicairkan.</span>
                 </div>
                 <div class="card-body">
                     <table id="table-pinjaman-acc" class="table table-bordered table-hover">
@@ -63,7 +71,33 @@
                                 <th>Tanggal</th>
                                 <th class="text-center">Nama Anggota</th>
                                 <th class="text-center">Nominal Pinjaman</th>
-                                <th width="10%">Status</th>
+                                <th>Status</th>
+                                <th>Aksi</th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title"><b>Pinjaman</b> <b class="text-primary">(Sudah Dicairkan)</b></h3>
+                </div>
+                <div class="card-body">
+                    <table id="table-pinjaman-cair" class="table table-bordered table-hover">
+                        <thead>
+                            <tr>
+                                <th>No</th>
+                                <th>Kode Pinjaman</th>
+                                <th>Kode Anggota</th>
+                                <th>Tanggal</th>
+                                <th class="text-center">Nama Anggota</th>
+                                <th class="text-center">Nominal Pinjaman</th>
+                                <th>Status</th>
                                 <th>Kode Jurnal</th>
                                 <th>Aksi</th>
                             </tr>
@@ -165,7 +199,79 @@
                 "info": true,
                 "autoWidth": true,
                 "responsive": true,
-                "scrollX": true,
+                "lengthMenu": [
+                    [10, 25, 50, -1],
+                    [10, 25, 50, "All"]
+                ],
+                "deferRender": true,
+                "columnDefs": [{
+                        "targets": 0,
+                        "className": "text-center",
+                    },
+                    {
+                        "targets": 1,
+                        "className": "text-center",
+                    },
+                    {
+                        "targets": 2,
+                        "className": "text-center",
+                    },
+                    {
+                        "targets": 3,
+                        "className": "text-center",
+                    },
+                    {
+                        "targets": 5,
+                        "className": "text-right",
+                    },
+                    {
+                        "targets": 6,
+                        "className": "text-center",
+                    },
+                    {
+                        "targets": 7,
+                        "className": "text-center",
+                    }
+                ],
+                "ajax": {
+                    url: "{{ route('pengajuan.index') }}?type=accept"
+                },
+                "columns": [{
+                        data: 'no'
+                    },
+                    {
+                        data: 'kode'
+                    },
+                    {
+                        data: 'kode_anggota'
+                    },
+                    {
+                        data: 'tanggal'
+                    },
+                    {
+                        data: 'nama'
+                    },
+                    {
+                        data: 'nominal'
+                    },
+                    {
+                        data: 'status'
+                    },
+                    {
+                        data: 'action',
+                        orderable: false
+                    }
+                ]
+            });
+
+            $('#table-pinjaman-cair').DataTable({
+                "paging": true,
+                "lengthChange": true,
+                "searching": true,
+                "ordering": true,
+                "info": true,
+                "autoWidth": true,
+                "responsive": true,
                 "lengthMenu": [
                     [10, 25, 50, -1],
                     [10, 25, 50, "All"]
@@ -205,7 +311,7 @@
                     }
                 ],
                 "ajax": {
-                    url: "{{ route('pengajuan.index') }}?type=accept"
+                    url: "{{ route('pengajuan.index') }}?type=cair"
                 },
                 "columns": [{
                         data: 'no'

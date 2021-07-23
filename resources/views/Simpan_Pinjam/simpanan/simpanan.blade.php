@@ -30,6 +30,10 @@
                 <div class="card-header">
                     <h3 class="card-title">Data Simpanan Anggota</h3>
                     <a href="{{ route('data.create') }}" class="btn btn-sm btn-primary float-right">Tambah Simpanan</a>
+                    <br><span class="text-secondary">Silahkan klik <button class="btn btn-info btn-xs"><i
+                                class="far fa-plus-square"></i>&nbsp;Proses</button> apabila telah dibayar atau <button
+                            class="btn btn-danger btn-xs"><i class="fas fa-trash"></i></button> untuk menolak
+                        pengajuan simpanan berikut.</span>
                 </div>
                 <div class="card-body">
                     <div class="row">
