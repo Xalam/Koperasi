@@ -21,6 +21,10 @@
                 <div class="dropdown-menu-notif">
 
                 </div>
+                <div class="dropdown-divider"></div>
+                <a href="#" class="dropdown-item dropdown-footer text-danger" onclick="delete_notifikasi()"><b>Hapus
+                        Semua
+                        Notifikasi</b></a>
             </div>
         </li>
         <li class="nav-item">

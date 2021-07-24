@@ -33,4 +33,15 @@ class NotifikasiController extends Controller
 
         return response()->json($data);
     }
+
+    public function destroy()
+    {
+        Notifikasi::where('type', 1)->delete();
+
+        $data = array(
+            'count' => 0
+        );
+
+        return response()->json($data);
+    }
 }

@@ -127,6 +127,17 @@
     <script src="https://js.pusher.com/7.0/pusher.min.js"></script>
 
     <script>
+        function delete_notifikasi() {
+            $.ajax({
+                method: 'GET',
+                url: '{{ route('delete-notif') }}',
+                success: function(data) {
+                    $('#notifikasi-text').text(data.count);
+                    $('#notifikasi-header').text(data.count + ' Notifikasi');
+                }
+            })
+        }
+
         function clear_notification(id_notif) {
             $.ajax({
                 method: 'POST',

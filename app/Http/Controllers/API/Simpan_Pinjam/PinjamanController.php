@@ -236,6 +236,11 @@ class PinjamanController extends Controller
     public function angsuran_lunas(Request $request)
     {
         $checkAngsuran = Angsuran::where('id_pinjaman', $request->id_pinjaman)->where('status', 0)->orderBy('id', 'DESC')->first();
+        $checkPinjaman = Pinjaman::where('id', $request->id_pinjaman)->whereIn('status', [0, 1])->first();
+
+        if ($checkPinjaman) {
+            return ResponseFormatter::error('Masih terdapat pinjaman yang belum disetujui atau dicairkan');
+        }
 
         if ($checkAngsuran) {
             return ResponseFormatter::error('Masih terdapat angsuran yang belum disetujui');

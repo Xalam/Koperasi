@@ -402,5 +402,6 @@ Route::group(['prefix' => 'simpan-pinjam', 'middleware' => ['auth:simpan-pinjam'
         #Notifikasi
         Route::post('notif', 'Simpan_Pinjam\Pengaturan\NotifikasiController@clear')->name('clear-notif');
         Route::get('all-notif', 'Simpan_Pinjam\Pengaturan\NotifikasiController@index')->name('all-notif');
+        Route::get('delete-notif', 'Simpan_Pinjam\Pengaturan\NotifikasiController@destroy')->name('delete-notif');
     });
 });
