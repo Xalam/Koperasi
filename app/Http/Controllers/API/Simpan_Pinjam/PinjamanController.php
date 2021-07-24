@@ -7,6 +7,7 @@ use App\Http\Controllers\API\ResponseFormatter;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\Simpan_Pinjam\Utils\Ratusan;
 use App\Models\Simpan_Pinjam\Master\Anggota\Anggota;
+use App\Models\Simpan_Pinjam\Other\Notifikasi;
 use App\Models\Simpan_Pinjam\Pengaturan\Pengaturan;
 use App\Models\Simpan_Pinjam\Pinjaman\Angsuran;
 use App\Models\Simpan_Pinjam\Pinjaman\Pinjaman;
@@ -95,7 +96,18 @@ class PinjamanController extends Controller
 
                         $data = Pinjaman::orderBy('id', 'DESC')->first();
 
-                        event(new PusherNotification('Notifikasi Baru'));
+                        #Pusher
+                        event(new PusherNotification(3, 'Notifikasi Baru'));
+
+                        #Save Notifikasi
+                        $notifikasi = new Notifikasi();
+
+                        $notifikasi->create([
+                            'id_anggota' => $idAnggota,
+                            'title'      => 'Pengajuan Pinjaman Baru!',
+                            'content'    => 'Pengajuan pinjaman ' . $data->anggota->kd_anggota . ' untuk tanggal ' . date('d-m-Y', strtotime($data->tanggal)) . ' sebesar Rp ' . number_format($pinjaman->nominal_pinjaman, 0, '', '.'),
+                            'type'       => 1
+                        ]);
 
                         return ResponseFormatter::success($data, 'Berhasil menambah pengajuan pinjaman');
                     }
@@ -117,7 +129,18 @@ class PinjamanController extends Controller
 
                 $data = Pinjaman::orderBy('id', 'DESC')->first();
 
-                event(new PusherNotification('Notifikasi Baru'));
+                #Pusher
+                event(new PusherNotification(3, 'Notifikasi Baru'));
+
+                #Save Notifikasi
+                $notifikasi = new Notifikasi();
+
+                $notifikasi->create([
+                    'id_anggota' => $idAnggota,
+                    'title'      => 'Pengajuan Pinjaman Baru!',
+                    'content'    => 'Pengajuan pinjaman ' . $data->anggota->kd_anggota . ' untuk tanggal ' . date('d-m-Y', strtotime($data->tanggal)) . ' sebesar Rp ' . number_format($pinjaman->nominal_pinjaman, 0, '', '.'),
+                    'type'       => 1
+                ]);
 
                 return ResponseFormatter::success($data, 'Berhasil menambah pengajuan pinjaman');
             }
@@ -249,6 +272,19 @@ class PinjamanController extends Controller
             $angsuran->save();
 
             $data = Angsuran::orderBy('id', 'DESC')->first();
+
+            #Pusher
+            event(new PusherNotification(4, 'Notifikasi Baru'));
+
+            #Save Notifikasi
+            $notifikasi = new Notifikasi();
+
+            $notifikasi->create([
+                'id_anggota' => $data->pinjaman->id_anggota,
+                'title'      => 'Pengajuan Pelunasan Baru!',
+                'content'    => 'Pengajuan pelunasan pinjaman ' . $data->pinjaman->anggota->kd_anggota . ' untuk tanggal ' . $data->tanggal . ' sebesar Rp ' . number_format($data->total_bayar, 0, '', '.'),
+                'type'       => 1
+            ]);
 
             return ResponseFormatter::success($data, 'Berhasil menambah pengajuan pelunasan angsuran');
         }

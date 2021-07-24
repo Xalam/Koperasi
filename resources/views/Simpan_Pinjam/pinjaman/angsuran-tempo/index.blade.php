@@ -48,7 +48,11 @@
         <div class="col-12">
             <div class="card">
                 <div class="card-header">
-                    <h3 class="card-title">Pelunasan Sebelum Jatuh Tempo</h3>
+                    <h3 class="card-title"><b>Pelunasan Sebelum Jatuh Tempo</b></h3>
+                    <br><span class="text-secondary">Silahkan klik <button class="btn btn-info btn-xs"><i
+                                class="far fa-plus-square"></i>&nbsp;Proses</button> untuk menyetujui atau <button
+                            class="btn btn-danger btn-xs"><i class="fas fa-trash"></i>&nbsp;Hapus</button> untuk menolak
+                        pengajuan pelunasan berikut.</span>
                 </div>
                 <div class="card-body">
                     <table id="table-angsuran" class="table table-bordered table-hover">
@@ -59,7 +63,7 @@
                                 <th>Kode Anggota</th>
                                 <th>Tanggal</th>
                                 <th class="text-center">Nama Anggota</th>
-                                <th class="text-center">Nominal Angsuran</th>
+                                <th class="text-center">Nominal Pelunasan</th>
                                 <th class="text-center">Angsuran ke -</th>
                                 <th width="10%">Status</th>
                                 <th>Kode Jurnal</th>

@@ -19,6 +19,7 @@ class CreateNotifikasiTable extends Migration
             $table->string('title');
             $table->string('content');
             $table->integer('status')->default(0)->comment('0 = unread, 1 = read');
+            $table->integer('type')->default(0)->comment('0 = Mobile, 1 = Web')->nullable();
             $table->timestamps();
         });
     }

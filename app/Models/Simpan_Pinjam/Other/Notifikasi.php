@@ -12,7 +12,7 @@ class Notifikasi extends Model
 
     protected $table = 'tb_notifikasi';
 
-    protected $fillable = ['id_anggota', 'title', 'content', 'status'];
+    protected $fillable = ['id_anggota', 'title', 'content', 'status', 'type'];
 
     public function anggota()
     {

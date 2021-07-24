@@ -21,9 +21,18 @@ class PusherNotification implements ShouldBroadcast
      */
 
     public $message;
+    public $type;
 
-    public function __construct($message)
+    public function __construct($type, $message)
     {
+        #Type
+        /* 
+            1 = Simpanan
+            2 = Tarik Simpanan
+            3 = Pinjaman
+            4 = Pelunasan
+        */
+        $this->type = $type;
         $this->message = $message;
     }
 

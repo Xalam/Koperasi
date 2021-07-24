@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers\API\Simpan_Pinjam;
 
+use App\Events\PusherNotification;
 use App\Http\Controllers\API\ResponseFormatter;
 use App\Http\Controllers\Controller;
+use App\Models\Simpan_Pinjam\Other\Notifikasi;
 use App\Models\Simpan_Pinjam\Simpanan\Saldo;
 use App\Models\Simpan_Pinjam\Simpanan\SaldoTarik;
 use App\Models\Simpan_Pinjam\Simpanan\Simpanan;
@@ -56,6 +58,19 @@ class SaldoController extends Controller
 
             $data = Simpanan::orderBy('id', 'DESC')->first();
 
+            #Pusher
+            event(new PusherNotification(1, 'Notifikasi Baru'));
+
+            #Save Notifikasi
+            $notifikasi = new Notifikasi();
+
+            $notifikasi->create([
+                'id_anggota' => $data->id_anggota,
+                'title'      => 'Pengajuan Simpanan Baru!',
+                'content'    => 'Pengajuan simpanan ' . $data->anggota->kd_anggota . ' untuk tanggal ' . $data->tanggal . ' sebesar Rp ' . number_format($data->total_bayar, 0, '', '.'),
+                'type'       => 1
+            ]);
+
             return ResponseFormatter::success($data, 'Berhasil mengajukan simpanan');
         }
     }
@@ -86,6 +101,19 @@ class SaldoController extends Controller
                 SaldoTarik::create($item);
 
                 $data = SaldoTarik::orderBy('id', 'DESC')->first();
+
+                #Pusher
+                event(new PusherNotification(2, 'Notifikasi Baru'));
+
+                #Save Notifikasi
+                $notifikasi = new Notifikasi();
+
+                $notifikasi->create([
+                    'id_anggota' => $idAnggota,
+                    'title'      => 'Pengajuan Penarikan Baru!',
+                    'content'    => 'Pengajuan penarikan simpanan ' . $data->saldo->anggota->kd_anggota . ' untuk tanggal ' . date('d-m-Y', strtotime($data->tanggal)) . ' sebesar Rp ' . number_format($data->nominal, 0, '', '.'),
+                    'type'       => 1
+                ]);
 
                 return ResponseFormatter::success($data, 'Berhasil mengajukan penarikan');
             }

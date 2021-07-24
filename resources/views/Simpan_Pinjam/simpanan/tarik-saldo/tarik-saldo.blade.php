@@ -24,7 +24,7 @@
         <div class="col-12">
             <div class="card">
                 <div class="card-header">
-                    <h3 class="card-title">Permintaan Penarikan</h3>
+                    <h3 class="card-title"><b>Permintaan Penarikan</b></h3>
                     <a href="{{ route('tarik-saldo.create') }}" class="btn btn-sm btn-primary float-right">Tambah
                         Penarikan</a>
                     <br><span class="text-secondary">Silahkan klik <button class="btn btn-info btn-xs"><i
@@ -53,7 +53,7 @@
         <div class="col-12">
             <div class="card">
                 <div class="card-header">
-                    <h3 class="card-title">Permintaan Penarikan Dalam Proses</h3>
+                    <h3 class="card-title"><b>Permintaan Penarikan Dalam Proses</b></h3>
                     <br><span class="text-secondary">Silahkan klik <button class="btn btn-success btn-xs"><i
                                 class="far fa-check-square"></i>&nbsp;Selesai</button> apabila penarikan selesai.</span>
                 </div>

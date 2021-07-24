@@ -23,7 +23,7 @@
         <div class="col-12">
             <div class="card">
                 <div class="card-header">
-                    <h3 class="card-title">Saldo <b class="text-primary">(Simpanan Sukarela)</b></h3>
+                    <h3 class="card-title"><b>Saldo</b> <b class="text-primary">(Simpanan Sukarela)</b></h3>
                 </div>
                 <div class="card-body">
                     <table id="table-sukarela" class="table table-bordered table-hover">
@@ -45,7 +45,7 @@
         <div class="col-12">
             <div class="card">
                 <div class="card-header">
-                    <h3 class="card-title">Saldo <b class="text-success">(Simpanan Wajib)</b></h3>
+                    <h3 class="card-title"><b>Saldo</b> <b class="text-success">(Simpanan Wajib)</b></h3>
                 </div>
                 <div class="card-body">
                     <table id="table-wajib" class="table table-bordered table-hover">
@@ -67,7 +67,7 @@
         <div class="col-12">
             <div class="card">
                 <div class="card-header">
-                    <h3 class="card-title">Saldo <b class="text-danger">(Simpanan Pokok)</b></h3>
+                    <h3 class="card-title"><b>Saldo</b> <b class="text-danger">(Simpanan Pokok)</b></h3>
                 </div>
                 <div class="card-body">
                     <table id="table-pokok" class="table table-bordered table-hover">
