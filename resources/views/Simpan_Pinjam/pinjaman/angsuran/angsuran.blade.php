@@ -10,6 +10,8 @@
         <link rel="stylesheet" href="{{ asset('assets/plugins/datatables-responsive/css/responsive.bootstrap4.min.css') }}">
         <link rel="stylesheet" href="{{ asset('assets/plugins/datatables-buttons/css/buttons.bootstrap4.min.css') }}">
         <link rel="stylesheet" href="{{ asset('assets/plugins/toastr/toastr.min.css') }}">
+        <link rel="stylesheet"
+            href="{{ asset('assets/plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css') }}">
         <!-- SweetAlert2 -->
         <link rel="stylesheet" href="{{ asset('assets/plugins/sweetalert2-theme-bootstrap-4/bootstrap-4.min.css') }}">
     @endpush
@@ -51,8 +53,23 @@
                     <h3 class="card-title"><b>Angsuran Pinjaman</b></h3>
                     <a href="{{ route('angsuran.create') }}" class="btn btn-sm btn-primary float-right">Tambah
                         Angsuran</a>
+                    <br><span class="text-secondary">Silahkan klik <button class="btn btn-success btn-xs"><i
+                                class="fas fa-check"></i></button> untuk mengubah penyetujuan atau <button
+                            class="btn btn-danger btn-xs">&nbsp;<i class="fas fa-times"></i>&nbsp;</button> untuk mengubah
+                        pembatalan angsuran berikut.</span>
                 </div>
                 <div class="card-body">
+                    <div class="row">
+                        <span>Tampilkan:&nbsp;</span>
+                        <div class="input-group date col-3" id="tanggal" data-target-input="nearest">
+                            <input type="text" id="tanggal-input" class="form-control datetimepicker-input form-control-sm"
+                                data-target="#tanggal" name="tanggal" placeholder="Bulan" />
+                            <div class="input-group-append" data-target="#tanggal" data-toggle="datetimepicker">
+                                <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                            </div>
+                        </div>
+                        <button class="btn btn-danger btn-sm" id="button-clear">Hapus</button>
+                    </div><br>
                     <table id="table-angsuran" class="table table-bordered table-hover">
                         <thead>
                             <tr>
@@ -82,12 +99,39 @@
     <script src="{{ asset('assets/plugins/datatables-responsive/js/dataTables.responsive.min.js') }}"></script>
     <script src="{{ asset('assets/plugins/datatables-responsive/js/responsive.bootstrap4.min.js') }}"></script>
     <script src="{{ asset('assets/plugins/toastr/toastr.min.js') }}"></script>
+    <script src="{{ asset('assets/plugins/moment/moment.min.js') }}"></script>
+    <script src="{{ asset('assets/plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js') }}"></script>
     <!-- SweetAlert2 -->
     <script src="{{ asset('assets/plugins/sweetalert2/sweetalert2.min.js') }}"></script>
 
     <script>
+        let dateSearch;
+
+        let DateFilterFunction = (function(settings, data, dataIndex) {
+            let dateS = dateSearch;
+            let date = parseDateValue(data[3]);
+
+            console.log(dateS);
+            console.log(date);
+            if (dateS === date) {
+                return true;
+            }
+
+            if (dateS == '') {
+                return true;
+            }
+
+            return false;
+        });
+
+        function parseDateValue(rawDate) {
+            var dateArray = rawDate.split("-");
+            var parsedDate = dateArray[2] + '-' + dateArray[1];
+            return parsedDate;
+        }
+
         $(function() {
-            $('#table-angsuran').DataTable({
+            var tableAng = $('#table-angsuran').DataTable({
                 "paging": true,
                 "lengthChange": true,
                 "searching": true,
@@ -172,6 +216,27 @@
                     }
                 ]
             });
+
+            $('#tanggal').datetimepicker({
+                format: 'yyyy-MM',
+            });
+
+            $('#tanggal-input').keydown(function(event) {
+                event.preventDefault();
+            });
+
+            $('#tanggal').on('change.datetimepicker', function() {
+                dateSearch = $('#tanggal-input').val();
+                $.fn.dataTable.ext.search.push(DateFilterFunction);
+                tableAng.draw();
+            });
+
+            $('#button-clear').click(function() {
+                $('#tanggal-input').val('');
+                dateSearch = $('#tanggal-input').val();
+                $.fn.dataTable.ext.search.push(DateFilterFunction);
+                tableAng.draw();
+            });
         });
 
         function edit_angsuran(id) {
@@ -187,6 +252,24 @@
                     status: statusEdit
                 },
                 success: function(data) {
+                    if (data.tanggal) {
+                        Swal.fire({
+                            title: 'Error!',
+                            text: 'Tidak dapat diubah. Periode pengubahan sudah terlewat!',
+                            icon: 'error',
+                            confirmButtonText: 'OK'
+                        })
+                    }
+
+                    if (data.lunas) {
+                        Swal.fire({
+                            title: 'Error!',
+                            text: 'Pinjaman sudah lunas. Tidak dapat mengubah status bayar!',
+                            icon: 'error',
+                            confirmButtonText: 'OK'
+                        })
+                    }
+
                     $('#table-angsuran').DataTable().ajax.reload();
                 },
                 error: function(e) {

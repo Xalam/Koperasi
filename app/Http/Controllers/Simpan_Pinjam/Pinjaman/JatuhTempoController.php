@@ -328,7 +328,7 @@ class JatuhTempoController extends Controller
 
         if ($pinjaman->get()->count() > 0) {
 
-            if ($pinjaman->where('status', 1)->get()->count() > 0) {
+            if ($pinjaman->where('status', 2)->get()->count() > 0) {
                 if ($pinjaman->where('lunas', 0)->get()->count() > 0) {
 
                     $data = $pinjaman->firstOrFail();
@@ -341,7 +341,7 @@ class JatuhTempoController extends Controller
                 }
             } else {
                 return redirect()->route('tempo.index')->with([
-                    'error' => 'Kode pinjaman belum disetujui'
+                    'error' => 'Kode pinjaman belum disetujui/dicairkan'
                 ]);
             }
         } else {

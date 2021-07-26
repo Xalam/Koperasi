@@ -547,8 +547,35 @@ class AngsuranController extends Controller
         $angsuran = Angsuran::findOrFail($request->id);
         $status   = $request->status;
 
+        $pinjamanUpdate = Pinjaman::findOrFail($angsuran->id_pinjaman);
+
+        #Check tanggal perubahan
+        if (date('Y-m', strtotime($angsuran->tanggal)) < date('Y-m')) {
+            $data = array(
+                'tanggal' => 1
+            );
+            return response()->json($data);
+        }
+
+        #Check lunas angsuran
+        if ($pinjamanUpdate->lunas == 1) {
+            $data = array(
+                'lunas' => 1
+            );
+            return response()->json($data);
+        }
+
         if ($status == 1) {
             $message = 'Jurnal Ditambahkan';
+
+            #Update Pinjaman
+            $pinjamanUpdate->angsuran_ke += 1;
+
+            if ($pinjamanUpdate->tenor == $pinjamanUpdate->angsuran_ke) {
+                $pinjamanUpdate->lunas = 1;
+            }
+
+            $pinjamanUpdate->update();
 
             #Pembulatan Pendapatan
             $pendapatan = round(($angsuran->pinjaman->total_pinjaman - $angsuran->pinjaman->nominal_pinjaman) / $angsuran->pinjaman->tenor, 2);
@@ -577,6 +604,15 @@ class AngsuranController extends Controller
             $angsuran->update();
         } else {
             $message = 'Jurnal Dihapus';
+
+            #Update Pinjaman
+            $pinjamanUpdate->angsuran_ke -= 1;
+
+            if ($pinjamanUpdate->tenor == $pinjamanUpdate->angsuran_ke) {
+                $pinjamanUpdate->lunas = 1;
+            }
+
+            $pinjamanUpdate->update();
 
             #Delete Jurnal
             JurnalUmum::where('kode_jurnal', $angsuran->kode_jurnal)->delete();
