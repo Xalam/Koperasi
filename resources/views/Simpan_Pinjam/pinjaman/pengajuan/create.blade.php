@@ -226,7 +226,6 @@
                         'id': id
                     },
                     success: function(data) {
-                        console.log(data.limit);
                         $('#limit').attr('value', formatMoney(data.limit));
                         $('#limit-gaji').attr('value', data.limit);
                     }

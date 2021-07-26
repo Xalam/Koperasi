@@ -21,7 +21,7 @@
 
 @section('content_main')
 
-    <div class="row">
+    {{-- <div class="row">
         <div class="col-12">
             <div class="card card-outline card-primary">
                 <div class="card-header">
@@ -42,13 +42,15 @@
                 </div>
             </div>
         </div>
-    </div>
+    </div> --}}
 
     <div class="row">
         <div class="col-12">
             <div class="card">
                 <div class="card-header">
                     <h3 class="card-title"><b>Angsuran Pinjaman</b></h3>
+                    <a href="{{ route('angsuran.create') }}" class="btn btn-sm btn-primary float-right">Tambah
+                        Angsuran</a>
                 </div>
                 <div class="card-body">
                     <table id="table-angsuran" class="table table-bordered table-hover">
@@ -61,7 +63,7 @@
                                 <th class="text-center">Nama Anggota</th>
                                 <th class="text-center">Nominal Angsuran</th>
                                 <th>Angsuran ke -</th>
-                                <th width="10%">Status</th>
+                                <th width="10%">Status Bayar</th>
                                 <th>Kode Jurnal</th>
                                 <th>Aksi</th>
                             </tr>
@@ -171,6 +173,27 @@
                 ]
             });
         });
+
+        function edit_angsuran(id) {
+            $('#modalKonfirmasi').modal('hide');
+            let statusEdit = $('#status-edit').val();
+
+            $.ajax({
+                type: 'POST',
+                url: '{{ route('angsuran.update-bayar') }}',
+                data: {
+                    '_token': '{{ csrf_token() }}',
+                    id: id,
+                    status: statusEdit
+                },
+                success: function(data) {
+                    $('#table-angsuran').DataTable().ajax.reload();
+                },
+                error: function(e) {
+                    alert('Terjadi kesalahan, Harap coba lagi nanti');
+                }
+            });
+        }
     </script>
 
     @if (session()->has('success'))
@@ -195,7 +218,7 @@
             $('#modalKonfirmasi').on('show.bs.modal', function(e) {
                 var button = $(e.relatedTarget);
                 var modal = $(this);
-
+                modal.find('.modal-content').html('<i class="">&nbsp;</i>');
                 modal.find('.modal-content').load(button.data("remote"));
             });
         });
@@ -211,7 +234,7 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <i class="fa fa-spinner fa-spin"></i>
+
                 </div>
             </div>
         </div>
