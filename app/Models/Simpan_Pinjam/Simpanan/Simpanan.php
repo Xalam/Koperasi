@@ -13,11 +13,11 @@ class Simpanan extends Model
     protected $table = 'tb_simpanan';
 
     protected $fillable = [
-        'kode_simpanan', 'id_anggota', 'tanggal', 'jenis_simpanan', 'nominal', 'keterangan',
+        'kode_simpanan', 'id_anggota', 'tanggal', 'jenis_simpanan', 'nominal', 'image', 'keterangan',
         'status', 'kode_jurnal'
     ];
 
-    public function anggota() 
+    public function anggota()
     {
         return $this->belongsTo(Anggota::class, 'id_anggota', 'id');
     }

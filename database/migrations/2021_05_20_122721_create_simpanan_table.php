@@ -20,6 +20,7 @@ class CreateSimpananTable extends Migration
             $table->date('tanggal');
             $table->integer('jenis_simpanan')->comment('1 = pokok, 2 = wajib, 3 = sukarela');
             $table->integer('nominal');
+            $table->string('image')->nullable();
             $table->string('keterangan')->nullable();
             $table->integer('status')->comment('0 = waiting, 1 = sukses')->default(0);
             $table->string('kode_jurnal')->nullable();

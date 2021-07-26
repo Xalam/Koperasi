@@ -46,8 +46,11 @@ class SimpananController extends Controller
                             'status'         => ($value->status == 0) ? '<a href="#modalKonfirmasi" data-remote="' . route('data.konfirmasi', $value->id) . '" 
                                                 data-toggle="modal" data-target="#modalKonfirmasi" class="btn btn-info btn-sm">
                                                 <i class="far fa-plus-square"></i>&nbsp; Proses</a>' : '<span class="badge bg-success">Sudah Bayar</span>',
+                            'image'          => (($value->image != null) ? '<a href="#modalTransfer" data-remote="' . route('data.image', $value->id) . '" 
+                                                data-toggle="modal" data-target="#modalTransfer" class="btn btn-info btn-sm">
+                                                <i class="fas fa-image"></i></a>' : '-'),
                             'keterangan'     => $value->keterangan == null ? '-' : $value->keterangan,
-                            'action'         => ($value->status == 0) ? '<span data-remote="' . route('data.modal', $value->id) . '" data-toggle="modal" data-target="#mymodal"><a href="#mymodal" class="btn btn-danger btn-sm" data-toggle="tooltip" data-placement="top" title="Hapus"><i class="fas fa-trash"></i></a></span>'
+                            'action'         => ($value->status == 0) ? '<span data-remote="' . route('data.modal', $value->id) . '" data-toggle="modal" data-target="#modalKonfirmasi"><a href="#modalKonfirmasi" class="btn btn-danger btn-sm" data-toggle="tooltip" data-placement="top" title="Hapus"><i class="fas fa-trash"></i></a></span>'
                                 : '<a href="' . route('data.print', $value->id) . '" class="btn btn-default btn-sm" data-toggle="tooltip" data-placement="top" title="Cetak"><i class="fas fa-print"></i></a>' . '<a href="' . route('data.edit', $value->id) . '" class="btn btn-sm btn-warning" data-toggle="tooltip" data-placement="top" title="Edit"><i class="fas fa-edit"></i></a>'
                         ];
                     }
@@ -68,8 +71,11 @@ class SimpananController extends Controller
                             'status'         => ($value->status == 0) ? '<a href="#modalKonfirmasi" data-remote="' . route('data.konfirmasi', $value->id) . '" 
                                                 data-toggle="modal" data-target="#modalKonfirmasi" class="btn btn-info btn-sm">
                                                 <i class="far fa-plus-square"></i>&nbsp; Proses</a>' : '<span class="badge bg-success">Sudah Bayar</span>',
+                            'image'          => (($value->image != null) ? '<a href="#modalTransfer" data-remote="' . route('data.image', $value->id) . '" 
+                                                data-toggle="modal" data-target="#modalTransfer" class="btn btn-info btn-sm">
+                                                <i class="fas fa-image"></i></a>' : '-'),
                             'keterangan'     => $value->keterangan == null ? '-' : $value->keterangan,
-                            'action'         => ($value->status == 0) ? '<span data-remote="' . route('data.modal', $value->id) . '" data-toggle="modal" data-target="#mymodal"><a href="#mymodal" class="btn btn-danger btn-sm" data-toggle="tooltip" data-placement="top" title="Hapus"><i class="fas fa-trash"></i></a></span>'
+                            'action'         => ($value->status == 0) ? '<span data-remote="' . route('data.modal', $value->id) . '" data-toggle="modal" data-target="#modalKonfirmasi"><a href="#modalKonfirmasi" class="btn btn-danger btn-sm" data-toggle="tooltip" data-placement="top" title="Hapus"><i class="fas fa-trash"></i></a></span>'
                                 : '<a href="' . route('data.print', $value->id) . '" class="btn btn-default btn-sm" data-toggle="tooltip" data-placement="top" title="Cetak"><i class="fas fa-print"></i></a>' . '<a href="' . route('data.edit', $value->id) . '" class="btn btn-sm btn-warning" data-toggle="tooltip" data-placement="top" title="Edit"><i class="fas fa-edit"></i></a>'
                         ];
                     }
@@ -90,8 +96,11 @@ class SimpananController extends Controller
                             'status'         => ($value->status == 0) ? '<a href="#modalKonfirmasi" data-remote="' . route('data.konfirmasi', $value->id) . '" 
                                                 data-toggle="modal" data-target="#modalKonfirmasi" class="btn btn-info btn-sm">
                                                 <i class="far fa-plus-square"></i>&nbsp; Proses</a>' : '<span class="badge bg-success">Sudah Bayar</span>',
+                            'image'          => (($value->image != null) ? '<a href="#modalTransfer" data-remote="' . route('data.image', $value->id) . '" 
+                                                data-toggle="modal" data-target="#modalTransfer" class="btn btn-info btn-sm">
+                                                <i class="fas fa-image"></i></a>' : '-'),
                             'keterangan'     => $value->keterangan == null ? '-' : $value->keterangan,
-                            'action'         => ($value->status == 0) ? '<span data-remote="' . route('data.modal', $value->id) . '" data-toggle="modal" data-target="#mymodal"><a href="#mymodal" class="btn btn-danger btn-sm" data-toggle="tooltip" data-placement="top" title="Hapus"><i class="fas fa-trash"></i></a></span>'
+                            'action'         => ($value->status == 0) ? '<span data-remote="' . route('data.modal', $value->id) . '" data-toggle="modal" data-target="#modalKonfirmasi"><a href="#modalKonfirmasi" class="btn btn-danger btn-sm" data-toggle="tooltip" data-placement="top" title="Hapus"><i class="fas fa-trash"></i></a></span>'
                                 : '<a href="' . route('data.print', $value->id) . '" class="btn btn-default btn-sm" data-toggle="tooltip" data-placement="top" title="Cetak"><i class="fas fa-print"></i></a>' . '<a href="' . route('data.edit', $value->id) . '" class="btn btn-sm btn-warning" data-toggle="tooltip" data-placement="top" title="Edit"><i class="fas fa-edit"></i></a>'
                         ];
                     }
@@ -121,8 +130,11 @@ class SimpananController extends Controller
                             'status'         => ($value->status == 0) ? '<a href="#modalKonfirmasi" data-remote="' . route('data.konfirmasi', $value->id) . '" 
                                                 data-toggle="modal" data-target="#modalKonfirmasi" class="btn btn-info btn-sm">
                                                 <i class="far fa-plus-square"></i>&nbsp; Proses</a>' : '<span class="badge bg-success">Sudah Bayar</span>',
+                            'image'          => (($value->image != null) ? '<a href="#modalTransfer" data-remote="' . route('data.image', $value->id) . '" 
+                                                data-toggle="modal" data-target="#modalTransfer" class="btn btn-info btn-sm">
+                                                <i class="fas fa-image"></i></a>' : '-'),
                             'keterangan'     => $value->keterangan == null ? '-' : $value->keterangan,
-                            'action'         => ($value->status == 0) ? '<span data-remote="' . route('data.modal', $value->id) . '" data-toggle="modal" data-target="#mymodal"><a href="#mymodal" class="btn btn-danger btn-sm" data-toggle="tooltip" data-placement="top" title="Hapus"><i class="fas fa-trash"></i></a></span>'
+                            'action'         => ($value->status == 0) ? '<span data-remote="' . route('data.modal', $value->id) . '" data-toggle="modal" data-target="#modalKonfirmasi"><a href="#modalKonfirmasi" class="btn btn-danger btn-sm" data-toggle="tooltip" data-placement="top" title="Hapus"><i class="fas fa-trash"></i></a></span>'
                                 : '<a href="' . route('data.print', $value->id) . '" class="btn btn-default btn-sm" data-toggle="tooltip" data-placement="top" title="Cetak"><i class="fas fa-print"></i></a>' . '<a href="' . route('data.edit', $value->id) . '" class="btn btn-sm btn-warning" data-toggle="tooltip" data-placement="top" title="Edit"><i class="fas fa-edit"></i></a>'
                         ];
                     }
@@ -574,5 +586,12 @@ class SimpananController extends Controller
         return redirect()->route('data.index')->with([
             'success' => 'Berhasil mengubah data'
         ]);
+    }
+
+    public function modal_image($id)
+    {
+        $simpanan = Simpanan::findOrFail($id);
+
+        return view('Simpan_Pinjam.simpanan.image', compact('simpanan'));
     }
 }

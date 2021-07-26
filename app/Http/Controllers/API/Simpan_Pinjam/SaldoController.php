@@ -10,6 +10,7 @@ use App\Models\Simpan_Pinjam\Simpanan\Saldo;
 use App\Models\Simpan_Pinjam\Simpanan\SaldoTarik;
 use App\Models\Simpan_Pinjam\Simpanan\Simpanan;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class SaldoController extends Controller
 {
@@ -118,5 +119,40 @@ class SaldoController extends Controller
                 return ResponseFormatter::success($data, 'Berhasil mengajukan penarikan');
             }
         }
+    }
+
+    public function upload_transfer(Request $request)
+    {
+        $simpanan = Simpanan::findOrFail($request->id);
+
+        if ($simpanan->image != null) {
+            Storage::delete('public/transfer/' . $simpanan->image);
+        }
+
+        $extension = $request->file('image')->extension();
+
+        $imageName =  $simpanan->kode_simpanan . '.' . $extension;
+
+        Storage::putFileAs('public/transfer', $request->file('image'), $imageName);
+
+        $simpanan->image = $imageName;
+        $simpanan->save();
+
+        #Pusher
+        event(new PusherNotification(1, 'Notifikasi Baru'));
+
+        #Save Notifikasi
+        $notifikasi = new Notifikasi();
+
+        $notifikasi->create([
+            'id_anggota' => $simpanan->id_anggota,
+            'title'      => 'Upload Bukti Simpanan Baru!',
+            'content'    => 'Bukti transfer simpanan ' . $simpanan->kode_simpanan . '.',
+            'type'       => 1
+        ]);
+
+        $data['image'] = asset('storage/transfer/' . $simpanan->image);
+
+        return ResponseFormatter::success($data, 'Berhasil upload bukti transfer');
     }
 }
