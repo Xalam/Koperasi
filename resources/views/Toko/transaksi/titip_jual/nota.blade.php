@@ -123,10 +123,7 @@
         </table>
         <table class="table table-sm table-borderless">
             <tr>
-                <td class="text-right">Keterangan</td>
-                <td>:</td>
-                <td>Pengiriman barang setelah transaksi berhasil.</td>
-                <td></td>
+                <td colspan="4"></td>
                 <td class="text-right">Jumlah Item</td>
                 <td>:</td>
                 <td class="text-right">{{$jumlahItem}}</td>
@@ -156,19 +153,19 @@
                 <td>:</td>
                 <td class="text-right">0.00%</td>
                 <td class="text-right">0.00</td>
-                <td class="text-right">DP PO</td>
-                <td>:</td>
-                <td class="text-right" style="width: 100px;">0</td>
+                <td class="text-right"></td>
+                <td></td>
+                <td class="text-right" style="width: 100px;"></td>
             </tr>
             <tr>
                 <td colspan="4"></td>
                 <td class="text-right">Biaya Lain</td>
                 <td>:</td>
                 <td class="text-right">0</td>
-                <td class="text-right">0.00</td>
-                <td class="text-right">Tunai</td>
-                <td>:</td>
-                <td class="text-right" style="width: 100px;">{{($pembayaran == 2) ? $jumlahBayar : 0.00}}</td>
+                <td class="text-right"></td>
+                <td class="text-right"></td>
+                <td></td>
+                <td class="text-right" style="width: 100px;"></td>
             </tr>
             <tr>
                 <td colspan="4" class="text-center">
@@ -181,24 +178,10 @@
                 <td>:</td>
                 <td class="text-right">{{$tanggal}}</td>
                 <td class="text-right"></td>
-                <td class="text-right">Kredit</td>
-                <td>:</td>
+                <td class="text-right"></td>
+                <td></td>
                 <td class="text-right" style="width: 100px;">
-                    @if ($pembayaran == 1)
-                    @php
-                    $jumlahBayar = $jumlahHarga
-                    @endphp
-                    {{$jumlahBayar}}
-                    @else
-                    0.00
-                    @endif
                 </td>
-            </tr>
-            <tr>
-                <td colspan="8"></td>
-                <td class="text-right">Kembali</td>
-                <td>:</td>
-                <td class="text-right" style="width: 100px;">{{$jumlahBayar - $jumlahHarga}}</td>
             </tr>
         </table>
     </div>

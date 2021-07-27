@@ -22,6 +22,7 @@
                 <thead class="text-center">
                     <tr>
                         <th>No</th>
+                        <th>Nomor Jurnal</th>
                         <th>Kode Anggota</th>
                         <th>Nama Anggota</th>
                         <th>Daftar Barang</th>
@@ -43,6 +44,7 @@
                         <th class="align-middle text-center">
                             <p>{{$i++}}</p>
                         </th>
+                        <td class="align-middle text-center">{{$data->nomor}}</td>
                         <td class="align-middle text-center">{{$data->kode_anggota}}</td>
                         <td class="align-middle">{{$data->nama_anggota}}</td>
                         <td class="align-middle text-center">{{$data->daftar_barang}}</td>
@@ -63,6 +65,7 @@
                                         echo 'Sudah Diproses';
                                     }
                                 ?></a>
+                            <a id="<?php echo "check-" . $data->id; ?>" class="btn btn-sm btn-danger" onclick="hapus(<?php echo $data->id; ?>)">Hapus</a>
                             @else
                             <a class="<?php 
                                     if ($data->proses == 0) {
@@ -117,6 +120,51 @@ function proses($proses, $id) {
                     $('#check-' + $id).addClass('btn-outline-success');
                 }
             }
+        }
+    });
+}
+
+function hapus(id) {
+    Swal.fire({
+        title: 'Hapus Pesanan',
+        text: 'Anda yakin ingin menghapus data ini?',
+        position: 'center',
+        showConfirmButton: true,
+        showCancelButton: true,
+        confirmButtonText: 'Hapus',
+        cancelButtonText: 'Batal',
+    }).then((result) => {
+        if (result.isConfirmed) {
+            $.ajax({
+                url: '/toko/transaksi/pesanan-online/delete',
+                type: 'POST',
+                data: {
+                    id: id
+                },
+                success: function(response) {
+                    if (response.code == 200) {
+                        const Toast = Swal.mixin({
+                            toast: true,
+                            position: 'middle',
+                            showConfirmButton: false,
+                            timer: 2000,
+                            timerProgressBar: true
+                        });
+
+                        Toast.fire({
+                            icon: 'success',
+                            title: 'Hapus Pesanan',
+                            text: 'Pesanan Berhasil Dihapus'
+                        });
+                        setTimeout(function() {
+                            window.location = "{{url('toko/transaksi/pesanan-online')}}";
+                        }, 2000);
+                    }
+                },
+                error: function(error) {
+                    alert(error.responseText);
+                }
+            });
         }
     });
 }

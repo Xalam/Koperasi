@@ -16,7 +16,7 @@ class SupplierController extends Controller
 
         $data_notified = BarangModel::all();
         foreach ($data_notified AS $data) {
-            if ($data->stok <= $data->stok_minimal) {
+            if ($data->stok_etalase <= $data->stok_minimal || $data->stok_gudang <= $data->stok_minimal) {
                 BarangModel::where('id', $data->id)->update([
                     'alert_status' => 1
                 ]);
@@ -37,22 +37,26 @@ class SupplierController extends Controller
 
         $data_notified = BarangModel::all();
         foreach ($data_notified AS $data) {
-            if ($data->stok <= $data->stok_minimal) {
+            if ($data->stok_etalase <= $data->stok_minimal || $data->stok_gudang <= $data->stok_minimal) {
                 BarangModel::where('id', $data->id)->update([
                     'alert_status' => 1
+                ]);
+            } else {
+                BarangModel::where('id', $data->id)->update([
+                    'alert_status' => 0
                 ]);
             }
         }
 
         $last_nomor = SupplierModel::all();
 
-        if (count($last_nomor) > 0) {
-            $kode = "SUP" . str_pad(count($last_nomor) + 1, 5, '0', STR_PAD_LEFT);
-        } else {
-            $kode = "SUP" . str_pad(strval(1), 5, '0', STR_PAD_LEFT);
-        }
+        // if (count($last_nomor) > 0) {
+        //     $kode = "SUP" . str_pad(count($last_nomor) + 1, 5, '0', STR_PAD_LEFT);
+        // } else {
+        //     $kode = "SUP" . str_pad(strval(1), 5, '0', STR_PAD_LEFT);
+        // }
         
-        return view('toko.master.supplier.create', compact('data_notified', 'data_notif', 'kode'));
+        return view('toko.master.supplier.create', compact('data_notified', 'data_notif'));
     }
 
     public function store(Request $request) {
@@ -60,9 +64,13 @@ class SupplierController extends Controller
 
         $data_notified = BarangModel::all();
         foreach ($data_notified AS $data) {
-            if ($data->stok <= $data->stok_minimal) {
+            if ($data->stok_etalase <= $data->stok_minimal || $data->stok_gudang <= $data->stok_minimal) {
                 BarangModel::where('id', $data->id)->update([
                     'alert_status' => 1
+                ]);
+            } else {
+                BarangModel::where('id', $data->id)->update([
+                    'alert_status' => 0
                 ]);
             }
         }

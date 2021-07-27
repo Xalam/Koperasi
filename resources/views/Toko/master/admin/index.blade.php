@@ -38,25 +38,25 @@
                             <div>{{$i++}}</div>
                         </th>
                         <td class="align-middle text-center">
-                            {!! Form::text('edit_kode', $data->kode, ['class' => 'd-none', 'id' =>
+                            {!! Form::text('edit_kode', $data->kode, ['class' => 'd-none form-control form-control-sm', 'id' =>
                             'edit-kode-'.$data->id]) !!}
                             <div id="kode-<?php echo $data->id ?>">{{$data->kode}}</div>
                         </td>
                         <td class="align-middle">
-                            {!! Form::text('edit_nama', $data->nama, ['class' => 'd-none', 'id' =>
+                            {!! Form::text('edit_nama', $data->nama, ['class' => 'd-none form-control form-control-sm', 'id' =>
                             'edit-nama-'.$data->id]) !!}
                             <div id="nama-<?php echo $data->id ?>">{{$data->nama}}</div>
                         </td>
                         <td class="align-middle">
-                            {!! Form::text('edit_password', $data->password, ['class' => 'd-none', 'id' =>
+                            {!! Form::text('edit_password', $data->password, ['class' => 'd-none form-control form-control-sm', 'id' =>
                             'edit-password-'.$data->id]) !!}
                             <div id="password-<?php echo $data->id ?>">{{$data->password}}</div>
                         </td>
                         <td class="align-middle text-center">
                             {!! Form::select('edit_jabatan', ['Super_Admin' => 'Super Admin', 'Kanit' => 'Kanit',
-                            'Gudang' => 'Gudang', 'Kasir' => 'Kasir'], null, ['class' => 'd-none', 'id' =>
+                            'Gudang' => 'Gudang', 'Kasir' => 'Kasir'], $data->jabatan, ['class' => 'd-none form-select form-select-sm', 'id' =>
                             'edit-jabatan-'.$data->id]) !!}
-                            <div id="jabatan-<?php echo $data->id ?>">{{$data->jabatan}}</div>
+                            <div id="jabatan-<?php echo $data->id ?>">{{($data->jabatan == 'Super_Admin') ? 'Super Admin' : $data->jabatan}}</div>
                         </td>
                         <td class="align-middle text-center">
                             <a id=<?php echo "edit-" . $data->id ?> class="w-48 btn btn-sm btn-warning"
@@ -172,6 +172,8 @@ function terapkan(id) {
                     $("#nama-" + id).html(response.admin.nama);
                     $("#password-" + id).html(response.admin.password);
                     $("#jabatan-" + id).html(response.admin.alamat);
+
+                    window.location.reload();
                 }
             }
         });

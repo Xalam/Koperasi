@@ -1,7 +1,7 @@
 <nav class="navbar navbar-expand-lg overflow-visible">
     <div class="container-fluid">
-        <a href="/" class="navbar-brand text-wrap">Primer Koperasi Kepolisian Resor Kota Besar Semarang</a>
-        <div class="d-flex">
+        <a href="/toko/dashboard" class="navbar-brand text-wrap">Primer Koperasi Kepolisian Resor Kota Besar Semarang</a>
+        <div class="d-flex flex-row">
             <div class="me-3">
                 <ul class="navbar-nav">
                     <li class="nav-item dropdown">
@@ -10,20 +10,15 @@
                         @endphp
                         @foreach ($data_notified as $data)
                             @php
-                            $expired = explode('-', $data->expired);
-                            $now = explode('-', date('Y-m-d'));
+                            $now = explode('-', date('y-m-d'));
 
-                            $diffYears = $expired[0] - $now[0];
-                            $diffMonths = $expired[1] - $now[1];
-                            $diffDays = $expired[2] - $now[2];
+                            $diffYears = $data->expired_tahun - $now[0];
+                            $diffMonths = $data->expired_bulan - $now[1];
+                            $diffDays = date('t') + 1 - $now[2];
                             
-                            if ($data->alert_status > 0) {
-                                $total_notif++;
-                            }
+                            if ($data->alert_status > 0) { $total_notif++; }
 
-                            if ($diffDays <= 3) {
-                                $total_notif++;
-                            }
+                            if ($diffDays <= 3) { $total_notif++; }
                             @endphp
                         @endforeach
                         <i id="notification" class="fas fa-bell fa-lg position-relative" style="cursor: pointer;"
@@ -31,25 +26,46 @@
                             <span id="notification-count" class="notification-count">{{$total_notif}}</span>
                         </i>
                         <ul class="dropdown-menu dropdown-menu-right alert-primary mt-2 ps-2 pe-2 overflow-auto"
-                            style="max-height: 512px; right: -12px;">
+                            style="max-height: 400px; width: 300px; right: -12px;">
                             @foreach ($data_notified as $data)
                                 @php
-                                $expired = explode('-', $data->expired);
-                                $now = explode('-', date('Y-m-d'));
+                                $now = explode('-', date('y-m-d'));
 
-                                $diffYears = $expired[0] - $now[0];
-                                $diffMonths = $expired[1] - $now[1];
-                                $diffDays = $expired[2] - $now[2];
+                                $diffYears = $data->expired_tahun - $now[0];
+                                $diffMonths = $data->expired_bulan - $now[1];
+                                $diffDays = date('t') + 1 - $now[2];
                                 @endphp
                                 @if (isset($data_notified) && count($data_notified) > 0)
-                                @if ($data->stok <= $data->stok_minimal)
+                                @if ($data->stok_etalase <= $data->stok_minimal && $data->stok_gudang > $data->stok_minimal)
                                 <li class="alert dropdown-notification-item">
                                     <div class="alert-close close" data-dismiss="alert" aria-label="close">
                                         <i id="<?php echo $data->id; ?>" class="fas fa-times" aria-hidden="true"
                                             onclick="close_notification(<?php echo $data->id; ?>)"></i>
                                     </div>
-                                    <p id="alert-title" class="alert-message"><b>Pemberitahuan Persediaan Barang</b>
-                                        <br> Persediaan <b class="text-danger">{{$data->nama}}</b> kurang
+                                    <p id="alert-title" class="alert-message text-wrap"><b>Pemberitahuan Persediaan Barang Etalase</b>
+                                        <br> Persediaan <b class="text-danger">{{$data->nama}}</b> di etalase kurang
+                                        dari <b class="text-danger">stok minimal</b>
+                                    </p>
+                                </li>
+                                @elseif ($data->stok_etalase > $data->stok_minimal && $data->stok_gudang <= $data->stok_minimal)
+                                <li class="alert dropdown-notification-item">
+                                    <div class="alert-close close" data-dismiss="alert" aria-label="close">
+                                        <i id="<?php echo $data->id; ?>" class="fas fa-times" aria-hidden="true"
+                                            onclick="close_notification(<?php echo $data->id; ?>)"></i>
+                                    </div>
+                                    <p id="alert-title" class="alert-message text-wrap"><b>Pemberitahuan Persediaan Barang Gudang</b>
+                                        <br> Persediaan <b class="text-danger">{{$data->nama}}</b> di gudang kurang
+                                        dari <b class="text-danger">stok minimal</b>
+                                    </p>
+                                </li>
+                                @elseif ($data->stok_etalase <= $data->stok_minimal && $data->stok_gudang <= $data->stok_minimal)
+                                <li class="alert dropdown-notification-item">
+                                    <div class="alert-close close" data-dismiss="alert" aria-label="close">
+                                        <i id="<?php echo $data->id; ?>" class="fas fa-times" aria-hidden="true"
+                                            onclick="close_notification(<?php echo $data->id; ?>)"></i>
+                                    </div>
+                                    <p id="alert-title" class="alert-message text-wrap"><b>Pemberitahuan Persediaan Barang</b>
+                                        <br> Persediaan <b class="text-danger">{{$data->nama}}</b> di etalase & gudang kurang
                                         dari <b class="text-danger">stok minimal</b>
                                     </p>
                                 </li>
@@ -60,7 +76,7 @@
                                     <div class="alert-close close" data-dismiss="alert" aria-label="close">
                                         <i class="fas fa-times" aria-hidden="true"></i>
                                     </div>
-                                    <p class="alert-message"><b>Pemberitahuan Persediaan Barang</b> <br> Persediaan
+                                    <p class="alert-message text-wrap"><b>Pemberitahuan Persediaan Barang</b> <br> Persediaan
                                         <b class="text-danger">{{$data->nama}}</b> telah <b class="text-danger">expired</b> pada tanggal <b class="text-danger">{{$data->expired}}</b>.</p>
                                     <a href="/toko/master/barang" class="btn btn-sm btn-success mb-2">Ubah Tanggal</a>
                                 </div>
@@ -69,7 +85,7 @@
                                     <div class="alert-close close" data-dismiss="alert" aria-label="close">
                                         <i class="fas fa-times" aria-hidden="true"></i>
                                     </div>
-                                    <p class="alert-message"><b>Pemberitahuan Persediaan Barang</b> <br> Persediaan
+                                    <p class="alert-message text-wrap"><b>Pemberitahuan Persediaan Barang</b> <br> Persediaan
                                         <b class="text-danger">{{$data->nama}}</b> akan <b class="text-danger">expired</b> hari ini.</p>
                                     <a href="/toko/master/barang" class="btn btn-sm btn-success">Ubah Tanggal</a>
                                 </div>
@@ -78,7 +94,7 @@
                                     <div class="alert-close close" data-dismiss="alert" aria-label="close">
                                         <i class="fas fa-times" aria-hidden="true"></i>
                                     </div>
-                                    <p class="alert-message"><b>Pemberitahuan Persediaan Barang</b> <br> Persediaan
+                                    <p class="alert-message text-wrap"><b>Pemberitahuan Persediaan Barang</b> <br> Persediaan
                                         <b class="text-danger">{{$data->nama}}</b> akan <b class="text-danger">expired</b> dalam waktu {{$diffDays}} hari.</p>
                                     <a href="/toko/master/barang" class="btn btn-sm btn-success">Ubah Tanggal</a>
                                 </div>
@@ -100,7 +116,7 @@
 @section('script')
 <script>
 $('.close').click(function() {
-    $total_notif--;
+    $total_notif = $total_notif - 1;
     $('#notification-count').text($total_notif);
 });
 </script>

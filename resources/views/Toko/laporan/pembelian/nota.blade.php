@@ -45,7 +45,7 @@
                     style="position: absolute; transform: translateY(-50%); top: 50%;" width="48px" height="48px">
             </div>
             <div class="col-5">
-                <b style="font-size: 16px;">Faktur Pembelian</b><br>
+                <b style="font-size: 16px;">{{($pembayaran == 1) ? 'Bukti Transaksi Pembelian Kredit' : 'Bukti Transaksi Pembelian Tunai'}}</b><br>
                 <b style="font-size: 14px;">Primkop Polrestabes Semarang</b><br>
                 Jl. Kaligarang No. 1A, Barusari, Kec. Semarang Selatan, Kota Semarang, Jawa Tengah 50244,
                 024-xxxxxxxx <br>
@@ -123,10 +123,7 @@
         </table>
         <table class="table table-sm table-borderless">
             <tr>
-                <td class="text-right">Keterangan</td>
-                <td>:</td>
-                <td>Pengiriman barang setelah transaksi berhasil.</td>
-                <td></td>
+                <td colspan="4"></td>
                 <td class="text-right">Jumlah Item</td>
                 <td>:</td>
                 <td class="text-right">{{$jumlahItem}}</td>

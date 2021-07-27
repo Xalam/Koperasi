@@ -18,7 +18,7 @@ class LaporanPendapatanController extends Controller
 
         $data_notified = BarangModel::all();
         foreach ($data_notified AS $data) {
-            if ($data->stok <= $data->stok_minimal) {
+            if ($data->stok_etalase <= $data->stok_minimal || $data->stok_gudang <= $data->stok_minimal) {
                 BarangModel::where('id', $data->id)->update([
                     'alert_status' => 1
                 ]);

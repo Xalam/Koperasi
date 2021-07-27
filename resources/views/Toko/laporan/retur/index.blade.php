@@ -21,8 +21,8 @@
     <div class="d-flex flex-row">
         @if (isset($laporan_retur_pembelian) && count($laporan_retur_pembelian) > 0)
         <p class="card-header col-lg">Daftar Retur</p>
-        <a href=<?php echo 'retur-pembelian/export/'.$tanggal_awal.'/'.$tanggal_akhir ?> target="_blank"><i class="card-header text-success fas fa-file-export" style="cursor: pointer;" title="Export to Excel"></i></a>
-        <a href=<?php echo 'retur-pembelian/print/'.$tanggal_awal.'/'.$tanggal_akhir ?> target="_blank"><i class="card-header text-success fas fa-print" style="cursor: pointer;" title="Print"></i></a>
+        <a href=<?php echo 'retur-pembelian/export/'.$tanggal ?> target="_blank"><i class="card-header text-success fas fa-file-export" style="cursor: pointer;" title="Export to Excel"></i></a>
+        <a href=<?php echo 'retur-pembelian/print/'.$tanggal ?> target="_blank"><i class="card-header text-success fas fa-print" style="cursor: pointer;" title="Print"></i></a>
         @else
         <p class="card-header col-lg">Daftar Retur</p>
         @endif
@@ -38,9 +38,10 @@
                         <th>Nomor Beli</th>
                         <th>Kode Barang</th>
                         <th>Nama Barang</th>
-                        <th>HPP</th>
+                        <th>Harga Beli</th>
                         <th>Jumlah Retur</th>
                         <th>Total Harga</th>
+                        <th>Nota</th>
                     </tr>
                 </thead>
                 @if (isset($laporan_retur_pembelian) && count($laporan_retur_pembelian) > 0)
@@ -56,9 +57,11 @@
                         <td class="align-middle text-center">{{$data->nomor_beli}}</td>
                         <td class="align-middle text-center">{{$data->kode_barang}}</td>
                         <td class="align-middle text-center">{{$data->nama_barang}}</td>
-                        <td class="align-middle text-center">{{$data->hpp}}</td>
+                        <td class="align-middle text-center">{{$data->harga_beli}}</td>
                         <td class="align-middle text-center">{{$data->jumlah}}</td>
                         <td class="align-middle text-center">{{$data->total_harga}}</td>
+                        <td class="align-middle text-center"><a href="<?php echo url('toko/laporan/retur-pembelian/nota/' . $data->nomor); ?>" target="_blank"><i class="text-success fas fa-print"
+                                style="cursor: pointer;" title="Print"></i></a></td>
                     </tr>
                     @endforeach
                 </tbody>

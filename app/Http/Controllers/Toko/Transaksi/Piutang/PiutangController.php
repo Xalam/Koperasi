@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Toko\Transaksi\Piutang;
 
 use App\Http\Controllers\Controller;
+use App\Models\Simpan_Pinjam\Laporan\JurnalUmum;
 use App\Models\Toko\Master\Akun\AkunModel;
 use App\Models\Toko\Master\Barang\BarangModel;
 use App\Models\Toko\Transaksi\Jurnal\JurnalModel;
@@ -16,7 +17,7 @@ class PiutangController extends Controller
     public function index() {
         $data_notified = BarangModel::all();
         foreach ($data_notified AS $data) {
-            if ($data->stok <= $data->stok_minimal) {
+            if ($data->stok_etalase <= $data->stok_minimal || $data->stok_gudang <= $data->stok_minimal) {
                 BarangModel::where('id', $data->id)->update([
                     'alert_status' => 1
                 ]);
@@ -113,12 +114,30 @@ class PiutangController extends Controller
             'kredit' => 0
         ]); 
 
+        JurnalUmum::create([
+            'kode_jurnal' => $request->input('nomor_jurnal'),
+            'id_akun' => $kas->id,
+            'tanggal' => $request->input('tanggal'),
+            'keterangan' => $keterangan,
+            'debet' => $request->input('terima_piutang'),
+            'kredit' => 0
+        ]); 
+
         JurnalModel::create([
             'nomor' => $request->input('nomor_jurnal'),
             'tanggal' => $request->input('tanggal'),
             'keterangan' => $keterangan,
             'id_akun' => $piutang->id,
             'debit' => 0,
+            'kredit' => $request->input('terima_piutang')
+        ]); 
+
+        JurnalUmum::create([
+            'kode_jurnal' => $request->input('nomor_jurnal'),
+            'id_akun' => $piutang->id,
+            'tanggal' => $request->input('tanggal'),
+            'keterangan' => $keterangan,
+            'debet' => 0,
             'kredit' => $request->input('terima_piutang')
         ]); 
         
@@ -149,6 +168,7 @@ class PiutangController extends Controller
 
         PiutangDetailModel::where('id', $id)->delete();
         JurnalModel::where('nomor', $data_terima_piutang->nomor_jurnal)->delete();
+        JurnalUmum::where('kode_jurnal', $data_terima_piutang->nomor_jurnal)->delete();
         
         return response()->json(['code'=>200]);
     }

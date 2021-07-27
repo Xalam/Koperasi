@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Simpan_Pinjam\Master\Akun;
 
 use App\Http\Controllers\Controller;
 use App\Models\Simpan_Pinjam\Master\Akun\Akun;
+use App\Models\Toko\Master\Akun\ViewAkunModel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 

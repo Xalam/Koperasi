@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Toko\Transaksi\Hutang;
 
 use App\Http\Controllers\Controller;
+use App\Models\Simpan_Pinjam\Laporan\JurnalUmum;
 use App\Models\Toko\Master\Akun\AkunModel;
 use App\Models\Toko\Master\Barang\BarangModel;
 use App\Models\Toko\Master\Supplier\SupplierModel;
@@ -20,7 +21,7 @@ class HutangController extends Controller
 
         $data_notified = BarangModel::all();
         foreach ($data_notified AS $data) {
-            if ($data->stok <= $data->stok_minimal) {
+            if ($data->stok_etalase <= $data->stok_minimal || $data->stok_gudang <= $data->stok_minimal) {
                 BarangModel::where('id', $data->id)->update([
                     'alert_status' => 1
                 ]);
@@ -131,12 +132,30 @@ class HutangController extends Controller
             'kredit' => 0 
         ]); 
 
+        JurnalUmum::create([
+            'kode_jurnal' => $request->input('nomor_jurnal'),
+            'id_akun' => $hutang->id,
+            'tanggal' => $request->input('tanggal'),
+            'keterangan' => $keterangan,
+            'debet' => $angsuran,
+            'kredit' => 0 
+        ]); 
+
         JurnalModel::create([
             'nomor' => $request->input('nomor_jurnal'),
             'tanggal' => $request->input('tanggal'),
             'keterangan' => $keterangan,
             'id_akun' => $kas->id,
             'debit' => 0,
+            'kredit' => $angsuran
+        ]); 
+
+        JurnalUmum::create([
+            'kode_jurnal' => $request->input('nomor_jurnal'),
+            'id_akun' => $kas->id,
+            'tanggal' => $request->input('tanggal'),
+            'keterangan' => $keterangan,
+            'debet' => 0,
             'kredit' => $angsuran
         ]); 
         
@@ -167,6 +186,7 @@ class HutangController extends Controller
 
         HutangDetailModel::where('id', $id)->delete();
         JurnalModel::where('nomor', $data_angsuran->nomor_jurnal)->delete();
+        JurnalUmum::where('kode_jurnal', $data_angsuran->nomor_jurnal)->delete();
         
         return response()->json(['code'=>200]);
     }

@@ -26,6 +26,7 @@
                         <th>Telepon</th>
                         <th>WA</th>
                         <th>Jarak (km)</th>
+                        <th>Lama Pengiriman (hari)</th>
                         <th>Email</th>
                         <th>Keterangan</th>
                         <th>Tempo</th>
@@ -43,47 +44,52 @@
                             <div>{{$i++}}</div>
                         </th>
                         <td class="align-middle text-center">
-                            {!! Form::text('edit_kode', $data->kode, ['class' => 'd-none', 'id' =>
+                            {!! Form::text('edit_kode', $data->kode, ['class' => 'd-none form-control form-control-sm', 'id' =>
                             'edit-kode-'.$data->id, 'required']) !!}
                             <div id="kode-<?php echo $data->id ?>">{{$data->kode}}</div>
                         </td>
                         <td class="align-middle">
-                            {!! Form::text('edit_nama', $data->nama, ['class' => 'd-none', 'id' =>
+                            {!! Form::text('edit_nama', $data->nama, ['class' => 'd-none form-control form-control-sm', 'id' =>
                             'edit-nama-'.$data->id, 'required']) !!}
                             <div id="nama-<?php echo $data->id ?>">{{$data->nama}}</div>
                         </td>
                         <td class="align-middle">
-                            {!! Form::text('edit_alamat', $data->alamat, ['class' => 'd-none', 'id' =>
+                            {!! Form::text('edit_alamat', $data->alamat, ['class' => 'd-none form-control form-control-sm', 'id' =>
                             'edit-alamat-'.$data->id, 'required']) !!}
                             <div id="alamat-<?php echo $data->id ?>">{{$data->alamat}}</div>
                         </td>
                         <td class="align-middle">
-                            {!! Form::text('edit_telepon', $data->telepon, ['class' => 'd-none', 'id' =>
+                            {!! Form::text('edit_telepon', $data->telepon, ['class' => 'd-none form-control form-control-sm', 'id' =>
                             'edit-telepon-'.$data->id, 'required']) !!}
                             <div id="telepon-<?php echo $data->id ?>">{{$data->telepon}}</div>
                         </td>
                         <td class="align-middle">
-                            {!! Form::text('edit_wa', $data->wa, ['class' => 'd-none', 'id' =>
+                            {!! Form::text('edit_wa', $data->wa, ['class' => 'd-none form-control form-control-sm', 'id' =>
                             'edit-wa-'.$data->id, 'required']) !!}
                             <div id="wa-<?php echo $data->id ?>">{{$data->wa}}</div>
                         </td>
                         <td class="align-middle">
-                            {!! Form::text('edit_jarak', $data->jarak, ['class' => 'd-none', 'id' =>
+                            {!! Form::text('edit_jarak', $data->jarak, ['class' => 'd-none form-control form-control-sm', 'id' =>
                             'edit-jarak-'.$data->id, 'required']) !!}
                             <div id="jarak-<?php echo $data->id ?>">{{$data->jarak}}</div>
                         </td>
                         <td class="align-middle">
-                            {!! Form::text('edit_email', $data->email, ['class' => 'd-none', 'id' =>
+                            {!! Form::text('edit_lama_kirim', $data->lama_kirim, ['class' => 'd-none form-control form-control-sm', 'id' =>
+                            'edit-lama-kirim-'.$data->id, 'required']) !!}
+                            <div id="lama-kirim-<?php echo $data->id ?>">{{$data->lama_kirim}}</div>
+                        </td>
+                        <td class="align-middle">
+                            {!! Form::text('edit_email', $data->email, ['class' => 'd-none form-control form-control-sm', 'id' =>
                             'edit-email-'.$data->id, 'required']) !!}
                             <div id="email-<?php echo $data->id ?>">{{$data->email}}</div>
                         </td>
                         <td class="align-middle">
-                            {!! Form::text('edit_keterangan', $data->keterangan, ['class' => 'd-none', 'id' =>
+                            {!! Form::text('edit_keterangan', $data->keterangan, ['class' => 'd-none form-control form-control-sm', 'id' =>
                             'edit-keterangan-'.$data->id, 'required']) !!}
                             <div id="keterangan-<?php echo $data->id ?>">{{$data->keterangan}}</div>
                         </td>
                         <td class="align-middle">
-                            {!! Form::text('edit_tempo', $data->tempo, ['class' => 'd-none', 'id' =>
+                            {!! Form::text('edit_tempo', $data->tempo, ['class' => 'd-none form-control form-control-sm', 'id' =>
                             'edit-tempo-'.$data->id, 'required']) !!}
                             <div id="tempo-<?php echo $data->id ?>">{{$data->tempo}}</div>
                         </td>
@@ -123,6 +129,8 @@ function edit(id) {
     $("#edit-wa-" + id).removeClass("d-none");
     $("#jarak-" + id).addClass("d-none");
     $("#edit-jarak-" + id).removeClass("d-none");
+    $("#lama-kirim-" + id).addClass("d-none");
+    $("#edit-lama-kirim-" + id).removeClass("d-none");
     $("#email-" + id).addClass("d-none");
     $("#edit-email-" + id).removeClass("d-none");
     $("#keterangan-" + id).addClass("d-none");
@@ -154,6 +162,9 @@ function batal(id) {
     $("#jarak-" + id).removeClass("d-none");
     $("#edit-jarak-" + id).val($("#jarak-" + id).text());
     $("#edit-jarak-" + id).addClass("d-none");
+    $("#lama-kirim-" + id).removeClass("d-none");
+    $("#edit-lama-kirim-" + id).val($("#lama-kirim-" + id).text());
+    $("#edit-lama-kirim-" + id).addClass("d-none");
     $("#email-" + id).removeClass("d-none");
     $("#edit-email-" + id).val($("#email-" + id).text());
     $("#edit-email-" + id).addClass("d-none");
@@ -204,6 +215,7 @@ function terapkan(id) {
                 telepon: $('#edit-telepon-' + id).val(),
                 wa: $('#edit-wa-' + id).val(),
                 jarak: $('#edit-jarak-' + id).val(),
+                lama_kirim: $('#edit-lama-kirim-' + id).val(),
                 email: $('#edit-email-' + id).val(),
                 keterangan: $('#edit-keterangan-' + id).val(),
                 tempo: $('#edit-tempo-' + id).val()
@@ -222,6 +234,8 @@ function terapkan(id) {
                     $("#edit-wa-" + id).addClass("d-none");
                     $("#jarak-" + id).removeClass("d-none");
                     $("#edit-jarak-" + id).addClass("d-none");
+                    $("#lama-kirim-" + id).removeClass("d-none");
+                    $("#edit-lama-kirim-" + id).addClass("d-none");
                     $("#email-" + id).removeClass("d-none");
                     $("#edit-email-" + id).addClass("d-none");
                     $("#keterangan-" + id).removeClass("d-none");
@@ -239,6 +253,7 @@ function terapkan(id) {
                     $("#telepon-" + id).html(response.supplier.telepon);
                     $("#wa-" + id).html(response.supplier.wa);
                     $("#jarak-" + id).html(response.supplier.jarak);
+                    $("#lama-kirim-" + id).html(response.supplier.lama_kirim);
                     $("#email-" + id).html(response.supplier.email);
                     $("#keterangan-" + id).html(response.supplier.keterangan);
                     $("#tempo-" + id).html(response.supplier.tempo);

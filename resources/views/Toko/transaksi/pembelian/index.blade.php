@@ -53,8 +53,8 @@
                 {!! Form::label(null, 'Barang', ['class' => 'fw-bold']) !!}
                 <div class="w-100"></div>
                 {!! Form::label(null, 'Kode') !!}
-                {!! Form::select('kode_barang', $kode_barang, null, ['class' => 'col-lg-12 form-control
-                form-control-sm', 'required']) !!}
+                {!! Form::select('kode_barang', $kode_barang, null, ['class' => 'col-lg-12 form-select
+                form-select-sm', 'required', 'disabled']) !!}
             </div>
             <div class="col-lg-6">
                 {!! Form::label(null, 'Pembayaran', ['class' => 'fw-bold']) !!}
@@ -82,7 +82,7 @@
             <div class="col-lg-4">
                 {!! Form::label(null, 'Nama', null) !!}
                 {!! Form::select('nama_barang', $barang, [], ['class' => 'col-lg-12 form-select form-select-sm',
-                'required']) !!}
+                'required', 'disabled']) !!}
             </div>
             <div class="col-lg-2">
                 {!! Form::label(null, 'Sisa Stok', null) !!}
@@ -90,7 +90,7 @@
             </div>
             <div class="col-lg-2">
                 {!! Form::label(null, 'Harga Satuan', null) !!}
-                {!! Form::number('harga_satuan', 0, ['class' => 'col-lg-12 form-control form-control-sm', 'required'])
+                {!! Form::number('harga_satuan', 0, ['class' => 'col-lg-12 form-control form-control-sm', 'required', 'readonly'])
                 !!}
             </div>
             <div class="col-lg-2">

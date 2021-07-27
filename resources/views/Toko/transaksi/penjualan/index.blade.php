@@ -54,8 +54,8 @@
                 {!! Form::label(null, 'Barang', ['class' => 'fw-bold']) !!}
                 <div class="w-100"></div>
                 {!! Form::label(null, 'Kode') !!}
-                {!! Form::select('kode_barang', $kode_barang, null, ['class' => 'col-lg-12 form-control
-                form-control-sm', 'required']) !!}
+                {!! Form::select('kode_barang', $kode_barang, null, ['class' => 'col-lg-12 form-select
+                form-select-sm', 'required']) !!}
             </div>
             <div class="col-lg-6">
                 {!! Form::label(null, 'Pembayaran', ['class' => 'fw-bold']) !!}
@@ -92,12 +92,14 @@
             </div>
             <div class="col-lg-2">
                 {!! Form::label(null, 'Harga Satuan', null) !!}
-                {!! Form::number('harga_satuan', 0, ['class' => 'col-lg-12 form-control form-control-sm', 'required', 'readonly'])
+                {!! Form::number('harga_satuan', 0, ['class' => 'col-lg-12 form-control form-control-sm', 'required',
+                'readonly'])
                 !!}
             </div>
             <div class="col-lg-2">
                 {!! Form::label(null, 'Jumlah', null) !!}
-                {!! Form::number('jumlah', 0, ['class' => 'col-lg-12 form-control form-control-sm', 'required', 'readonly']) !!}
+                {!! Form::number('jumlah', 0, ['class' => 'col-lg-12 form-control form-control-sm', 'required',
+                'readonly']) !!}
             </div>
             <div class="col-lg-2">
                 {!! Form::label(null, 'Total Harga', null) !!}
@@ -164,9 +166,9 @@ $(document).ready(function() {
     }).then((result) => {
         if (result.isConfirmed) {
             window.open("{{url('toko/transaksi/penjualan/nota')}}");
-            window.location = "{{url('toko/transaksi/pembelian')}}";
+            window.location = "{{url('toko/transaksi/penjualan')}}";
         } else {
-            window.location = "{{url('toko/transaksi/pembelian')}}";
+            window.location = "{{url('toko/transaksi/penjualan')}}";
         }
     });
 });
@@ -350,6 +352,12 @@ function close_popup_hapus() {
 
 $(document).ready(function() {
     $('#table-penjualan').DataTable();
+
+    onScan.attachTo(document, {
+        onScan: function(key) {
+            alert(key);
+        }
+    });
 
     $('#cek-nomor').click(function() {
         tampil_daftar();

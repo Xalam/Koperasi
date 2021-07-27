@@ -10,13 +10,25 @@
 
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="{{ asset('bootstrap 5/dist/css/bootstrap.css') }}">
-    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.22/css/dataTables.bootstrap4.min.css">
+    <link rel="stylesheet" href="{{ asset('css/dataTables.bootstrap5.min.css') }}">
     <link rel="stylesheet" href="{{ asset('css/sidebar.css') }}">
     <link rel="stylesheet" href="{{ asset('css/style.css') }}">
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
     <link href="https://use.fontawesome.com/releases/v5.15.3/css/all.css" rel="stylesheet">
 
     <link rel="stylesheet" href="{{ asset('css/normalize.css') }}">
+
+    <style>
+    input::-webkit-outer-spin-button,
+    input::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+    }
+
+    input[type=number] {
+        -moz-appearance: textfield;
+    }
+    </style>
 
     @yield('style')
 
@@ -38,16 +50,37 @@
         @if (isset($data_notified) && count($data_notified) > 0)
         <div class="alert-wrapper">
             @foreach ($data_notified as $data)
-            @if ($data->stok <= $data->stok_minimal && $data->alert_status == 0)
+            @if ($data->alert_status == 0)
+            @if ($data->stok_etalase <= $data->stok_minimal && $data->stok_gudang > $data->stok_minimal)
                 <div class="alert alert-primary">
                     <div class="alert-close close" data-dismiss="alert" aria-label="close">
                         <i class="fas fa-times" aria-hidden="true"></i>
                     </div>
-                    <p class="alert-message"><b>Pemberitahuan Persediaan Barang</b> <br> Persediaan
-                        <b class="text-danger">{{$data->nama}}</b> kurang dari stok minimal.</p>
+                    <p class="alert-message"><b>Pemberitahuan Persediaan Barang Etalase</b> <br> Persediaan
+                        <b class="text-danger">{{$data->nama}}</b> di etalase kurang dari stok minimal.
+                    </p>
                 </div>
-                @endif
-                @endforeach
+                @elseif ($data->stok_etalase > $data->stok_minimal && $data->stok_gudang <= $data->stok_minimal)
+                    <div class="alert alert-primary">
+                        <div class="alert-close close" data-dismiss="alert" aria-label="close">
+                            <i class="fas fa-times" aria-hidden="true"></i>
+                        </div>
+                        <p class="alert-message"><b>Pemberitahuan Persediaan Barang Gudang</b> <br> Persediaan
+                            <b class="text-danger">{{$data->nama}}</b> di gudang kurang dari stok minimal.
+                        </p>
+                    </div>
+                @elseif ($data->stok_etalase <= $data->stok_minimal && $data->stok_gudang <= $data->stok_minimal)
+                    <div class="alert alert-primary">
+                        <div class="alert-close close" data-dismiss="alert" aria-label="close">
+                            <i class="fas fa-times" aria-hidden="true"></i>
+                        </div>
+                        <p class="alert-message"><b>Pemberitahuan Persediaan Barang</b> <br> Persediaan
+                            <b class="text-danger">{{$data->nama}}</b> di etalase & gudang kurang dari stok minimal.
+                        </p>
+                    </div>
+                    @endif
+                    @endif
+                    @endforeach
         </div>
         @endif
     </div>
@@ -56,14 +89,12 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.9.2/umd/popper.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.js"></script>
-    <script src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.js"></script>
-    <script src="https://cdn.datatables.net/1.10.25/js/dataTables.bootstrap5.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.18/dist/sweetalert2.all.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@3.4.1/dist/chart.min.js"></script>
+    <script src="{{ asset('js/onScan.js') }}"></script>
+    <script src="{{ asset('js/jquery.dataTables.js') }}"></script>
 </body>
-
-</html>
 
 @yield('script')
 
@@ -274,3 +305,5 @@ jQuery(function($) {
     }
 });
 </script>
+
+</html>

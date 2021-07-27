@@ -12,6 +12,7 @@ class PesananOnlineModel extends Model
     protected $table = 'pesanan_online';
 
     protected $fillable = [
+        'nomor',
         'id_aggota',
         'daftar_barang',
         'jumlah_harga',

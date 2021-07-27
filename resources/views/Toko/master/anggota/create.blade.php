@@ -62,10 +62,7 @@
         </div>
         <div class="row-lg align-item-center mb-2">
             {!! Form::label(null, 'Jabatan', ['class' => 'col-lg-2']) !!}
-            {!! Form::select('jabatan', ['Anggota' => 'Anggota', 'Umum' => 'Umum', 'Pengurus' => 'Pengurus'], null,
-            ['class' => 'col-lg-2
-            form-select form-select-sm',
-            'required']) !!}
+            {!! Form::text('jabatan', null, ['class' => 'col-lg-2 form-select form-select-sm', 'required']) !!}
         </div>
         <div class="row-lg align-item-center mb-2">
             {!! Form::label(null, 'Email', ['class' => 'col-lg-2']) !!}
@@ -74,7 +71,7 @@
         </div>
         <div class="row-lg align-item-center mb-2">
             {!! Form::label(null, 'Username (NRP)', ['class' => 'col-lg-2']) !!}
-            {!! Form::text('username', null, ['class' =>'col-lg-4 form-control form-control-sm', 'required', 'oninvalid'
+            {!! Form::number('username', null, ['class' =>'col-lg-4 form-control form-control-sm', 'required', 'oninvalid'
             => "this.setCustomValidity('Tidak boleh kosong')", 'oninput' => "this.setCustomValidity('')"]) !!}
         </div>
         <div class="row-lg align-item-center mb-2">
