@@ -26,6 +26,10 @@ class PinjamanController extends Controller
         $checkLimit = Anggota::where('id', $idAnggota)->first();
         $checkPiutang = PiutangModel::where('id_anggota', $idAnggota)->orderBy('id', 'DESC')->first();
 
+        if (date('Y-m-d', strtotime($request->tanggal)) < date('Y-m-d')) {
+            return ResponseFormatter::error('Tanggal sudah lewat');
+        }
+
         if ($checkPiutang) {
             $piutangAnggota = $checkPiutang->sisa_piutang;
         } else {
@@ -237,6 +241,10 @@ class PinjamanController extends Controller
     {
         $checkAngsuran = Angsuran::where('id_pinjaman', $request->id_pinjaman)->where('status', 0)->orderBy('id', 'DESC')->first();
         $checkPinjaman = Pinjaman::where('id', $request->id_pinjaman)->whereIn('status', [0, 1])->first();
+
+        if (date('Y-m-d', strtotime($request->tanggal)) < date('Y-m-d')) {
+            return ResponseFormatter::error('Tanggal sudah lewat');
+        }
 
         if ($checkPinjaman) {
             return ResponseFormatter::error('Masih terdapat pinjaman yang belum disetujui atau dicairkan');

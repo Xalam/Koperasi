@@ -6,6 +6,7 @@ use App\Events\PusherNotification;
 use App\Http\Controllers\API\ResponseFormatter;
 use App\Http\Controllers\Controller;
 use App\Models\Simpan_Pinjam\Other\Notifikasi;
+use App\Models\Simpan_Pinjam\Pengaturan\Pengaturan;
 use App\Models\Simpan_Pinjam\Simpanan\Saldo;
 use App\Models\Simpan_Pinjam\Simpanan\SaldoTarik;
 use App\Models\Simpan_Pinjam\Simpanan\Simpanan;
@@ -53,6 +54,7 @@ class SaldoController extends Controller
             $item['jenis_simpanan'] = 3;
             $item['nominal'] = $request->nominal;
             $item['status'] = 0;
+            $item['type'] = 0;
             $item['keterangan'] = '(Mobile)';
 
             Simpanan::create($item);
@@ -68,7 +70,7 @@ class SaldoController extends Controller
             $notifikasi->create([
                 'id_anggota' => $data->id_anggota,
                 'title'      => 'Pengajuan Simpanan Baru!',
-                'content'    => 'Pengajuan simpanan ' . $data->anggota->kd_anggota . ' untuk tanggal ' . $data->tanggal . ' sebesar Rp ' . number_format($data->total_bayar, 0, '', '.'),
+                'content'    => 'Pengajuan simpanan ' . $data->anggota->kd_anggota . ' untuk tanggal ' . $data->tanggal . ' sebesar Rp ' . number_format($data->nominal, 0, '', '.'),
                 'type'       => 1
             ]);
 
@@ -85,6 +87,10 @@ class SaldoController extends Controller
                 $query->where('id_anggota', $idAnggota);
                 $query->where('jenis_simpanan', 3);
             })->where('status', 0)->first();
+
+        if (date('Y-m-d', strtotime($request->tanggal)) < date('Y-m-d')) {
+            return ResponseFormatter::error('Tanggal sudah lewat');
+        }
 
         if ($checkSaldo) {
             return ResponseFormatter::error('Masih terdapat penarikan yang belum disetujui');
@@ -154,5 +160,26 @@ class SaldoController extends Controller
         $data['image'] = asset('storage/transfer/' . $simpanan->image);
 
         return ResponseFormatter::success($data, 'Berhasil upload bukti transfer');
+    }
+
+    public function upload_info()
+    {
+        $idAnggota = getallheaders()['id'];
+
+        $pengaturan = Pengaturan::where('id', 6)->first();
+
+        $simpanan = Simpanan::where('id_anggota', $idAnggota)->where('status', 0)->where('keterangan', '(Mobile)')->orderBy('id', 'DESC')->first();
+
+        if ($simpanan) {
+            $data['max_date'] = date('d-m-Y H:i', strtotime($simpanan->created_at . '+1 days'));
+            $data['account_bank']   = $pengaturan->nama;
+            $data['account_number'] = $pengaturan->angka;
+
+            $data['simpanan'] = $simpanan;
+
+            return ResponseFormatter::success($data, 'Berhasil mendapatkan deposit simpanan');
+        }
+
+        return ResponseFormatter::error('Tidak terdapat deposit simpanan');
     }
 }

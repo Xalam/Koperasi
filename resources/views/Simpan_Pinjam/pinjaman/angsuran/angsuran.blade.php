@@ -264,7 +264,7 @@
                     if (data.lunas) {
                         Swal.fire({
                             title: 'Error!',
-                            text: 'Pinjaman sudah lunas. Tidak dapat mengubah status bayar!',
+                            text: 'Terdapat pelunasan angsuran sebelum jatuh tempo. Tidak dapat mengubah status bayar!',
                             icon: 'error',
                             confirmButtonText: 'OK'
                         })

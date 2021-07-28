@@ -557,8 +557,9 @@ class AngsuranController extends Controller
             return response()->json($data);
         }
 
+        $checkLunas = Angsuran::where('id_pinjaman', $angsuran->id_pinjaman)->where('jenis', 2)->first();
         #Check lunas angsuran
-        if ($pinjamanUpdate->lunas == 1) {
+        if ($checkLunas) {
             $data = array(
                 'lunas' => 1
             );
