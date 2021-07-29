@@ -96,7 +96,7 @@
                 </tr>
                 <tr>
                     <td colspan="4" class="text-center">
-                        <b>{{($data->pembayaran == 1) ? 'Kredit' : 'Tunai'}}</b>
+                        <b>{{($data->pembayaran == 1) ? 'Faktur Penjualan' : 'Nota Penjualan'}}</b>
                         <br>
                         ======= {{$data->created_at}} =======
                         <br>
@@ -108,7 +108,7 @@
         @endforeach
         <div class="text-center">
             ----------------------------------------------- <br>
-            Barang tang sudah dibeli tidak boleh dikembalikan <br>
+            Barang yang sudah dibeli tidak boleh dikembalikan <br>
             ----------------------------------------------- <br>
             <b>Belanja aman dan mudah dengan menggunakan aplikasi koperasi Primkop Polrestabes Semarang di perangkat android anda</b> <br>
             -----------------------------------------------

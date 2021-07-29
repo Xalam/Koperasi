@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Toko\Transaksi\Pembelian;
 
 use App\Http\Controllers\Controller;
+use App\Models\Simpan_Pinjam\Laporan\JurnalUmum;
 use App\Models\Toko\Master\Akun\AkunModel;
 use Illuminate\Http\Request;
 
@@ -21,7 +22,7 @@ class PembelianController extends Controller
     public function index() {
         $data_notified = BarangModel::all();
         foreach ($data_notified AS $data) {
-            if ($data->stok <= $data->stok_minimal) {
+            if ($data->stok_etalase <= $data->stok_minimal || $data->stok_gudang <= $data->stok_minimal) {
                 BarangModel::where('id', $data->id)->update([
                     'alert_status' => 1
                 ]);
@@ -135,8 +136,9 @@ class PembelianController extends Controller
                 $barang = BarangModel::where('id', $data->id_barang)->first();
     
                 BarangModel::where('id', $data->id_barang)->update([
-                    'hpp' => ($barang->stok * $barang->hpp + $data->total_harga) / ($barang->stok + $data->jumlah),
-                    'stok' => $barang->stok + $data->jumlah]);
+                    'hpp' => ((($barang->stok_etalase + $barang->stok_gudang) * $barang->hpp) + $data->total_harga) / (($barang->stok_gudang + $barang->stok_etalase) + $data->jumlah),
+                    'stok_gudang' => $barang->stok_gudang + $data->jumlah
+                ]);
             }
     
             if ($request->input('pembayaran') == 2) {
@@ -161,6 +163,15 @@ class PembelianController extends Controller
                     'debit' => $request->input('jumlah_harga'),
                     'kredit' => 0
                 ]); 
+    
+                JurnalUmum::create([
+                    'kode_jurnal' => $request->input('nomor_jurnal'),
+                    'id_akun' => $persediaan->id,
+                    'tanggal' => $request->input('tanggal'),
+                    'keterangan' => $keterangan,
+                    'debet' => $request->input('jumlah_harga'),
+                    'kredit' => 0
+                ]); 
                 
                 JurnalModel::create([
                     'nomor' => $request->input('nomor_jurnal'),
@@ -168,6 +179,15 @@ class PembelianController extends Controller
                     'keterangan' => $keterangan,
                     'id_akun' => $kas->id,
                     'debit' => 0,
+                    'kredit' => $request->input('jumlah_harga')
+                ]);
+                
+                JurnalUmum::create([
+                    'kode_jurnal' => $request->input('nomor_jurnal'),
+                    'id_akun' => $kas->id,
+                    'tanggal' => $request->input('tanggal'),
+                    'keterangan' => $keterangan,
+                    'debet' => 0,
                     'kredit' => $request->input('jumlah_harga')
                 ]);
     
@@ -209,6 +229,15 @@ class PembelianController extends Controller
                     'debit' => $request->input('jumlah_harga'),
                     'kredit' => 0
                 ]); 
+    
+                JurnalUmum::create([
+                    'kode_jurnal' => $request->input('nomor_jurnal'),
+                    'id_akun' => $persediaan->id,
+                    'tanggal' => $request->input('tanggal'),
+                    'keterangan' => $keterangan,
+                    'debet' => $request->input('jumlah_harga'),
+                    'kredit' => 0
+                ]); 
                     
                 JurnalModel::create([
                     'nomor' => $request->input('nomor_jurnal'),
@@ -216,6 +245,15 @@ class PembelianController extends Controller
                     'keterangan' => $keterangan,
                     'id_akun' => $hutang->id,
                     'debit' => 0,
+                    'kredit' => $request->input('jumlah_harga')
+                ]);
+                    
+                JurnalUmum::create([
+                    'kode_jurnal' => $request->input('nomor_jurnal'),
+                    'id_akun' => $hutang->id,
+                    'tanggal' => $request->input('tanggal'),
+                    'keterangan' => $keterangan,
+                    'debet' => 0,
                     'kredit' => $request->input('jumlah_harga')
                 ]);
             }
@@ -263,6 +301,9 @@ class PembelianController extends Controller
                                     ->get();
 
         $last_nomor = PembelianModel::orderBy('id', 'desc')->first()->nomor;
+                                    
+        $pembayaran = PembelianModel::orderBy('id', 'desc')
+                                    ->first();
 
         $pembelian = PembelianBarangModel::join('barang', 'barang.id', '=', 'detail_beli.id_barang')
                                             ->select('barang.nama AS nama_barang', 'barang.kode AS kode_barang', 'barang.satuan AS satuan', 
@@ -270,6 +311,6 @@ class PembelianController extends Controller
                                                     'detail_beli.total_harga AS total_harga')
                                             ->where('nomor', $last_nomor)->get();
 
-        return view('toko.transaksi.pembelian.nota', compact('supplier', 'pembelian'));
+        return view('toko.transaksi.pembelian.nota', compact('supplier', 'pembelian', 'pembayaran'));
     }
 }

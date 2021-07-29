@@ -45,7 +45,7 @@
                     style="position: absolute; transform: translateY(-50%); top: 50%;" width="48px" height="48px">
             </div>
             <div class="col-5">
-                <b style="font-size: 16px;">Faktur Retur Pembelian</b><br>
+                <b style="font-size: 16px;">Nota Debet</b><br>
                 <b style="font-size: 14px;">Primkop Polrestabes Semarang</b><br>
                 Jl. Kaligarang No. 1A, Barusari, Kec. Semarang Selatan, Kota Semarang, Jawa Tengah 50244,
                 024-xxxxxxxx <br>
@@ -123,10 +123,7 @@
         </table>
         <table class="table table-sm table-borderless">
             <tr>
-                <td class="text-right">Keterangan</td>
-                <td>:</td>
-                <td>Pengiriman barang setelah transaksi berhasil.</td>
-                <td></td>
+                <td colspan="4"></td>
                 <td class="text-right">Jumlah Item</td>
                 <td>:</td>
                 <td class="text-right">{{$jumlahItem}}</td>
@@ -155,20 +152,20 @@
                 <td class="text-right">Pajak</td>
                 <td>:</td>
                 <td class="text-right">0.00%</td>
-                <td class="text-right">0.00</td>
-                <td class="text-right">DP PO</td>
-                <td>:</td>
-                <td class="text-right" style="width: 100px;">0</td>
+                <td class="text-right"></td>
+                <td class="text-right"></td>
+                <td></td>
+                <td class="text-right" style="width: 100px;"></td>
             </tr>
             <tr>
                 <td colspan="4"></td>
                 <td class="text-right">Biaya Lain</td>
                 <td>:</td>
                 <td class="text-right">0</td>
-                <td class="text-right">0.00</td>
-                <td class="text-right">Tunai</td>
-                <td>:</td>
-                <td class="text-right" style="width: 100px;">{{($pembayaran == 2) ? $jumlahBayar : 0.00}}</td>
+                <td class="text-right"></td>
+                <td class="text-right"></td>
+                <td></td>
+                <td class="text-right" style="width: 100px;"></td>
             </tr>
             <tr>
                 <td colspan="4" class="text-center">
@@ -181,24 +178,15 @@
                 <td>:</td>
                 <td class="text-right">{{$tanggal}}</td>
                 <td class="text-right"></td>
-                <td class="text-right">Kredit</td>
-                <td>:</td>
-                <td class="text-right" style="width: 100px;">
-                    @if ($pembayaran == 1)
-                    @php
-                    $jumlahBayar = $jumlahHarga
-                    @endphp
-                    {{$jumlahBayar}}
-                    @else
-                    0.00
-                    @endif
-                </td>
+                <td class="text-right"></td>
+                <td></td>
+                <td class="text-right" style="width: 100px;"></td>
             </tr>
             <tr>
                 <td colspan="8"></td>
-                <td class="text-right">Kembali</td>
-                <td>:</td>
-                <td class="text-right" style="width: 100px;">{{$jumlahBayar - $jumlahHarga}}</td>
+                <td class="text-right"></td>
+                <td></td>
+                <td class="text-right" style="width: 100px;"></td>
             </tr>
         </table>
     </div>

@@ -39,17 +39,17 @@
                             <div>{{$i++}}</div>
                         </th>
                         <td class="align-middle text-center">
-                            {!! Form::text('edit_kode', $data->kode, ['class' => 'd-none', 'id' =>
+                            {!! Form::text('edit_kode', $data->kode, ['class' => 'd-none form-control form-control-sm', 'id' =>
                             'edit-kode-'.$data->id]) !!}
                             <div id="kode-<?php echo $data->id ?>">{{$data->kode}}</div>
                         </td>
                         <td class="align-middle">
-                            {!! Form::text('edit_nama', $data->nama, ['class' => 'd-none', 'id' =>
+                            {!! Form::text('edit_nama', $data->nama, ['class' => 'd-none form-control form-control-sm', 'id' =>
                             'edit-nama-'.$data->id]) !!}
                             <div id="nama-<?php echo $data->id ?>">{{$data->nama}}</div>
                         </td>
                         <td class="align-middle text-center">
-                            {!! Form::text('edit_debit', $data->debit, ['class' => 'd-none', 'id' =>
+                            {!! Form::text('edit_debit', $data->debit, ['class' => 'd-none form-control form-control-sm', 'id' =>
                             'edit-debit-'.$data->id]) !!}
                             <div id="debit-<?php echo $data->id ?>">{{$data->debit}}</div>
                             @php
@@ -57,7 +57,7 @@
                             @endphp
                         </td>
                         <td class="align-middle text-center">
-                            {!! Form::text('edit_kredit', $data->kredit, ['class' => 'd-none', 'id' =>
+                            {!! Form::text('edit_kredit', $data->kredit, ['class' => 'd-none form-control form-control-sm', 'id' =>
                             'edit-kredit-'.$data->id]) !!}
                             <div id="kredit-<?php echo $data->id ?>">{{$data->kredit}}</div>
                             @php

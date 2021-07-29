@@ -58,7 +58,7 @@
             </div>
             <br>
             <div class="d-grid gap-2 mb-2">
-                <a id="bayar" class="btn btn-sm btn-primary">Bayar</a>
+                <a id="bayar" class="btn btn-sm btn-primary">Terima</a>
             </div>
             <div class="d-grid gap-2">
                 <a id="batal" class="btn btn-sm btn-danger">Batal</a>
@@ -77,7 +77,6 @@
                     <thead class="text-center">
                         <tr>
                             <th>No</th>
-                            <th>Nomor Jual</th>
                             <th>Kode Anggota</th>
                             <th>Nama Anggota</th>
                             <th>Jumlah Piutang</th>
@@ -99,7 +98,6 @@
                             <th class="align-middle text-center">
                                 <p>{{$i++}}</p>
                             </th>
-                            <td class="align-middle text-center">{{$data->nomor_jual}}</td>
                             <td class="align-middle text-center">{{$data->kode_anggota}}</td>
                             <td class="align-middle">{{$data->nama_anggota}}</td>
                             <td class="align-middle text-center">{{$data->jumlah_piutang}}</td>

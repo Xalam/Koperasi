@@ -77,12 +77,12 @@
             </div>
             <div class="col-lg-2">
                 {!! Form::label(null, 'Harga Satuan', null) !!}
-                {!! Form::number('harga_satuan', 0, ['class' => 'col-lg-12 form-control form-control-sm', 'required'])
+                {!! Form::number('harga_satuan', 0, ['class' => 'col-lg-12 form-control form-control-sm', 'required', 'readonly'])
                 !!}
             </div>
             <div class="col-lg-2">
                 {!! Form::label(null, 'Jumlah', null) !!}
-                {!! Form::number('jumlah', 1, ['class' => 'col-lg-12 form-control form-control-sm', 'required']) !!}
+                {!! Form::number('jumlah', 0, ['class' => 'col-lg-12 form-control form-control-sm', 'required', 'readonly']) !!}
             </div>
             <div class="col-lg-2">
                 {!! Form::label(null, 'Total Harga', null) !!}
@@ -131,22 +131,29 @@
 @if(Session::get('success'))
 <script>
 $(document).ready(function() {
-    const Toast = Swal.mixin({
-        toast: true,
-        position: 'middle',
-        showConfirmButton: false,
-        timer: 2000,
-        timerProgressBar: true
-    });
-
-    Toast.fire({
+    Swal.fire({
         icon: 'success',
-        title: 'Proses Transaksi',
-        text: `{{Session::get('success')}}`
+        title: '<b>Proses Transaksi</b>',
+        text: `{{Session::get('success')}}`,
+        position: 'middle',
+        showConfirmButton: true,
+        showCancelButton: true,
+        confirmButtonText: 'Cetak Nota',
+        cancelButtonText: 'Tutup',
+        timer: 3000,
+        timerProgressBar: true,
+        didOpen: (toast) => {
+            toast.addEventListener('mouseenter', Swal.stopTimer)
+            toast.addEventListener('mouseleave', Swal.resumeTimer)
+        }
+    }).then((result) => {
+        if (result.isConfirmed) {
+            window.open("{{url('toko/transaksi/titip-jual/nota')}}");
+            window.location = "{{url('toko/transaksi/titip-jual')}}";
+        } else {
+            window.location = "{{url('toko/transaksi/titip-jual')}}";
+        }
     });
-    setTimeout(function() {
-        window.location = "/toko/transaksi/titip-jual";
-    }, 1000);
 });
 </script>
 @elseif (Session::get('failed'))

@@ -12,7 +12,6 @@ class PiutangModel extends Model
     protected $table = 'piutang';
 
     protected $fillable = [
-        'nomor_jual',
         'id_anggota',
         'jumlah_piutang',
         'jumlah_terima_piutang',

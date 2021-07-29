@@ -21,11 +21,14 @@
                         <th>No</th>
                         <th>Kode Barang</th>
                         <th>Nama Barang</th>
-                        <th>HPP</th>
                         <th>Harga Jual</th>
-                        <th>Stok</th>
                         <th>Satuan</th>
                         <th>Expired</th>
+                        <th>Nomor Rak</th>
+                        <th>Tingkat Rak</th>
+                        <th>Posisi Rak</th>
+                        <th>Kode Supplier</th>
+                        <th>Nama Supplier</th>
                         <th class="w-20">Opsi</th>
                     </tr>
                 </thead>
@@ -40,39 +43,48 @@
                             <div>{{$i++}}</div>
                         </th>
                         <td class="align-middle text-center">
-                            {!! Form::text('edit_kode', $data->kode, ['class' => 'd-none', 'id' =>
-                            'edit-kode-'.$data->id]) !!}
                             <div id="kode-<?php echo $data->id ?>">{{$data->kode}}</div>
                         </td>
                         <td class="align-middle">
-                            {!! Form::text('edit_nama', $data->nama, ['class' => 'd-none', 'id' =>
+                            {!! Form::text('edit_nama', $data->nama, ['class' => 'd-none form-control form-control-sm', 'id' =>
                             'edit-nama-'.$data->id]) !!}
                             <div id="nama-<?php echo $data->id ?>">{{$data->nama}}</div>
                         </td>
                         <td class="align-middle text-center">
-                            {!! Form::text('edit_hpp', $data->hpp, ['class' => 'd-none', 'id' =>
-                            'edit-hpp-'.$data->id]) !!}
-                            <div id="hpp-<?php echo $data->id ?>">{{$data->hpp}}</div>
-                        </td>
-                        <td class="align-middle text-center">
-                            {!! Form::text('edit_harga_jual', $data->harga_jual, ['class' => 'd-none', 'id' =>
+                            {!! Form::text('edit_harga_jual', $data->harga_jual, ['class' => 'd-none form-control form-control-sm', 'id' =>
                             'edit-harga-jual-'.$data->id]) !!}
                             <div id="harga-jual-<?php echo $data->id ?>">{{$data->harga_jual}}</div>
                         </td>
                         <td class="align-middle text-center">
-                            {!! Form::text('edit_stok', $data->stok, ['class' => 'd-none', 'id' =>
-                            'edit-stok-'.$data->id]) !!}
-                            <div id="stok-<?php echo $data->id ?>">{{$data->stok}}</div>
-                        </td>
-                        <td class="align-middle text-center">
-                            {!! Form::text('edit_satuan', $data->satuan, ['class' => 'd-none', 'id' =>
+                            {!! Form::text('edit_satuan', $data->satuan, ['class' => 'd-none form-control form-control-sm', 'id' =>
                             'edit-satuan-'.$data->id]) !!}
                             <div id="satuan-<?php echo $data->id ?>">{{$data->satuan}}</div>
                         </td>
                         <td class="align-middle text-center">
-                            {!! Form::date('edit_expired', $data->expired, ['class' => 'd-none', 'id' =>
-                            'edit-expired-'.$data->id]) !!}
-                            <div id="expired-<?php echo $data->id ?>">{{$data->expired}}</div>
+                            <!-- {!! Form::date('edit_expired', $data->expired, ['class' => 'd-none form-control form-control-sm', 'id' =>
+                            'edit-expired-'.$data->id]) !!} -->
+                            <div id="expired-<?php echo $data->id ?>">{{'01/' . $data->expired_bulan . '/' . '20' . $data->expired_tahun}}</div>
+                        </td>
+                        <td class="align-middle">
+                            {!! Form::text('edit_nomor_rak', $data->nomor_rak, ['class' => 'd-none form-control form-control-sm', 'id' =>
+                            'edit-nomor-rak-'.$data->id]) !!}
+                            <div id="nomor-rak-<?php echo $data->id ?>">{{$data->nomor_rak}}</div>
+                        </td>
+                        <td class="align-middle text-center">
+                            {!! Form::text('edit_tingkat_rak', $data->tingkat_rak, ['class' => 'd-none form-control form-control-sm', 'id' =>
+                            'edit-tingkat-rak-'.$data->id]) !!}
+                            <div id="tingkat-rak-<?php echo $data->id ?>">{{$data->tingkat_rak}}</div>
+                        </td>
+                        <td class="align-middle text-center">
+                            {!! Form::text('edit_posisi_rak', $data->posisi_rak, ['class' => 'd-none form-control form-control-sm', 'id' =>
+                            'edit-posisi-rak-'.$data->id]) !!}
+                            <div id="posisi-rak-<?php echo $data->id ?>">{{$data->posisi_rak}}</div>
+                        </td>
+                        <td class="align-middle text-center">
+                            <div id="kode-supplier-<?php echo $data->id ?>">{{$data->kode_supplier}}</div>
+                        </td>
+                        <td class="align-middle">
+                            <div id="nama-supplier-<?php echo $data->id ?>">{{$data->nama_supplier}}</div>
                         </td>
                         <td class="align-middle text-center">
                             <a id=<?php echo "edit-" . $data->id ?> class="w-48 btn btn-sm btn-warning"
@@ -98,8 +110,6 @@
 <script>
 
 function edit(id) {
-    $("#kode-" + id).addClass("d-none");
-    $("#edit-kode-" + id).removeClass("d-none");
     $("#nama-" + id).addClass("d-none");
     $("#edit-nama-" + id).removeClass("d-none");
     $("#hpp-" + id).addClass("d-none");
@@ -110,8 +120,14 @@ function edit(id) {
     $("#edit-stok-" + id).removeClass("d-none");
     $("#satuan-" + id).addClass("d-none");
     $("#edit-satuan-" + id).removeClass("d-none");
-    $("#expired-" + id).addClass("d-none");
-    $("#edit-expired-" + id).removeClass("d-none");
+    $("#nomor-rak-" + id).addClass("d-none");
+    $("#edit-nomor-rak-" + id).removeClass("d-none");
+    $("#tingkat-rak-" + id).addClass("d-none");
+    $("#edit-tingkat-rak-" + id).removeClass("d-none");
+    $("#posisi-rak-" + id).addClass("d-none");
+    $("#edit-posisi-rak-" + id).removeClass("d-none");
+    // $("#expired-" + id).addClass("d-none");
+    // $("#edit-expired-" + id).removeClass("d-none");
     $("#edit-" + id).addClass("d-none");
     $("#hapus-" + id).addClass("d-none");
     $("#terapkan-" + id).removeClass("d-none");
@@ -119,9 +135,6 @@ function edit(id) {
 }
 
 function batal(id) {
-    $("#kode-" + id).removeClass("d-none");
-    $("#edit-kode-" + id).val($("#kode-" + id).text());
-    $("#edit-kode-" + id).addClass("d-none");
     $("#nama-" + id).removeClass("d-none");
     $("#edit-nama-" + id).val($("#nama-" + id).text());
     $("#edit-nama-" + id).addClass("d-none");
@@ -137,9 +150,18 @@ function batal(id) {
     $("#satuan-" + id).removeClass("d-none");
     $("#edit-satuan-" + id).val($("#satuan-" + id).text());
     $("#edit-satuan-" + id).addClass("d-none");
-    $("#expired-" + id).removeClass("d-none");
-    $("#edit-expired-" + id).val($("#expired-" + id).text());
-    $("#edit-expired-" + id).addClass("d-none");
+    $("#nomor-rak-" + id).removeClass("d-none");
+    $("#edit-nomor-rak-" + id).val($("#nomor-rak-" + id).text());
+    $("#edit-nomor-rak-" + id).addClass("d-none");
+    $("#tingkat-rak-" + id).removeClass("d-none");
+    $("#edit-tingkat-rak-" + id).val($("#tingkat-rak-" + id).text());
+    $("#edit-tingkat-rak-" + id).addClass("d-none");
+    $("#posisi-rak-" + id).removeClass("d-none");
+    $("#edit-posisi-rak-" + id).val($("#posisi-rak-" + id).text());
+    $("#edit-posisi-rak-" + id).addClass("d-none");
+    // $("#expired-" + id).removeClass("d-none");
+    // $("#edit-expired-" + id).val($("#expired-" + id).text());
+    // $("#edit-expired-" + id).addClass("d-none");
     $("#edit-" + id).removeClass("d-none");
     $("#hapus-" + id).removeClass("d-none");
     $("#terapkan-" + id).addClass("d-none");
@@ -175,18 +197,18 @@ function terapkan(id) {
             type: 'POST',
             data: {
                 id: id,
-                kode: $('#edit-kode-' + id).val(),
                 nama: $('#edit-nama-' + id).val(),
                 hpp: $('#edit-hpp-' + id).val(),
                 harga_jual: $('#edit-harga-jual-' + id).val(),
                 stok: $('#edit-stok-' + id).val(),
                 satuan: $('#edit-satuan-' + id).val(),
-                expired: $('#edit-expired-' + id).val()
+                nomor_rak: $('#edit-nomor-rak-' + id).val(),
+                tingkat_rak: $('#edit-tingkat-rak-' + id).val(),
+                posisi_rak: $('#edit-posisi-rak-' + id).val()
+                // expired: $('#edit-expired-' + id).val()
             },
             success: function(response) {
                 if (response.code == 200) {
-                    $("#kode-" + id).removeClass("d-none");
-                    $("#edit-kode-" + id).addClass("d-none");
                     $("#nama-" + id).removeClass("d-none");
                     $("#edit-nama-" + id).addClass("d-none");
                     $("#hpp-" + id).removeClass("d-none");
@@ -197,20 +219,28 @@ function terapkan(id) {
                     $("#edit-stok-" + id).addClass("d-none");
                     $("#satuan-" + id).removeClass("d-none");
                     $("#edit-satuan-" + id).addClass("d-none");
-                    $("#expired-" + id).removeClass("d-none");
-                    $("#edit-expired-" + id).addClass("d-none");
+                    $("#nomor-rak-" + id).removeClass("d-none");
+                    $("#edit-nomor-rak-" + id).addClass("d-none");
+                    $("#tingkat-rak-" + id).removeClass("d-none");
+                    $("#edit-tingkat-rak-" + id).addClass("d-none");
+                    $("#posisi-rak-" + id).removeClass("d-none");
+                    $("#edit-posisi-rak-" + id).addClass("d-none");
+                    // $("#expired-" + id).removeClass("d-none");
+                    // $("#edit-expired-" + id).addClass("d-none");
                     $("#edit-" + id).removeClass("d-none");
                     $("#hapus-" + id).removeClass("d-none");
                     $("#terapkan-" + id).addClass("d-none");
                     $("#batal-" + id).addClass("d-none");
 
-                    $("#kode-" + id).html(response.barang.kode);
                     $("#nama-" + id).html(response.barang.nama);
                     $("#hpp-" + id).html(response.barang.hpp);
                     $("#harga-jual-" + id).html(response.barang.harga_jual);
                     $("#stok-" + id).html(response.barang.stok);
                     $("#satuan-" + id).html(response.barang.satuan);
-                    $("#expired-" + id).html(response.barang.expired);
+                    $("#nomor-rak-" + id).html(response.barang.satuan);
+                    $("#tingkat-rak-" + id).html(response.barang.satuan);
+                    $("#posisi-rak-" + id).html(response.barang.satuan);
+                    // $("#expired-" + id).html(response.barang.expired);
                 }
             }
         });

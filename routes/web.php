@@ -39,6 +39,7 @@ use App\Http\Controllers\Toko\Laporan\Pendapatan\LaporanPendapatanController;
 use App\Http\Controllers\Toko\Laporan\Penjualan\LaporanPenjualanController;
 use App\Http\Controllers\Toko\Laporan\Persediaan\LaporanPersediaanController;
 use App\Http\Controllers\Toko\Laporan\Retur\LaporanReturPembelianController;
+use App\Http\Controllers\Toko\Transaksi\Persediaan\PersediaanController;
 
 /*
 |--------------------------------------------------------------------------
@@ -56,6 +57,7 @@ use App\Http\Controllers\Toko\Laporan\Retur\LaporanReturPembelianController;
 Route::group(['prefix' => 'api'], function () {
     Route::get('/data-akun/{id}', [DataAkunController::class, 'dataAkun']);
     Route::get('/data-barang/{id}', [DataBarangController::class, 'dataBarang']);
+    Route::get('/data-beli-barang/{id}', [DataBarangController::class, 'dataBeliBarang']);
     Route::get('/data-retur-barang/{id}', [DataBarangController::class, 'dataReturBarang']);
     Route::get('/data-retur-detail-barang/{nomor}/{id}', [DataBarangController::class, 'dataReturDetailBarang']);
     Route::get('/data-supplier/{id}', [DataSupplierController::class, 'dataSupplier']);
@@ -112,6 +114,7 @@ Route::group(['prefix' => 'toko'], function () {
 
             Route::group(['prefix' => 'penjualan', 'middleware' => ['auth:toko', 'checkjabatan:Kanit,Super_Admin']], function () {
                 Route::get('/', [PenjualanController::class, 'index']);
+                Route::post('/scan', [PenjualanController::class, 'scan']);
                 Route::post('/store', [PenjualanController::class, 'store']);
                 Route::post('/jual', [PenjualanController::class, 'sell']);
                 Route::post('/cancel', [PenjualanController::class, 'cancel']);
@@ -180,7 +183,12 @@ Route::group(['prefix' => 'toko'], function () {
 
             Route::group(['prefix' => 'pesanan-online', 'middleware' => ['auth:toko', 'checkjabatan:Super_Admin,Kanit']], function () {
                 Route::get('/', [PesananOnlineController::class, 'index']);
+                Route::post('/delete', [PesananOnlineController::class, 'delete']);
                 Route::post('/proses/{id}/{proses}', [PesananOnlineController::class, 'proses']);
+            });
+
+            Route::group(['prefix' => 'persediaan', 'middleware' => ['auth:toko', 'checkjabatan:Super_Admin,Kanit']], function () {
+                Route::get('/', [PersediaanController::class, 'index']);
             });
         });
 
@@ -206,8 +214,8 @@ Route::group(['prefix' => 'toko'], function () {
             Route::group(['prefix' => 'retur-pembelian'], function () {
                 Route::get('/', [LaporanReturPembelianController::class, 'index']);
                 Route::get('/nota/{nomor}', [LaporanReturPembelianController::class, 'nota']);
-                Route::get('/print/{awal}/{akhir}', [LaporanReturPembelianController::class, 'print']);
-                Route::get('/export/{awal}/{akhir}', [LaporanReturPembelianController::class, 'export']);
+                Route::get('/print/{tanggal}', [LaporanReturPembelianController::class, 'print']);
+                Route::get('/export/{tanggal}', [LaporanReturPembelianController::class, 'export']);
             });
 
             Route::group(['prefix' => 'penjualan'], function () {

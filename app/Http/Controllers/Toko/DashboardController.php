@@ -42,7 +42,6 @@ class DashboardController extends Controller
                                     DB::raw('IFNULL(SUM(jurnal.debit+jurnal.kredit), 0) AS jumlah'))
                                     ->where('akun.kode', 'like', '4%')
                                     ->where(DB::raw('YEAR(jurnal.created_at)'), now()->year)
-                                    ->groupBy('jurnal.tanggal')
                                     ->first();
         
         $pengeluaran = JurnalModel::join('akun', 'akun.id', '=', 'jurnal.id_akun')
@@ -53,11 +52,11 @@ class DashboardController extends Controller
                                         $i->where('akun.kode', 'like', '5%')
                                         ->orWhere('akun.kode', 'like', '6%');
                                     })
-                                    ->groupBy('jurnal.tanggal')
+                                    ->where(DB::raw('YEAR(jurnal.created_at)'), now()->year)
                                     ->first();
 
         $total_pendapatan = $pemasukan->jumlah - $pengeluaran->jumlah;
-
+            
         // Chart
         $list_bulan = [];
         $list_bulan[] = 'Januari';

@@ -14,15 +14,21 @@ class BarangModel extends Model
     protected $fillable = [
         'kode', 
         'nama', 
+        'id_supplier',
         'hpp',
         'harga_jual',
         'minimal_grosir',
         'harga_grosir',
-        'stok',
         'stok_minimal',
+        'stok_etalase',
+        'stok_gudang',
         'satuan',
+        'nomor_rak',
+        'tingkat_rak',
+        'posisi_rak',
         'foto',
-        'expired',
+        'expired_bulan',
+        'expired_tahun',
         'alert_status'
     ];
 }

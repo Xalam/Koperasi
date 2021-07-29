@@ -56,6 +56,12 @@
                 {!! Form::close() !!}
             </div>
         </div>
+        <div class="text-center mt-4">
+            <a href="{{ route('login') }}" class="btn btn-danger-outline btn-lg text-white"
+                style="background-color: transparent;">
+                <i class="fas fa-arrow-left fa-sm text-white"></i>&nbsp;Kembali
+            </a>
+        </div>
     </div>
 </body>
 

@@ -27,6 +27,7 @@
             {!! Form::label(null, 'No. Beli', ['class' => 'col-lg-2']) !!}
             {!! Form::select('id_beli', $nomor_beli, null, ['class' => 'col-lg-4 form-select form-select-sm',
             'required']) !!}
+            {!! Form::text('nomor_beli', null, ['class' => 'd-none', 'readonly']) !!}
         </div>
         <div class="row-lg align-item-center mb-2">
             {!! Form::label(null, 'Nama Supplier', ['class' => 'col-lg-2']) !!}
@@ -104,22 +105,29 @@
 @if(Session::get('success'))
 <script>
 $(document).ready(function() {
-    const Toast = Swal.mixin({
-        toast: true,
-        position: 'middle',
-        showConfirmButton: false,
-        timer: 2000,
-        timerProgressBar: true
-    });
-
-    Toast.fire({
+    Swal.fire({
         icon: 'success',
-        title: 'Proses Transaksi',
-        text: `{{Session::get('success')}}`
+        title: '<b>Proses Transaksi</b>',
+        text: `{{Session::get('success')}}`,
+        position: 'middle',
+        showConfirmButton: true,
+        showCancelButton: true,
+        confirmButtonText: 'Cetak Nota',
+        cancelButtonText: 'Tutup',
+        timer: 3000,
+        timerProgressBar: true,
+        didOpen: (toast) => {
+            toast.addEventListener('mouseenter', Swal.stopTimer)
+            toast.addEventListener('mouseleave', Swal.resumeTimer)
+        }
+    }).then((result) => {
+        if (result.isConfirmed) {
+            window.open("{{url('toko/transaksi/retur-pembelian/nota')}}");
+            window.location = "{{url('toko/transaksi/retur-pembelian')}}";
+        } else {
+            window.location = "{{url('toko/transaksi/retur-pembelian')}}";
+        }
     });
-    setTimeout(function() {
-        window.location = "/toko/transaksi/retur-pembelian";
-    }, 1000);
 });
 </script>
 @elseif (Session::get('failed'))
@@ -180,18 +188,18 @@ function tambah_daftar() {
                                 .jumlah_beli - data.jumlah_retur));
                             $('[name="maksimal_retur"]').val(parseInt(data.jumlah_beli - data
                                 .jumlah_retur));
+
+                            if (parseInt(data.jumlah_beli - data.jumlah_retur) <= 0) {
+                                $('[name="jumlah"]').attr('readonly', true);
+                                $('[name="jumlah"]').val(0);
+                            } else {
+                                $('[name="jumlah"]').removeAttr('readonly');
+                                $('[name="jumlah"]').val(1);
+                            }
                         });
                 } else {
                     $('[name="nama_barang"]').val("");
                     $('[name="harga_beli"]').val("");
-                }
-
-                if (parseInt(data.jumlah_beli - data.jumlah_retur) <= 0) {
-                    $('[name="jumlah"]').attr('readonly', true);
-                    $('[name="jumlah"]').val(0);
-                } else {
-                    $('[name="jumlah"]').removeAttr('readonly');
-                    $('[name="jumlah"]').val(1);
                 }
             }
         }
@@ -334,6 +342,16 @@ $(document).ready(function() {
     $('#cek-nomor').click(function() {
         tampil_daftar();
     });
+
+    setNomorBeli();
+
+    $('[name="id_beli"]').change(function() {
+        setNomorBeli();
+    });
+
+    function setNomorBeli() {
+        $('[name="nomor_beli"]').val($('[name="id_beli"] option:selected').text());
+    }
 
     $('[name="jumlah"]').change(function() {
         if ($(this).val() < 1) {

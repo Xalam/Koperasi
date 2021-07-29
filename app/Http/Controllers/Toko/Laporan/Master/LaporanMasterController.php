@@ -8,15 +8,18 @@ use App\Models\Toko\Master\Admin\AdminModel;
 use App\Models\Toko\Master\Anggota\AnggotaModel;
 use App\Models\Toko\Master\Barang\BarangModel;
 use App\Models\Toko\Master\Supplier\SupplierModel;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Maatwebsite\Excel\Facades\Excel;
 
 class LaporanMasterController extends Controller
 {
     public function index(Request $request) {
+        $cur_date = Carbon::now();
+
         $data_notified = BarangModel::all();
         foreach ($data_notified AS $data) {
-            if ($data->stok <= $data->stok_minimal) {
+            if ($data->stok_etalase <= $data->stok_minimal || $data->stok_gudang <= $data->stok_minimal) {
                 BarangModel::where('id', $data->id)->update([
                     'alert_status' => 1
                 ]);
@@ -42,9 +45,9 @@ class LaporanMasterController extends Controller
                 $laporan_master = SupplierModel::all();
             }
 
-            return view ('toko.laporan.master.index', compact('bagian', 'data_notified', 'data_notif', 'laporan_master'));
+            return view ('toko.laporan.master.index', compact('bagian', 'cur_date', 'data_notified', 'data_notif', 'laporan_master'));
         } else {
-            return view ('toko.laporan.master.index', compact('data_notified', 'data_notif'));
+            return view ('toko.laporan.master.index', compact('cur_date', 'data_notified', 'data_notif'));
         }
     }
 

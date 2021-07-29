@@ -18,6 +18,7 @@ class SupplierModel extends Model
         'telepon',
         'wa',
         'jarak',
+        'lama_kirim',
         'email',
         'keterangan',
         'tempo'

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Toko\Transaksi\TitipJual;
 
 use App\Http\Controllers\Controller;
+use App\Models\Simpan_Pinjam\Laporan\JurnalUmum;
 use App\Models\Toko\Master\Akun\AkunModel;
 use Illuminate\Http\Request;
 
@@ -20,10 +21,9 @@ use Illuminate\Support\Facades\Session;
 class TitipJualController extends Controller
 {
     public function index() {
-
         $data_notified = BarangModel::all();
         foreach ($data_notified AS $data) {
-            if ($data->stok <= $data->stok_minimal) {
+            if ($data->stok_etalase <= $data->stok_minimal || $data->stok_gudang <= $data->stok_minimal) {
                 BarangModel::where('id', $data->id)->update([
                     'alert_status' => 1
                 ]);
@@ -138,8 +138,9 @@ class TitipJualController extends Controller
                 $barang = BarangModel::where('id', $data->id_barang)->first();
 
                 BarangModel::where('id', $data->id_barang)->update([
-                    'hpp' => ($barang->stok * $barang->hpp + $data->total_harga) / ($barang->stok + $data->jumlah),
-                    'stok' => $barang->stok + $data->jumlah]);
+                    'hpp' => (($barang->stok_gudang + $barang->stok_etalase) * $barang->hpp + $data->total_harga) / (($barang->stok_gudang + $barang->stok_etalase) + $data->jumlah),
+                    'stok_gudang' => $barang->stok_gudang + $data->jumlah
+                ]);
             }
 
             $persediaan_konsinyasi = AkunModel::where('kode', 1131)->first();
@@ -176,13 +177,31 @@ class TitipJualController extends Controller
                 'debit' => $request->input('jumlah_harga'),
                 'kredit' => 0
             ]); 
+
+            JurnalUmum::create([
+                'kode_jurnal' => $request->input('nomor_jurnal'),
+                'tanggal' => $request->input('tanggal'),
+                'keterangan' => $keterangan,
+                'id_akun' => $persediaan_konsinyasi->id,
+                'debet' => $request->input('jumlah_harga'),
+                'kredit' => 0
+            ]); 
                 
             JurnalModel::create([
                 'nomor' => $request->input('nomor_jurnal'),
+                'id_akun' => $hutang_konsinyasi->id,
                 'tanggal' => $request->input('tanggal'),
                 'keterangan' => $keterangan,
-                'id_akun' => $hutang_konsinyasi->id,
                 'debit' => 0,
+                'kredit' => $request->input('jumlah_harga')
+            ]);
+                
+            JurnalModel::create([
+                'kode_jurnal' => $request->input('nomor_jurnal'),
+                'id_akun' => $hutang_konsinyasi->id,
+                'tanggal' => $request->input('tanggal'),
+                'keterangan' => $keterangan,
+                'debet' => 0,
                 'kredit' => $request->input('jumlah_harga')
             ]);
             
@@ -217,5 +236,24 @@ class TitipJualController extends Controller
         TitipJualDetailModel::where('nomor', $nomor)->delete();
         
         return response()->json(['code'=>200]);
+    }
+
+    public function nota() {
+        $supplier = TitipJualModel::leftJoin('supplier', 'supplier.id', '=', 'titip_jual.id_supplier')
+                                    ->select('supplier.kode AS kode_supplier', 'supplier.nama AS nama_supplier', 
+                                            'supplier.alamat AS alamat_supplier', 'titip_jual.*')
+                                    ->orderBy('id', 'desc')
+                                    ->limit(1)
+                                    ->get();
+
+        $last_nomor = TitipJualModel::orderBy('id', 'desc')->first()->nomor;
+
+        $titip_jual = TitipJualDetailModel::join('barang', 'barang.id', '=', 'detail_titip_jual.id_barang')
+                                            ->select('barang.nama AS nama_barang', 'barang.kode AS kode_barang', 'barang.satuan AS satuan', 
+                                                    'detail_titip_jual.jumlah AS jumlah', 'detail_titip_jual.harga_satuan AS harga_satuan', 
+                                                    'detail_titip_jual.total_harga AS total_harga')
+                                            ->where('nomor', $last_nomor)->get();
+
+        return view('toko.transaksi.titip_jual.nota', compact('titip_jual', 'supplier'));
     }
 }

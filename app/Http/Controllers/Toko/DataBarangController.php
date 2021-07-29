@@ -15,6 +15,11 @@ class DataBarangController extends Controller
                             ->orderBy('nama')
                             ->get();
     }
+    public function dataBeliBarang($supplier) {
+        return BarangModel::where('id_supplier', $supplier)
+                            ->orderBy('nama')
+                            ->get();
+    }
 
     public function dataReturBarang($id) {
         return BarangModel::join('detail_beli', 'detail_beli.id_barang', '=', 'barang.id')

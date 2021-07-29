@@ -12,47 +12,50 @@
 @section('main')
 <div class="m-6">
     <div class="d-flex flex-row flex-wrap mb-4">
-        <div class="card mb-2 vw-100" style="height: 120px;">
+        <div class="card mb-2 vw-100">
             <div class="bg-white card-header" style="height: 36px;">
                 <p><b>SUMMARY</b></p>
             </div>
-            <div class="bg-white card-body d-flex flex-row">
-                <div class="col-lg-4 align-self-center d-flex flex-row">
+            <div class="bg-white card-body d-flex flex-row flex-wrap">
+                <div class="col-lg-4 align-self-center d-flex flex-row flex-wrap mb-2 mt-2">
                     <div class="align-self-center">
                         <i class="btn-success text-white fab fa-sellsy fa-2x summary-icon"></i>
                     </div>
                     <div class="ms-3 align">
                         <b class="text-gray-600">Penjualan</b>
                         @if (isset($total_penjualan->total))
-                        <h3 class="fw-bolder">{{$total_penjualan->total}}</h3>
+                        <h5 class="fw-bolder">{{$total_penjualan->total}}</h5>
                         @else
-                        <h3 class="fw-bolder">0</h3>
+                        <h5 class="fw-bolder">0</h5>
                         @endif
                     </div>
                 </div>
-                <div class="col-lg-4 align-self-center d-flex flex-row">
+                <div class="col-lg-4 align-self-center d-flex flex-row flex-wrap mb-2 mt-2">
                     <div class="align-self-center">
                         <i class="btn-warning text-white fas fa-shopping-cart fa-2x summary-icon"></i>
                     </div>
                     <div class="ms-3">
                         <b class="text-gray-600">Pembelian</b>
                         @if (isset($total_pembelian->total))
-                        <h3 class="fw-bolder">{{$total_pembelian->total}}</h3>
+                        <h5 class="fw-bolder">{{$total_pembelian->total}}</h5>
                         @else
-                        <h3 class="fw-bolder">0</h3>
+                        <h5 class="fw-bolder">0</h3>
                         @endif
                     </div>
                 </div>
-                <div class="col-lg-4 align-self-center d-flex flex-row">
+                <div class="col-lg-4 align-self-center d-flex flex-row flex-wrap mb-2 mt-2">
                     <div class="align-self-center">
                         <i class="btn-info fas fa-coins text-white fa-2x summary-icon"></i>
                     </div>
                     <div class="ms-3">
                         <b class="text-gray-600">Pendapatan</b>
                         @if (isset($total_pendapatan))
-                        <h3 class="fw-bolder">Rp. {{$total_pendapatan}},-</h3>
+                        @php
+                        $pendapatan = number_format($total_pendapatan, 2, ',', '.');
+                        @endphp
+                        <h5 class="fw-bolder">Rp. {{$pendapatan}}</h3>
                         @else
-                        <h3 class="fw-bolder">Rp. 0,-</h3>
+                        <h5 class="fw-bolder">Rp. 0,-</h5>
                         @endif
                     </div>
                 </div>

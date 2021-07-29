@@ -42,7 +42,7 @@
                 <th>Nomor Beli</th>
                 <th>Kode Barang</th>
                 <th>Nama Barang</th>
-                <th>HPP</th>
+                <th>Harga Beli</th>
                 <th>Jumlah Retur</th>
                 <th>Total Harga</th>
             </tr>

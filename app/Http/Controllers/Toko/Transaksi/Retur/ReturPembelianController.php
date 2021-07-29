@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Toko\Transaksi\Retur;
 
 use App\Http\Controllers\Controller;
+use App\Models\Simpan_Pinjam\Laporan\JurnalUmum;
 use App\Models\Toko\Master\Akun\AkunModel;
 use App\Models\Toko\Master\Barang\BarangModel;
 use App\Models\Toko\Master\Supplier\SupplierModel;
@@ -20,7 +21,7 @@ class ReturPembelianController extends Controller
     public function index() {
         $data_notified = BarangModel::all();
         foreach ($data_notified AS $data) {
-            if ($data->stok <= $data->stok_minimal) {
+            if ($data->stok_etalase <= $data->stok_minimal || $data->stok_gudang <= $data->stok_minimal) {
                 BarangModel::where('id', $data->id)->update([
                     'alert_status' => 1
                 ]);
@@ -82,12 +83,8 @@ class ReturPembelianController extends Controller
     }
 
     public function retur(Request $request) {
-        $cur_date = "";
-        $nomor_beli = [];
-        $data_notified = [];
-        $data_notif = [];
-
         $nomor = $request->input('nomor');
+        $nomor_beli = $request->input('nomor_beli');
 
         $data_barang = ReturPembelianBarangModel::where('nomor', $nomor)->get();
 
@@ -98,7 +95,9 @@ class ReturPembelianController extends Controller
                 $barang = BarangModel::where('id', $data->id_barang)->first();
 
                 BarangModel::where('id', $data->id_barang)->update([
-                    'stok' => $barang->stok - $data->jumlah]);
+                    'hpp' => ((($barang->stok_gudang + $barang->stok_etalase) * $barang->hpp) - $data->total_harga) / (($barang->stok_gudang + $barang->stok_etalase) - $data->jumlah),
+                    'stok_gudang' => $barang->stok_gudang - $data->jumlah
+                ]);
             }
 
             ReturPembelianModel::create([
@@ -133,6 +132,15 @@ class ReturPembelianController extends Controller
                     'debit' => $request->input('jumlah_harga'),
                     'kredit' => 0
                 ]);
+                
+                JurnalUmum::create([
+                    'kode_jurnal' => $request->input('nomor_jurnal'),
+                    'id_akun' => $kas->id,
+                    'tanggal' => $request->input('tanggal'),
+                    'keterangan' => $keterangan,
+                    'debet' => $request->input('jumlah_harga'),
+                    'kredit' => 0
+                ]);
 
                 JurnalModel::create([
                     'nomor' => $request->input('nomor_jurnal'),
@@ -140,6 +148,15 @@ class ReturPembelianController extends Controller
                     'keterangan' => $keterangan,
                     'id_akun' => $persediaan->id,
                     'debit' => 0,
+                    'kredit' => $request->input('jumlah_harga')
+                ]); 
+
+                JurnalUmum::create([
+                    'kode_jurnal' => $request->input('nomor_jurnal'),
+                    'id_akun' => $persediaan->id,
+                    'tanggal' => $request->input('tanggal'),
+                    'keterangan' => $keterangan,
+                    'debet' => 0,
                     'kredit' => $request->input('jumlah_harga')
                 ]); 
             } else {
@@ -156,8 +173,11 @@ class ReturPembelianController extends Controller
 
                 $tanggal = Carbon::parse($request->input('tanggal'))->format('y-m-d');
 
-                HutangModel::where('nomor_beli', $nomor)->update([
-                    'jumlah_hutang' => $request->input('jumlah_harga')
+                $data_hutang = HutangModel::where('nomor_beli', $nomor_beli)->first();
+
+                HutangModel::where('nomor_beli', $nomor_beli)->update([
+                    'jumlah_hutang' => $data_hutang->jumlah_hutang - $request->input('jumlah_harga'),
+                    'sisa_hutang' => $data_hutang->sisa_hutang - $request->input('jumlah_harga')
                 ]);
                     
                 JurnalModel::create([
@@ -166,6 +186,15 @@ class ReturPembelianController extends Controller
                     'keterangan' => $keterangan,
                     'id_akun' => $hutang->id,
                     'debit' => $request->input('jumlah_harga'),
+                    'kredit' => 0
+                ]);
+                    
+                JurnalUmum::create([
+                    'kode_jurnal' => $request->input('nomor_jurnal'),
+                    'id_akun' => $hutang->id,
+                    'tanggal' => $request->input('tanggal'),
+                    'keterangan' => $keterangan,
+                    'debet' => $request->input('jumlah_harga'),
                     'kredit' => 0
                 ]);
 
@@ -177,12 +206,26 @@ class ReturPembelianController extends Controller
                     'debit' => 0,
                     'kredit' => $request->input('jumlah_harga')
                 ]); 
+
+                JurnalUmum::create([
+                    'kode_jurnal' => $request->input('nomor_jurnal'),
+                    'id_akun' => $persediaan->id,
+                    'tanggal' => $request->input('tanggal'),
+                    'keterangan' => $keterangan,
+                    'debet' => 0,
+                    'kredit' => $request->input('jumlah_harga')
+                ]); 
             }
             
             Session::flash('success', 'Retur Barang Berhasil');
         } else {
             Session::flash('failed', 'Daftar Retur Pembelian Kosong');
         }
+
+        $cur_date = "";
+        $nomor_beli = [];
+        $data_notified = [];
+        $data_notif = [];
 
         return view('toko.transaksi.retur.index', compact('cur_date', 'data_notified', 'data_notif', 'nomor_beli'));
     }
@@ -200,5 +243,24 @@ class ReturPembelianController extends Controller
         ReturPembelianBarangModel::where('nomor', $nomor)->delete();
         
         return response()->json(['code'=>200]);
+    }
+
+    public function nota() {
+        $supplier = ReturPembelianModel::leftJoin('supplier', 'supplier.id', '=', 'retur.id_supplier')
+                                    ->select('supplier.kode AS kode_supplier', 'supplier.nama AS nama_supplier', 
+                                            'supplier.alamat AS alamat_supplier', 'retur.*')
+                                    ->orderBy('id', 'desc')
+                                    ->limit(1)
+                                    ->get();
+
+        $last_nomor = ReturPembelianModel::orderBy('id', 'desc')->first()->nomor;
+
+        $pembelian = ReturPembelianBarangModel::join('barang', 'barang.id', '=', 'detail_retur.id_barang')
+                                            ->select('barang.nama AS nama_barang', 'barang.kode AS kode_barang', 'barang.satuan AS satuan', 
+                                                    'detail_retur.jumlah AS jumlah', 'detail_retur.harga_beli AS harga_satuan', 
+                                                    'detail_retur.total_harga AS total_harga')
+                                            ->where('nomor', $last_nomor)->get();
+
+        return view('toko.transaksi.retur.nota', compact('pembelian', 'supplier'));
     }
 }
