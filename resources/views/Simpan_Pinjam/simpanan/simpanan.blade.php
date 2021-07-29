@@ -28,8 +28,12 @@
         <div class="col-12">
             <div class="card">
                 <div class="card-header">
-                    <h3 class="card-title">Data Simpanan Anggota</h3>
+                    <h3 class="card-title"><b>Data Simpanan Anggota</b></h3>
                     <a href="{{ route('data.create') }}" class="btn btn-sm btn-primary float-right">Tambah Simpanan</a>
+                    <br><span class="text-secondary">Silahkan klik <button class="btn btn-info btn-xs"><i
+                                class="far fa-plus-square"></i>&nbsp;Proses</button> apabila telah dibayar atau <button
+                            class="btn btn-danger btn-xs"><i class="fas fa-trash"></i></button> untuk menolak
+                        pengajuan simpanan berikut.</span>
                 </div>
                 <div class="card-body">
                     <div class="row">
@@ -51,6 +55,7 @@
                                 <th class="text-center">Nama Anggota</th>
                                 <th class="text-center">Nominal Setoran (Rp)</th>
                                 <th>Status Bayar</th>
+                                <th>Bukti Transfer</th>
                                 <th class="text-center">Keterangan</th>
                                 <th>Aksi</th>
                             </tr>
@@ -197,7 +202,11 @@
                         "className": "text-center",
                     },
                     {
-                        "targets": 8,
+                        "targets": 7,
+                        "className": "text-center",
+                    },
+                    {
+                        "targets": 9,
                         "className": "text-center",
                     }
                 ],
@@ -224,6 +233,9 @@
                     },
                     {
                         data: 'status'
+                    },
+                    {
+                        data: 'image'
                     },
                     {
                         data: 'keterangan'
@@ -303,10 +315,11 @@
 
     <script>
         jQuery(document).ready(function($) {
-            $('#mymodal').on('show.bs.modal', function(e) {
+            $('#modalTransfer').on('show.bs.modal', function(e) {
                 var button = $(e.relatedTarget);
                 var modal = $(this);
 
+                modal.find('.modal-content').html('<i>&nbsp;</i>')
                 modal.find('.modal-content').load(button.data("remote"));
             });
 
@@ -314,16 +327,17 @@
                 var button = $(e.relatedTarget);
                 var modal = $(this);
 
+                modal.find('.modal-content').html('<i>&nbsp;</i>')
                 modal.find('.modal-content').load(button.data("remote"));
             });
         });
     </script>
 
-    <div class="modal" id="mymodal" tabindex="-1" role="dialog">
+    <div class="modal" id="modalTransfer" tabindex="-1" role="dialog">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">Konfirmasi</h5>
+                    <h5 class="modal-title">Bukti Transfer</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="close">
                         <span aria-hidden="true">&times;</span>
                     </button>

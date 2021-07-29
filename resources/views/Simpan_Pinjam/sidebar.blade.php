@@ -76,6 +76,7 @@
                             <p>
                                 Simpanan
                                 <i class="right fas fa-angle-left"></i>
+                                <span class="right badge badge-danger" id="pulsate-simpanan" hidden>New!</span>
                             </p>
                         </a>
                         <ul class="nav nav-treeview">
@@ -84,6 +85,7 @@
                                     class="nav-link {{ request()->is('simpan-pinjam/simpanan/data*') ? ' active' : '' }}">
                                     <i class="far fa-circle nav-icon"></i>
                                     <p>Data Simpanan</p>
+                                    <span class="right pulsate-child" id="pulsate-child-simpanan" hidden>&nbsp;</span>
                                 </a>
                             </li>
                             <li class="nav-item">
@@ -98,6 +100,7 @@
                                     class="nav-link {{ request()->is('simpan-pinjam/simpanan/tarik-saldo*') ? ' active' : '' }}">
                                     <i class="far fa-circle nav-icon"></i>
                                     <p>Permintaan Penarikan</p>
+                                    <span class="right pulsate-child" id="pulsate-child-penarikan" hidden>&nbsp;</span>
                                 </a>
                             </li>
                             <li class="nav-item">
@@ -117,6 +120,7 @@
                             <p>
                                 Pinjaman
                                 <i class="right fas fa-angle-left"></i>
+                                <span class="right badge badge-danger" id="pulsate" hidden>New!</span>
                             </p>
                         </a>
                         <ul class="nav nav-treeview">
@@ -125,6 +129,7 @@
                                     class="nav-link {{ request()->is('simpan-pinjam/pinjaman/pengajuan*') ? ' active' : '' }}">
                                     <i class="far fa-circle nav-icon"></i>
                                     <p>Pengajuan Pinjaman</p>
+                                    <span class="right pulsate-child" id="pulsate-child-pengajuan" hidden>&nbsp;</span>
                                 </a>
                             </li>
                             <li class="nav-item">
@@ -139,6 +144,7 @@
                                     class="nav-link {{ request()->is('simpan-pinjam/pinjaman/tempo*') ? ' active' : '' }}">
                                     <i class="far fa-circle nav-icon"></i>
                                     <marquee direction="left"><span>Pelunasan Sebelum Jatuh Tempo</span></marquee>
+                                    <span class="right pulsate-child" id="pulsate-child-pelunasan" hidden>&nbsp;</span>
                                 </a>
                             </li>
                         </ul>

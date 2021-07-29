@@ -127,7 +127,7 @@
                                     <span class="input-group-text"><i class="fab fa-whatsapp"></i></span>
                                 </div>
                                 <input type="text" class="form-control number" placeholder="No Whatsapp" name="no_wa"
-                                    value="{{ $anggota->no_wa }}">
+                                    value="{{ old('no_wa') ? old('no_wa') : $anggota->no_wa }}">
                             </div>
                             @if ($errors->has('no_wa'))
                                 <span class="text-danger">{{ $errors->first('no_wa') }}</span>
@@ -209,7 +209,7 @@
                                 <input type="text" class="form-control" placeholder="Limit" id="limit" disabled
                                     value="{{ old('limit_gaji') ? old('limit_gaji') : 'Rp ' . number_format($anggota->limit_gaji, 2, ',', '.') }}">
                                 <input type="hidden" name="limit_gaji" id="limit-gaji"
-                                    value="{{ $anggota->limit_gaji }}">
+                                    value="{{ old('limit_gaji') ? old('limit_gaji') : $anggota->limit_gaji }}">
                             </div>
                         </div>
                         <div class="form-group">

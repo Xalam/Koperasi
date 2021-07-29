@@ -40,7 +40,7 @@ class JatuhTempoController extends Controller
                     'kode_anggota'  => $value->pinjaman->anggota->kd_anggota,
                     'tanggal'       => date('d-m-Y', strtotime($value->tanggal)),
                     'nama'          => $value->pinjaman->anggota->nama_anggota,
-                    'nominal'       => 'Rp. ' . number_format($value->nominal_angsuran, '2', ',', '.'),
+                    'nominal'       => 'Rp. ' . number_format($value->total_bayar, '0', '', '.'),
                     'angsuran'      => $value->pinjaman->tenor - $value->sisa_bayar,
                     'status'        => (($value->status == 0) ? '<a href="#modalKonfirmasi" data-remote="' . route('tempo.konfirmasi', $value->id) . '" 
                            data-toggle="modal" data-target="#modalKonfirmasi" class="btn btn-primary btn-sm"><i class="far fa-plus-square"></i>&nbsp; Proses</a>' :
@@ -328,7 +328,7 @@ class JatuhTempoController extends Controller
 
         if ($pinjaman->get()->count() > 0) {
 
-            if ($pinjaman->where('status', 1)->get()->count() > 0) {
+            if ($pinjaman->where('status', 2)->get()->count() > 0) {
                 if ($pinjaman->where('lunas', 0)->get()->count() > 0) {
 
                     $data = $pinjaman->firstOrFail();
@@ -341,7 +341,7 @@ class JatuhTempoController extends Controller
                 }
             } else {
                 return redirect()->route('tempo.index')->with([
-                    'error' => 'Kode pinjaman belum disetujui'
+                    'error' => 'Kode pinjaman belum disetujui/dicairkan'
                 ]);
             }
         } else {

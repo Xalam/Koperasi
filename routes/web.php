@@ -110,7 +110,7 @@ Route::group(['prefix' => 'toko'], function () {
                 Route::post('/delete/{nomor}', [PembelianController::class, 'delete']);
             });
 
-            Route::group(['prefix' => 'penjualan','middleware' => ['auth:toko', 'checkjabatan:Kanit,Super_Admin']], function () {
+            Route::group(['prefix' => 'penjualan', 'middleware' => ['auth:toko', 'checkjabatan:Kanit,Super_Admin']], function () {
                 Route::get('/', [PenjualanController::class, 'index']);
                 Route::post('/store', [PenjualanController::class, 'store']);
                 Route::post('/jual', [PenjualanController::class, 'sell']);
@@ -328,6 +328,7 @@ Route::group(['prefix' => 'simpan-pinjam', 'middleware' => ['auth:simpan-pinjam'
         Route::post('data/store-all', 'Simpan_Pinjam\Simpanan\SimpananController@store_all')->name('data.store-all');
         Route::get('data/konfirmasi/{id}', 'Simpan_Pinjam\Simpanan\SimpananController@konfirmasi')->name('data.konfirmasi');
         Route::put('data/edit-all/{id}', 'Simpan_Pinjam\Simpanan\SimpananController@edit_all')->name('data.edit-all');
+        Route::get('data/image/{id}', 'Simpan_Pinjam\Simpanan\SimpananController@modal_image')->name('data.image');
 
         Route::resource('saldo', 'Simpan_Pinjam\Simpanan\SaldoController');
 
@@ -356,6 +357,8 @@ Route::group(['prefix' => 'simpan-pinjam', 'middleware' => ['auth:simpan-pinjam'
         Route::get('angsuran/cetak/show/{id}', 'Simpan_Pinjam\Pinjaman\AngsuranController@print_show')->name('angsuran.print-show');
         Route::get('angsuran/konfirmasi/{id}', 'Simpan_Pinjam\Pinjaman\AngsuranController@konfirmasi')->name('angsuran.konfirmasi');
         Route::get('angsuran/modal/{id}', 'Simpan_Pinjam\Pinjaman\AngsuranController@modal')->name('angsuran.modal');
+        Route::post('angsuran/store-all', 'Simpan_Pinjam\Pinjaman\AngsuranController@store_all')->name('angsuran.store-all');
+        Route::post('angsuran/update-bayar', 'Simpan_Pinjam\Pinjaman\AngsuranController@update_bayar')->name('angsuran.update-bayar');
 
         Route::resource('tempo', 'Simpan_Pinjam\Pinjaman\JatuhTempoController');
         Route::post('tempo/bayar', 'Simpan_Pinjam\Pinjaman\JatuhTempoController@bayar')->name('tempo.bayar');
@@ -405,5 +408,10 @@ Route::group(['prefix' => 'simpan-pinjam', 'middleware' => ['auth:simpan-pinjam'
         Route::resource('list', 'Simpan_Pinjam\Pengaturan\PengaturanController');
         // Route::get('list/modal/{id}', 'Simpan_Pinjam\Pengaturan\PengaturanController@modal')->name('list.modal');
         Route::get('list/modal-all/{id}', 'Simpan_Pinjam\Pengaturan\PengaturanController@modal_all')->name('list.modal-all');
+
+        #Notifikasi
+        Route::post('notif', 'Simpan_Pinjam\Pengaturan\NotifikasiController@clear')->name('clear-notif');
+        Route::get('all-notif', 'Simpan_Pinjam\Pengaturan\NotifikasiController@index')->name('all-notif');
+        Route::get('delete-notif', 'Simpan_Pinjam\Pengaturan\NotifikasiController@destroy')->name('delete-notif');
     });
 });

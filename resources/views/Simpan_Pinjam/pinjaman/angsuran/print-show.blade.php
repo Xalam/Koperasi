@@ -136,6 +136,9 @@
                                         <tr>
                                             <th style="width:50%">Jumlah#</th>
                                             <td>Rp. {{ number_format($angsuran->nominal_angsuran, 2, ',', '.') }}
+                                                @if ($angsuran->status == 0)
+                                                    (<b>BELUM BAYAR</b>)
+                                                @endif
                                             </td>
                                         </tr>
                                     </table>

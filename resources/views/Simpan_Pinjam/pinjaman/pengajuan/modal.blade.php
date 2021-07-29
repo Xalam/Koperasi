@@ -6,19 +6,28 @@
 </div>
 <div class="modal-body">
     <p>
-        Apakah Anda ingin memproses pinjaman dari <strong>{{ $pinjaman->anggota->nama_anggota }}</strong> ?
+        @if ($pinjaman->status == 0)
+            Apakah Anda ingin memproses pengajuan pinjaman dari
+            <strong>{{ $pinjaman->anggota->nama_anggota }}</strong> sebesar <strong>Rp
+                {{ number_format($pinjaman->nominal_pinjaman, 2, ',', '.') }}</strong> ?
+        @endif
+        @if ($pinjaman->status == 1)
+            Apakah sudah mencairkan pinjaman dari
+            <strong>{{ $pinjaman->anggota->nama_anggota }}</strong> sebesar <strong>Rp
+                {{ number_format($pinjaman->nominal_pinjaman, 2, ',', '.') }}</strong> ?
+        @endif
     </p>
 </div>
 <form action="{{ route('pengajuan.update', $pinjaman->id) }}" method="POST">
     @csrf
     @method('put')
-    <input type="hidden" name="status" value="1">
+    <input type="hidden" name="status" value="{{ $pinjaman->status == 0 ? 1 : 2 }}">
     <div class="modal-footer">
         <button type="button" class="btn btn-light" data-dismiss="modal">
-            Nanti saja
+            {{ $pinjaman->status == 0 ? 'Nanti saja' : 'Masih belum' }}
         </button>
         <button type="submit" class="btn btn-primary">
-            Proses
+            {{ $pinjaman->status == 0 ? 'Proses' : 'Cair' }}
         </button>
     </div>
 </form>

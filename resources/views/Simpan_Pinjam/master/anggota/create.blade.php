@@ -201,7 +201,7 @@
                                 <label>Limit</label>
                                 <input type="text" class="form-control" placeholder="Limit" id="limit" disabled
                                     value="{{ 'Rp ' . number_format(old('limit_gaji'), 2, ',', '.') }}">
-                                <input type="text" name="limit_gaji" id="limit-gaji" value="{{ old('limit_gaji') }}">
+                                <input type="hidden" name="limit_gaji" id="limit-gaji" value="{{ old('limit_gaji') }}">
                             </div>
                         </div>
                         <div class="form-group">

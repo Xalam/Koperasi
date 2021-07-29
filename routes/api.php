@@ -21,6 +21,8 @@ Route::namespace('API')->group(function () {
         Route::get('saldo', 'Simpan_Pinjam\SaldoController@index');
         Route::post('saldo-deposit', 'Simpan_Pinjam\SaldoController@deposit');
         Route::post('saldo-tarik', 'Simpan_Pinjam\SaldoController@withdraw');
+        Route::post('saldo-upload', 'Simpan_Pinjam\SaldoController@upload_transfer');
+        Route::get('saldo-upload-info', 'Simpan_Pinjam\SaldoController@upload_info');
 
         Route::get('settings', 'Simpan_Pinjam\PengaturanController@index');
 

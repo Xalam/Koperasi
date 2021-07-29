@@ -68,7 +68,8 @@
                                         <td>
                                             <div class="input-group date" id="tanggal" data-target-input="nearest">
                                                 <input type="text" class="form-control datetimepicker-input"
-                                                    data-target="#tanggal" name="tanggal" placeholder="Tanggal" />
+                                                    id="tanggal-input" data-target="#tanggal" name="tanggal"
+                                                    placeholder="Tanggal" />
                                                 <div class="input-group-append" data-target="#tanggal"
                                                     data-toggle="datetimepicker">
                                                     <div class="input-group-text"><i class="fa fa-calendar"></i></div>
@@ -183,6 +184,10 @@
 
             $('#tanggal').datetimepicker({
                 format: 'YYYY-MM-DD'
+            });
+
+            $('#tanggal-input').keydown(function(event) {
+                event.preventDefault();
             });
 
             $('#form-angsuran').validate({

@@ -27,6 +27,7 @@ class PengajuanController extends Controller
         $pinjaman = Pinjaman::with('anggota')->orderBy('id', 'DESC')->get();
         $pinjamanWaiting = $pinjaman->where('status', 0);
         $pinjamanAccept  = $pinjaman->where('status', 1);
+        $pinjamanCair    = $pinjaman->where('status', 2);
 
         if (request()->ajax()) {
             switch (request()->type) {
@@ -44,10 +45,10 @@ class PengajuanController extends Controller
                             'nominal'       => 'Rp. ' . number_format($value->nominal_pinjaman, 2, ',', '.'),
                             'status'        => '<a href="#modalKonfirmasi" data-remote="' . route('pengajuan.konfirmasi', $value->id) . '" 
                             data-toggle="modal" data-target="#modalKonfirmasi" class="btn btn-info btn-sm">
-                            <i class="far fa-plus-square"></i>&nbsp; Setujui</a>',
+                            <i class="far fa-plus-square"></i>&nbsp; Proses</a>',
                             'action'        => '<a href="#modalShow" data-remote="' . route('pengajuan.show', $value->id) . '" data-toggle="modal" data-target="#modalShow" 
-                            class="btn btn-default btn-sm"><i class="fas fa-search"></i>&nbsp; Lihat</a>&nbsp;
-                            <a href="#modalKonfirmasi" data-remote="' . route('pengajuan.modal', $value->id) . '" data-toggle="modal" data-target="#modalKonfirmasi" class="btn btn-danger btn-sm"><i class="fas fa-trash"></i>&nbsp; Hapus</a>'
+                            class="btn btn-default btn-sm"><i class="fas fa-search"></i></a>&nbsp;
+                            <a href="#modalKonfirmasi" data-remote="' . route('pengajuan.modal', $value->id) . '" data-toggle="modal" data-target="#modalKonfirmasi" class="btn btn-danger btn-sm"><i class="fas fa-trash"></i></a>'
                         ];
                     }
                     return response()->json(compact('data'));
@@ -57,6 +58,28 @@ class PengajuanController extends Controller
                     $no   = 1;
 
                     foreach ($pinjamanAccept as $key => $value) {
+                        $data[] = [
+                            'no'            => $no++,
+                            'kode'          => $value->kode_pinjaman,
+                            'kode_anggota'  => $value->anggota->kd_anggota,
+                            'tanggal'       => date('d-m-Y', strtotime($value->tanggal)),
+                            'nama'          => $value->anggota->nama_anggota,
+                            'nominal'       => 'Rp. ' . number_format($value->nominal_pinjaman, 2, ',', '.'),
+                            'status'        => '<a href="#modalKonfirmasi" data-remote="' . route('pengajuan.konfirmasi', $value->id) . '" 
+                            data-toggle="modal" data-target="#modalKonfirmasi" class="btn btn-success btn-sm">
+                            <i class="far fa-check-square"></i>&nbsp; Cair</a>',
+                            'action'        => '<a href="#modalShow" data-remote="' . route('pengajuan.show', $value->id) . '" data-toggle="modal" data-target="#modalShow" 
+                            class="btn btn-default btn-sm"><i class="fas fa-search"></i></a>&nbsp;
+                            <a href="#modalKonfirmasi" data-remote="' . route('pengajuan.modal', $value->id) . '" data-toggle="modal" data-target="#modalKonfirmasi" class="btn btn-danger btn-sm"><i class="fas fa-trash"></i></a>'
+                        ];
+                    }
+                    return response()->json(compact('data'));
+                    break;
+                case 'cair':
+                    $data = [];
+                    $no   = 1;
+
+                    foreach ($pinjamanCair as $key => $value) {
                         $data[] = [
                             'no'            => $no++,
                             'kode'          => $value->kode_pinjaman,
@@ -298,37 +321,48 @@ class PengajuanController extends Controller
             $idJurnal   = $substrKode + 1;
         }
 
-        $pinjaman->status = $request->status;
-        $pinjaman->kode_jurnal = 'JU-' . str_pad($idJurnal, 6, '0', STR_PAD_LEFT);
-        $pinjaman->update();
-
-        $kodePinjaman = Pinjaman::where('id', $id)->first();
-        $kodeJurnal   = 'JU-' . str_pad($idJurnal, 6, '0', STR_PAD_LEFT);
-        $keterangan   = 'Pinjaman ( ' . $kodePinjaman->kode_pinjaman . ' )';
-
-        #Simpan Dana Asuransi
-        SaveJurnalUmum::save($kodeJurnal, $idAsuransi, $keterangan, 0, $kodePinjaman->biaya_asuransi);
-
-        #Simpan Dana Provisi
-        SaveJurnalUmum::save($kodeJurnal, $idProvisi, $keterangan, 0, $kodePinjaman->biaya_provisi);
-
-        #Simpan Jurnal Pendapatan
-        SaveJurnalUmum::save($kodeJurnal, $idPendapatan, $keterangan, 0, $kodePinjaman->biaya_admin);
-
-        #Simpan Jurnal Kas
-        $kredit = $kodePinjaman->nominal_pinjaman - $kodePinjaman->biaya_asuransi - $kodePinjaman->biaya_admin - $kodePinjaman->biaya_provisi;
-
-        SaveJurnalUmum::save($kodeJurnal, $idKas, $keterangan, 0, $kredit);
-
-        #Simpan Jurnal Piutang
-        SaveJurnalUmum::save($kodeJurnal, $idPiutang, $keterangan, $kodePinjaman->nominal_pinjaman, 0);
+        $pinjaman->update(['status' => $request->status]);
 
         #Send Whatsapp
-        $anggotaSend = Anggota::where('id', $kodePinjaman->id_anggota)->first();
+        $anggotaSend = Anggota::where('id', $pinjaman->id_anggota)->first();
         $phoneNumber = $anggotaSend->no_wa;
 
-        $message = 'Pengajuan pinjaman atas nama (' . $anggotaSend->nama_anggota . ') sebesar : *Rp ' . number_format($kodePinjaman->nominal_pinjaman, 0, '', '.') . '* telah disetujui.';
+        $message = 'Pengajuan pinjaman atas nama (' . $anggotaSend->nama_anggota . ') sebesar : *Rp ' . number_format($pinjaman->nominal_pinjaman, 0, '', '.') . '* telah disetujui.';
         ResponseMessage::send($phoneNumber, $message);
+
+        if ($pinjaman->status == 2) {
+            $kodeJurnal   = 'JU-' . str_pad($idJurnal, 6, '0', STR_PAD_LEFT);
+
+            $kodePinjaman = Pinjaman::where('id', $id)->first();
+            $kodePinjaman->kode_jurnal = $kodeJurnal;
+            $kodePinjaman->update();
+
+            $keterangan   = 'Pinjaman ( ' . $kodePinjaman->kode_pinjaman . ' )';
+
+            #Simpan Dana Asuransi
+            SaveJurnalUmum::save($kodeJurnal, $idAsuransi, $keterangan, 0, $kodePinjaman->biaya_asuransi);
+
+            #Simpan Dana Provisi
+            SaveJurnalUmum::save($kodeJurnal, $idProvisi, $keterangan, 0, $kodePinjaman->biaya_provisi);
+
+            #Simpan Jurnal Pendapatan
+            SaveJurnalUmum::save($kodeJurnal, $idPendapatan, $keterangan, 0, $kodePinjaman->biaya_admin);
+
+            #Simpan Jurnal Kas
+            $kredit = $kodePinjaman->nominal_pinjaman - $kodePinjaman->biaya_asuransi - $kodePinjaman->biaya_admin - $kodePinjaman->biaya_provisi;
+
+            SaveJurnalUmum::save($kodeJurnal, $idKas, $keterangan, 0, $kredit);
+
+            #Simpan Jurnal Piutang
+            SaveJurnalUmum::save($kodeJurnal, $idPiutang, $keterangan, $kodePinjaman->nominal_pinjaman, 0);
+
+            #Send Whatsapp
+            $anggotaSend = Anggota::where('id', $kodePinjaman->id_anggota)->first();
+            $phoneNumber = $anggotaSend->no_wa;
+
+            $message = 'Pinjaman atas nama (' . $anggotaSend->nama_anggota . ') sebesar : *Rp ' . number_format($kodePinjaman->nominal_pinjaman, 0, '', '.') . '* telah dicairkan.';
+            ResponseMessage::send($phoneNumber, $message);
+        }
 
         return redirect()->route('pengajuan.index');
     }
@@ -388,10 +422,16 @@ class PengajuanController extends Controller
 
     public function limit(Request $request)
     {
-        $piutang = PiutangModel::where('id_anggota', $request->id)->first();
+        $piutang = PiutangModel::where('id_anggota', $request->id)->orderBy('id', 'DESC')->first();
         $anggota = Anggota::select('limit_gaji')->where('id', $request->id)->first();
+
+        $totalPiutang = 0;
+        if ($piutang) {
+            $totalPiutang = $piutang->sisa_piutang;
+        }
+
         $data = array(
-            'limit' => $anggota->limit_gaji - $piutang->sisa_piutang
+            'limit' => $anggota->limit_gaji - $totalPiutang
         );
 
         return response()->json($data);

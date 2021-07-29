@@ -183,6 +183,20 @@ class AnggotaController extends Controller
     {
         $anggota = Anggota::findOrFail($id);
 
+        $rules = [
+            'no_wa'     => 'unique:tb_anggota'
+        ];
+
+        $messages = [
+            'no_wa.unique'     => 'No Whatsapp sudah terdaftar'
+        ];
+
+        $validator = Validator::make($request->all(), $rules, $messages);
+
+        if ($validator->fails()) {
+            return redirect()->back()->withErrors($validator)->withInput($request->all());
+        }
+
         $data = $request->all();
 
         $user = $anggota->username;

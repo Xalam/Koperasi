@@ -39,10 +39,10 @@ class TarikSaldoController extends Controller
                             'nama'     => $value->saldo->anggota->nama_anggota,
                             'nominal'  => number_format($value->nominal, 2, ',', '.'),
                             'action'   => '<a href="#modalKonfirmasi" data-remote="' . route('tarik-saldo.konfirmasi', $value->id) . '" 
-                                        data-toggle="modal" data-target="#modalKonfirmasi" class="btn btn-primary btn-sm">
+                                        data-toggle="modal" data-target="#modalKonfirmasi" class="btn btn-info btn-sm">
                                         <i class="far fa-plus-square"></i>&nbsp; Proses</a>&nbsp; <a href="#modalKonfirmasi" data-remote="' . route('tarik-saldo.modal-delete', $value->id) . '" 
                                         data-toggle="modal" data-target="#modalKonfirmasi" class="btn btn-danger btn-sm">
-                                        <i class="far fa-trash-alt"></i>&nbsp; Hapus</a>'
+                                        <i class="fas fa-trash"></i>&nbsp; Hapus</a>'
                         ];
                     }
                     return response()->json(compact('data'));
@@ -195,7 +195,7 @@ class TarikSaldoController extends Controller
 
                 $phoneNumber = $penarikan->saldo->anggota->no_wa;
 
-                $message = 'Penarikan ' . $simpananName . ' atas nama (' . $penarikan->saldo->anggota->nama_anggota . ') sebesar : *Rp ' . number_format($tarikSaldo->nominal, 0, '', '.') . '* telah disetujui. Saldo akhir : *Rp ' . number_format($saldo->saldo - $tarikSaldo->nominal, 0, '', '.') . '*';
+                $message = 'Penarikan ' . $simpananName . ' atas nama (' . $penarikan->saldo->anggota->nama_anggota . ') sebesar : *Rp ' . number_format($tarikSaldo->nominal, 0, '', '.') . '* telah disetujui. Saldo akhir : *Rp ' . number_format($saldo->saldo, 0, '', '.') . '*';
                 ResponseMessage::send($phoneNumber, $message);
             }
         } else {

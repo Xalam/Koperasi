@@ -4,15 +4,15 @@
 
 @section('content_header', 'Penarikan Simpanan')
 
-@push('style')
-    <!-- DataTables -->
-    <link rel="stylesheet" href="{{ asset('assets/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css') }}">
-    <link rel="stylesheet" href="{{ asset('assets/plugins/datatables-responsive/css/responsive.bootstrap4.min.css') }}">
-    <link rel="stylesheet" href="{{ asset('assets/plugins/datatables-buttons/css/buttons.bootstrap4.min.css') }}">
-    <link rel="stylesheet" href="{{ asset('assets/plugins/toastr/toastr.min.css') }}">
-    <!-- SweetAlert2 -->
-    <link rel="stylesheet" href="{{ asset('assets/plugins/sweetalert2-theme-bootstrap-4/bootstrap-4.min.css') }}">
-@endpush
+    @push('style')
+        <!-- DataTables -->
+        <link rel="stylesheet" href="{{ asset('assets/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css') }}">
+        <link rel="stylesheet" href="{{ asset('assets/plugins/datatables-responsive/css/responsive.bootstrap4.min.css') }}">
+        <link rel="stylesheet" href="{{ asset('assets/plugins/datatables-buttons/css/buttons.bootstrap4.min.css') }}">
+        <link rel="stylesheet" href="{{ asset('assets/plugins/toastr/toastr.min.css') }}">
+        <!-- SweetAlert2 -->
+        <link rel="stylesheet" href="{{ asset('assets/plugins/sweetalert2-theme-bootstrap-4/bootstrap-4.min.css') }}">
+    @endpush
 
 @section('breadcrumb')
     <li class="breadcrumb-item"><a href="#">Simpanan</a></li>
@@ -24,8 +24,13 @@
         <div class="col-12">
             <div class="card">
                 <div class="card-header">
-                    <h3 class="card-title">Permintaan Penarikan</h3>
-                    <a href="{{ route('tarik-saldo.create') }}" class="btn btn-sm btn-primary float-right">Tambah Penarikan</a>
+                    <h3 class="card-title"><b>Permintaan Penarikan</b></h3>
+                    <a href="{{ route('tarik-saldo.create') }}" class="btn btn-sm btn-primary float-right">Tambah
+                        Penarikan</a>
+                    <br><span class="text-secondary">Silahkan klik <button class="btn btn-info btn-xs"><i
+                                class="far fa-plus-square"></i>&nbsp;Proses</button> apabila menyetujui penarikan atau
+                        <button class="btn btn-danger btn-xs"><i class="fas fa-trash"></i>&nbsp;Hapus</button> untuk menolak
+                        pengajuan penarikan berikut.</span>
                 </div>
                 <div class="card-body">
                     <table id="table-permintaan" class="table table-bordered table-hover">
@@ -48,7 +53,9 @@
         <div class="col-12">
             <div class="card">
                 <div class="card-header">
-                    <h3 class="card-title">Permintaan Penarikan Dalam Proses</h3>
+                    <h3 class="card-title"><b>Permintaan Penarikan Dalam Proses</b></h3>
+                    <br><span class="text-secondary">Silahkan klik <button class="btn btn-success btn-xs"><i
+                                class="far fa-check-square"></i>&nbsp;Selesai</button> apabila penarikan selesai.</span>
                 </div>
                 <div class="card-body">
                     <table id="table-permintaan-proses" class="table table-bordered table-hover">
@@ -83,23 +90,23 @@
             $('#table-permintaan').DataTable({
                 "stateSave": true,
                 "deferRender": true,
-                "columnDefs": [
-                {
-                  "targets": 0,
-                  "className": "text-center",
-                },
-                {
-                  "targets": 1,
-                  "className": "text-center",
-                },
-                {
-                  "targets": 3,
-                  "className": "text-right",
-                },
-                {
-                  "targets": 4,
-                  "className": "text-center",
-                }],
+                "columnDefs": [{
+                        "targets": 0,
+                        "className": "text-center",
+                    },
+                    {
+                        "targets": 1,
+                        "className": "text-center",
+                    },
+                    {
+                        "targets": 3,
+                        "className": "text-right",
+                    },
+                    {
+                        "targets": 4,
+                        "className": "text-center",
+                    }
+                ],
                 "ajax": {
                     url: "{{ route('tarik-saldo.index') }}?type=permintaan_masuk"
                 },
@@ -125,23 +132,23 @@
             $('#table-permintaan-proses').DataTable({
                 "stateSave": true,
                 "deferRender": true,
-                "columnDefs": [
-                {
-                  "targets": 0,
-                  "className": "text-center",
-                },
-                {
-                  "targets": 1,
-                  "className": "text-center",
-                },
-                {
-                  "targets": 3,
-                  "className": "text-right",
-                },
-                {
-                  "targets": 4,
-                  "className": "text-center",
-                }],
+                "columnDefs": [{
+                        "targets": 0,
+                        "className": "text-center",
+                    },
+                    {
+                        "targets": 1,
+                        "className": "text-center",
+                    },
+                    {
+                        "targets": 3,
+                        "className": "text-right",
+                    },
+                    {
+                        "targets": 4,
+                        "className": "text-center",
+                    }
+                ],
                 "ajax": {
                     url: "{{ route('tarik-saldo.index') }}?type=permintaan_proses"
                 },
@@ -163,27 +170,25 @@
                     }
                 ]
             });
-            
-        });
 
+        });
     </script>
 
     @if (session()->has('success'))
-    <script>
-        toastr.success("{{ session()->get('success') }}");
-
-    </script>
+        <script>
+            toastr.success("{{ session()->get('success') }}");
+        </script>
     @endif
 
     @if (session()->has('error'))
-    <script>
-        Swal.fire({
-            title: 'Error!',
-            text: '{{ session()->get('error') }}',
-            icon: 'error',
-            confirmButtonText: 'OK'
-        })
-    </script>
+        <script>
+            Swal.fire({
+                title: 'Error!',
+                text: '{{ session()->get('error') }}',
+                icon: 'error',
+                confirmButtonText: 'OK'
+            })
+        </script>
     @endif
 
     <script>
@@ -195,7 +200,6 @@
                 modal.find('.modal-content').load(button.data("remote"));
             });
         });
-
     </script>
 
     <div class="modal" id="modalKonfirmasi" tabindex="-1" role="dialog">

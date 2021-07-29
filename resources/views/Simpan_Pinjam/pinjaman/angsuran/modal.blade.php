@@ -6,19 +6,16 @@
 </div>
 <div class="modal-body">
     <p>
-        Apakah Anda memproses angsuran dari <strong>{{ $angsuran->pinjaman->anggota->nama_anggota }}</strong> ?
+        Apakah Anda mengubah pembayaran angsuran dari
+        <strong>{{ $angsuran->pinjaman->anggota->nama_anggota }}</strong> ?
     </p>
 </div>
-<form action="{{ route('angsuran.update', $angsuran->id) }}" method="POST">
+<form id="form-edit-bayar" action="{{ route('angsuran.update-bayar', $angsuran->id) }}" method="POST" role="form">
     @csrf
     @method('put')
-    <input type="hidden" name="status" value="1">
+    <input type="hidden" name="status" id="status-edit" value="{{ $angsuran->status == 0 ? 1 : 0 }}">
     <div class="modal-footer">
-        <button type="button" class="btn btn-light" data-dismiss="modal">
-            Nanti saja
-        </button>
-        <button type="submit" class="btn btn-primary">
-            Proses
-        </button>
+        <input type="button" class="btn btn-light" data-dismiss="modal" value="Tidak" />
+        <input type="button" onclick="edit_angsuran({{ $angsuran->id }})" class="btn btn-primary" value="Proses" />
     </div>
 </form>
