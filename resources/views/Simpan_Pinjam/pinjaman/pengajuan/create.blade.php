@@ -118,16 +118,6 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="form-group">
-                            <label>Biaya Administrasi</label>
-                            <div class="input-group">
-                                <div class="input-group-prepend">
-                                    <span class="input-group-text">Rp</span>
-                                </div>
-                                <input type="text" class="form-control" placeholder="Biaya Administrasi" id="biaya-admin"
-                                    name="biaya_admin">
-                            </div>
-                        </div>
                         <a href="{{ route('pengajuan.index') }}" class="btn btn-light">Kembali</a>&nbsp;
                         <button id="btn-angsuran" type="submit" class="btn btn-primary">Simpan</button>
                     </form>
@@ -154,10 +144,6 @@
     <script>
         $(function() {
             $('#nominal').mask('#.##0', {
-                reverse: true
-            });
-
-            $('#biaya-admin').mask('#.##0', {
                 reverse: true
             });
 

@@ -162,12 +162,6 @@ class PengajuanController extends Controller
         $countProv   = ($prov / 100) * $nominal;
         $countAsur   = ($asur / 100) * $nominal;
 
-        if ($request->biaya_admin == null) {
-            $biaya_admin = 0;
-        } else {
-            $biaya_admin = str_replace('.', '', $request->biaya_admin);
-        }
-
         #Check Jika Belum Lunas
         $checkAnggota = Pinjaman::select('*')
             ->where('id_anggota', $request->id_anggota)
@@ -209,7 +203,6 @@ class PengajuanController extends Controller
                     $pinjaman->nominal_angsuran = $uangAngsuran;
                     $pinjaman->biaya_provisi    = $countProv;
                     $pinjaman->biaya_asuransi   = $countAsur;
-                    $pinjaman->biaya_admin      = $biaya_admin;
                     $pinjaman->save();
 
                     return redirect()->route('pengajuan.index')->with([
@@ -230,7 +223,6 @@ class PengajuanController extends Controller
             $pinjaman->nominal_angsuran = $uangAngsuran;
             $pinjaman->biaya_provisi    = $countProv;
             $pinjaman->biaya_asuransi   = $countAsur;
-            $pinjaman->biaya_admin      = $biaya_admin;
             $pinjaman->save();
 
             return redirect()->route('pengajuan.index')->with([
@@ -345,11 +337,8 @@ class PengajuanController extends Controller
             #Simpan Dana Provisi
             SaveJurnalUmum::save($kodeJurnal, $idProvisi, $keterangan, 0, $kodePinjaman->biaya_provisi);
 
-            #Simpan Jurnal Pendapatan
-            SaveJurnalUmum::save($kodeJurnal, $idPendapatan, $keterangan, 0, $kodePinjaman->biaya_admin);
-
             #Simpan Jurnal Kas
-            $kredit = $kodePinjaman->nominal_pinjaman - $kodePinjaman->biaya_asuransi - $kodePinjaman->biaya_admin - $kodePinjaman->biaya_provisi;
+            $kredit = $kodePinjaman->nominal_pinjaman - $kodePinjaman->biaya_asuransi - $kodePinjaman->biaya_provisi;
 
             SaveJurnalUmum::save($kodeJurnal, $idKas, $keterangan, 0, $kredit);
 

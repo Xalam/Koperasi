@@ -59,7 +59,7 @@ class TarikSaldoController extends Controller
                             'nominal'  => number_format($value->nominal, 2, ',', '.'),
                             'action'   => '<a href="#modalKonfirmasi" data-remote="' . route('tarik-saldo.konfirmasi', $value->id) . '" 
                                         data-toggle="modal" data-target="#modalKonfirmasi" class="btn btn-success btn-sm">
-                                        <i class="far fa-check-square"></i>&nbsp; Selesai</a>'
+                                        <i class="far fa-check-square"></i>&nbsp; Cair</a>'
                         ];
                     }
                     return response()->json(compact('data'));

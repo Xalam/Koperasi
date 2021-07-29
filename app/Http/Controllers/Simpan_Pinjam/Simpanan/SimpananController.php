@@ -243,6 +243,19 @@ class SimpananController extends Controller
             $anggotaSend = Anggota::where('id', $kodeSimpanan->id_anggota)->first();
             $phoneNumber = $anggotaSend->no_wa;
 
+            #Insert Saldo
+            $insertSaldo = Saldo::where('id_anggota', $kodeSimpanan->id_anggota)->first();
+
+            if (!$insertSaldo) {
+                for ($i = 1; $i < 4; $i++) {
+                    $saldo = new Saldo();
+                    $saldo->id_anggota = $kodeSimpanan->id_anggota;
+                    $saldo->saldo = 0;
+                    $saldo->jenis_simpanan = $i;
+                    $saldo->save();
+                }
+            }
+
             #Update Saldo
             if ($kodeSimpanan->jenis_simpanan == 3) {
                 $checkSaldo = Saldo::where('id_anggota', $kodeSimpanan->id_anggota)
@@ -385,6 +398,19 @@ class SimpananController extends Controller
 
             $anggotaSend = Anggota::where('id', $kodeSimpanan->id_anggota)->first();
             $phoneNumber = $anggotaSend->no_wa;
+
+            #Insert Saldo
+            $insertSaldo = Saldo::where('id_anggota', $kodeSimpanan->id_anggota)->first();
+
+            if (!$insertSaldo) {
+                for ($i = 1; $i < 4; $i++) {
+                    $saldo = new Saldo();
+                    $saldo->id_anggota = $kodeSimpanan->id_anggota;
+                    $saldo->saldo = 0;
+                    $saldo->jenis_simpanan = $i;
+                    $saldo->save();
+                }
+            }
 
             #Update Saldo
             if ($kodeSimpanan->jenis_simpanan == 3) {
@@ -536,6 +562,19 @@ class SimpananController extends Controller
 
             #Simpan Jurnal Kas
             SaveJurnalUmum::save($kodeJurnal, $idKas, $keterangan, $kodeSimpanan->nominal, 0);
+
+            #Insert Saldo
+            $insertSaldo = Saldo::where('id_anggota', $kodeSimpanan->id_anggota)->first();
+
+            if (!$insertSaldo) {
+                for ($i = 1; $i < 4; $i++) {
+                    $saldo = new Saldo();
+                    $saldo->id_anggota = $kodeSimpanan->id_anggota;
+                    $saldo->saldo = 0;
+                    $saldo->jenis_simpanan = $i;
+                    $saldo->save();
+                }
+            }
 
             $checkSaldo = Saldo::where('id_anggota', $kodeSimpanan->id_anggota)
                 ->where('jenis_simpanan', 2)->first();
