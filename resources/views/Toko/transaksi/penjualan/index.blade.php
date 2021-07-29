@@ -355,7 +355,20 @@ $(document).ready(function() {
 
     onScan.attachTo(document, {
         onScan: function(key) {
-            alert(key);
+            $.ajax({
+                url: '/toko/transaksi/penjualan/scan',
+                type: 'POST',
+                data: {
+                    nomor: $('[name="nomor"]').val(),
+                    kode_barang: key,
+                    _token: $('meta[name="csrf-token"]').attr('content')
+                },
+                success: function(response) {
+                    if (response.code == 200) {
+                        tampil_daftar();
+                    }
+                }
+            });
         }
     });
 

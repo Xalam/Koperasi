@@ -116,6 +116,29 @@ class PenjualanController extends Controller
         return response()->json(['code'=>200]);
     }
 
+    public function scan(Request $request) {
+        $data_barang = BarangModel::where('kode', $request->kode_barang)->first();
+        $barang = PenjualanBarangModel::where('nomor', $request->nomor)
+                                        ->where('id_barang', $data_barang->id)->first();
+
+        if ($barang) {
+            PenjualanBarangModel::where('id_barang', $data_barang->id)->update([
+                'jumlah' => $barang->jumlah + 1, 
+                'total_harga' => $barang->total_harga + $data_barang->harga_jual
+            ]);
+        } else {
+            PenjualanBarangModel::create([
+                'nomor' => $request->nomor,
+                'id_barang' => $data_barang->id,
+                'jumlah' => 1,
+                'total_harga' => $data_barang->harga_jual,
+                'submited' => 0
+            ]);
+        }
+        
+        return response()->json(['code'=>200]);
+    }
+
     public function sell(Request $request) {
         $anggota = [];
         $barang = [];

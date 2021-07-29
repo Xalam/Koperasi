@@ -121,7 +121,7 @@ class HutangController extends Controller
 
         HutangDetailModel::create($request->all());
             
-        $keterangan = "Penerimaan angsuran.";
+        $keterangan = "Pembayaran Utang.";
 
         JurnalModel::create([
             'nomor' => $request->input('nomor_jurnal'),

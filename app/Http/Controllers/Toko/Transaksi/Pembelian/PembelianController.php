@@ -301,6 +301,9 @@ class PembelianController extends Controller
                                     ->get();
 
         $last_nomor = PembelianModel::orderBy('id', 'desc')->first()->nomor;
+                                    
+        $pembayaran = PembelianModel::orderBy('id', 'desc')
+                                    ->first();
 
         $pembelian = PembelianBarangModel::join('barang', 'barang.id', '=', 'detail_beli.id_barang')
                                             ->select('barang.nama AS nama_barang', 'barang.kode AS kode_barang', 'barang.satuan AS satuan', 
@@ -308,6 +311,6 @@ class PembelianController extends Controller
                                                     'detail_beli.total_harga AS total_harga')
                                             ->where('nomor', $last_nomor)->get();
 
-        return view('toko.transaksi.pembelian.nota', compact('supplier', 'pembelian'));
+        return view('toko.transaksi.pembelian.nota', compact('supplier', 'pembelian', 'pembayaran'));
     }
 }

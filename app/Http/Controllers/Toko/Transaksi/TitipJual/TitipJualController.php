@@ -151,7 +151,7 @@ class TitipJualController extends Controller
             ]);
 
             AkunModel::where('kode', 2102)->update([
-                'kredit' => $hutang_konsinyasi->kredit + $request->input('jumlah_harga')
+                'debit' => $hutang_konsinyasi->debit + $request->input('jumlah_harga')
             ]);
 
             $jumlah_bayar = 0;

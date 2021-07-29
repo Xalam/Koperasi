@@ -282,7 +282,7 @@ jQuery(function($) {
     });
 
     $('input[type="number"]').change(function() {
-        if ($(this).val() < 0 || $(this).val() == '') {
+        if (parseInt($(this).val()) < 0 || $(this).val() == '') {
             $(this).val(0);
         };
     });

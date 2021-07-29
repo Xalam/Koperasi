@@ -237,22 +237,6 @@ function transfer(id) {
     });
 }
 
-function formatNumber(evt) {
-    event.target.value = event.target.value.replace(
-        /[^\d\/]{0,}$/g, ''
-    );
-}
-
-function minMaxValue($name) {
-    if (parseInt($('[name="'+$name+'"]').val()) == '') {
-        $('[name="'+$name+'"]').val('0');
-    };
-
-    if (parseInt($('[name="'+$name+'"]').val()) > parseInt($('[name="edit_stok_gudang"]').val())) {
-        $('[name="'+$name+'"]').val($('[name="edit_stok_gudang"]').val());
-    };
-}
-
 function edit(id) {
     $("#nama-" + id).addClass("d-none");
     $("#edit-nama-" + id).removeClass("d-none");

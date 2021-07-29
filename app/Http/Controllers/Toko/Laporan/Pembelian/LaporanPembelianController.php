@@ -132,6 +132,9 @@ class LaporanPembelianController extends Controller
                                     ->where('nomor', $nomor)
                                     ->limit(1)
                                     ->get();
+                                    
+        $pembayaran = PembelianModel::where('nomor', $nomor)
+                                    ->first();
 
         $pembelian = PembelianBarangModel::join('barang', 'barang.id', '=', 'detail_beli.id_barang')
                                             ->select('barang.nama AS nama_barang', 'barang.kode AS kode_barang', 'barang.satuan AS satuan', 
@@ -139,7 +142,7 @@ class LaporanPembelianController extends Controller
                                                     'detail_beli.total_harga AS total_harga')
                                             ->where('nomor', $nomor)->get();
 
-        return view('toko.laporan.pembelian.nota', compact('supplier', 'pembelian'));
+        return view('toko.laporan.pembelian.nota', compact('supplier', 'pembelian', 'pembayaran'));
     }
 
     public function export($type_pembayaran, $tanggal_awal, $tanggal_akhir) {

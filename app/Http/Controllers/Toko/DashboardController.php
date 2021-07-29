@@ -52,15 +52,11 @@ class DashboardController extends Controller
                                         $i->where('akun.kode', 'like', '5%')
                                         ->orWhere('akun.kode', 'like', '6%');
                                     })
-                                    ->groupBy('jurnal.tanggal')
+                                    ->where(DB::raw('YEAR(jurnal.created_at)'), now()->year)
                                     ->first();
 
-        if ($pemasukan->jumlah >= 0) {
-            $total_pendapatan = $pemasukan->jumlah - $pengeluaran->jumlah;
-        } else {
-            $total_pendapatan = 0;
-        }
-
+        $total_pendapatan = $pemasukan->jumlah - $pengeluaran->jumlah;
+            
         // Chart
         $list_bulan = [];
         $list_bulan[] = 'Januari';

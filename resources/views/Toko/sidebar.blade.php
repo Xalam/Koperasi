@@ -130,7 +130,7 @@
                             <li><a href="/toko/laporan/penjualan">Penjualan</a></li>
                             <li><a href="/toko/laporan/persediaan">Persediaan</a></li>
                             <li><a href="/toko/laporan/kas-masuk">Kas Masuk</a></li>
-                            <li><a href="/toko/laporan/kas-keluar">Pembayaran Utang</a></li>
+                            <li><a href="/toko/laporan/kas-keluar">Kas Keluar</a></li>
                             <li><a href="/toko/laporan/pendapatan">Laba Rugi Toko</a></li>
                         </ul>
                     </div>

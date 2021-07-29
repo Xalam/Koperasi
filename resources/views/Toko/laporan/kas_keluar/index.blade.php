@@ -2,7 +2,7 @@
 
 @section('main')
 <div class="card m-6">
-    <p class="card-header bg-light">Laporan Pembayaran Utang</p>
+    <p class="card-header bg-light">Laporan Kas Kaluar</p>
     <div class="card-body">
         {!! Form::open( ['url' => '/toko/laporan/kas-keluar', 'method' => 'GET']) !!}
         <div class="row-lg align-item-center mb-2">
@@ -29,7 +29,7 @@
 <div class="card m-6">
     <div class="d-flex flex-row">
         @if (isset($laporan_kas_keluar) && count($laporan_kas_keluar) > 0)
-        <p class="card-header col-lg">Daftar Pembayaran Utang {{$pengeluaran[$jenis_pengeluaran]}}</p>
+        <p class="card-header col-lg">Daftar Kas Keluar {{$pengeluaran[$jenis_pengeluaran]}}</p>
         <a href=<?php echo 'kas-keluar/export/'.$jenis_pengeluaran.'/'.$tanggal_awal.'/'.$tanggal_akhir ?>
             target="_blank"><i class="card-header text-success fas fa-file-export" style="cursor: pointer;"
                 title="Export to Excel"></i></a>
