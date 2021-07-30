@@ -248,6 +248,13 @@
                                     <p>Daftar Pengaturan</p>
                                 </a>
                             </li>
+                            <li class="nav-item">
+                                <a href="{{ route('pembagian.index') }}"
+                                    class="nav-link nav-link {{ request()->is('simpan-pinjam/pengaturan/pembagian*') ? ' active' : '' }}">
+                                    <i class="far fa-circle nav-icon"></i>
+                                    <p>Pembagian SHU</p>
+                                </a>
+                            </li>
                         </ul>
                     </li>
                 @endif

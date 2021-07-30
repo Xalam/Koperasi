@@ -13,8 +13,10 @@ class CreatePembagianTable extends Migration
      */
     public function up()
     {
-        Schema::create('pembagian', function (Blueprint $table) {
+        Schema::create('tb_pembagian_shu', function (Blueprint $table) {
             $table->id();
+            $table->string('nama');
+            $table->string('angka');
             $table->timestamps();
         });
     }
@@ -26,6 +28,6 @@ class CreatePembagianTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('pembagian');
+        Schema::dropIfExists('tb_pembagian_shu');
     }
 }

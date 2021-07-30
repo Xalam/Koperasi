@@ -422,6 +422,9 @@ Route::group(['prefix' => 'simpan-pinjam', 'middleware' => ['auth:simpan-pinjam'
         // Route::get('list/modal/{id}', 'Simpan_Pinjam\Pengaturan\PengaturanController@modal')->name('list.modal');
         Route::get('list/modal-all/{id}', 'Simpan_Pinjam\Pengaturan\PengaturanController@modal_all')->name('list.modal-all');
 
+        Route::resource('pembagian', 'Simpan_Pinjam\Pengaturan\PembagianSHUController');
+        Route::get('pembagian/modal/{id}', 'Simpan_Pinjam\Pengaturan\PembagianSHUController@modal')->name('pembagian.modal');
+
         #Notifikasi
         Route::post('notif', 'Simpan_Pinjam\Pengaturan\NotifikasiController@clear')->name('clear-notif');
         Route::get('all-notif', 'Simpan_Pinjam\Pengaturan\NotifikasiController@index')->name('all-notif');
