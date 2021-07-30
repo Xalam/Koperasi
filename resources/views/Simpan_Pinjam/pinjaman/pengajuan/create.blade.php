@@ -172,7 +172,14 @@
                         required: true
                     },
                     nominal_pinjaman: {
-                        required: true
+                        required: true,
+                        max: function() {
+                            var str = $('#nominal').val()
+                            var res = str.replace(/\./g, '');
+                            if (parseInt(res) > 75000000) {
+                                return false;
+                            }
+                        }
                     },
                     bunga: {
                         required: true
@@ -184,7 +191,10 @@
                 messages: {
                     id_anggota: "Nama Anggota wajib diisi",
                     tanggal: "Tanggal wajib diisi",
-                    nominal_pinjaman: "Nominal wajib diisi",
+                    nominal_pinjaman: {
+                        required: "Nominal wajib diisi",
+                        max: "Melebihi batas ketentuan"
+                    },
                     bunga: "Bunga wajib diisi",
                     tenor: "Jangka waktu wajib diisi",
                 },

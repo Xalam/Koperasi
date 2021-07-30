@@ -221,6 +221,13 @@
                                 </a>
                             </li>
                         @endif
+                        <li class="nav-item">
+                            <a href="{{ route('bendahara.index') }}"
+                                class="nav-link {{ request()->is('simpan-pinjam/laporan/bendahara*') ? ' active' : '' }}">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>Bendahara Pusat</p>
+                            </a>
+                        </li>
                     </ul>
                 </li>
                 @if (auth()->user()->role != 'bendahara_pusat')

@@ -3,17 +3,16 @@
 namespace App\Http\Controllers\Simpan_Pinjam\Pinjaman;
 
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\Simpan_Pinjam\Utils\KodeJurnal;
 use App\Http\Controllers\Simpan_Pinjam\Utils\Ratusan;
 use App\Http\Controllers\Simpan_Pinjam\Utils\ResponseMessage;
 use App\Http\Controllers\Simpan_Pinjam\Utils\SaveJurnalUmum;
-use App\Models\Simpan_Pinjam\Laporan\JurnalUmum;
 use App\Models\Simpan_Pinjam\Master\Akun\Akun;
 use App\Models\Simpan_Pinjam\Master\Anggota\Anggota;
 use App\Models\Simpan_Pinjam\Other\Notifikasi;
 use App\Models\Simpan_Pinjam\Pinjaman\Angsuran;
 use App\Models\Simpan_Pinjam\Pinjaman\Pinjaman;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 
 class JatuhTempoController extends Controller
 {
@@ -90,13 +89,7 @@ class JatuhTempoController extends Controller
         }
 
         #Check Jurnal
-        $checkJurnal = JurnalUmum::select('*')->orderBy('id', 'DESC')->first();
-        if ($checkJurnal == null) {
-            $idJurnal = 1;
-        } else {
-            $substrKode = substr($checkJurnal->kode_jurnal, 3);
-            $idJurnal   = $substrKode + 1;
-        }
+        $kodeJurnal = KodeJurnal::kode();
 
         $angsuran = new Angsuran();
         $angsuran->kode_angsuran    = 'ASN-' . str_replace('-', '', date('Y-m-d')) . '-' . str_pad($id, 6, '0', STR_PAD_LEFT);
@@ -111,7 +104,7 @@ class JatuhTempoController extends Controller
         $angsuran->jenis            = 2;
         $angsuran->total_bayar      = str_replace(',', '', $request->total_bayar);
         $angsuran->keterangan       = $request->keterangan;
-        $angsuran->kode_jurnal      = 'JU-' . str_pad($idJurnal, 6, '0', STR_PAD_LEFT);
+        $angsuran->kode_jurnal      = $kodeJurnal;
         $angsuran->save();
 
         //Input Jurnal Umum
@@ -150,7 +143,6 @@ class JatuhTempoController extends Controller
 
         $newPiutang = Ratusan::edit_ratusan($piutang);
 
-        $kodeJurnal = 'JU-' . str_pad($idJurnal, 6, '0', STR_PAD_LEFT);
         $keterangan = 'Angsuran ( ' . $kodeAngsuran->kode_angsuran . ' )';
 
         #Simpan Jurnal Pendapatan
@@ -251,17 +243,11 @@ class JatuhTempoController extends Controller
             }
 
             #Check Jurnal
-            $checkJurnal = JurnalUmum::select('*')->orderBy('id', 'DESC')->first();
-            if ($checkJurnal == null) {
-                $idJurnal = 1;
-            } else {
-                $substrKode = substr($checkJurnal->kode_jurnal, 3);
-                $idJurnal   = $substrKode + 1;
-            }
+            $kodeJurnal = KodeJurnal::kode();
 
             $angsuran->status = $request->status;
             $angsuran->lunas = 1;
-            $angsuran->kode_jurnal = 'JU-' . str_pad($idJurnal, 6, '0', STR_PAD_LEFT);
+            $angsuran->kode_jurnal = $kodeJurnal;
             $angsuran->update();
 
             $kodeAngsuran = Angsuran::where('id', $id)->first();
@@ -270,7 +256,6 @@ class JatuhTempoController extends Controller
             $bunga = $kodeAngsuran->pinjaman->nominal_pinjaman * ($kodeAngsuran->pinjaman->bunga / 100);
             $pokok = $kodeAngsuran->total_bayar - $bunga;
 
-            $kodeJurnal = 'JU-' . str_pad($idJurnal, 6, '0', STR_PAD_LEFT);
             $keterangan = 'Angsuran ( ' . $kodeAngsuran->kode_angsuran . ' )';
 
             #Simpan Jurnal Pendapatan

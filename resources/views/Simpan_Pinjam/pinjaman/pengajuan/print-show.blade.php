@@ -27,7 +27,8 @@
                         <div class="row">
                             <div class="col-12">
                                 <h4>
-                                    <small class="float-right" style="font-size: 10pt;">Tanggal Cetak: {{ date('d-m-Y H:i:s') }}</small>
+                                    <small class="float-right" style="font-size: 10pt;">Tanggal Cetak:
+                                        {{ date('d-m-Y H:i:s') }}</small>
                                 </h4>
                             </div>
                             <!-- /.col -->
@@ -124,15 +125,14 @@
                                         </tr>
                                         <tr>
                                             <th style="width:50%">Biaya Asuransi</th>
-                                            <td>: Rp. {{ number_format($pinjaman->biaya_asuransi, 2, ',', '.') }}</td>
-                                        </tr>
-                                        <tr>
-                                            <th style="width:50%">Biaya Administrasi</th>
-                                            <td>: Rp. {{ number_format($pinjaman->biaya_admin, 2, ',', '.') }}</td>
+                                            <td>: Rp. {{ number_format($pinjaman->biaya_asuransi, 2, ',', '.') }}
+                                            </td>
                                         </tr>
                                         <tr>
                                             <th style="width:50%">Total Diterima</th>
-                                            <td>: Rp. {{ number_format($pinjaman->nominal_pinjaman - $pinjaman->biaya_provisi - $pinjaman->biaya_asuransi - $pinjaman->biaya_admin, 2, ',', '.') }}</td>
+                                            <td>: Rp.
+                                                {{ number_format($pinjaman->nominal_pinjaman - $pinjaman->biaya_provisi - $pinjaman->biaya_asuransi, 2, ',', '.') }}
+                                            </td>
                                         </tr>
                                     </table>
                                 </div>
@@ -149,7 +149,6 @@
     </div>
     <script>
         window.addEventListener("load", window.print());
-
     </script>
 </body>
 

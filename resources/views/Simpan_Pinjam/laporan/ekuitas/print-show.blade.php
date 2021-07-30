@@ -14,12 +14,14 @@
     <!-- Theme style -->
     <link rel="stylesheet" href="{{ asset('assets/dist/css/adminlte.min.css') }}">
 </head>
+
 <body>
     <div class="wrapper">
         <!-- Main content -->
         <div class="row no-print">
             <div class="col-12">
-                <a href="{{ route('ekuitas.index') }}" class="btn btn-default" style="margin: 10px;"><i></i> Kembali</a>
+                <a href="{{ route('ekuitas.index') }}" class="btn btn-default" style="margin: 10px;"><i></i>
+                    Kembali</a>
             </div>
         </div>
         <div class="invoice p-3 mb-3">
@@ -33,17 +35,17 @@
                 <!-- /.col -->
             </div>
             <div class="row" style="margin: 15px;">
-                <img src="{{ asset('assets/dist/img/logo-koperasi.png') }}" alt="Primkop Logo" style="width: 80px; height: 80px;" class="brand-image img-circle elevation-2"
-                    style="opacity: .8">
-                    <div style="margin-left: 15px;">
-                        <h3><b>Primkop Polrestabes Semarang</b></h3>
-                        <address>
-                            Jl. Kaligarang No.1A, Barusari<br>
-                            Semarang<br>
-                            Phone: 0895-2458-3818<br>
-                            Email: -
-                        </address>
-                    </div>
+                <img src="{{ asset('assets/dist/img/logo-koperasi.png') }}" alt="Primkop Logo"
+                    style="width: 80px; height: 80px;" class="brand-image img-circle elevation-2" style="opacity: .8">
+                <div style="margin-left: 15px;">
+                    <h3><b>Primkop Polrestabes Semarang</b></h3>
+                    <address>
+                        Jl. Kaligarang No.1A, Barusari<br>
+                        Semarang<br>
+                        Phone: 0895-2458-3818<br>
+                        Email: -
+                    </address>
+                </div>
             </div>
             <div class="text-center">
                 <h3><b>Laporan Perubahan Ekuitas</b></h3><br>
@@ -52,7 +54,7 @@
             <div>
                 <address>
                     @if (isset($reqStart) && isset($reqEnd))
-                        Periode : {{ $reqStart }} / {{ $reqEnd }}   
+                        Periode : {{ $reqStart }} / {{ $reqEnd }}
                     @else
                         Sampai Tanggal : {{ date('d-m-Y') }}
                     @endif
@@ -94,7 +96,7 @@
                             <tr>
                                 <td>Saldo Akhir</td>
                                 @foreach ($saldoAkhir as $sal)
-                                    <td class="text-right">{{ number_format($sal, 2, ',', '.') }}</td>
+                                    <td class="text-right"><b>{{ number_format($sal, 2, ',', '.') }}</b></td>
                                 @endforeach
                             </tr>
                         </tbody>
@@ -107,7 +109,6 @@
     </div>
     <script>
         window.addEventListener("load", window.print());
-
     </script>
 </body>
 

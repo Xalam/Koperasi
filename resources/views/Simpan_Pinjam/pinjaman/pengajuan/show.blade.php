@@ -28,7 +28,5 @@
         <dd class="col-sm-8">: &nbsp;Rp {{ number_format($data->biaya_provisi, 2, ',', '.') }}</dd>
         <dt class="col-sm-4">Biaya Asuransi</dt>
         <dd class="col-sm-8">: &nbsp;Rp {{ number_format($data->biaya_asuransi, 2, ',', '.') }}</dd>
-        <dt class="col-sm-4">Biaya Administrasi</dt>
-        <dd class="col-sm-8">: &nbsp;Rp {{ number_format($data->biaya_admin, 2, ',', '.') }}</dd>
     </dl>
 </div>

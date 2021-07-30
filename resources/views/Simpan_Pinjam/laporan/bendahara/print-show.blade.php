@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Simpan Pinjam | Laporan Simpanan</title>
+    <title>Simpan Pinjam | Laporan Bendahara Pusat</title>
 
     <!-- Google Font: Source Sans Pro -->
     <link rel="stylesheet"
@@ -20,7 +20,7 @@
         <!-- Main content -->
         <div class="row no-print">
             <div class="col-12">
-                <a href="{{ route('lap-pinjaman.index') }}" class="btn btn-default" style="margin: 10px;"><i></i>
+                <a href="{{ route('bendahara.index') }}" class="btn btn-default" style="margin: 10px;"><i></i>
                     Kembali</a>
             </div>
         </div>
@@ -48,79 +48,76 @@
                 </div>
             </div>
             <div class="text-center">
-                <h3><b>Laporan Pinjaman Anggota</b></h3><br>
+                <h3><b>Laporan Piutang Anggota</b></h3><br>
                 <h3 style="margin-top: -30px; margin-bottom: 20px;"><b>Primer Koperasi Polrestabes Semarang</b></h3>
             </div>
-            <div>
-                <address>
-                    <div class="col-12">
-                        <table class="table table-borderless">
-                            <tr>
-                                <td width="15%">Kode Anggota</td>
-                                <td>: {{ $anggota->kd_anggota }}</td>
-                            </tr>
-                            <tr>
-                                <td width="15%">Nama Anggota</td>
-                                <td>: {{ $anggota->nama_anggota }}</td>
-                            </tr>
-                        </table>
-                    </div>
-                </address>
+            <div class="row" style="margin-bottom: 10px;">
+                Periode : {{ isset($tanggal) ? date('m-Y', strtotime($tanggal)) : date('m-Y') }}
             </div>
             <!-- Table row -->
             <div class="row">
                 <div class="col-12 table-responsive">
-                    <table class="table table-striped">
+                    <table class="table table-bordered">
                         <thead>
                             <tr>
                                 <th class="text-center">No</th>
-                                <th class="text-center">Kode Pinjaman</th>
-                                <th class="text-center">Tanggal Pinjaman</th>
-                                <th class="text-center">Anggota</th>
-                                <th class="text-center">Pokok Pinjaman (Rp)</th>
-                                <th class="text-center">Jangka Waktu (x)</th>
-                                <th class="text-center">Sisa Angsuran (x)</th>
-                                <th class="text-center">Angsuran Pokok (Rp)</th>
-                                <th class="text-center">Angsuran Bunga (Rp)</th>
-                                <th class="text-center">Jumlah Angsuran (Rp)</th>
+                                <th class="text-center">NRP</th>
+                                <th class="text-center">Nama Anggota</th>
+                                <th class="text-center">Piutang Toko (Rp)</th>
+                                <th class="text-center">Angsuran Pinjaman (Rp)</th>
+                                <th class="text-center">Simpanan Wajib (Rp)</th>
+                                <th class="text-center">Total Piutang (Rp)</th>
                             </tr>
                         </thead>
                         <tbody>
                             @php
                                 $no = 1;
                             @endphp
-                            @foreach ($pinjaman as $pin)
+                            @foreach ($anggota as $key => $value)
                                 <tr>
                                     <td class="text-center">{{ $no++ }}</td>
-                                    <td class="text-center">{{ $pin->kode_pinjaman }}</td>
-                                    <td class="text-center">{{ date('d-m-Y', strtotime($pin->tanggal)) }}</td>
-                                    <td class="text-center">
-                                        {{ $pin->anggota->kd_anggota . ' / ' . $pin->anggota->nama_anggota }}</td>
-                                    <td class="text-right">{{ number_format($pin->nominal_pinjaman, 2, ',', '.') }}
-                                    </td>
-                                    <td class="text-center">{{ $pin->tenor }}</td>
-                                    <td class="text-center">{{ $pin->tenor - $pin->angsuran_ke }}</td>
+                                    <td class="text-center">{{ $value->username }}</td>
+                                    <td>{{ $value->nama_anggota }}</td>
                                     <td class="text-right">
-                                        {{ number_format($pin->nominal_pinjaman / $pin->tenor, 2, ',', '.') }}</td>
-                                    <td class="text-right">
-                                        {{ number_format(($pin->total_pinjaman - $pin->nominal_pinjaman) / $pin->tenor, 2, ',', '.') }}
+                                        {{ $value->sisa_piutang != null ? number_format($value->sisa_piutang, 0, '', '.') : '-' }}
                                     </td>
-                                    <td class="text-right">{{ number_format($pin->nominal_angsuran, 2, ',', '.') }}
+                                    <td class="text-right">
+                                        {{ $value->nominal_angsuran != null ? number_format($value->nominal_angsuran, 0, '', '.') : '-' }}
+                                    </td>
+                                    <td class="text-right">{{ number_format($simpananWajib->angka, 0, '', '.') }}
+                                    </td>
+                                    <td class="text-right">{{ number_format($totalPiutang[$key], 0, '', '.') }}
                                     </td>
                                 </tr>
                             @endforeach
                         </tbody>
                         <tfoot>
                             <tr>
-                                <td></td>
+                                <td colspan="3" class="text-center"><b>TOTAL</b></td>
+                                <td class="text-right"><b>{{ number_format($sumHutang, 0, '', '.') }}</b></td>
+                                <td class="text-right"><b>{{ number_format($sumAngsuran, 0, '', '.') }}</b></td>
+                                <td class="text-right"><b>{{ number_format($sumSimpanan, 0, '', '.') }}</b></td>
+                                <td class="text-right"><b>{{ number_format($sumTotalPiutang, 0, '', '.') }}</b></td>
                             </tr>
                         </tfoot>
                     </table>
                 </div>
                 <!-- /.col -->
             </div>
+            <div class="row float-right mr-3 mt-5">
+                <table border="0">
+                    <tr>
+                        <td class="text-center col-6">
+                            Bendahara Koperasi
+                            <br>
+                            <br>
+                            <br>
+                            .............................
+                        </td>
+                    </tr>
+                </table>
+            </div>
         </div>
-
     </div>
     <script>
         window.addEventListener("load", window.print());

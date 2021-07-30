@@ -3,9 +3,9 @@
 namespace App\Http\Controllers\Simpan_Pinjam\Simpanan;
 
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\Simpan_Pinjam\Utils\KodeJurnal;
 use App\Http\Controllers\Simpan_Pinjam\Utils\ResponseMessage;
 use App\Http\Controllers\Simpan_Pinjam\Utils\SaveJurnalUmum;
-use App\Models\Simpan_Pinjam\Laporan\JurnalUmum;
 use App\Models\Simpan_Pinjam\Master\Akun\Akun;
 use App\Models\Simpan_Pinjam\Master\Anggota\Anggota;
 use App\Models\Simpan_Pinjam\Other\Notifikasi;
@@ -150,17 +150,10 @@ class TarikSaldoController extends Controller
 
             if ($tarikSaldo->status == 2) {
                 #Check Jurnal
-                $checkJurnal = JurnalUmum::select('*')->orderBy('id', 'DESC')->first();
-                if ($checkJurnal == null) {
-                    $idJurnal = 1;
-                } else {
-                    $substrKode = substr($checkJurnal->kode_jurnal, 3);
-                    $idJurnal   = $substrKode + 1;
-                }
+                $kodeJurnal = KodeJurnal::kode();
 
                 $penarikan = SaldoTarik::where('id', $id)->first();
 
-                $kodeJurnal = 'JU-' . str_pad($idJurnal, 6, '0', STR_PAD_LEFT);
                 $keterangan = 'Penarikan ( ' . $penarikan->saldo->anggota->nama_anggota . ' )';
 
                 #Simpan Jurnal Kas
@@ -181,7 +174,7 @@ class TarikSaldoController extends Controller
                 ]);
 
                 $tarikSaldo->update([
-                    'kode_jurnal' => 'JU-' . str_pad($idJurnal, 6, '0', STR_PAD_LEFT)
+                    'kode_jurnal' => $kodeJurnal
                 ]);
 
                 #Send Whatsapp

@@ -397,6 +397,7 @@ Route::group(['prefix' => 'simpan-pinjam', 'middleware' => ['auth:simpan-pinjam'
         Route::get('shu', 'Simpan_Pinjam\Laporan\SHUController@index')->name('shu.index');
         Route::post('shu/cetak', 'Simpan_Pinjam\Laporan\SHUController@print_show')->name('shu.print-show');
         Route::post('shu/show', 'Simpan_Pinjam\Laporan\SHUController@show_data')->name('shu.show-data');
+        Route::post('shu/show-data', 'Simpan_Pinjam\Laporan\SHUController@show')->name('shu.show');
 
         Route::get('buku-besar', 'Simpan_Pinjam\Laporan\BukuBesarController@index')->name('buku-besar.index');
         Route::post('buku-besar/show', 'Simpan_Pinjam\Laporan\BukuBesarController@show_data')->name('buku-besar.show-data');
@@ -409,6 +410,10 @@ Route::group(['prefix' => 'simpan-pinjam', 'middleware' => ['auth:simpan-pinjam'
         Route::get('keuangan', 'Simpan_Pinjam\Laporan\KeuanganController@index')->name('keuangan.index');
         Route::post('keuangan/show', 'Simpan_Pinjam\Laporan\KeuanganController@show_data')->name('keuangan.show-data');
         Route::post('keuangan/cetak', 'Simpan_Pinjam\Laporan\KeuanganController@print_show')->name('keuangan.print-show');
+
+        Route::get('bendahara', 'Simpan_Pinjam\Laporan\BendaharaController@index')->name('bendahara.index');
+        Route::post('bendahara/show', 'Simpan_Pinjam\Laporan\BendaharaController@show_data')->name('bendahara.show-data');
+        Route::post('bendahara/cetak', 'Simpan_Pinjam\Laporan\BendaharaController@print_show')->name('bendahara.print-show');
     });
 
     #Pengaturan
