@@ -40,12 +40,14 @@
                             </div>
                         </div>
                         <div class="col-6 text-right" style="margin-top: 15px;">
-                            <form action="{{ route('shu.show-data') }}" method="post" enctype="multipart/form-data">
+                            <form action="{{ route('shu.show') }}" method="post" enctype="multipart/form-data">
                                 @csrf
-                                <input type="text" class="form-control form-control-sm" name="start_date" id="start-date">
-                                <input type="text" class="form-control form-control-sm" name="end_date" id="end-date">
+                                <input type="text" class="form-control form-control-sm" name="start_date" id="start-date"
+                                    hidden>
+                                <input type="text" class="form-control form-control-sm" name="end_date" id="end-date"
+                                    hidden>
                                 <button type="submit" class="btn btn-sm btn-info"><i
-                                        class="fas fa-print"></i>&nbsp;Cetak</button>
+                                        class="fas fa-search"></i>&nbsp;Tampil</button>
                             </form>
                         </div>
                     </div>

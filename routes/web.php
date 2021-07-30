@@ -396,7 +396,7 @@ Route::group(['prefix' => 'simpan-pinjam', 'middleware' => ['auth:simpan-pinjam'
 
         Route::get('shu', 'Simpan_Pinjam\Laporan\SHUController@index')->name('shu.index');
         Route::post('shu/cetak', 'Simpan_Pinjam\Laporan\SHUController@print_show')->name('shu.print-show');
-        Route::post('shu/show', 'Simpan_Pinjam\Laporan\SHUController@show_data')->name('shu.show-data');
+        // Route::post('shu/show', 'Simpan_Pinjam\Laporan\SHUController@show_data')->name('shu.show-data');
         Route::post('shu/show-data', 'Simpan_Pinjam\Laporan\SHUController@show')->name('shu.show');
 
         Route::get('buku-besar', 'Simpan_Pinjam\Laporan\BukuBesarController@index')->name('buku-besar.index');
