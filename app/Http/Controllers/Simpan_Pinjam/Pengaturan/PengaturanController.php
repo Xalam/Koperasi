@@ -21,19 +21,19 @@ class PengaturanController extends Controller
 
         if (request()->ajax()) {
             $data = [];
-            
+
             foreach ($pengaturan as $key => $value) {
                 $data[] = [
                     'no'        => $value->id,
                     'nama'      => $value->nama,
                     'angka'     => $value->angka,
-                    'action'    => '<a href="'. route('list.edit', $value->id) . '" class="btn btn-warning btn-sm"><i class="far fa-edit"></i>&nbsp; Edit</a>',
+                    'action'    => '<a href="' . route('list.edit', $value->id) . '" class="btn btn-warning btn-sm"><i class="far fa-edit"></i>&nbsp; Edit</a>',
                 ];
             }
 
             return response()->json(compact('data'));
         }
-        return view('Simpan_Pinjam.pengaturan.index');
+        return view('Simpan_Pinjam.pengaturan.list.index');
     }
 
     /**
@@ -43,7 +43,7 @@ class PengaturanController extends Controller
      */
     public function create()
     {
-        return view('Simpan_Pinjam.pengaturan.create');
+        return view('Simpan_Pinjam.pengaturan.list.create');
     }
 
     /**
@@ -78,7 +78,7 @@ class PengaturanController extends Controller
     {
         $pengaturan = Pengaturan::findOrFail($id);
 
-        return view('Simpan_Pinjam.pengaturan.edit', compact('pengaturan'));
+        return view('Simpan_Pinjam.pengaturan.list.edit', compact('pengaturan'));
     }
 
     /**
@@ -98,13 +98,13 @@ class PengaturanController extends Controller
             'angka.required' => 'Angka wajib diisi',
             'angka.regex'  => 'Wajib diisi angka'
         ];
-        
+
         $validator = Validator::make($request->all(), $rules, $messages);
-        
+
         if ($validator->fails()) {
             return redirect()->back()->withErrors($validator)->withInput($request->all());
         }
-        
+
         $pengaturan = Pengaturan::findOrFail($id);
         $pengaturan->angka = $request->angka;
         $pengaturan->update();
@@ -135,11 +135,11 @@ class PengaturanController extends Controller
     {
         $pengaturan = Pengaturan::findOrFail($id);
 
-        return view('Simpan_Pinjam.pengaturan.modal', compact('pengaturan'));
+        return view('Simpan_Pinjam.pengaturan.list.modal', compact('pengaturan'));
     }
-    
+
     public function modal_all($id)
     {
-        return view('Simpan_Pinjam.pengaturan.modal-delete');
+        return view('Simpan_Pinjam.pengaturan.list.modal-delete');
     }
 }
