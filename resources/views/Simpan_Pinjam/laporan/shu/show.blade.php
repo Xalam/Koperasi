@@ -42,11 +42,10 @@
                         <h3 class="card-title"><b>Sisa Hasil Usaha</b></h3>
                     </div>
                     <div class="col-12 text-right">
-                        @if (isset($reqStart) && isset($reqEnd))
-                            <h3 class="card-title" style="float: right;">Periode: {{ $reqStart }} /
-                                {{ $reqEnd }}</h3>
+                        @if (isset($startDate) && isset($endDate))
+                            Periode: {{ $startDate }} / {{ $endDate }}
                         @else
-                            Periode: {{ date('m-Y') }}
+                            Periode: {{ date('d-m-Y') }}
                         @endif
                     </div>
                 </div>
@@ -81,16 +80,19 @@
                                 <tr>
                                     <td class="text-center">{{ $five->kode_akun }}</td>
                                     <td>{{ $five->nama_akun }}</td>
-                                    <td class="text-right">{{ number_format($five->total, 2, ',', '.') }}</td>
                                     <td class="text-right"></td>
+                                    <td class="text-right">{{ number_format($five->total, 2, ',', '.') }}</td>
                                 </tr>
                             @endforeach
 
+                            @php
+                                $labaKotor = $sumAkunFour - $sumAkunFive;
+                            @endphp
                             <tr>
                                 <td class="table-secondary"></td>
                                 <td class="text-center table-secondary"><b>Laba Kotor</b></td>
                                 <td class="table-secondary"></td>
-                                <td>0</td>
+                                <td class="text-right"><b>{{ number_format($labaKotor, 2, ',', '.') }}</b></td>
                             </tr>
 
                             @foreach ($valueAkunSix as $six)
@@ -105,8 +107,8 @@
                             <tr>
                                 <td></td>
                                 <td class="text-center"><b>Total Beban Administrasi dan Umum</b></td>
-                                <td></td>
                                 <td class="text-right"><b>{{ number_format($sumAkunSix, 2, ',', '.') }}</b></td>
+                                <td></td>
                             </tr>
 
                             @foreach ($valueAkunSixThree as $sixThree)
@@ -121,8 +123,8 @@
                             <tr>
                                 <td></td>
                                 <td class="text-center"><b>Total Beban Organisasi</b></td>
-                                <td></td>
                                 <td class="text-right"><b>{{ number_format($sumAkunSixThree, 2, ',', '.') }}</b></td>
+                                <td></td>
                             </tr>
 
                             @foreach ($valueAkunSixFour as $sixFour)
@@ -134,18 +136,25 @@
                                 </tr>
                             @endforeach
 
+                            @php
+                                $totalBeban = $sumAkunSix + $sumAkunSixThree + $sumAkunSixFour;
+                            @endphp
                             <tr>
                                 <td></td>
                                 <td class="text-center"><b>Total Beban</b></td>
                                 <td></td>
-                                <td class="text-right"><b>{{ number_format($sumAkunSixFour, 2, ',', '.') }}</b></td>
+                                <td class="text-right"><b>{{ number_format($totalBeban, 2, ',', '.') }}</b></td>
                             </tr>
 
+                            @php
+                                $pendapatanOperasional = $labaKotor - $totalBeban;
+                            @endphp
                             <tr>
                                 <td class="table-secondary"></td>
                                 <td class="text-center table-secondary"><b>Pendapatan Operasional</b></td>
                                 <td class="table-secondary"></td>
-                                <td>0</td>
+                                <td class="text-right"><b>{{ number_format($pendapatanOperasional, 2, ',', '.') }}</b>
+                                </td>
                             </tr>
 
                             @foreach ($valueAkunFourTwo as $fourTwo)
@@ -166,32 +175,35 @@
 
                             <tr>
                                 <td colspan="3" class="table-secondary text-center"><b>SHU Sebelum Pajak</b></td>
-                                <td></td>
+                                <td class="text-right"><b>{{ number_format($sumSHU, 2, ',', '.') }}</b></td>
                             </tr>
+
                             <tr>
                                 <td colspan="3" class="text-center"><b>Pajak</b></td>
-                                <td></td>
+                                <td class="text-right"><b>{{ number_format($pajakSHU, 2, ',', '.') }}</b></td>
                             </tr>
+
                             <tr>
                                 <td colspan="3" class="text-center"><b>SHU Setelah Pajak</b></td>
-                                <td></td>
+                                <td class="text-right"><b>{{ number_format($sumSHUPajak, 2, ',', '.') }}</b></td>
                             </tr>
                         </tbody>
                     </table>
                     <br>
                     <h5><b>Pembagian Sisa Hasil Usaha</b></h5>
                     <table border="0">
-                        @foreach ($pembagian as $pem)
+                        @foreach ($pembagian as $key => $pem)
                             <tr>
                                 <td width="60%">{{ $pem->nama }}</td>
                                 <td width="10%" class="text-center">{{ $pem->angka }} %</td>
-                                <td width="30%" class="text-right"></td>
+                                <td width="30%" class="text-right">
+                                    {{ number_format($calculatePembagian[$key], 2, ',', '.') }}</td>
                             </tr>
                         @endforeach
                         <tr>
                             <td><b>JUMLAH</b></td>
                             <td class="text-center"><b>100%</b></td>
-                            <td class="text-right"><b>0</b></td>
+                            <td class="text-right"><b>{{ number_format($sumSHUPajak, 2, ',', '.') }}</b></td>
                         </tr>
                     </table>
                     <br>
@@ -211,16 +223,32 @@
                             </tr>
                         </thead>
                         <tbody>
+                            @php
+                                $no = 1;
+                            @endphp
+                            @foreach ($jasaAnggota as $key => $item)
+                                <tr>
+                                    <td class="text-center">{{ $no++ }}</td>
+                                    <td class="text-center">{{ $item->username }}</td>
+                                    <td>{{ $item->nama_anggota }}</td>
+                                    <td class="text-right">{{ number_format($item->wajib, 0, '', '.') }}</td>
+                                    <td class="text-right">{{ number_format($item->sukarela, 0, '', '.') }}</td>
+                                    <td class="text-right">{{ number_format($item->total_pinjaman, 0, '', '.') }}</td>
+                                    <td class="text-right">{{ number_format($item->total_penjualan, 0, '', '.') }}</td>
+                                    <td class="text-right">{{ number_format($item->keaktifan_anggota, 0, '', '.') }}</td>
+                                    <td class="text-right">{{ number_format($pembagianSHU[$key], 2, ',', '.') }}</td>
+                                </tr>
+                            @endforeach
                         </tbody>
                         <tfoot>
                             <tr>
                                 <td colspan="3" class="text-center"><b>JUMLAH</b></td>
-                                <td class="text-right"><b></b></td>
-                                <td class="text-right"><b></b></td>
-                                <td class="text-right"><b></b></td>
-                                <td class="text-right"><b></b></td>
-                                <td class="text-right"><b></b></td>
-                                <td class="text-right"><b></b></td>
+                                <td class="text-right"><b>{{ number_format($jumWajib, 0, '', '.') }}</b></td>
+                                <td class="text-right"><b>{{ number_format($jumSukarela, 0, '', '.') }}</b></td>
+                                <td class="text-right"><b>{{ number_format($jumPinjaman, 0, '', '.') }}</b></td>
+                                <td class="text-right"><b>{{ number_format($jumPenjualan, 0, '', '.') }}</b></td>
+                                <td class="text-right"><b>{{ number_format($jumAktifAnggota, 0, '', '.') }}</b></td>
+                                <td class="text-right"><b>{{ number_format($jumPembagianSHU, 2, ',', '.') }}</b></td>
                             </tr>
                         </tfoot>
                     </table>
@@ -242,7 +270,16 @@
     <script src="{{ asset('assets/plugins/datatables-responsive/js/responsive.bootstrap4.min.js') }}"></script>
     <script>
         $(function() {
-            $('#table-jasa').DataTable();
+            $('#table-jasa').DataTable({
+                "paging": true,
+                "lengthChange": true,
+                "searching": true,
+                "ordering": true,
+                "info": true,
+                "autoWidth": true,
+                "responsive": true,
+                "scrollX": true
+            });
         });
     </script>
 @endsection
