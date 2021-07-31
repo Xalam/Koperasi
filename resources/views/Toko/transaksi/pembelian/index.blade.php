@@ -37,15 +37,18 @@
         </div>
         <div class="row-lg align-item-center mb-2">
             {!! Form::label(null, 'Alamat', ['class' => 'col-lg-2']) !!}
-            {!! Form::text('alamat', null, ['class' => 'col-lg-9 form-control form-control-sm', 'required', 'readonly']) !!}
+            {!! Form::text('alamat', null, ['class' => 'col-lg-9 form-control form-control-sm', 'required', 'readonly'])
+            !!}
         </div>
         <div class="row-lg align-item-center mb-2">
             {!! Form::label(null, 'Nomor Telepon', ['class' => 'col-lg-2']) !!}
-            {!! Form::number('telepon', null, ['class' => 'col-lg-2 form-control form-control-sm', 'required', 'readonly']) !!}
+            {!! Form::number('telepon', null, ['class' => 'col-lg-2 form-control form-control-sm', 'required',
+            'readonly']) !!}
         </div>
         <div class="row-lg align-item-center mb-2">
             {!! Form::label(null, 'Nomor WA', ['class' => 'col-lg-2']) !!}
-            {!! Form::number('wa', null, ['class' => 'col-lg-2 form-control form-control-sm', 'required', 'readonly']) !!}
+            {!! Form::number('wa', null, ['class' => 'col-lg-2 form-control form-control-sm', 'required', 'readonly'])
+            !!}
         </div>
         <br>
         <div class="row-lg mb-2">
@@ -86,20 +89,24 @@
             </div>
             <div class="col-lg-2">
                 {!! Form::label(null, 'Sisa Stok', null) !!}
-                {!! Form::number('stok', 0, ['class' => 'col-lg-12 form-control form-control-sm', 'required', 'readonly']) !!}
+                {!! Form::number('stok', 0, ['class' => 'col-lg-12 form-control form-control-sm', 'required',
+                'readonly']) !!}
             </div>
             <div class="col-lg-2">
                 {!! Form::label(null, 'Harga Satuan', null) !!}
-                {!! Form::number('harga_satuan', 0, ['class' => 'col-lg-12 form-control form-control-sm', 'required', 'readonly'])
+                {!! Form::number('harga_satuan', 0, ['class' => 'col-lg-12 form-control form-control-sm', 'required',
+                'readonly'])
                 !!}
             </div>
             <div class="col-lg-2">
                 {!! Form::label(null, 'Jumlah', null) !!}
-                {!! Form::number('jumlah', 0, ['class' => 'col-lg-12 form-control form-control-sm', 'required', 'readonly']) !!}
+                {!! Form::number('jumlah', 0, ['class' => 'col-lg-12 form-control form-control-sm', 'required',
+                'readonly']) !!}
             </div>
             <div class="col-lg-2">
                 {!! Form::label(null, 'Total Harga', null) !!}
-                {!! Form::number('total_harga', 0, ['class' => 'col-lg-12 form-control form-control-sm', 'required', 'readonly'])
+                {!! Form::number('total_harga', 0, ['class' => 'col-lg-12 form-control form-control-sm', 'required',
+                'readonly'])
                 !!}
             </div>
         </div>
@@ -130,7 +137,7 @@
             </table>
         </div>
         <div class="d-grid gap-2 mb-2">
-            {!! Form::submit('Beli', ['class' => 'btn btn-sm btn-success']) !!}
+            {!! Form::submit('Beli', ['class' => 'btn btn-sm btn-success', 'disabled']) !!}
         </div>
         <div class="d-grid gap-2">
             <a id="batal" class="btn btn-sm btn-danger">Batal</a>
@@ -327,6 +334,16 @@ function batal_transaksi() {
 function kalkulasi_pembayaran() {
     $('#jumlah-kembalian').html("Rp. " + ($('[name="jumlah_bayar"]').val() - jumlah_harga) + ",-");
     $('[name="jumlah_kembalian"]').val($('[name="jumlah_bayar"]').val() - jumlah_harga);
+
+    if (parseInt($('[name="pembayaran"]').val()) == 2) {
+        if (parseInt($('[name="jumlah_bayar"]').val()) >= jumlah_harga) {
+            $('[type="submit"]').removeAttr('disabled');
+        } else {
+            $('[type="submit"]').attr('disabled', 'disabled');
+        }
+    } else {
+        $('[type="submit"]').removeAttr('disabled');
+    }
 }
 
 function show_popup_hapus(id) {
@@ -358,6 +375,8 @@ $(document).ready(function() {
             $('[name="jumlah_bayar"]').removeClass('d-none');
             $('[name="jumlah_bayar"]').attr('required', true);
         }
+
+        kalkulasi_pembayaran();
     });
 
     $('[name="jumlah"]').change(function() {

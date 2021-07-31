@@ -52,17 +52,17 @@ class PiutangController extends Controller
         return view('toko.transaksi.piutang.index', compact('cur_date', 'data_notified', 'data_notif', 'nomor', 'piutang'));
     }
     
-    public function show($nomor_jual) {
+    public function show($id_piutang) {
         $terima_piutang = PiutangDetailModel::join('piutang', 'piutang.id', '=', 'terima_piutang.id_piutang')
                                             ->select('terima_piutang.*')
-                                            ->where('id_piutang', $nomor_jual)
+                                            ->where('id_piutang', $id_piutang)
                                             ->get();
 
         $anggota_piutang = PiutangModel::join('tb_anggota', 'tb_anggota.id', '=', 'piutang.id_anggota')
                                     ->select('tb_anggota.nama_anggota AS nama_anggota', 'tb_anggota.id AS id_anggota', 
                                     'tb_anggota.kd_anggota AS kode_anggota', 'piutang.sisa_piutang AS sisa_piutang',
                                     'piutang.jumlah_piutang AS jumlah_piutang')
-                                    ->where('piutang.id', $nomor_jual)
+                                    ->where('piutang.id', $id_piutang)
                                     ->first();
 
         return response()->json(['code'=>200, 'terima_piutang' => $terima_piutang, 'anggota_piutang' => $anggota_piutang]);

@@ -396,6 +396,7 @@ class PenjualanController extends Controller
                 'jumlah_harga' => $request->input('jumlah_harga'),
                 'jumlah_bayar' => $jumlah_bayar,
                 'jumlah_kembalian' => $jumlah_kembalian,
+                'type_penjualan' => 1,
                 'pembayaran' => $request->input('pembayaran'),
                 'notified' => 1
             ]);

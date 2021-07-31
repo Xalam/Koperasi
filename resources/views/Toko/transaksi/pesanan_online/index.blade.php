@@ -82,8 +82,8 @@
                                 ?></a>
                             @endif
                         </td>
-                        <td class="align-middle text-center"><i class="text-success fas fa-print"
-                                style="cursor: pointer;" title="Print"></i></td>
+                        <td class="align-middle text-center"><a href="<?php echo url('/toko/transaksi/pesanan-online/nota/' . $data->nomor); ?>" target="_blank"><i class="text-success fas fa-print"
+                                style="cursor: pointer;" title="Print"></i></a></td>
                     </tr>
                     @endforeach
                 </tbody>

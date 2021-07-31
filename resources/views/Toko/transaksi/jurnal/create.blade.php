@@ -18,7 +18,7 @@
             {!! Form::label(null, 'Tanggal', ['class' => 'col-lg-2']) !!}
             {!! Form::date('tanggal', $cur_date, ['class' => 'col-lg-2 form-control form-control-sm', 'required'])
             !!}
-            {!! Form::label(null, 'Nomor', ['class' => 'offset-lg-2 col-lg-2']) !!}
+            {!! Form::label(null, 'Nomor Jurnal Umum', ['class' => 'offset-lg-2 col-lg-2']) !!}
             {!! Form::text('nomor', null, ['class' => 'col-lg-3 form-control form-control-sm',
             'required', 'readonly'])
             !!}

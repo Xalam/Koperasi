@@ -37,6 +37,7 @@ class LaporanPenjualanController extends Controller
         $tanggal_awal = $request->input('tanggal_awal');
         $tanggal_akhir = $request->input('tanggal_akhir');
         $type_pembayaran = $request->input('type_pembayaran');
+        $type_penjualan = $request->input('type_penjualan');
 
         $data_pembayaran = PembayaranModel::all();
 
@@ -47,31 +48,64 @@ class LaporanPenjualanController extends Controller
 
         if ($tanggal_awal && $tanggal_akhir) {
             if ($type_pembayaran > 0) {
-                $laporan_penjualan = PenjualanModel::whereBetween('penjualan.tanggal', [$tanggal_awal, $tanggal_akhir])
-                                                    ->where('pembayaran', '=', $type_pembayaran)
-                                                    ->join('detail_jual', 'detail_jual.nomor', '=', 'penjualan.nomor')
-                                                    ->join('barang', 'barang.id', '=', 'detail_jual.id_barang')
-                                                    ->leftJoin('tb_anggota', 'tb_anggota.id', '=', 'penjualan.id_anggota')
-                                                    ->select('barang.kode AS kode', 'barang.nama AS nama',
-                                                            'barang.harga_jual AS harga_jual', 'detail_jual.jumlah AS jumlah', 
-                                                            'detail_jual.total_harga AS total_harga', 'detail_jual.nomor AS nomor',
-                                                            'penjualan.tanggal AS tanggal', 'tb_anggota.nama_anggota AS nama_anggota', 
-                                                            'tb_anggota.kd_anggota AS kode_anggota', 'tb_anggota.jabatan AS status')
-                                                    ->get();
+                if ($type_penjualan > 0) {
+                    $laporan_penjualan = PenjualanModel::whereBetween('penjualan.tanggal', [$tanggal_awal, $tanggal_akhir])
+                                                        ->where('penjualan.pembayaran', '=', $type_pembayaran)
+                                                        ->where('penjualan.type_penjualan', '=', $type_penjualan)
+                                                        ->join('detail_jual', 'detail_jual.nomor', '=', 'penjualan.nomor')
+                                                        ->join('barang', 'barang.id', '=', 'detail_jual.id_barang')
+                                                        ->leftJoin('tb_anggota', 'tb_anggota.id', '=', 'penjualan.id_anggota')
+                                                        ->select('barang.kode AS kode', 'barang.nama AS nama',
+                                                                'barang.harga_jual AS harga_jual', 'detail_jual.jumlah AS jumlah', 
+                                                                'detail_jual.total_harga AS total_harga', 'detail_jual.nomor AS nomor',
+                                                                'penjualan.tanggal AS tanggal', 'penjualan.type_penjualan AS type_penjualan', 
+                                                                'tb_anggota.nama_anggota AS nama_anggota', 'tb_anggota.kd_anggota AS kode_anggota', 
+                                                                'tb_anggota.jabatan AS status')
+                                                        ->get();
+                } else {
+                    $laporan_penjualan = PenjualanModel::whereBetween('penjualan.tanggal', [$tanggal_awal, $tanggal_akhir])
+                                                        ->where('penjualan.pembayaran', '=', $type_pembayaran)
+                                                        ->join('detail_jual', 'detail_jual.nomor', '=', 'penjualan.nomor')
+                                                        ->join('barang', 'barang.id', '=', 'detail_jual.id_barang')
+                                                        ->leftJoin('tb_anggota', 'tb_anggota.id', '=', 'penjualan.id_anggota')
+                                                        ->select('barang.kode AS kode', 'barang.nama AS nama',
+                                                                'barang.harga_jual AS harga_jual', 'detail_jual.jumlah AS jumlah', 
+                                                                'detail_jual.total_harga AS total_harga', 'detail_jual.nomor AS nomor',
+                                                                'penjualan.tanggal AS tanggal', 'penjualan.type_penjualan AS type_penjualan', 
+                                                                'tb_anggota.nama_anggota AS nama_anggota', 'tb_anggota.kd_anggota AS kode_anggota', 
+                                                                'tb_anggota.jabatan AS status')
+                                                        ->get();
+                }
             } else {
-                $laporan_penjualan = PenjualanModel::whereBetween('penjualan.tanggal', [$tanggal_awal, $tanggal_akhir])
-                                                    ->join('detail_jual', 'detail_jual.nomor', '=', 'penjualan.nomor')
-                                                    ->join('barang', 'barang.id', '=', 'detail_jual.id_barang')
-                                                    ->leftJoin('tb_anggota', 'tb_anggota.id', '=', 'penjualan.id_anggota')
-                                                    ->select('barang.kode AS kode', 'barang.nama AS nama',
-                                                            'barang.harga_jual AS harga_jual', 'detail_jual.jumlah AS jumlah', 
-                                                            'detail_jual.total_harga AS total_harga', 'detail_jual.nomor AS nomor',
-                                                            'penjualan.tanggal AS tanggal', 'tb_anggota.nama_anggota AS nama_anggota', 
-                                                            'tb_anggota.kd_anggota AS kode_anggota', 'tb_anggota.jabatan AS status')
-                                                    ->get();
+                if ($type_penjualan > 0) {
+                    $laporan_penjualan = PenjualanModel::whereBetween('penjualan.tanggal', [$tanggal_awal, $tanggal_akhir])
+                                                        ->where('penjualan.type_penjualan', '=', $type_penjualan)
+                                                        ->join('detail_jual', 'detail_jual.nomor', '=', 'penjualan.nomor')
+                                                        ->join('barang', 'barang.id', '=', 'detail_jual.id_barang')
+                                                        ->leftJoin('tb_anggota', 'tb_anggota.id', '=', 'penjualan.id_anggota')
+                                                        ->select('barang.kode AS kode', 'barang.nama AS nama',
+                                                                'barang.harga_jual AS harga_jual', 'detail_jual.jumlah AS jumlah', 
+                                                                'detail_jual.total_harga AS total_harga', 'detail_jual.nomor AS nomor',
+                                                                'penjualan.tanggal AS tanggal', 'penjualan.type_penjualan AS type_penjualan', 
+                                                                'tb_anggota.nama_anggota AS nama_anggota', 'tb_anggota.kd_anggota AS kode_anggota', 
+                                                                'tb_anggota.jabatan AS status')
+                                                        ->get();
+                } else {
+                    $laporan_penjualan = PenjualanModel::whereBetween('penjualan.tanggal', [$tanggal_awal, $tanggal_akhir])
+                                                        ->join('detail_jual', 'detail_jual.nomor', '=', 'penjualan.nomor')
+                                                        ->join('barang', 'barang.id', '=', 'detail_jual.id_barang')
+                                                        ->leftJoin('tb_anggota', 'tb_anggota.id', '=', 'penjualan.id_anggota')
+                                                        ->select('barang.kode AS kode', 'barang.nama AS nama',
+                                                                'barang.harga_jual AS harga_jual', 'detail_jual.jumlah AS jumlah', 
+                                                                'detail_jual.total_harga AS total_harga', 'detail_jual.nomor AS nomor',
+                                                                'penjualan.tanggal AS tanggal', 'penjualan.type_penjualan AS type_penjualan', 
+                                                                'tb_anggota.nama_anggota AS nama_anggota', 'tb_anggota.kd_anggota AS kode_anggota', 
+                                                                'tb_anggota.jabatan AS status')
+                                                        ->get();
+                }
             }
     
-            return view ('toko.laporan.penjualan.index', compact('cur_date', 'laporan_penjualan', 'data_notified', 'data_notif', 'pembayaran', 'tanggal_awal', 'tanggal_akhir', 'type_pembayaran'));
+            return view ('toko.laporan.penjualan.index', compact('cur_date', 'laporan_penjualan', 'data_notified', 'data_notif', 'pembayaran', 'tanggal_awal', 'tanggal_akhir', 'type_pembayaran', 'type_penjualan'));
         } else {
             return view ('toko.laporan.penjualan.index', compact('cur_date', 'pembayaran', 'data_notified', 'data_notif'));
         }
@@ -106,8 +140,9 @@ class LaporanPenjualanController extends Controller
                                                     ->select('barang.kode AS kode', 'barang.nama AS nama',
                                                             'barang.harga_jual AS harga_jual', 'detail_jual.jumlah AS jumlah', 
                                                             'detail_jual.total_harga AS total_harga', 'detail_jual.nomor AS nomor',
-                                                            'penjualan.tanggal AS tanggal', 'tb_anggota.nama_anggota AS nama_anggota', 
-                                                            'tb_anggota.kd_anggota AS kode_anggota', 'tb_anggota.jabatan AS status')
+                                                            'penjualan.tanggal AS tanggal', 'penjualan.type_penjualan AS type_penjualan', 
+                                                            'tb_anggota.nama_anggota AS nama_anggota', 'tb_anggota.kd_anggota AS kode_anggota', 
+                                                            'tb_anggota.jabatan AS status')
                                                     ->get();
             } else {
                 $laporan_penjualan = PenjualanModel::whereBetween('penjualan.tanggal', [$tanggal_awal, $tanggal_akhir])
@@ -117,8 +152,9 @@ class LaporanPenjualanController extends Controller
                                                     ->select('barang.kode AS kode', 'barang.nama AS nama',
                                                             'barang.harga_jual AS harga_jual', 'detail_jual.jumlah AS jumlah', 
                                                             'detail_jual.total_harga AS total_harga', 'detail_jual.nomor AS nomor',
-                                                            'penjualan.tanggal AS tanggal', 'tb_anggota.nama_anggota AS nama_anggota', 
-                                                            'tb_anggota.kd_anggota AS kode_anggota', 'tb_anggota.jabatan AS status')
+                                                            'penjualan.tanggal AS tanggal', 'penjualan.type_penjualan AS type_penjualan', 
+                                                            'tb_anggota.nama_anggota AS nama_anggota', 'tb_anggota.kd_anggota AS kode_anggota', 
+                                                            'tb_anggota.jabatan AS status')
                                                     ->get();
             }
         }

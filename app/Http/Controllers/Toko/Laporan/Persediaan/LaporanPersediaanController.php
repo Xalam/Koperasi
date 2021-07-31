@@ -45,6 +45,29 @@ class LaporanPersediaanController extends Controller
         return view ('toko.laporan.persediaan.index', compact('cur_date', 'data_notified', 'data_notif'));
     }
 
+    public function minimalPersediaan() {
+        $cur_date = Carbon::now();
+
+        $data_notified = BarangModel::all();
+        foreach ($data_notified AS $data) {
+            if ($data->stok_etalase <= $data->stok_minimal || $data->stok_gudang <= $data->stok_minimal) {
+                BarangModel::where('id', $data->id)->update([
+                    'alert_status' => 1
+                ]);
+            } else {
+                BarangModel::where('id', $data->id)->update([
+                    'alert_status' => 0
+                ]);
+            }
+        }
+
+        $data_notif = BarangModel::where('alert_status', 1)->get();
+        
+        $laporan_minimal_persediaan = BarangModel::all();
+
+        return view ('toko.laporan.minimal_persediaan.index', compact('cur_date', 'data_notified', 'data_notif', 'laporan_minimal_persediaan'));
+    }
+
     public function print($minimal_stok) {
         $laporan_persediaan = BarangModel::where(DB::raw('SUM(stok_etalase + stok_gudang)'), '<', $minimal_stok)->get();
 

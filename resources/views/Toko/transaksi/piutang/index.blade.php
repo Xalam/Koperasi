@@ -25,10 +25,6 @@
                 {!! Form::label(null, 'Tanggal', ['class' => 'col-lg-2']) !!}
                 {!! Form::date('tanggal', $cur_date, ['class' => 'col-lg-2 form-control form-control-sm', 'required'])
                 !!}
-                {!! Form::label(null, 'No. Jual', ['class' => 'offset-lg-2 col-lg-2']) !!}
-                {!! Form::select('nomor_jual', $nomor, null, ['class' => 'col-lg-3 form-control form-control-sm',
-                'readonly'])
-                !!}
                 {!! Form::text('nomor', null, ['class' => 'd-none', 'readonly'])!!}
                 {!! Form::text('nomor_jurnal', null, ['class' => 'd-none', 'readonly'])!!}
             </div>
@@ -150,7 +146,8 @@
 <script src="{{ asset('js/base-url.js') }}"></script>
 <script src="{{ asset('js/nomor-terima-piutang.js') }}"></script>
 <script>
-var nomor_jual;
+
+var id_piutang;
 
 function panel_piutang() {
     $('#panel-piutang').removeClass('d-none');
@@ -169,8 +166,7 @@ function panel_terima_piutang() {
 }
 
 function bayar($id) {
-    $('[name="nomor_jual"]').val($id);
-    tampil_daftar();
+    tampil_daftar($id);
     panel_terima_piutang();
 }
 
@@ -182,7 +178,7 @@ function terima_piutang() {
             nomor: $('[name="nomor"]').val(),
             nomor_jurnal: $('[name="nomor_jurnal"]').val(),
             tanggal: $('[name="tanggal"]').val(),
-            id_piutang: $('[name="nomor_jual"]').val(),
+            id_piutang: id_piutang,
             sisa_piutang: $('[name="sisa_piutang"]').val() - $('[name="terima_piutang"]').val(),
             terima_piutang: $('[name="terima_piutang"]').val(),
             _token: $('meta[name="csrf-token"]').attr('content')
@@ -202,7 +198,7 @@ function terima_piutang() {
                     title: 'Proses Transaksi',
                     text: response.message
                 });
-                tampil_daftar();
+                tampil_daftar(id_piutang);
                 nomorTransaksi();
             }
         }
@@ -222,12 +218,12 @@ function hapus_daftar($id) {
     });
 }
 
-function tampil_daftar() {
+function tampil_daftar($id_piutang) {
     var i = 1;
-    nomor_jual = $('[name="nomor_jual"]').val();
+    id_piutang = $id_piutang;
 
     $.ajax({
-        url: '/toko/transaksi/piutang/' + nomor_jual,
+        url: '/toko/transaksi/piutang/' + id_piutang,
         type: 'GET',
         success: function(response) {
             if (response.code == 200) {
