@@ -183,8 +183,13 @@ class AnggotaController extends Controller
     {
         $anggota = Anggota::findOrFail($id);
 
+        $rule_wa = '';
+        if ($anggota->no_wa != $request->no_wa) {
+            $rule_wa = 'unique:tb_anggota';
+        }
+
         $rules = [
-            'no_wa'     => 'unique:tb_anggota'
+            'no_wa'     => $rule_wa
         ];
 
         $messages = [
