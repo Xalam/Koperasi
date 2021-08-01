@@ -13,6 +13,7 @@ use App\Models\Simpan_Pinjam\Other\Notifikasi;
 use App\Models\Simpan_Pinjam\Pinjaman\Angsuran;
 use App\Models\Simpan_Pinjam\Pinjaman\Pinjaman;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class JatuhTempoController extends Controller
 {
@@ -355,5 +356,10 @@ class JatuhTempoController extends Controller
         $angsuran = Angsuran::findOrFail($id);
 
         return view('Simpan_Pinjam.pinjaman.angsuran-tempo.modal-delete', compact('angsuran'));
+    }
+
+    public function delete_angsuran()
+    {
+        Angsuran::where('status', 0)->where('jenis', 2)->where(DB::raw("DATE_ADD(created_at, INTERVAL 1 DAY)"), '<', DB::raw("NOW()"))->delete();
     }
 }

@@ -14,6 +14,7 @@ use App\Models\Simpan_Pinjam\Pengaturan\Pengaturan;
 use App\Models\Simpan_Pinjam\Pinjaman\Pinjaman;
 use App\Models\Toko\Transaksi\Piutang\PiutangModel;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class PengajuanController extends Controller
 {
@@ -408,5 +409,10 @@ class PengajuanController extends Controller
         );
 
         return response()->json($data);
+    }
+
+    public function delete_pinjaman()
+    {
+        Pinjaman::where('status', 0)->where(DB::raw("DATE_ADD(tanggal, INTERVAL 1 DAY)"), '<', date('Y-m-d'))->delete();
     }
 }
