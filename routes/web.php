@@ -30,7 +30,7 @@ use App\Http\Controllers\Toko\Master\Akun\AkunController;
 use App\Http\Controllers\Toko\Master\Anggota\AnggotaController;
 use App\Http\Controllers\Toko\Master\Supplier\SupplierController;
 
-use App\Http\Controllers\Toko\Laporan\Akuntansi\LaporanAkuntansiController;
+use App\Http\Controllers\Toko\Laporan\Anggota\LaporanAnggotaController;
 use App\Http\Controllers\Toko\Laporan\KasKeluar\LaporanKasKeluarController;
 use App\Http\Controllers\Toko\Laporan\KasMasuk\LaporanKasMasukController;
 use App\Http\Controllers\Toko\Laporan\Master\LaporanMasterController;
@@ -38,6 +38,7 @@ use App\Http\Controllers\Toko\Laporan\Pembelian\LaporanPembelianController;
 use App\Http\Controllers\Toko\Laporan\Pendapatan\LaporanPendapatanController;
 use App\Http\Controllers\Toko\Laporan\Penjualan\LaporanPenjualanController;
 use App\Http\Controllers\Toko\Laporan\Persediaan\LaporanPersediaanController;
+use App\Http\Controllers\Toko\Laporan\Piutang\LaporanPiutangController;
 use App\Http\Controllers\Toko\Laporan\Retur\LaporanReturPembelianController;
 use App\Http\Controllers\Toko\Transaksi\Persediaan\PersediaanController;
 use Illuminate\Support\Facades\Artisan;
@@ -185,6 +186,7 @@ Route::group(['prefix' => 'toko'], function () {
             Route::group(['prefix' => 'pesanan-online', 'middleware' => ['auth:toko', 'checkjabatan:Super_Admin,Kanit']], function () {
                 Route::get('/', [PesananOnlineController::class, 'index']);
                 Route::post('/delete', [PesananOnlineController::class, 'delete']);
+                Route::get('/nota/{nomor}', [PesananOnlineController::class, 'nota']);
                 Route::post('/proses/{id}/{proses}', [PesananOnlineController::class, 'proses']);
             });
 
@@ -195,8 +197,9 @@ Route::group(['prefix' => 'toko'], function () {
 
         //Laporan
         Route::group(['prefix' => 'laporan', 'middleware' => ['auth:toko', 'checkjabatan:Super_Admin,Kanit']], function () {
-            Route::group(['prefix' => 'akuntansi'], function () {
-                Route::get('/', [LaporanAkuntansiController::class, 'index']);
+            Route::group(['prefix' => 'anggota'], function () {
+                Route::get('/', [LaporanAnggotaController::class, 'index']);
+                Route::get('/detail/{id}/{tanggal_awal}/{tanggal_akhir}', [LaporanAnggotaController::class, 'detail']);
             });
 
             Route::group(['prefix' => 'data-master'], function () {
@@ -228,6 +231,7 @@ Route::group(['prefix' => 'toko'], function () {
 
             Route::group(['prefix' => 'persediaan'], function () {
                 Route::get('/', [LaporanPersediaanController::class, 'index']);
+                Route::get('/minimal-persediaan', [LaporanPersediaanController::class, 'minimalPersediaan']);
                 Route::get('/print/{stok}', [LaporanPersediaanController::class, 'print']);
                 Route::get('/export/{stok}', [LaporanPersediaanController::class, 'export']);
             });
@@ -248,6 +252,12 @@ Route::group(['prefix' => 'toko'], function () {
                 Route::get('/', [LaporanPendapatanController::class, 'index']);
                 Route::get('/print/{tanggal}', [LaporanPendapatanController::class, 'print']);
                 Route::get('/export/{tanggal}', [LaporanPendapatanController::class, 'export']);
+            });
+
+            Route::group(['prefix' => 'piutang'], function () {
+                Route::get('/', [LaporanPiutangController::class, 'index']);
+                Route::get('/print/{awal}/{akhir}', [LaporanPiutangController::class, 'print']);
+                Route::get('/export/{awal}/{akhir}', [LaporanPiutangController::class, 'export']);
             });
         });
 

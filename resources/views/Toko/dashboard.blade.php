@@ -48,7 +48,7 @@
                         <i class="btn-info fas fa-coins text-white fa-2x summary-icon"></i>
                     </div>
                     <div class="ms-3">
-                        <b class="text-gray-600">Pendapatan</b>
+                        <b class="text-gray-600">Laba</b>
                         @if (isset($total_pendapatan))
                         @php
                         $pendapatan = number_format($total_pendapatan, 2, ',', '.');

@@ -12,8 +12,8 @@
 @section('main')
 <div class="card m-6">
     <div class="card-header bg-light d-flex flex-row">
-        <p class="col-form-label me-4">Daftar Barang</p> {!! Form::select('filter', ['barang' => 'Per Barang',
-        'supplier' => 'Per Supplier'], null, ['class' => 'col-lg-2 form-select form-select-sm']) !!}
+        <p class="col-form-label me-4">Daftar Barang</p> {!! Form::select('filter', ['barang' => 'Per Nama Barang',
+        'supplier' => 'Detail Persediaan'], null, ['class' => 'col-lg-2 form-select form-select-sm']) !!}
     </div>
     <div class="card-body">
         <div class="table-responsive">

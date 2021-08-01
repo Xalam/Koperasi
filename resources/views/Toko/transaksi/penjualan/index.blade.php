@@ -93,13 +93,15 @@
             <div class="col-lg-2">
                 {!! Form::label(null, 'Harga Satuan', null) !!}
                 {!! Form::number('harga_satuan', 0, ['class' => 'col-lg-12 form-control form-control-sm', 'required',
-                'readonly'])
-                !!}
+                'readonly']) !!}
+                {!! Form::number('harga_grosir', 0, ['class' => 'd-none', 'readonly']) !!}
+                {!! Form::number('harga_normal', 0, ['class' => 'd-none', 'readonly']) !!}
             </div>
             <div class="col-lg-2">
                 {!! Form::label(null, 'Jumlah', null) !!}
                 {!! Form::number('jumlah', 0, ['class' => 'col-lg-12 form-control form-control-sm', 'required',
                 'readonly']) !!}
+                {!! Form::number('jumlah_grosir', 0, ['class' => 'd-none', 'readonly']) !!}
             </div>
             <div class="col-lg-2">
                 {!! Form::label(null, 'Total Harga', null) !!}
@@ -219,7 +221,7 @@ function tambah_daftar() {
             if (response.code == 200) {
                 tampil_daftar();
                 $('[name="jumlah"]').val(1);
-                $('[name="total_harga"]').val(0);
+                $('[name="total_harga"]').val(parseInt($('[name="harga_satuan"]').val()) * parseInt($('[name="jumlah"]').val()));
             }
         }
     });
@@ -250,14 +252,15 @@ function tampil_daftar() {
             if (response.code == 200) {
                 $('#table-data-penjualan').empty();
                 $.each(response.barang_penjualan, function(index, value) {
+                    var harga = (value.jumlah_barang >= value.minimal_grosir) ? value.harga_grosir : value.harga_jual;
                     $('#table-data-penjualan').append('<tr>' +
                         '<th class="align-middle text-center">' + i++ + '</th>' +
                         '<td class="align-middle text-center">' + value.kode_barang + '</td>' +
                         '<td class="align-middle">' + value.nama_barang + '</td>' +
-                        '<td class="align-middle text-center">' + value.harga_jual + '</td>' +
+                        '<td class="align-middle text-center">' + harga + '</td>' +
                         '<td class="align-middle text-center">' + value.jumlah_barang +
                         '</td>' +
-                        '<td class="align-middle text-center">' + value.total_harga + '</td>' +
+                        '<td class="align-middle text-center">' + harga * value.jumlah_barang + '</td>' +
                         '<td class="align-middle text-center"><a id="hapus-' + value
                         .id + '" class="btn btn-sm btn-danger" onclick="show_popup_hapus(' +
                         value
@@ -353,6 +356,14 @@ function close_popup_hapus() {
 $(document).ready(function() {
     $('#table-penjualan').DataTable();
 
+    $('[name="jumlah"]').change(function() {
+        if (parseInt($(this).val()) >= parseInt($('[name="jumlah_grosir"]').val())) {
+            $('[name="harga_satuan"]').val($('[name="harga_grosir"]').val());
+        } else {
+            $('[name="harga_satuan"]').val($('[name="harga_normal"]').val());
+        }
+    });
+
     onScan.attachTo(document, {
         onScan: function(key) {
             $.ajax({
@@ -365,6 +376,13 @@ $(document).ready(function() {
                 },
                 success: function(response) {
                     if (response.code == 200) {
+                        $('[name="kode_barang"] option:selected').removeAttr(
+                        'selected');
+                        $('[name="kode_barang"] option:contains(' + key + ')').attr(
+                            'selected', 'selected');
+                        $('[name="nama_barang"]').val($(
+                                '[name="kode_barang"] option:contains(' + key + ')')
+                            .val());
                         tampil_daftar();
                     }
                 }

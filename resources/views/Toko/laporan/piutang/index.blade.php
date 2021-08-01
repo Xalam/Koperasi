@@ -2,9 +2,9 @@
 
 @section('main')
 <div class="card m-6">
-    <p class="card-header bg-light">Laporan Kas Kaluar</p>
+    <p class="card-header bg-light">Laporan Piutang</p>
     <div class="card-body">
-        {!! Form::open( ['url' => '/toko/laporan/kas-keluar', 'method' => 'GET']) !!}
+        {!! Form::open( ['url' => '/toko/laporan/piutang', 'method' => 'GET']) !!}
         <div class="row-lg align-item-center mb-2">
             {!! Form::label(null, 'Tanggal Awal', ['class' => 'col-lg-2']) !!}
             {!! Form::date('tanggal_awal', (isset($tanggal_awal) ? $tanggal_awal : $cur_date), ['class' => 'col-lg-2
@@ -13,11 +13,6 @@
             {!! Form::label(null, 'Tanggal Akhir', ['class' => 'col-lg-2']) !!}
             {!! Form::date('tanggal_akhir', (isset($tanggal_akhir) ? $tanggal_akhir : $cur_date), ['class' => 'col-lg-2
             form-control form-control-sm']) !!}
-        </div>
-        <div class="row-lg align-item-center mb-2">
-            {!! Form::label(null, 'Jenis Pengeluaran', ['class' => 'col-lg-2']) !!}
-            {!! Form::select('jenis_pengeluaran', $pengeluaran, (isset($jenis_pengeluaran) ? $jenis_pengeluaran : null),
-            ['class' => 'col-lg-4 form-select form-select-sm']) !!}
         </div>
         <div class="d-grid gap-2">
             {!! Form::submit('Cek', ['class' => 'btn btn-primary btn-sm']) !!}
@@ -28,16 +23,15 @@
 
 <div class="card m-6">
     <div class="d-flex flex-row">
-        @if (isset($laporan_kas_keluar) && count($laporan_kas_keluar) > 0)
-        <p class="card-header col-lg">Daftar Kas Keluar {{$pengeluaran[$jenis_pengeluaran]}}</p>
-        <a href=<?php echo 'kas-keluar/export/'.$jenis_pengeluaran.'/'.$tanggal_awal.'/'.$tanggal_akhir ?>
+        <p class="card-header col-lg">Daftar Piutang</p>
+        @if (isset($laporan_piutang) && count($laporan_piutang) > 0)
+        <a href=<?php echo 'piutang/export/'.$tanggal_awal.'/'.$tanggal_akhir ?>
             target="_blank"><i class="card-header text-success fas fa-file-export" style="cursor: pointer;"
                 title="Export to Excel"></i></a>
-        <a href=<?php echo 'kas-keluar/print/'.$jenis_pengeluaran.'/'.$tanggal_awal.'/'.$tanggal_akhir ?>
+        <a href=<?php echo 'piutang/print/'.$tanggal_awal.'/'.$tanggal_akhir ?>
             target="_blank"><i class="card-header text-success fas fa-print" style="cursor: pointer;"
                 title="Print"></i></a>
         @else
-        <p class="card-header col-lg">Daftar </p>
         @endif
     </div>
     <div class="card-body">
@@ -46,28 +40,22 @@
                 <thead class="text-center">
                     <tr>
                         <th>No.</th>
-                        <th>Nomor Transaksi</th>
-                        <th>Tanggal Transaksi</th>
-                        <th>Kode Supplier</th>
-                        <th>Nama Supplier</th>
-                        <th>Keterangan</th>
-                        <th>Jumlah Transaksi</th>
+                        <th>Kode Anggota</th>
+                        <th>Nama Anggota</th>
+                        <th>Sisa Piutang</th>
                     </tr>
                 </thead>
-                @if (isset($laporan_kas_keluar) && count($laporan_kas_keluar) > 0)
+                @if (isset($laporan_piutang) && count($laporan_piutang) > 0)
                 <tbody>
                     @php
                     $i = 1;
                     @endphp
-                    @foreach ($laporan_kas_keluar AS $data)
+                    @foreach ($laporan_piutang AS $data)
                     <tr>
                         <th class="align-middle text-center">{{$i++}}</th>
-                        <td class="align-middle text-center">{{$data->nomor}}</td>
-                        <td class="align-middle text-center">{{$data->tanggal}}</td>
-                        <td class="align-middle">{{$data->kode_supplier}}</td>
-                        <td class="align-middle">{{$data->nama_supplier}}</td>
-                        <td class="align-middle text-center">{{$data->keterangan}}</td>
-                        <td class="align-middle text-center">{{$data->jumlah_transaksi}}</td>
+                        <td class="align-middle text-center">{{$data->kode_anggota}}</td>
+                        <td class="align-middle text-center">{{$data->nama_anggota}}</td>
+                        <td class="align-middle text-center">{{$data->sisa_piutang}}</td>
                     </tr>
                     @endforeach
                 </tbody>

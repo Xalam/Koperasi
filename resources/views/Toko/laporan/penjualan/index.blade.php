@@ -19,6 +19,11 @@
             {!! Form::select('type_pembayaran', $pembayaran, (isset($type_pembayaran) ? $type_pembayaran : null),
             ['class' => 'col-lg-4 form-select form-select-sm']) !!}
         </div>
+        <div class="row-lg align-item-center mb-2">
+            {!! Form::label(null, 'Type Penjualan', ['class' => 'col-lg-2']) !!}
+            {!! Form::select('type_penjualan', ['0' => 'Semua', '1' => 'Offline', '2' => 'Online'], (isset($type_penjualan) ? $type_penjualan : null),
+            ['class' => 'col-lg-4 form-select form-select-sm']) !!}
+        </div>
         <div class="d-grid gap-2">
             {!! Form::submit('Cek', ['class' => 'btn btn-primary btn-sm']) !!}
         </div>
@@ -50,12 +55,13 @@
                         <th>Tanggal Transaksi</th>
                         <th>Kode Anggota</th>
                         <th>Nama Anggota</th>
-                        <th>Status</th>
+                        <th>Status Anggota</th>
                         <th>Kode Barang</th>
                         <th>Nama Barang</th>
                         <th>Harga Jual</th>
                         <th>Jumlah Jual</th>
                         <th>Total Harga</th>
+                        <th>Tipe Penjualan</th>
                         <th>Nota</th>
                     </tr>
                 </thead>
@@ -80,11 +86,14 @@
                         @endif
                         <td class="align-middle text-center">{{$data->kode}}</td>
                         <td class="align-middle">{{$data->nama}}</td>
-                        <td class="align-middle text-center">{{$data->harga_jual}}</td>
+                <td class="align-middle text-center">{{($data->jumlah >= $data->minimal_grosir) ? $data->harga_grosir : $data->harga_jual}}</td>
                         <td class="align-middle text-center">{{$data->jumlah}}</td>
                         <td class="align-middle text-center">{{$data->total_harga}}</td>
-                        <td class="align-middle text-center"><a href="<?php echo url('toko/laporan/penjualan/nota/' . $data->nomor); ?>" target="_blank"><i class="text-success fas fa-print"
-                                style="cursor: pointer;" title="Print"></i></a></td>
+                        <td class="align-middle text-center">{{($data->type_penjualan == 1) ? 'Offline' : 'Online'}}</td>
+                        <td class="align-middle text-center"><a
+                                href="<?php echo url('toko/laporan/penjualan/nota/' . $data->nomor); ?>"
+                                target="_blank"><i class="text-success fas fa-print" style="cursor: pointer;"
+                                    title="Print"></i></a></td>
                     </tr>
                     @endforeach
                 </tbody>

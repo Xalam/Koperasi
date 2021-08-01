@@ -12,7 +12,7 @@
                 <thead class="text-center">
                     <tr>
                         <th>No</th>
-                        <th>Nomor</th>
+                        <th>Nomor Jurnal Umum</th>
                         <th>Tanggal</th>
                         <th>Kode Akun</th>
                         <th>Nama Akun</th>

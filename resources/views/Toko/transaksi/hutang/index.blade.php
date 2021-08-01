@@ -130,7 +130,7 @@
                     <thead class="text-center">
                         <tr>
                             <th>No</th>
-                            <th>Nomor</th>
+                            <th>Nomor Angsuran Utang</th>
                             <th>Nomor Jurnal</th>
                             <th>Tanggal</th>
                             <th>Angsuran</th>

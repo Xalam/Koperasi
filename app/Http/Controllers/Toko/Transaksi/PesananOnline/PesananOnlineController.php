@@ -93,4 +93,19 @@ class PesananOnlineController extends Controller
 
         return response()->json(['code' => 200]);
     }
+
+    public function nota($nomor) {
+        $pembeli = PenjualanModel::leftJoin('tb_anggota', 'tb_anggota.id', '=', 'penjualan.id_anggota')
+                                    ->select(DB::raw('IFNULL(tb_anggota.nama_anggota, "Masyarakat Umum") AS nama_anggota'), 'penjualan.*')
+                                    ->orderBy('id', 'desc')
+                                    ->where('nomor', $nomor)
+                                    ->get();
+
+        $pesanan_online = PenjualanBarangModel::join('barang', 'barang.id', '=', 'detail_jual.id_barang')
+                                            ->select('barang.nama AS nama_barang', 'barang.harga_jual AS harga_jual',
+                                                    'detail_jual.jumlah AS jumlah', 'detail_jual.total_harga AS total_harga')
+                                            ->where('nomor', $nomor)->get();
+
+        return view('toko.transaksi.pesanan_online.nota', compact('pembeli', 'pesanan_online'));
+    }
 }

@@ -10,8 +10,8 @@
 @endsection
 
 @section('main')
-<a href="{{url('toko/master/anggota/create')}}" class="btn btn-sm btn-success mt-4 ms-4 pe-4"><i
-        class="fas fa-plus"></i><b>Tambah</b></a>
+<!-- <a href="{{url('toko/master/anggota/create')}}" class="btn btn-sm btn-success mt-4 ms-4 pe-4"><i
+        class="fas fa-plus"></i><b>Tambah</b></a> -->
 <div class="card m-6">
     <p class="card-header bg-light">Daftar Anggota</p>
     <div class="card-body">

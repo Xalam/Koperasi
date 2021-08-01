@@ -33,48 +33,26 @@
 </head>
 
 <body>
-    <table class="table table-striped table-bordered table-hover nowrap">
+    <table id="table-data" class="table table-striped table-bordered table-hover nowrap">
         <thead class="text-center">
             <tr>
                 <th>No.</th>
-                <th>Nomor Transaksi</th>
-                <th>Tanggal Transaksi</th>
                 <th>Kode Anggota</th>
                 <th>Nama Anggota</th>
-                <th>Status</th>
-                <th>Kode Barang</th>
-                <th>Nama Barang</th>
-                <th>Harga Jual</th>
-                <th>Jumlah Jual</th>
-                <th>Total Harga</th>
-                <th>Tipe Penjualan</th>
+                <th>Sisa Piutang</th>
             </tr>
         </thead>
-        @if (isset($laporan_penjualan) && count($laporan_penjualan) > 0)
+        @if (isset($laporan_piutang) && count($laporan_piutang) > 0)
         <tbody>
             @php
             $i = 1;
             @endphp
-            @foreach ($laporan_penjualan AS $data)
+            @foreach ($laporan_piutang AS $data)
             <tr>
                 <th class="align-middle text-center">{{$i++}}</th>
-                <td class="align-middle text-center">{{$data->nomor}}</td>
-                <td class="align-middle text-center">{{$data->tanggal}}</td>
-                @if (isset($data->kode_anggota))
-                <td class="align-middle">{{$data->kode_anggota}}</td>
-                <td class="align-middle">{{$data->nama_anggota}}</td>
-                <td class="align-middle text-center">{{$data->status}}</td>
-                @else
-                <td class="align-middle">Masyarakat Umum</td>
-                <td class="align-middle">Masyarakat Umum</td>
-                <td class="align-middle text-center">-</td>
-                @endif
-                <td class="align-middle text-center">{{$data->kode}}</td>
-                <td class="align-middle">{{$data->nama}}</td>
-                <td class="align-middle text-center">{{($data->jumlah >= $data->minimal-grosir) ? $data->harga_grosir : $data->harga_jual}}</td>
-                <td class="align-middle text-center">{{$data->jumlah}}</td>
-                <td class="align-middle text-center">{{$data->total_harga}}</td>
-                <td class="align-middle text-center">{{($data->type_penjualan == 1) ? 'Offline' : 'Online'}}</td>
+                <td class="align-middle text-center">{{$data->kode_anggota}}</td>
+                <td class="align-middle text-center">{{$data->nama_anggota}}</td>
+                <td class="align-middle text-center">{{$data->sisa_piutang}}</td>
             </tr>
             @endforeach
         </tbody>
