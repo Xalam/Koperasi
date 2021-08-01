@@ -166,7 +166,7 @@
                                 <div class="sidebar-submenu2">
                                     <ul>
                                         <li><a href="/toko/laporan/persediaan">Persediaan</a></li>
-                                        <li><a href="/toko/laporan/persediaan/minimal-persediaan">Minimal Persediaan</a>
+                                        <li><a href="/toko/laporan/persediaan/minimal-persediaan">Persediaan Minimal</a>
                                         </li>
                                     </ul>
                                 </div>
