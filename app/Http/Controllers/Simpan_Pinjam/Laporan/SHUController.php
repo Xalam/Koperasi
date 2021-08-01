@@ -205,12 +205,12 @@ class SHUController extends Controller
         $pembagian = PembagianSHU::get();
 
         //Kalkulasi
-        $labaKotor = $sumAkunFour - $sumAkunFive;
-        $totalBeban = $sumAkunSix + $sumAkunSixThree + $sumAkunSixFour;
-        $pendapatanOperasional = $labaKotor - $totalBeban;
+        $labaKotor = ($sumAkunFour * -1) - $sumAkunFive;
+        $totalBeban = ($sumAkunSix + $sumAkunSixThree + $sumAkunSixFour) * -1;
+        $pendapatanOperasional = $labaKotor + $totalBeban;
 
-        $sumSHU = $pendapatanOperasional + $sumAkunFourTwo;
-        $pajakSHU = 0.5 / 100 * $sumAkunFour;
+        $sumSHU = $pendapatanOperasional + ($sumAkunFourTwo * -1);
+        $pajakSHU = 0.5 / 100 * ($sumAkunFour * -1);
         $sumSHUPajak = $sumSHU - $pajakSHU;
 
         $calculatePembagian = array();
@@ -338,7 +338,10 @@ class SHUController extends Controller
             'jumPinjaman',
             'jumPenjualan',
             'jumAktifAnggota',
-            'jumPembagianSHU'
+            'jumPembagianSHU',
+            'labaKotor',
+            'totalBeban',
+            'pendapatanOperasional'
         ));
     }
 
@@ -487,12 +490,12 @@ class SHUController extends Controller
         $pembagian = PembagianSHU::get();
 
         //Kalkulasi
-        $labaKotor = $sumAkunFour - $sumAkunFive;
-        $totalBeban = $sumAkunSix + $sumAkunSixThree + $sumAkunSixFour;
-        $pendapatanOperasional = $labaKotor - $totalBeban;
+        $labaKotor = ($sumAkunFour * -1) - $sumAkunFive;
+        $totalBeban = ($sumAkunSix + $sumAkunSixThree + $sumAkunSixFour) * -1;
+        $pendapatanOperasional = $labaKotor + $totalBeban;
 
-        $sumSHU = $pendapatanOperasional + $sumAkunFourTwo;
-        $pajakSHU = 0.5 / 100 * $sumAkunFour;
+        $sumSHU = $pendapatanOperasional + ($sumAkunFourTwo * -1);
+        $pajakSHU = 0.5 / 100 * ($sumAkunFour * -1);
         $sumSHUPajak = $sumSHU - $pajakSHU;
 
         $calculatePembagian = array();
@@ -620,7 +623,10 @@ class SHUController extends Controller
             'jumPinjaman',
             'jumPenjualan',
             'jumAktifAnggota',
-            'jumPembagianSHU'
+            'jumPembagianSHU',
+            'labaKotor',
+            'totalBeban',
+            'pendapatanOperasional'
         ));
     }
 }

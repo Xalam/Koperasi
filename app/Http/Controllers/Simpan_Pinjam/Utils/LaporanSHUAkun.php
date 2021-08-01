@@ -21,7 +21,7 @@ class LaporanSHUAkun
                 if ($value->kredit != 0) {
                     $total -= $value->kredit;
                 } else {
-                    $total += $value->debit;
+                    $total += $value->debet;
                 }
             }
 

@@ -76,7 +76,7 @@
                                 <tr>
                                     <td class="text-center">{{ $four->kode_akun }}</td>
                                     <td>{{ $four->nama_akun }}</td>
-                                    <td class="text-right">{{ number_format($four->total, 2, ',', '.') }}</td>
+                                    <td class="text-right">{{ number_format($four->total * -1, 2, ',', '.') }}</td>
                                     <td class="text-right"></td>
                                 </tr>
                             @endforeach
@@ -85,7 +85,8 @@
                                 <td></td>
                                 <td class="text-center"><b>Total Pendapatan</b></td>
                                 <td></td>
-                                <td class="text-right"><b>{{ number_format($sumAkunFour, 2, ',', '.') }}</b></td>
+                                <td class="text-right"><b>{{ number_format($sumAkunFour * -1, 2, ',', '.') }}</b>
+                                </td>
                             </tr>
 
                             @foreach ($valueAkunFive as $five)
@@ -93,13 +94,10 @@
                                     <td class="text-center">{{ $five->kode_akun }}</td>
                                     <td>{{ $five->nama_akun }}</td>
                                     <td class="text-right"></td>
-                                    <td class="text-right">{{ number_format($five->total, 2, ',', '.') }}</td>
+                                    <td class="text-right">{{ number_format($five->total * -1, 2, ',', '.') }}</td>
                                 </tr>
                             @endforeach
 
-                            @php
-                                $labaKotor = $sumAkunFour - $sumAkunFive;
-                            @endphp
                             <tr>
                                 <td class="table-secondary"></td>
                                 <td class="text-center table-secondary"><b>Laba Kotor</b></td>
@@ -148,9 +146,6 @@
                                 </tr>
                             @endforeach
 
-                            @php
-                                $totalBeban = $sumAkunSix + $sumAkunSixThree + $sumAkunSixFour;
-                            @endphp
                             <tr>
                                 <td></td>
                                 <td class="text-center"><b>Total Beban</b></td>
@@ -158,9 +153,6 @@
                                 <td class="text-right"><b>{{ number_format($totalBeban, 2, ',', '.') }}</b></td>
                             </tr>
 
-                            @php
-                                $pendapatanOperasional = $labaKotor - $totalBeban;
-                            @endphp
                             <tr>
                                 <td class="table-secondary"></td>
                                 <td class="text-center table-secondary"><b>Pendapatan Operasional</b></td>
@@ -174,7 +166,8 @@
                                 <tr>
                                     <td class="text-center">{{ $fourTwo->kode_akun }}</td>
                                     <td>{{ $fourTwo->nama_akun }}</td>
-                                    <td class="text-right">{{ number_format($fourTwo->total, 2, ',', '.') }}</td>
+                                    <td class="text-right">{{ number_format($fourTwo->total * -1, 2, ',', '.') }}
+                                    </td>
                                     <td class="text-right"></td>
                                 </tr>
                             @endforeach
@@ -183,7 +176,8 @@
                                 <td></td>
                                 <td class="text-center"><b>Total Pendapatan di Luar Usaha</b></td>
                                 <td></td>
-                                <td class="text-right"><b>{{ number_format($sumAkunFourTwo, 2, ',', '.') }}</b></td>
+                                <td class="text-right"><b>{{ number_format($sumAkunFourTwo * -1, 2, ',', '.') }}</b>
+                                </td>
                             </tr>
 
                             <tr>
