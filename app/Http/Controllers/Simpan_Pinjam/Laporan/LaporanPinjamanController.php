@@ -27,15 +27,18 @@ class LaporanPinjamanController extends Controller
                 'error' => 'Belum terdapat pinjaman'
             ]);
         } else {
-            return view('Simpan_Pinjam.laporan.pinjaman.print', compact('pinjaman', 'anggota'));
+            $sumPinjaman = $pinjaman->sum('nominal_pinjaman');
+
+            return view('Simpan_Pinjam.laporan.pinjaman.print', compact('pinjaman', 'anggota', 'sumPinjaman'));
         }
     }
 
     public function print_all()
     {
         $pinjaman = Pinjaman::where('status', 2)->get();
+        $sumPinjaman = $pinjaman->sum('nominal_pinjaman');
 
-        return view('Simpan_Pinjam.laporan.pinjaman.print-all', compact('pinjaman'));
+        return view('Simpan_Pinjam.laporan.pinjaman.print-all', compact('pinjaman', 'sumPinjaman'));
     }
 
     public function print_show($id)
@@ -43,6 +46,8 @@ class LaporanPinjamanController extends Controller
         $pinjaman = Pinjaman::where('id_anggota', $id)->where('status', 2)->get();
         $anggota = Anggota::findOrFail($id);
 
-        return view('Simpan_Pinjam.laporan.pinjaman.print-show', compact('pinjaman', 'anggota'));
+        $sumPinjaman = $pinjaman->sum('nominal_pinjaman');
+
+        return view('Simpan_Pinjam.laporan.pinjaman.print-show', compact('pinjaman', 'anggota', 'sumPinjaman'));
     }
 }

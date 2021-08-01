@@ -13,6 +13,7 @@ use App\Models\Simpan_Pinjam\Other\Notifikasi;
 use App\Models\Simpan_Pinjam\Simpanan\Saldo;
 use App\Models\Simpan_Pinjam\Simpanan\Simpanan;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class SimpananController extends Controller
 {
@@ -612,5 +613,10 @@ class SimpananController extends Controller
         $simpanan = Simpanan::findOrFail($id);
 
         return view('Simpan_Pinjam.simpanan.image', compact('simpanan'));
+    }
+
+    public function delete_simpanan()
+    {
+        Simpanan::where('status', 0)->where(DB::raw("DATE_ADD(created_at, INTERVAL 1 DAY)"), '<', DB::raw("NOW()"))->delete();
     }
 }

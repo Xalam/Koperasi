@@ -14,12 +14,14 @@
     <!-- Theme style -->
     <link rel="stylesheet" href="{{ asset('assets/dist/css/adminlte.min.css') }}">
 </head>
+
 <body>
     <div class="wrapper">
         <!-- Main content -->
         <div class="row no-print">
             <div class="col-12">
-                <a href="{{ route('lap-pinjaman.index') }}" class="btn btn-default" style="margin: 10px;"><i></i> Kembali</a>
+                <a href="{{ route('lap-pinjaman.index') }}" class="btn btn-default" style="margin: 10px;"><i></i>
+                    Kembali</a>
             </div>
         </div>
         <div class="row">
@@ -31,18 +33,18 @@
             <!-- /.col -->
         </div>
         <div class="row" style="margin: 15px;">
-            <img src="{{ asset('assets/dist/img/logo-koperasi.png') }}" alt="Primkop Logo" style="width: 80px; height: 80px;" class="brand-image img-circle elevation-2"
-                style="opacity: .8">
-                <div style="margin-left: 15px;">
-                    <h3><b>Primkop Polrestabes Semarang</b></h3>
-                    <address>
-                        Jl. Kaligarang No.1A, Petompon<br>
-                        Semarang<br>
-                        Phone: 0895-2458-3818<br>
-                        Email: -
-                    </address>
-                </div>
-            
+            <img src="{{ asset('assets/dist/img/logo-koperasi.png') }}" alt="Primkop Logo"
+                style="width: 80px; height: 80px;" class="brand-image img-circle elevation-2" style="opacity: .8">
+            <div style="margin-left: 15px;">
+                <h3><b>Primkop Polrestabes Semarang</b></h3>
+                <address>
+                    Jl. Kaligarang No.1A, Petompon<br>
+                    Semarang<br>
+                    Phone: 0895-2458-3818<br>
+                    Email: -
+                </address>
+            </div>
+
         </div>
         <div class="text-center">
             <h3><b>Laporan Pinjaman Anggota</b></h3><br>
@@ -71,22 +73,30 @@
                             $no = 1;
                         @endphp
                         @foreach ($pinjaman as $pin)
-                        <tr>
-                            <td class="text-center">{{ $no++ }}</td>
-                            <td class="text-center">{{ $pin->kode_pinjaman }}</td>
-                            <td class="text-center">{{ date('d-m-Y', strtotime($pin->tanggal)) }}</td>
-                            <td class="text-center">{{ $pin->anggota->kd_anggota . ' / ' . $pin->anggota->nama_anggota }}</td>
-                            <td class="text-right">{{ number_format($pin->nominal_pinjaman, 2, ',', '.') }}</td>
-                            <td class="text-center">{{ $pin->tenor }}</td>
-                            <td class="text-center">{{ $pin->tenor - $pin->angsuran_ke }}</td>
-                            <td class="text-right">{{ number_format($pin->nominal_pinjaman / $pin->tenor, 2, ',', '.') }}</td>
-                            <td class="text-right">{{ number_format(($pin->total_pinjaman - $pin->nominal_pinjaman) / $pin->tenor, 2, ',', '.') }}</td>
-                            <td class="text-right">{{ number_format($pin->nominal_angsuran, 2, ',', '.') }}</td>
-                        </tr>
+                            <tr>
+                                <td class="text-center">{{ $no++ }}</td>
+                                <td class="text-center">{{ $pin->kode_pinjaman }}</td>
+                                <td class="text-center">{{ date('d-m-Y', strtotime($pin->tanggal)) }}</td>
+                                <td class="text-center">
+                                    {{ $pin->anggota->kd_anggota . ' / ' . $pin->anggota->nama_anggota }}</td>
+                                <td class="text-right">{{ number_format($pin->nominal_pinjaman, 2, ',', '.') }}</td>
+                                <td class="text-center">{{ $pin->tenor }}</td>
+                                <td class="text-center">{{ $pin->tenor - $pin->angsuran_ke }}</td>
+                                <td class="text-right">
+                                    {{ number_format($pin->nominal_pinjaman / $pin->tenor, 2, ',', '.') }}</td>
+                                <td class="text-right">
+                                    {{ number_format(($pin->total_pinjaman - $pin->nominal_pinjaman) / $pin->tenor, 2, ',', '.') }}
+                                </td>
+                                <td class="text-right">{{ number_format($pin->nominal_angsuran, 2, ',', '.') }}</td>
+                            </tr>
                         @endforeach
                     </tbody>
                     <tfoot>
-                        
+                        <tr>
+                            <td colspan="4" class="text-center"><b>Jumlah</b></td>
+                            <td class="text-right"><b>{{ number_format($sumPinjaman, 2, ',', '.') }}</b></td>
+                            <td colspan="5"></td>
+                        </tr>
                     </tfoot>
                 </table>
             </div>
@@ -97,7 +107,6 @@
     </div>
     <script>
         window.addEventListener("load", window.print());
-
     </script>
 </body>
 

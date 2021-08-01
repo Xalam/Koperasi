@@ -40,6 +40,7 @@ use App\Http\Controllers\Toko\Laporan\Penjualan\LaporanPenjualanController;
 use App\Http\Controllers\Toko\Laporan\Persediaan\LaporanPersediaanController;
 use App\Http\Controllers\Toko\Laporan\Retur\LaporanReturPembelianController;
 use App\Http\Controllers\Toko\Transaksi\Persediaan\PersediaanController;
+use Illuminate\Support\Facades\Artisan;
 
 /*
 |--------------------------------------------------------------------------
@@ -296,6 +297,22 @@ Route::group(['prefix' => 'toko'], function () {
     });
 });
 
+//Clear Cache
+Route::get('/route-cache', function () {
+    $exitCode = Artisan::call('route:cache');
+    return 'Routes cache cleared';
+});
+
+Route::get('/config-cache', function () {
+    $exitCode = Artisan::call('config:cache');
+    return 'Config cache cleared';
+});
+
+Route::get('/cache-clear', function () {
+    $exitCode = Artisan::call('cache:clear');
+    return 'Application cache cleared';
+});
+
 //SIMPAN PINJAM
 Route::prefix('simpan-pinjam')->group(function () {
     #Login
@@ -306,6 +323,8 @@ Route::prefix('simpan-pinjam')->group(function () {
     Route::get('/', function () {
         return redirect()->route('s-login');
     });
+
+    Route::get('delete-simpanan', 'Simpan_Pinjam\Simpanan\SimpananController@delete_simpanan')->name('delete.simpanan');
 });
 
 //checkrole:admin,bendahara,bendahara_pusat,ketua_koperasi,simpan_pinjam

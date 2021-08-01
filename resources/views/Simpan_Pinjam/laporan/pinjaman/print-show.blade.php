@@ -112,7 +112,9 @@
                         </tbody>
                         <tfoot>
                             <tr>
-                                <td></td>
+                                <td colspan="4" class="text-center"><b>Jumlah</b></td>
+                                <td class="text-right"><b>{{ number_format($sumPinjaman, 2, ',', '.') }}</b></td>
+                                <td colspan="5"></td>
                             </tr>
                         </tfoot>
                     </table>
