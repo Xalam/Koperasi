@@ -3,10 +3,10 @@
 namespace App\Http\Controllers\Simpan_Pinjam\Pinjaman;
 
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\Simpan_Pinjam\Utils\KodeJurnal;
 use App\Http\Controllers\Simpan_Pinjam\Utils\Ratusan;
 use App\Http\Controllers\Simpan_Pinjam\Utils\ResponseMessage;
 use App\Http\Controllers\Simpan_Pinjam\Utils\SaveJurnalUmum;
-use App\Models\Simpan_Pinjam\Laporan\JurnalUmum;
 use App\Models\Simpan_Pinjam\Master\Akun\Akun;
 use App\Models\Simpan_Pinjam\Master\Anggota\Anggota;
 use App\Models\Simpan_Pinjam\Other\Notifikasi;
@@ -162,12 +162,6 @@ class PengajuanController extends Controller
         $countProv   = ($prov / 100) * $nominal;
         $countAsur   = ($asur / 100) * $nominal;
 
-        if ($request->biaya_admin == null) {
-            $biaya_admin = 0;
-        } else {
-            $biaya_admin = str_replace('.', '', $request->biaya_admin);
-        }
-
         #Check Jika Belum Lunas
         $checkAnggota = Pinjaman::select('*')
             ->where('id_anggota', $request->id_anggota)
@@ -209,7 +203,6 @@ class PengajuanController extends Controller
                     $pinjaman->nominal_angsuran = $uangAngsuran;
                     $pinjaman->biaya_provisi    = $countProv;
                     $pinjaman->biaya_asuransi   = $countAsur;
-                    $pinjaman->biaya_admin      = $biaya_admin;
                     $pinjaman->save();
 
                     return redirect()->route('pengajuan.index')->with([
@@ -230,7 +223,6 @@ class PengajuanController extends Controller
             $pinjaman->nominal_angsuran = $uangAngsuran;
             $pinjaman->biaya_provisi    = $countProv;
             $pinjaman->biaya_asuransi   = $countAsur;
-            $pinjaman->biaya_admin      = $biaya_admin;
             $pinjaman->save();
 
             return redirect()->route('pengajuan.index')->with([
@@ -278,7 +270,6 @@ class PengajuanController extends Controller
         #Check Akun
         $checkAkunKas        = Akun::where('kode_akun', 1101)->first();
         $checkAkunPiutang    = Akun::where('kode_akun', 1121)->first();
-        $checkAkunPendapatan = Akun::where('kode_akun', 4101)->first();
         $checkAkunAsuransi   = Akun::where('kode_akun', 2115)->first();
         $checkAkunProvisi    = Akun::where('kode_akun', 4203)->first();
 
@@ -294,12 +285,6 @@ class PengajuanController extends Controller
             $idPiutang = $checkAkunPiutang->id;
         }
 
-        if ($checkAkunPendapatan == null) {
-            $idPendapatan = 0;
-        } else {
-            $idPendapatan = $checkAkunPendapatan->id;
-        }
-
         if ($checkAkunAsuransi == null) {
             $idAsuransi = 0;
         } else {
@@ -312,15 +297,6 @@ class PengajuanController extends Controller
             $idProvisi = $checkAkunProvisi->id;
         }
 
-        #Check Jurnal
-        $checkJurnal = JurnalUmum::select('*')->orderBy('id', 'DESC')->first();
-        if ($checkJurnal == null) {
-            $idJurnal = 1;
-        } else {
-            $substrKode = substr($checkJurnal->kode_jurnal, 3);
-            $idJurnal   = $substrKode + 1;
-        }
-
         $pinjaman->update(['status' => $request->status]);
 
         #Send Whatsapp
@@ -331,7 +307,7 @@ class PengajuanController extends Controller
         ResponseMessage::send($phoneNumber, $message);
 
         if ($pinjaman->status == 2) {
-            $kodeJurnal   = 'JU-' . str_pad($idJurnal, 6, '0', STR_PAD_LEFT);
+            $kodeJurnal   = KodeJurnal::kode();
 
             $kodePinjaman = Pinjaman::where('id', $id)->first();
             $kodePinjaman->kode_jurnal = $kodeJurnal;
@@ -345,11 +321,8 @@ class PengajuanController extends Controller
             #Simpan Dana Provisi
             SaveJurnalUmum::save($kodeJurnal, $idProvisi, $keterangan, 0, $kodePinjaman->biaya_provisi);
 
-            #Simpan Jurnal Pendapatan
-            SaveJurnalUmum::save($kodeJurnal, $idPendapatan, $keterangan, 0, $kodePinjaman->biaya_admin);
-
             #Simpan Jurnal Kas
-            $kredit = $kodePinjaman->nominal_pinjaman - $kodePinjaman->biaya_asuransi - $kodePinjaman->biaya_admin - $kodePinjaman->biaya_provisi;
+            $kredit = $kodePinjaman->nominal_pinjaman - $kodePinjaman->biaya_asuransi - $kodePinjaman->biaya_provisi;
 
             SaveJurnalUmum::save($kodeJurnal, $idKas, $keterangan, 0, $kredit);
 

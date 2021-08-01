@@ -118,16 +118,6 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="form-group">
-                            <label>Biaya Administrasi</label>
-                            <div class="input-group">
-                                <div class="input-group-prepend">
-                                    <span class="input-group-text">Rp</span>
-                                </div>
-                                <input type="text" class="form-control" placeholder="Biaya Administrasi" id="biaya-admin"
-                                    name="biaya_admin">
-                            </div>
-                        </div>
                         <a href="{{ route('pengajuan.index') }}" class="btn btn-light">Kembali</a>&nbsp;
                         <button id="btn-angsuran" type="submit" class="btn btn-primary">Simpan</button>
                     </form>
@@ -157,10 +147,6 @@
                 reverse: true
             });
 
-            $('#biaya-admin').mask('#.##0', {
-                reverse: true
-            });
-
             $('#bunga').inputmask('decimal', {
                 rightAlign: false
             });
@@ -186,7 +172,14 @@
                         required: true
                     },
                     nominal_pinjaman: {
-                        required: true
+                        required: true,
+                        max: function() {
+                            var str = $('#nominal').val()
+                            var res = str.replace(/\./g, '');
+                            if (parseInt(res) > 75000000) {
+                                return false;
+                            }
+                        }
                     },
                     bunga: {
                         required: true
@@ -198,7 +191,10 @@
                 messages: {
                     id_anggota: "Nama Anggota wajib diisi",
                     tanggal: "Tanggal wajib diisi",
-                    nominal_pinjaman: "Nominal wajib diisi",
+                    nominal_pinjaman: {
+                        required: "Nominal wajib diisi",
+                        max: "Melebihi batas ketentuan"
+                    },
                     bunga: "Bunga wajib diisi",
                     tenor: "Jangka waktu wajib diisi",
                 },

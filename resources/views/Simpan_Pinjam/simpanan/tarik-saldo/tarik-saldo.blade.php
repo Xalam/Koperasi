@@ -55,7 +55,8 @@
                 <div class="card-header">
                     <h3 class="card-title"><b>Permintaan Penarikan Dalam Proses</b></h3>
                     <br><span class="text-secondary">Silahkan klik <button class="btn btn-success btn-xs"><i
-                                class="far fa-check-square"></i>&nbsp;Selesai</button> apabila penarikan selesai.</span>
+                                class="far fa-check-square"></i>&nbsp;Cair</button> apabila penarikan telah
+                        dicairkan.</span>
                 </div>
                 <div class="card-body">
                     <table id="table-permintaan-proses" class="table table-bordered table-hover">

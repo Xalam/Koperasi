@@ -9,24 +9,26 @@
     <!-- Right navbar links -->
     <ul class="navbar-nav ml-auto">
         <!-- Notifications Dropdown Menu -->
-        <li class="nav-item dropdown dropdown-notif" onclick="data_notifikasi()">
-            <a class="nav-link" data-toggle="dropdown" href="#">
-                <i class="far fa-bell"></i>
-                <span class="badge badge-danger navbar-badge notification-text"
-                    id="notifikasi-text">{{ $notifikasi_count }}</span>
-            </a>
-            <div class="dropdown-menu dropdown-menu-xl dropdown-menu-right">
-                <span class="dropdown-item dropdown-header" id="notifikasi-header">{{ $notifikasi_count }}
-                    Notifikasi</span>
-                <div class="dropdown-menu-notif">
+        @if (auth()->user()->role == 'simpan_pinjam' || auth()->user()->role == 'ketua_koperasi' || auth()->user()->role == 'admin')
+            <li class="nav-item dropdown dropdown-notif" onclick="data_notifikasi()">
+                <a class="nav-link" data-toggle="dropdown" href="#">
+                    <i class="far fa-bell"></i>
+                    <span class="badge badge-danger navbar-badge notification-text"
+                        id="notifikasi-text">{{ $notifikasi_count }}</span>
+                </a>
+                <div class="dropdown-menu dropdown-menu-xl dropdown-menu-right">
+                    <span class="dropdown-item dropdown-header" id="notifikasi-header">{{ $notifikasi_count }}
+                        Notifikasi</span>
+                    <div class="dropdown-menu-notif">
 
+                    </div>
+                    <div class="dropdown-divider"></div>
+                    <a href="#" class="dropdown-item dropdown-footer text-danger" onclick="delete_notifikasi()"><b>Hapus
+                            Semua
+                            Notifikasi</b></a>
                 </div>
-                <div class="dropdown-divider"></div>
-                <a href="#" class="dropdown-item dropdown-footer text-danger" onclick="delete_notifikasi()"><b>Hapus
-                        Semua
-                        Notifikasi</b></a>
-            </div>
-        </li>
+            </li>
+        @endif
         <li class="nav-item">
             <a class="nav-link" data-widget="fullscreen" href="#" role="button">
                 <i class="fas fa-expand-arrows-alt"></i>

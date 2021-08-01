@@ -31,7 +31,7 @@
                         autocomplete="off">
                         @csrf
                         <div class="form-group">
-                            <label>Angsuran Bulan Ke -</label>
+                            <label>Angsuran Bulan</label>
                             <div class="input-group date" id="tanggal" data-target-input="nearest">
                                 <input type="text" id="tanggal-input" class="form-control datetimepicker-input"
                                     data-target="#tanggal" name="tanggal" placeholder="Bulan" />

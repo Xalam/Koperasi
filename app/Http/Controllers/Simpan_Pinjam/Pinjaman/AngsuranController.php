@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Simpan_Pinjam\Pinjaman;
 
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\Simpan_Pinjam\Utils\KodeJurnal;
 use App\Http\Controllers\Simpan_Pinjam\Utils\Ratusan;
 use App\Http\Controllers\Simpan_Pinjam\Utils\ResponseMessage;
 use App\Http\Controllers\Simpan_Pinjam\Utils\SaveJurnalUmum;
@@ -116,13 +117,7 @@ class AngsuranController extends Controller
         }
 
         #Check Jurnal
-        $checkJurnal = JurnalUmum::select('*')->orderBy('id', 'DESC')->first();
-        if ($checkJurnal == null) {
-            $idJurnal = 1;
-        } else {
-            $substrKode = substr($checkJurnal->kode_jurnal, 3);
-            $idJurnal   = $substrKode + 1;
-        }
+        $kodeJurnal = KodeJurnal::kode();
 
         #Sisa Angsuran
         $sisaAngsuran = $pinjamanUpdate->total_pinjaman - ($pinjamanUpdate->nominal_angsuran * $pinjamanUpdate->angsuran_ke);
@@ -140,7 +135,7 @@ class AngsuranController extends Controller
         $angsuran->sisa_bayar       = $pinjamanUpdate->tenor - $pinjamanUpdate->angsuran_ke;
         $angsuran->status           = 1;
         $angsuran->lunas            = $pinjamanUpdate->lunas;
-        $angsuran->kode_jurnal      = 'JU-' . str_pad($idJurnal, 6, '0', STR_PAD_LEFT);
+        $angsuran->kode_jurnal      = $kodeJurnal;
         $angsuran->save();
 
         $kodeAngsuran = Angsuran::orderBy('id', 'DESC')->first();
@@ -155,7 +150,6 @@ class AngsuranController extends Controller
 
         $newPiutang = Ratusan::edit_ratusan($piutang);
 
-        $kodeJurnal = 'JU-' . str_pad($idJurnal, 6, '0', STR_PAD_LEFT);
         $keterangan = 'Angsuran ( ' . $kodeAngsuran->kode_angsuran . ' )';
 
         #Simpan Jurnal Pendapatan
@@ -251,16 +245,10 @@ class AngsuranController extends Controller
             }
 
             #Check Jurnal
-            $checkJurnal = JurnalUmum::select('*')->orderBy('id', 'DESC')->first();
-            if ($checkJurnal == null) {
-                $idJurnal = 1;
-            } else {
-                $substrKode = substr($checkJurnal->kode_jurnal, 3);
-                $idJurnal   = $substrKode + 1;
-            }
+            $kodeJurnal = KodeJurnal::kode();
 
             $angsuran->status = $request->status;
-            $angsuran->kode_jurnal = 'JU-' . str_pad($idJurnal, 6, '0', STR_PAD_LEFT);
+            $angsuran->kode_jurnal = $kodeJurnal;
             $angsuran->update();
 
             $kodeAngsuran = Angsuran::where('id', $id)->first();
@@ -275,7 +263,6 @@ class AngsuranController extends Controller
 
             $newPiutang = Ratusan::edit_ratusan($piutang);
 
-            $kodeJurnal = 'JU-' . str_pad($idJurnal, 6, '0', STR_PAD_LEFT);
             $keterangan = 'Angsuran ( ' . $kodeAngsuran->kode_angsuran . ' )';
 
             #Simpan Jurnal Pendapatan
@@ -441,13 +428,7 @@ class AngsuranController extends Controller
                 }
 
                 #Check Jurnal
-                $checkJurnal = JurnalUmum::select('*')->orderBy('id', 'DESC')->first();
-                if ($checkJurnal == null) {
-                    $idJurnal = 1;
-                } else {
-                    $substrKode = substr($checkJurnal->kode_jurnal, 3);
-                    $idJurnal   = $substrKode + 1;
-                }
+                $kodeJurnal = KodeJurnal::kode();
 
                 #Sisa Angsuran
                 $sisaAngsuran = $pinjamanUpdate->total_pinjaman - ($pinjamanUpdate->nominal_angsuran * $pinjamanUpdate->angsuran_ke);
@@ -465,7 +446,7 @@ class AngsuranController extends Controller
                 $angsuran->sisa_bayar       = $pinjamanUpdate->tenor - $pinjamanUpdate->angsuran_ke;
                 $angsuran->status           = 1;
                 $angsuran->lunas            = $pinjamanUpdate->lunas;
-                $angsuran->kode_jurnal      = 'JU-' . str_pad($idJurnal, 6, '0', STR_PAD_LEFT);
+                $angsuran->kode_jurnal      = $kodeJurnal;
                 $angsuran->save();
 
                 $kodeAngsuran = Angsuran::orderBy('id', 'DESC')->first();
@@ -480,7 +461,6 @@ class AngsuranController extends Controller
 
                 $newPiutang = Ratusan::edit_ratusan($piutang);
 
-                $kodeJurnal = 'JU-' . str_pad($idJurnal, 6, '0', STR_PAD_LEFT);
                 $keterangan = 'Angsuran ( ' . $kodeAngsuran->kode_angsuran . ' )';
 
                 #Simpan Jurnal Pendapatan
@@ -536,13 +516,7 @@ class AngsuranController extends Controller
         }
 
         #Check Jurnal
-        $checkJurnal = JurnalUmum::select('*')->orderBy('id', 'DESC')->first();
-        if ($checkJurnal == null) {
-            $idJurnal = 1;
-        } else {
-            $substrKode = substr($checkJurnal->kode_jurnal, 3);
-            $idJurnal   = $substrKode + 1;
-        }
+        $kodeJurnal = KodeJurnal::kode();
 
         $angsuran = Angsuran::findOrFail($request->id);
         $status   = $request->status;
@@ -588,7 +562,6 @@ class AngsuranController extends Controller
 
             $newPiutang = Ratusan::edit_ratusan($piutang);
 
-            $kodeJurnal = 'JU-' . str_pad($idJurnal, 6, '0', STR_PAD_LEFT);
             $keterangan = 'Angsuran ( ' . $angsuran->kode_angsuran . ' )';
 
             #Simpan Jurnal Pendapatan

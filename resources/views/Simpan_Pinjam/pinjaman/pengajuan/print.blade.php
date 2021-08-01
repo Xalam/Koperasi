@@ -28,8 +28,9 @@
                 <div class="row">
                     <div class="col-12">
                         <h4>
-                            <img src="{{ asset('assets/dist/img/logo-koperasi.png') }}" alt="Primkop Logo" class="brand-image img-circle elevation-1" style="max-height: 30px;">
-                                Primkop Polrestabes Semarang
+                            <img src="{{ asset('assets/dist/img/logo-koperasi.png') }}" alt="Primkop Logo"
+                                class="brand-image img-circle elevation-1" style="max-height: 30px;">
+                            Primkop Polrestabes Semarang
                             <small class="float-right">Tanggal: {{ date('d-m-Y', strtotime($pinjaman->tanggal)) }}</small>
                         </h4>
                     </div>
@@ -115,12 +116,10 @@
                                     <td>: Rp. {{ number_format($pinjaman->biaya_asuransi, 2, ',', '.') }}</td>
                                 </tr>
                                 <tr>
-                                    <th style="width:50%">Biaya Administrasi</th>
-                                    <td>: Rp. {{ number_format($pinjaman->biaya_admin, 2, ',', '.') }}</td>
-                                </tr>
-                                <tr>
                                     <th style="width:50%">Total Diterima</th>
-                                    <td>: Rp. {{ number_format($pinjaman->nominal_pinjaman - $pinjaman->biaya_provisi - $pinjaman->biaya_asuransi - $pinjaman->biaya_admin, 2, ',', '.') }}</td>
+                                    <td>: Rp.
+                                        {{ number_format($pinjaman->nominal_pinjaman - $pinjaman->biaya_provisi - $pinjaman->biaya_asuransi, 2, ',', '.') }}
+                                    </td>
                                 </tr>
                             </table>
                         </div>
@@ -132,9 +131,10 @@
                 <!-- this row will not appear when printing -->
                 <div class="row no-print">
                     <div class="col-12">
-                        <a href="{{ route('pengajuan.print-show', $pinjaman->id) }}" rel="noopener" target="_blank" class="btn btn-info float-right"><i
-                                class="fas fa-print"></i> Print</a>
-                        <a href="{{ route('pengajuan.index') }}" class="btn btn-default float-right" style="margin-right: 5px;"><i></i> Kembali</a>
+                        <a href="{{ route('pengajuan.print-show', $pinjaman->id) }}" rel="noopener" target="_blank"
+                            class="btn btn-info float-right"><i class="fas fa-print"></i> Print</a>
+                        <a href="{{ route('pengajuan.index') }}" class="btn btn-default float-right"
+                            style="margin-right: 5px;"><i></i> Kembali</a>
                     </div>
                 </div>
             </div>

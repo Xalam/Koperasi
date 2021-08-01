@@ -46,11 +46,12 @@
                         <h3 class="card-title">Posisi Keuangan</h3>
                     </div>
                     <div class="col-12 text-right">
-                        @if (isset($reqStart) && isset($reqEnd))
-                            <h3 class="card-title" style="float: right;">Tanggal: {{ $reqStart }} / {{ $reqEnd }}
+                        @if (isset($startDate) && isset($endDate))
+                            <h3 class="card-title" style="float: right;">Periode : {{ $startDate }} /
+                                {{ $endDate }}
                             </h3>
                         @else
-
+                            Periode : {{ date('m-Y') }}
                         @endif
                     </div>
                 </div>

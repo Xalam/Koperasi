@@ -62,22 +62,6 @@
                         class="fas fa-arrow-circle-right"></i></a>
             </div>
         </div>
-        <!-- ./col -->
-        {{-- <div class="col-lg-3 col-6">
-            <!-- small box -->
-            <div class="small-box bg-danger">
-                <div class="inner">
-                    <h3>Rp. {{ number_format($count_laba, 2, ',','.') }}</h3>
-
-                    <p>Laba</p>
-                </div>
-                <div class="icon">
-                    <i class="ion ion-pie-graph"></i>
-                </div>
-                <a href="{{ route('shu.index') }}" class="small-box-footer">Info lebih <i class="fas fa-arrow-circle-right"></i></a>
-            </div>
-        </div> --}}
-        <!-- ./col -->
     </div>
     <div class="row">
         <div class="col-md-12">

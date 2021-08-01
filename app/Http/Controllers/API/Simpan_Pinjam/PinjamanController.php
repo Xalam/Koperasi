@@ -26,6 +26,11 @@ class PinjamanController extends Controller
         $checkLimit = Anggota::where('id', $idAnggota)->first();
         $checkPiutang = PiutangModel::where('id_anggota', $idAnggota)->orderBy('id', 'DESC')->first();
 
+        #Check Nominal
+        if ($request->nominal > 75000000) {
+            return ResponseFormatter::error('Pinjaman melebihi ketentuan');
+        }
+
         if (date('Y-m-d', strtotime($request->tanggal)) < date('Y-m-d')) {
             return ResponseFormatter::error('Tanggal sudah lewat');
         }

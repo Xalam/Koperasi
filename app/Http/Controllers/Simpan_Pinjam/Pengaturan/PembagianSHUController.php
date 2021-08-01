@@ -3,12 +3,10 @@
 namespace App\Http\Controllers\Simpan_Pinjam\Pengaturan;
 
 use App\Http\Controllers\Controller;
-use App\Models\Simpan_Pinjam\Laporan\JurnalUmum;
-use App\Models\Simpan_Pinjam\Pengaturan\Pengaturan;
+use App\Models\Simpan_Pinjam\Pengaturan\PembagianSHU;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
 
-class PengaturanController extends Controller
+class PembagianSHUController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -17,23 +15,24 @@ class PengaturanController extends Controller
      */
     public function index()
     {
-        $pengaturan = Pengaturan::get();
+        $pembagianSHU = PembagianSHU::get();
+        $total = $pembagianSHU->sum('angka');
 
         if (request()->ajax()) {
             $data = [];
 
-            foreach ($pengaturan as $key => $value) {
+            foreach ($pembagianSHU as $key => $value) {
                 $data[] = [
                     'no'        => $value->id,
                     'nama'      => $value->nama,
                     'angka'     => $value->angka,
-                    'action'    => '<a href="' . route('list.edit', $value->id) . '" class="btn btn-warning btn-sm"><i class="far fa-edit"></i>&nbsp; Edit</a>',
+                    'action'    => '<a href="' . route('pembagian.edit', $value->id) . '" class="btn btn-warning btn-sm"><i class="far fa-edit"></i>&nbsp; Edit</a>&nbsp;<a href="#mymodal" data-remote="' . route('pembagian.modal', $value->id) . '" data-toggle="modal" data-target="#mymodal" class="btn btn-danger btn-sm"><i class="fas fa-trash"></i>&nbsp; Hapus</a>',
                 ];
             }
 
             return response()->json(compact('data'));
         }
-        return view('Simpan_Pinjam.pengaturan.list.index');
+        return view('Simpan_Pinjam.pengaturan.pembagian.index', compact('total'));
     }
 
     /**
@@ -43,7 +42,7 @@ class PengaturanController extends Controller
      */
     public function create()
     {
-        return view('Simpan_Pinjam.pengaturan.list.create');
+        return view('Simpan_Pinjam.pengaturan.pembagian.create');
     }
 
     /**
@@ -54,7 +53,15 @@ class PengaturanController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $pembagianSHU = new PembagianSHU();
+
+        $pembagianSHU->nama     = $request->nama;
+        $pembagianSHU->angka    = $request->angka;
+        $pembagianSHU->save();
+
+        return redirect()->route('pembagian.index')->with([
+            'success' => 'Berhasil menambahkan pembagian SHU'
+        ]);
     }
 
     /**
@@ -76,9 +83,9 @@ class PengaturanController extends Controller
      */
     public function edit($id)
     {
-        $pengaturan = Pengaturan::findOrFail($id);
+        $pembagianSHU = PembagianSHU::findOrFail($id);
 
-        return view('Simpan_Pinjam.pengaturan.list.edit', compact('pengaturan'));
+        return view('Simpan_Pinjam.pengaturan.pembagian.edit', compact('pembagianSHU'));
     }
 
     /**
@@ -90,27 +97,14 @@ class PengaturanController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $rules = [
-            'angka'  => 'required|regex:/[0-9\s]+/i',
-        ];
+        $pembagianSHU = PembagianSHU::findOrFail($id);
 
-        $messages = [
-            'angka.required' => 'Angka wajib diisi',
-            'angka.regex'  => 'Wajib diisi angka'
-        ];
+        $data = $request->all();
 
-        $validator = Validator::make($request->all(), $rules, $messages);
+        $pembagianSHU->update($data);
 
-        if ($validator->fails()) {
-            return redirect()->back()->withErrors($validator)->withInput($request->all());
-        }
-
-        $pengaturan = Pengaturan::findOrFail($id);
-        $pengaturan->angka = $request->angka;
-        $pengaturan->update();
-
-        return redirect()->route('list.index')->with([
-            'success' => 'Berhasil mengubah pengaturan'
+        return redirect()->route('pembagian.index')->with([
+            'success' => 'Berhasil memperbarui pembagian SHU'
         ]);
     }
 
@@ -122,24 +116,19 @@ class PengaturanController extends Controller
      */
     public function destroy($id)
     {
-        if ($id == 152) {
-            JurnalUmum::truncate();
-        }
+        $pembagianSHU = PembagianSHU::findOrFail($id);
 
-        return redirect()->route('list.index')->with([
-            'success' => 'Berhasil menghapus seluruh jurnal'
+        $pembagianSHU->delete();
+
+        return redirect()->route('pembagian.index')->with([
+            'success' => 'Berhasil menghapus pembagian SHU'
         ]);
     }
 
     public function modal($id)
     {
-        $pengaturan = Pengaturan::findOrFail($id);
+        $pembagianSHU = PembagianSHU::findOrFail($id);
 
-        return view('Simpan_Pinjam.pengaturan.list.modal', compact('pengaturan'));
-    }
-
-    public function modal_all($id)
-    {
-        return view('Simpan_Pinjam.pengaturan.list.modal-delete');
+        return view('Simpan_Pinjam.pengaturan.pembagian.modal-delete', compact('pembagianSHU'));
     }
 }

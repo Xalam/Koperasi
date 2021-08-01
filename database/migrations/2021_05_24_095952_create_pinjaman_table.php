@@ -26,7 +26,6 @@ class CreatePinjamanTable extends Migration
             $table->integer('angsuran_ke')->default(0);
             $table->double('biaya_provisi')->default(0);
             $table->double('biaya_asuransi')->default(0);
-            $table->integer('biaya_admin')->default(0);
             $table->integer('lunas')->default(0)->comment('0 = Belum Lunas, 1 = Lunas');
             $table->integer('status')->default(0)->comment('0 = Waiting, 1 = Acc, 2 = Pencairan');
             $table->string('kode_jurnal')->nullable();

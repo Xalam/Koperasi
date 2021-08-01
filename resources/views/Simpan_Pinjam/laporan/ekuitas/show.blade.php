@@ -15,7 +15,7 @@
 @section('breadcrumb')
     <li class="breadcrumb-item"><a href="#">Laporan</a></li>
     <li class="breadcrumb-item"><a href="{{ route('ekuitas.index') }}">Perubahan Ekuitas</a></li>
-        <li class="breadcrumb-item active">Tampil Perubahan Ekuitas</li>
+    <li class="breadcrumb-item active">Tampil Perubahan Ekuitas</li>
 @endsection
 
 @section('content_main')
@@ -26,8 +26,10 @@
         <div class="col-6 text-right">
             <form action="{{ route('ekuitas.print-show') }}" method="post" enctype="multipart/form-data">
                 @csrf
-                <input type="text" class="form-control form-control-sm" name="start_date" id="start-date" value="{{ (isset($reqStart)) ? $reqStart : '' }}" hidden>
-                <input type="text" class="form-control form-control-sm" name="end_date" id="end-date" value="{{ (isset($reqEnd)) ? $reqEnd : '' }}" hidden>
+                <input type="text" class="form-control form-control-sm" name="start_date" id="start-date"
+                    value="{{ isset($reqStart) ? $reqStart : '' }}" hidden>
+                <input type="text" class="form-control form-control-sm" name="end_date" id="end-date"
+                    value="{{ isset($reqEnd) ? $reqEnd : '' }}" hidden>
                 <button type="submit" id="btn-cetak" class="btn btn-info"><i class="fas fa-print"></i>&nbsp;Cetak</button>
             </form>
         </div>
@@ -42,9 +44,10 @@
                     </div>
                     <div class="col-12 text-right">
                         @if (isset($reqStart) && isset($reqEnd))
-                            <h3 class="card-title" style="float: right;">Tanggal: {{ $reqStart }} / {{ $reqEnd }}</h3>
+                            <h3 class="card-title" style="float: right;">Tanggal: {{ $reqStart }} / {{ $reqEnd }}
+                            </h3>
                         @else
-                            
+
                         @endif
                     </div>
                 </div>
@@ -82,7 +85,7 @@
                             <tr>
                                 <td>Saldo Akhir</td>
                                 @foreach ($saldoAkhir as $sal)
-                                    <td class="text-right">{{ number_format($sal, 2, ',', '.') }}</td>
+                                    <td class="text-right"><b>{{ number_format($sal, 2, ',', '.') }}</b></td>
                                 @endforeach
                             </tr>
                         </tbody>
@@ -94,7 +97,7 @@
 @endsection
 
 @push('before-script')
-    
+
 @endpush
 
 @section('script')
@@ -105,7 +108,6 @@
     <script src="{{ asset('assets/plugins/datatables-responsive/js/responsive.bootstrap4.min.js') }}"></script>
     <script src="{{ asset('assets/plugins/toastr/toastr.min.js') }}"></script>
     <script>
-
         $(function() {
             $('#table-ekuitas').DataTable({
                 "paging": false,
@@ -115,12 +117,11 @@
                 "lengthChange": false
             });
         });
-
     </script>
 
     @if (session()->has('error'))
         <script>
-            
+
         </script>
     @endif
 @endsection

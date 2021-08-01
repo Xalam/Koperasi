@@ -1,67 +1,55 @@
-<!DOCTYPE html>
-<html lang="en">
+@extends('Simpan_Pinjam.layout')
 
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Simpan Pinjam | Laporan Jurnal Umum</title>
+@section('title', 'Laporan')
 
-    <!-- Google Font: Source Sans Pro -->
-    <link rel="stylesheet"
-        href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
-    <!-- Font Awesome -->
-    <link rel="stylesheet" href="{{ asset('assets/plugins/fontawesome-free/css/all.min.css') }}">
-    <!-- Theme style -->
-    <link rel="stylesheet" href="{{ asset('assets/dist/css/adminlte.min.css') }}">
-</head>
+@section('content_header', 'Sisa Hasil Usaha')
 
-<body>
-    <div class="wrapper">
-        <!-- Main content -->
-        <div class="row no-print">
-            <div class="col-12">
-                <a href="{{ route('shu.index') }}" class="btn btn-default" style="margin: 10px;"><i></i> Kembali</a>
-            </div>
+    @push('style')
+        <!-- DataTables -->
+        <link rel="stylesheet" href="{{ asset('assets/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css') }}">
+        <link rel="stylesheet" href="{{ asset('assets/plugins/datatables-responsive/css/responsive.bootstrap4.min.css') }}">
+        <link rel="stylesheet" href="{{ asset('assets/plugins/datatables-buttons/css/buttons.bootstrap4.min.css') }}">
+    @endpush
+
+@section('breadcrumb')
+    <li class="breadcrumb-item"><a href="#">Laporan</a></li>
+    <li class="breadcrumb-item"><a href="{{ route('shu.index') }}">Sisa Hasil Usaha</a></li>
+    <li class="breadcrumb-item active">Tampil Sisa Hasil Usaha</li>
+@endsection
+
+@section('content_main')
+    <div class="row" style="margin-bottom: 15px;">
+        <div class="col-6">
+            <a href="{{ route('shu.index') }}" class="btn btn-default">Kembali</a>
         </div>
-        <div class="invoice p-3 mb-3">
-            <!-- title row -->
-            <div class="row">
-                <div class="col-12">
-                    <h4>
-                        <small class="float-right">Tanggal Cetak: {{ date('d-m-Y H:i:s') }}</small>
-                    </h4>
+        <div class="col-6 text-right">
+            <form action="{{ route('shu.print-show') }}" method="post" enctype="multipart/form-data">
+                @csrf
+                <input type="text" class="form-control form-control-sm" name="start_date" id="start-date"
+                    value="{{ isset($reqStart) ? $reqStart : '' }}" hidden>
+                <input type="text" class="form-control form-control-sm" name="end_date" id="end-date"
+                    value="{{ isset($reqEnd) ? $reqEnd : '' }}" hidden>
+                <button type="submit" id="btn-cetak" class="btn btn-info"><i class="fas fa-print"></i>&nbsp;Cetak</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <div class="col-12">
+                        <h3 class="card-title"><b>Sisa Hasil Usaha</b></h3>
+                    </div>
+                    <div class="col-12 text-right">
+                        @if (isset($startDate) && isset($endDate))
+                            Periode: {{ $startDate }} / {{ $endDate }}
+                        @else
+                            Periode: {{ date('d-m-Y') }}
+                        @endif
+                    </div>
                 </div>
-                <!-- /.col -->
-            </div>
-            <div class="row" style="margin: 15px;">
-                <img src="{{ asset('assets/dist/img/logo-koperasi.png') }}" alt="Primkop Logo"
-                    style="width: 80px; height: 80px;" class="brand-image img-circle elevation-2" style="opacity: .8">
-                <div style="margin-left: 15px;">
-                    <h3><b>Primkop Polrestabes Semarang</b></h3>
-                    <address>
-                        Jl. Kaligarang No.1A, Barusari<br>
-                        Semarang<br>
-                        Phone: 0895-2458-3818<br>
-                        Email: -
-                    </address>
-                </div>
-            </div>
-            <div class="text-center">
-                <h3><b>Laporan Sisa Hasil Usaha</b></h3><br>
-                <h3 style="margin-top: -30px; margin-bottom: 20px;"><b>Primer Koperasi Polrestabes Semarang</b></h3>
-            </div>
-            <div>
-                <address>
-                    @if (isset($startDate) && isset($endDate))
-                        Periode : {{ $startDate }} / {{ $endDate }}
-                    @else
-                        Sampai Tanggal : {{ date('d-m-Y') }}
-                    @endif
-                </address>
-            </div>
-            <!-- Table row -->
-            <div class="row">
-                <div class="col-12 table-responsive">
+                <div class="card-body">
                     <table id="table-shu" class="table table-bordered table-hover">
                         <thead>
                             <tr>
@@ -165,8 +153,7 @@
                                 <td class="table-secondary"></td>
                                 <td class="text-center table-secondary"><b>Pendapatan Operasional</b></td>
                                 <td class="table-secondary"></td>
-                                <td class="text-right">
-                                    <b>{{ number_format($pendapatanOperasional, 2, ',', '.') }}</b>
+                                <td class="text-right"><b>{{ number_format($pendapatanOperasional, 2, ',', '.') }}</b>
                                 </td>
                             </tr>
 
@@ -219,7 +206,7 @@
                             <td class="text-right"><b>{{ number_format($sumSHUPajak, 2, ',', '.') }}</b></td>
                         </tr>
                     </table>
-                    <br><br><br><br>
+                    <br>
                     <h5><b>Pembagian Sisa Hasil Usaha Jasa Anggota</b></h5>
                     <table id="table-jasa" class="table table-bordered table-hover">
                         <thead>
@@ -246,12 +233,9 @@
                                     <td>{{ $item->nama_anggota }}</td>
                                     <td class="text-right">{{ number_format($item->wajib, 0, '', '.') }}</td>
                                     <td class="text-right">{{ number_format($item->sukarela, 0, '', '.') }}</td>
-                                    <td class="text-right">{{ number_format($item->total_pinjaman, 0, '', '.') }}
-                                    </td>
-                                    <td class="text-right">{{ number_format($item->total_penjualan, 0, '', '.') }}
-                                    </td>
-                                    <td class="text-right">{{ number_format($item->keaktifan_anggota, 0, '', '.') }}
-                                    </td>
+                                    <td class="text-right">{{ number_format($item->total_pinjaman, 0, '', '.') }}</td>
+                                    <td class="text-right">{{ number_format($item->total_penjualan, 0, '', '.') }}</td>
+                                    <td class="text-right">{{ number_format($item->keaktifan_anggota, 0, '', '.') }}</td>
                                     <td class="text-right">{{ number_format($pembagianSHU[$key], 2, ',', '.') }}</td>
                                 </tr>
                             @endforeach
@@ -269,14 +253,33 @@
                         </tfoot>
                     </table>
                 </div>
-                <!-- /.col -->
             </div>
         </div>
-
     </div>
-    <script>
-        window.addEventListener("load", window.print());
-    </script>
-</body>
+@endsection
 
-</html>
+@push('before-script')
+
+@endpush
+
+@section('script')
+    <!-- DataTables  & Plugins -->
+    <script src="{{ asset('assets/plugins/datatables/jquery.dataTables.min.js') }}"></script>
+    <script src="{{ asset('assets/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js') }}"></script>
+    <script src="{{ asset('assets/plugins/datatables-responsive/js/dataTables.responsive.min.js') }}"></script>
+    <script src="{{ asset('assets/plugins/datatables-responsive/js/responsive.bootstrap4.min.js') }}"></script>
+    <script>
+        $(function() {
+            $('#table-jasa').DataTable({
+                "paging": true,
+                "lengthChange": true,
+                "searching": true,
+                "ordering": true,
+                "info": true,
+                "autoWidth": true,
+                "responsive": true,
+                "scrollX": true
+            });
+        });
+    </script>
+@endsection
