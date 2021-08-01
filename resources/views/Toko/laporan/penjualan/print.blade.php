@@ -71,7 +71,7 @@
                 @endif
                 <td class="align-middle text-center">{{$data->kode}}</td>
                 <td class="align-middle">{{$data->nama}}</td>
-                <td class="align-middle text-center">{{$data->harga_jual}}</td>
+                <td class="align-middle text-center">{{($data->jumlah >= $data->minimal-grosir) ? $data->harga_grosir : $data->harga_jual}}</td>
                 <td class="align-middle text-center">{{$data->jumlah}}</td>
                 <td class="align-middle text-center">{{$data->total_harga}}</td>
                 <td class="align-middle text-center">{{($data->type_penjualan == 1) ? 'Offline' : 'Online'}}</td>

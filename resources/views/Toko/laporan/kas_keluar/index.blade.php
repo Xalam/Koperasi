@@ -15,7 +15,7 @@
             form-control form-control-sm']) !!}
         </div>
         <div class="row-lg align-item-center mb-2">
-            {!! Form::label(null, 'Jenis Pemasukan', ['class' => 'col-lg-2']) !!}
+            {!! Form::label(null, 'Jenis Pengeluaran', ['class' => 'col-lg-2']) !!}
             {!! Form::select('jenis_pengeluaran', $pengeluaran, (isset($jenis_pengeluaran) ? $jenis_pengeluaran : null),
             ['class' => 'col-lg-4 form-select form-select-sm']) !!}
         </div>

@@ -2,7 +2,19 @@
 
 @section('main')
 <div class="card m-6">
-    <p class="card-header bg-light">Laporan Laba Rugi</p>
+    <div class="d-flex flex-row">
+        @if ((isset($laporan_pendapatan) && count($laporan_pendapatan) > 0) || (isset($laporan_pengeluaran) &&
+        count($laporan_pengeluaran) > 0))
+        <p class="card-header col-lg">Laporan Laba Rugi {{$tanggal}}</p>
+        <a href=<?php echo 'pendapatan/export/'.$tanggal ?> target="_blank"><i
+                class="card-header text-success fas fa-file-export" style="cursor: pointer;"
+                title="Export to Excel"></i></a>
+        <a href=<?php echo 'pendapatan/print/'.$tanggal ?> target="_blank"><i
+                class="card-header text-success fas fa-print" style="cursor: pointer;" title="Print"></i></a>
+        @else
+        <p class="card-header col-lg">Laporan Laba Rugi</p>
+        @endif
+    </div>
     <div class="card-body">
         {!! Form::open( ['url' => '/toko/laporan/pendapatan', 'method' => 'GET']) !!}
         <div class="row-lg align-item-center mb-2">
@@ -14,25 +26,7 @@
             {!! Form::submit('Cek', ['class' => 'btn btn-primary btn-sm']) !!}
         </div>
         {!! Form::close() !!}
-    </div>
-</div>
-
-<div class="card m-6">
-    <div class="d-flex flex-row">
-        @if ((isset($laporan_pendapatan) && count($laporan_pendapatan) > 0) || (isset($laporan_pengeluaran) &&
-        count($laporan_pengeluaran) > 0))
-        <p class="card-header col-lg">Daftar Laba Rugi Per {{$tanggal}}</p>
-        <a href=<?php echo 'pendapatan/export/'.$tanggal ?> target="_blank"><i
-                class="card-header text-success fas fa-file-export" style="cursor: pointer;"
-                title="Export to Excel"></i></a>
-        <a href=<?php echo 'pendapatan/print/'.$tanggal ?> target="_blank"><i
-                class="card-header text-success fas fa-print" style="cursor: pointer;" title="Print"></i></a>
-        @else
-        <p class="card-header col-lg">Daftar Laba Rugi</p>
-        @endif
-    </div>
-    <div class="card-body">
-        <div class="table-responsive">
+        <div class="table-responsive mt-4">
             <table id="table-data" class="table table-striped table-bordered table-hover nowrap">
                 <thead class="text-center"> 
                     <tr>

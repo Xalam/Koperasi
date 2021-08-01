@@ -55,8 +55,8 @@ class LaporanPenjualanController extends Controller
                                                         ->join('detail_jual', 'detail_jual.nomor', '=', 'penjualan.nomor')
                                                         ->join('barang', 'barang.id', '=', 'detail_jual.id_barang')
                                                         ->leftJoin('tb_anggota', 'tb_anggota.id', '=', 'penjualan.id_anggota')
-                                                        ->select('barang.kode AS kode', 'barang.nama AS nama',
-                                                                'barang.harga_jual AS harga_jual', 'detail_jual.jumlah AS jumlah', 
+                                                        ->select('barang.kode AS kode', 'barang.nama AS nama', 'barang.harga_grosir AS harga_grosir',
+                                                                'barang.minimal_grosir AS minimal_grosir', 'barang.harga_jual AS harga_jual', 'detail_jual.jumlah AS jumlah', 
                                                                 'detail_jual.total_harga AS total_harga', 'detail_jual.nomor AS nomor',
                                                                 'penjualan.tanggal AS tanggal', 'penjualan.type_penjualan AS type_penjualan', 
                                                                 'tb_anggota.nama_anggota AS nama_anggota', 'tb_anggota.kd_anggota AS kode_anggota', 
@@ -68,8 +68,8 @@ class LaporanPenjualanController extends Controller
                                                         ->join('detail_jual', 'detail_jual.nomor', '=', 'penjualan.nomor')
                                                         ->join('barang', 'barang.id', '=', 'detail_jual.id_barang')
                                                         ->leftJoin('tb_anggota', 'tb_anggota.id', '=', 'penjualan.id_anggota')
-                                                        ->select('barang.kode AS kode', 'barang.nama AS nama',
-                                                                'barang.harga_jual AS harga_jual', 'detail_jual.jumlah AS jumlah', 
+                                                        ->select('barang.kode AS kode', 'barang.nama AS nama', 'barang.harga_grosir AS harga_grosir',
+                                                                'barang.minimal_grosir AS minimal_grosir', 'barang.harga_jual AS harga_jual', 'detail_jual.jumlah AS jumlah', 
                                                                 'detail_jual.total_harga AS total_harga', 'detail_jual.nomor AS nomor',
                                                                 'penjualan.tanggal AS tanggal', 'penjualan.type_penjualan AS type_penjualan', 
                                                                 'tb_anggota.nama_anggota AS nama_anggota', 'tb_anggota.kd_anggota AS kode_anggota', 
@@ -83,8 +83,8 @@ class LaporanPenjualanController extends Controller
                                                         ->join('detail_jual', 'detail_jual.nomor', '=', 'penjualan.nomor')
                                                         ->join('barang', 'barang.id', '=', 'detail_jual.id_barang')
                                                         ->leftJoin('tb_anggota', 'tb_anggota.id', '=', 'penjualan.id_anggota')
-                                                        ->select('barang.kode AS kode', 'barang.nama AS nama',
-                                                                'barang.harga_jual AS harga_jual', 'detail_jual.jumlah AS jumlah', 
+                                                        ->select('barang.kode AS kode', 'barang.nama AS nama', 'barang.harga_grosir AS harga_grosir',
+                                                                'barang.minimal_grosir AS minimal_grosir', 'barang.harga_jual AS harga_jual', 'detail_jual.jumlah AS jumlah', 
                                                                 'detail_jual.total_harga AS total_harga', 'detail_jual.nomor AS nomor',
                                                                 'penjualan.tanggal AS tanggal', 'penjualan.type_penjualan AS type_penjualan', 
                                                                 'tb_anggota.nama_anggota AS nama_anggota', 'tb_anggota.kd_anggota AS kode_anggota', 
@@ -95,8 +95,8 @@ class LaporanPenjualanController extends Controller
                                                         ->join('detail_jual', 'detail_jual.nomor', '=', 'penjualan.nomor')
                                                         ->join('barang', 'barang.id', '=', 'detail_jual.id_barang')
                                                         ->leftJoin('tb_anggota', 'tb_anggota.id', '=', 'penjualan.id_anggota')
-                                                        ->select('barang.kode AS kode', 'barang.nama AS nama',
-                                                                'barang.harga_jual AS harga_jual', 'detail_jual.jumlah AS jumlah', 
+                                                        ->select('barang.kode AS kode', 'barang.nama AS nama', 'barang.harga_grosir AS harga_grosir',
+                                                                'barang.minimal_grosir AS minimal_grosir', 'barang.harga_jual AS harga_jual', 'detail_jual.jumlah AS jumlah', 
                                                                 'detail_jual.total_harga AS total_harga', 'detail_jual.nomor AS nomor',
                                                                 'penjualan.tanggal AS tanggal', 'penjualan.type_penjualan AS type_penjualan', 
                                                                 'tb_anggota.nama_anggota AS nama_anggota', 'tb_anggota.kd_anggota AS kode_anggota', 
@@ -137,8 +137,8 @@ class LaporanPenjualanController extends Controller
                                                     ->join('detail_jual', 'detail_jual.nomor', '=', 'penjualan.nomor')
                                                     ->join('barang', 'barang.id', '=', 'detail_jual.id_barang')
                                                     ->leftJoin('tb_anggota', 'tb_anggota.id', '=', 'penjualan.id_anggota')
-                                                    ->select('barang.kode AS kode', 'barang.nama AS nama',
-                                                            'barang.harga_jual AS harga_jual', 'detail_jual.jumlah AS jumlah', 
+                                                    ->select('barang.kode AS kode', 'barang.nama AS nama', 'barang.harga_grosir AS harga_grosir',
+                                                            'barang.minimal_grosir AS minimal_grosir', 'barang.harga_jual AS harga_jual', 'detail_jual.jumlah AS jumlah', 
                                                             'detail_jual.total_harga AS total_harga', 'detail_jual.nomor AS nomor',
                                                             'penjualan.tanggal AS tanggal', 'penjualan.type_penjualan AS type_penjualan', 
                                                             'tb_anggota.nama_anggota AS nama_anggota', 'tb_anggota.kd_anggota AS kode_anggota', 
@@ -149,8 +149,8 @@ class LaporanPenjualanController extends Controller
                                                     ->join('detail_jual', 'detail_jual.nomor', '=', 'penjualan.nomor')
                                                     ->join('barang', 'barang.id', '=', 'detail_jual.id_barang')
                                                     ->leftJoin('tb_anggota', 'tb_anggota.id', '=', 'penjualan.id_anggota')
-                                                    ->select('barang.kode AS kode', 'barang.nama AS nama',
-                                                            'barang.harga_jual AS harga_jual', 'detail_jual.jumlah AS jumlah', 
+                                                    ->select('barang.kode AS kode', 'barang.nama AS nama', 'barang.harga_grosir AS harga_grosir',
+                                                            'barang.minimal_grosir AS minimal_grosir', 'barang.harga_jual AS harga_jual', 'detail_jual.jumlah AS jumlah', 
                                                             'detail_jual.total_harga AS total_harga', 'detail_jual.nomor AS nomor',
                                                             'penjualan.tanggal AS tanggal', 'penjualan.type_penjualan AS type_penjualan', 
                                                             'tb_anggota.nama_anggota AS nama_anggota', 'tb_anggota.kd_anggota AS kode_anggota', 

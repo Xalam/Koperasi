@@ -125,7 +125,7 @@
                     <thead class="text-center">
                         <tr>
                             <th>No</th>
-                            <th>Nomor</th>
+                            <th>Nomor Angsuran Piutang</th>
                             <th>Nomor Jurnal</th>
                             <th>Tanggal</th>
                             <th>Terima Piutang</th>

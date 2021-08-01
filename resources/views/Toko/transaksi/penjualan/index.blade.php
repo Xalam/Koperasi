@@ -221,7 +221,7 @@ function tambah_daftar() {
             if (response.code == 200) {
                 tampil_daftar();
                 $('[name="jumlah"]').val(1);
-                $('[name="total_harga"]').val(0);
+                $('[name="total_harga"]').val(parseInt($('[name="harga_satuan"]').val()) * parseInt($('[name="jumlah"]').val()));
             }
         }
     });
@@ -252,14 +252,15 @@ function tampil_daftar() {
             if (response.code == 200) {
                 $('#table-data-penjualan').empty();
                 $.each(response.barang_penjualan, function(index, value) {
+                    var harga = (value.jumlah_barang >= value.minimal_grosir) ? value.harga_grosir : value.harga_jual;
                     $('#table-data-penjualan').append('<tr>' +
                         '<th class="align-middle text-center">' + i++ + '</th>' +
                         '<td class="align-middle text-center">' + value.kode_barang + '</td>' +
                         '<td class="align-middle">' + value.nama_barang + '</td>' +
-                        '<td class="align-middle text-center">' + value.harga_jual + '</td>' +
+                        '<td class="align-middle text-center">' + harga + '</td>' +
                         '<td class="align-middle text-center">' + value.jumlah_barang +
                         '</td>' +
-                        '<td class="align-middle text-center">' + value.total_harga + '</td>' +
+                        '<td class="align-middle text-center">' + harga * value.jumlah_barang + '</td>' +
                         '<td class="align-middle text-center"><a id="hapus-' + value
                         .id + '" class="btn btn-sm btn-danger" onclick="show_popup_hapus(' +
                         value

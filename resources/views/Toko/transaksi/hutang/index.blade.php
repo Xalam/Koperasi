@@ -80,7 +80,6 @@
                             <th>Tanggal Beli</th>
                             <th>Jatuh Tempo</th>
                             <th>Nilai Utang</th>
-                            <th>Angsuran Utang</th>
                             <th>Sisa Utang</th>
                             @if (auth()->user()->jabatan != 'Kanit')
                             <th>Opsi</th>
@@ -104,7 +103,6 @@
                             <td class="align-middle text-center">{{$data->tanggal_beli}}</td>
                             <td class="align-middle text-center">{{$data->jatuh_tempo}}</td>
                             <td class="align-middle text-center">{{$data->jumlah_hutang}}</td>
-                            <td class="align-middle text-center">{{$data->jumlah_angsuran}}</td>
                             <td class="align-middle text-center">{{$data->sisa_hutang}}</td>
                             @if (auth()->user()->jabatan != 'Kanit')
                             <td class="align-middle text-center">
@@ -132,7 +130,7 @@
                     <thead class="text-center">
                         <tr>
                             <th>No</th>
-                            <th>Nomor</th>
+                            <th>Nomor Angsuran Utang</th>
                             <th>Nomor Jurnal</th>
                             <th>Tanggal</th>
                             <th>Angsuran</th>

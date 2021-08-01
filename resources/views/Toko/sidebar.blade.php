@@ -4,7 +4,8 @@
 <nav id="sidebar" class="sidebar-wrapper">
     <div class="sidebar-content">
         <div class="sidebar-brand">
-            <a class="font-3 text-center"><img src="{{ asset('assets/dist/img/logo-koperasi.png') }}" alt="" width="72px"></a>
+            <a class="font-3 text-center"><img src="{{ asset('assets/dist/img/logo-koperasi.png') }}" alt=""
+                    width="72px"></a>
             <div id="close-sidebar">
                 <i class="fas fa-times" aria-hidden="true"></i>
             </div>
@@ -54,8 +55,25 @@
                     <a><i class="fas fa-receipt" aria-hidden="true"></i>Transaksi</a>
                     <div class="sidebar-submenu">
                         <ul>
-                            <li><a href="/toko/transaksi/penjualan">Penjualan</a></li>
-                            <li><a href="/toko/transaksi/pembelian">Pembelian</a></li>
+                            <li class="sidebar-dropdown2">
+                                <a>Penjualan</a>
+                                <div class="sidebar-submenu2">
+                                    <ul>
+                                        <li><a href="/toko/transaksi/penjualan">Transaksi Penjualan</a></li>
+                                        <li><a href="/toko/transaksi/piutang">Piutang</a></li>
+                                    </ul>
+                                </div>
+                            </li>
+                            <li class="sidebar-dropdown2">
+                                <a>Pembelian</a>
+                                <div class="sidebar-submenu2">
+                                    <ul>
+                                        <li><a href="/toko/transaksi/pembelian">Transaksi Pembelian</a></li>
+                                        <li><a href="/toko/transaksi/hutang">Utang</a></li>
+                                        <li><a href="/toko/transaksi/retur-pembelian">Retur Pembelian</a></li>
+                                    </ul>
+                                </div>
+                            </li>
                             <!-- <li class="sidebar-dropdown2">
                                 <a>Konsinyasi</a>
                                 <div class="sidebar-submenu2">
@@ -65,9 +83,6 @@
                                     </ul>
                                 </div>
                             </li> -->
-                            <li><a href="/toko/transaksi/retur-pembelian">Retur Pembelian</a></li>
-                            <li><a href="/toko/transaksi/hutang">Utang</a></li>
-                            <li><a href="/toko/transaksi/piutang">Piutang</a></li>
                             <li><a href="/toko/transaksi/jurnal">Jurnal</a></li>
                             <li><a href="/toko/transaksi/pesanan-online">Pesanan Online</a></li>
                             <li><a href="/toko/transaksi/persediaan">Persediaan</a></li>
@@ -94,8 +109,15 @@
                     <a><i class="fas fa-receipt" aria-hidden="true"></i>Transaksi</a>
                     <div class="sidebar-submenu">
                         <ul>
-                            <li><a href="/toko/transaksi/pembelian">Pembelian</a></li>
-                            <li><a href="/toko/transaksi/retur-pembelian">Retur Pembelian</a></li>
+                            <li class="sidebar-dropdown2">
+                                <a>Pembelian</a>
+                                <div class="sidebar-submenu2">
+                                    <ul>
+                                        <li><a href="/toko/transaksi/pembelian">Transaksi Pembelian</a></li>
+                                        <li><a href="/toko/transaksi/retur-pembelian">Retur Pembelian</a></li>
+                                    </ul>
+                                </div>
+                            </li>
                             <li><a href="/toko/transaksi/jurnal">Jurnal</a></li>
                         </ul>
                     </div>
@@ -120,21 +142,36 @@
                             <li><a href="/toko/laporan/anggota">Anggota</a></li>
                             <li><a href="/toko/laporan/data-master">Data Master</a></li>
                             <li class="sidebar-dropdown2">
+                                <a>Penjualan</a>
+                                <div class="sidebar-submenu2">
+                                    <ul>
+                                        <li><a href="/toko/laporan/penjualan">Transaksi Penjualan</a></li>
+                                        <li><a href="/toko/laporan/piutang">Piutang</a></li>
+                                        <li><a href="/toko/laporan/kas-masuk">Kas Masuk</a></li>
+                                    </ul>
+                                </div>
+                            </li>
+                            <li class="sidebar-dropdown2">
                                 <a>Pembelian</a>
                                 <div class="sidebar-submenu2">
                                     <ul>
                                         <li><a href="/toko/laporan/pembelian">Transaksi Pembelian</a></li>
+                                        <li><a href="/toko/laporan/kas-keluar">Kas Keluar</a></li>
                                         <li><a href="/toko/laporan/retur-pembelian">Retur Pembelian</a></li>
                                     </ul>
                                 </div>
                             </li>
-                            <li><a href="/toko/laporan/penjualan">Penjualan</a></li>
-                            <li><a href="/toko/laporan/persediaan">Persediaan</a></li>
-                            <li><a href="/toko/laporan/persediaan/minimal-persediaan">Minimal Persediaan</a></li>
-                            <li><a href="/toko/laporan/kas-masuk">Kas Masuk</a></li>
-                            <li><a href="/toko/laporan/kas-keluar">Kas Keluar</a></li>
+                            <li class="sidebar-dropdown2">
+                                <a>Persediaan</a>
+                                <div class="sidebar-submenu2">
+                                    <ul>
+                                        <li><a href="/toko/laporan/persediaan">Persediaan</a></li>
+                                        <li><a href="/toko/laporan/persediaan/minimal-persediaan">Minimal Persediaan</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </li>
                             <li><a href="/toko/laporan/pendapatan">Laba Rugi Toko</a></li>
-                            <li><a href="/toko/laporan/piutang">Piutang</a></li>
                         </ul>
                     </div>
                 </li>

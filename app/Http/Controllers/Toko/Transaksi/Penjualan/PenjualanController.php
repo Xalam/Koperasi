@@ -87,7 +87,8 @@ class PenjualanController extends Controller
                                     ->select('detail_jual.id AS id', 'detail_jual.nomor AS nomor_penjualan', 'detail_jual.jumlah AS jumlah_barang',
                                             'detail_jual.total_harga AS total_harga', 'detail_jual.id_barang AS id_barang',
                                             'barang.kode AS kode_barang', 'barang.nama AS nama_barang', 
-                                            'barang.harga_jual AS harga_jual')
+                                            'barang.harga_jual AS harga_jual', 'barang.harga_grosir AS harga_grosir',
+                                            'barang.minimal_grosir AS minimal_grosir')
                                     ->get();
 
         $anggota_penjualan = PenjualanModel::where('penjualan.nomor', $nomor)
@@ -101,14 +102,22 @@ class PenjualanController extends Controller
     }
 
     public function store(Request $request) {
+        $data_barang = BarangModel::where('id', $request->id_barang)->first();
         $barang = PenjualanBarangModel::where('nomor', $request->nomor)
                                         ->where('id_barang', $request->id_barang)->first();
 
         if ($barang) {
-            PenjualanBarangModel::where('id_barang', $request->id_barang)->update([
-                'jumlah' => $barang->jumlah + $request->jumlah, 
-                'total_harga' => $barang->total_harga + $request->total_harga
-                ]);
+            if (($barang->jumlah + $request->jumlah) >= $data_barang->minimal_grosir) {
+                PenjualanBarangModel::where('id_barang', $request->id_barang)->update([
+                    'jumlah' => $barang->jumlah + $request->jumlah, 
+                    'total_harga' => $data_barang->harga_grosir * ($barang->jumlah + $request->jumlah)
+                    ]);
+            } else {
+                PenjualanBarangModel::where('id_barang', $request->id_barang)->update([
+                    'jumlah' => $barang->jumlah + $request->jumlah, 
+                    'total_harga' => $data_barang->harga_jual * ($barang->jumlah + $request->jumlah)
+                    ]);
+            }
         } else {
             PenjualanBarangModel::create($request->all());
         }
@@ -122,10 +131,17 @@ class PenjualanController extends Controller
                                         ->where('id_barang', $data_barang->id)->first();
 
         if ($barang) {
-            PenjualanBarangModel::where('id_barang', $data_barang->id)->update([
-                'jumlah' => $barang->jumlah + 1, 
-                'total_harga' => $barang->total_harga + $data_barang->harga_jual
-            ]);
+            if (($barang->jumlah + $request->jumlah) >= $data_barang->minimal_grosir) {
+                PenjualanBarangModel::where('id_barang', $request->id_barang)->update([
+                    'jumlah' => $barang->jumlah + $request->jumlah, 
+                    'total_harga' => $data_barang->harga_grosir * ($barang->jumlah + $request->jumlah)
+                    ]);
+            } else {
+                PenjualanBarangModel::where('id_barang', $request->id_barang)->update([
+                    'jumlah' => $barang->jumlah + $request->jumlah, 
+                    'total_harga' => $data_barang->harga_jual * ($barang->jumlah + $request->jumlah)
+                    ]);
+            }
         } else {
             PenjualanBarangModel::create([
                 'nomor' => $request->nomor,
@@ -434,8 +450,8 @@ class PenjualanController extends Controller
         $last_nomor = PenjualanModel::orderBy('id', 'desc')->first()->nomor;
 
         $penjualan = PenjualanBarangModel::join('barang', 'barang.id', '=', 'detail_jual.id_barang')
-                                            ->select('barang.nama AS nama_barang', 'barang.harga_jual AS harga_jual',
-                                                    'detail_jual.jumlah AS jumlah', 'detail_jual.total_harga AS total_harga')
+                                            ->select('barang.nama AS nama_barang', 'barang.harga_jual AS harga_jual', 'barang.harga_grosir AS harga_grosir',
+                                                    'barang.minimal_grosir AS minimal_grosir', 'detail_jual.jumlah AS jumlah', 'detail_jual.total_harga AS total_harga')
                                             ->where('nomor', $last_nomor)->get();
 
         return view('toko.transaksi.penjualan.nota', compact('pembeli', 'penjualan'));

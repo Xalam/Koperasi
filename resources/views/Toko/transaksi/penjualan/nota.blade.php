@@ -66,7 +66,7 @@
                     @endphp
                     <td>{{$data->nama_barang}}</td>
                     <td class="text-center">{{$data->jumlah}}</td>
-                    <td class="text-center">{{$data->harga_jual}}</td>
+                    <td class="text-center">{{($data->jumlah >= $data->minimal_grosir) ? $data->harga_grosir : $data->harga_jual}}</td>
                     <td class="text-center">{{$data->total_harga}}</td>
                 </tr>
                 @endforeach

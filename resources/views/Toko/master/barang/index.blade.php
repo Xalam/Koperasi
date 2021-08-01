@@ -22,8 +22,8 @@
                         <th>Kode Barang</th>
                         <th>Nama Barang</th>
                         <th>Harga Jual</th>
-                        <th>Satuan</th>
-                        <th>Expired</th>
+                        <th>Harga Grosir</th>
+                        <th>Minimal Grosir</th>
                         <th>Nomor Rak</th>
                         <th>Tingkat Rak</th>
                         <th>Posisi Rak</th>
@@ -56,14 +56,14 @@
                             <div id="harga-jual-<?php echo $data->id ?>">{{$data->harga_jual}}</div>
                         </td>
                         <td class="align-middle text-center">
-                            {!! Form::text('edit_satuan', $data->satuan, ['class' => 'd-none form-control form-control-sm', 'id' =>
-                            'edit-satuan-'.$data->id]) !!}
-                            <div id="satuan-<?php echo $data->id ?>">{{$data->satuan}}</div>
+                            {!! Form::text('edit_harga_grosir', $data->harga_grosir, ['class' => 'd-none form-control form-control-sm', 'id' =>
+                            'edit-harga-grosir-'.$data->id]) !!}
+                            <div id="harga-grosir-<?php echo $data->id ?>">{{$data->harga_grosir}}</div>
                         </td>
                         <td class="align-middle text-center">
-                            <!-- {!! Form::date('edit_expired', $data->expired, ['class' => 'd-none form-control form-control-sm', 'id' =>
-                            'edit-expired-'.$data->id]) !!} -->
-                            <div id="expired-<?php echo $data->id ?>">{{'01/' . $data->expired_bulan . '/' . '20' . $data->expired_tahun}}</div>
+                            {!! Form::number('edit_minimal_grosir', $data->minimal_grosir, ['class' => 'd-none form-control form-control-sm', 'id' =>
+                            'edit-minimal-grosir-'.$data->id]) !!}
+                            <div id="minimal-grosir-<?php echo $data->id ?>">{{$data->minimal_grosir}}</div>
                         </td>
                         <td class="align-middle">
                             {!! Form::text('edit_nomor_rak', $data->nomor_rak, ['class' => 'd-none form-control form-control-sm', 'id' =>
@@ -118,16 +118,16 @@ function edit(id) {
     $("#edit-harga-jual-" + id).removeClass("d-none");
     $("#stok-" + id).addClass("d-none");
     $("#edit-stok-" + id).removeClass("d-none");
-    $("#satuan-" + id).addClass("d-none");
-    $("#edit-satuan-" + id).removeClass("d-none");
+    $("#harga-grosir-" + id).addClass("d-none");
+    $("#edit-harga-grosir-" + id).removeClass("d-none");
+    $("#minimal-grosir-" + id).addClass("d-none");
+    $("#edit-minimal-grosir-" + id).removeClass("d-none");
     $("#nomor-rak-" + id).addClass("d-none");
     $("#edit-nomor-rak-" + id).removeClass("d-none");
     $("#tingkat-rak-" + id).addClass("d-none");
     $("#edit-tingkat-rak-" + id).removeClass("d-none");
     $("#posisi-rak-" + id).addClass("d-none");
     $("#edit-posisi-rak-" + id).removeClass("d-none");
-    // $("#expired-" + id).addClass("d-none");
-    // $("#edit-expired-" + id).removeClass("d-none");
     $("#edit-" + id).addClass("d-none");
     $("#hapus-" + id).addClass("d-none");
     $("#terapkan-" + id).removeClass("d-none");
@@ -147,9 +147,12 @@ function batal(id) {
     $("#stok-" + id).removeClass("d-none");
     $("#edit-kode-" + id).val($("#stok-" + id).text());
     $("#edit-stok-" + id).addClass("d-none");
-    $("#satuan-" + id).removeClass("d-none");
-    $("#edit-satuan-" + id).val($("#satuan-" + id).text());
-    $("#edit-satuan-" + id).addClass("d-none");
+    $("#harga-grosir-" + id).removeClass("d-none");
+    $("#edit-harga-grosir-" + id).val($("#harga-grosir-" + id).text());
+    $("#edit-harga-grosir-" + id).addClass("d-none");
+    $("#minimal-grosir-" + id).removeClass("d-none");
+    $("#edit-minimal-grosir-" + id).val($("#minimal-grosir-" + id).text());
+    $("#edit-minimal-grosir-" + id).addClass("d-none");
     $("#nomor-rak-" + id).removeClass("d-none");
     $("#edit-nomor-rak-" + id).val($("#nomor-rak-" + id).text());
     $("#edit-nomor-rak-" + id).addClass("d-none");
@@ -159,9 +162,6 @@ function batal(id) {
     $("#posisi-rak-" + id).removeClass("d-none");
     $("#edit-posisi-rak-" + id).val($("#posisi-rak-" + id).text());
     $("#edit-posisi-rak-" + id).addClass("d-none");
-    // $("#expired-" + id).removeClass("d-none");
-    // $("#edit-expired-" + id).val($("#expired-" + id).text());
-    // $("#edit-expired-" + id).addClass("d-none");
     $("#edit-" + id).removeClass("d-none");
     $("#hapus-" + id).removeClass("d-none");
     $("#terapkan-" + id).addClass("d-none");
@@ -201,11 +201,11 @@ function terapkan(id) {
                 hpp: $('#edit-hpp-' + id).val(),
                 harga_jual: $('#edit-harga-jual-' + id).val(),
                 stok: $('#edit-stok-' + id).val(),
-                satuan: $('#edit-satuan-' + id).val(),
+                harga_grosir: $('#edit-harga-grosir-' + id).val(),
+                minimal_grosir: $('#edit-minimal-grosir-' + id).val(),
                 nomor_rak: $('#edit-nomor-rak-' + id).val(),
                 tingkat_rak: $('#edit-tingkat-rak-' + id).val(),
                 posisi_rak: $('#edit-posisi-rak-' + id).val()
-                // expired: $('#edit-expired-' + id).val()
             },
             success: function(response) {
                 if (response.code == 200) {
@@ -217,16 +217,16 @@ function terapkan(id) {
                     $("#edit-harga-jual-" + id).addClass("d-none");
                     $("#stok-" + id).removeClass("d-none");
                     $("#edit-stok-" + id).addClass("d-none");
-                    $("#satuan-" + id).removeClass("d-none");
-                    $("#edit-satuan-" + id).addClass("d-none");
+                    $("#harga-grosir-" + id).removeClass("d-none");
+                    $("#edit-harga-grosir-" + id).addClass("d-none");
+                    $("#minimal-grosir-" + id).removeClass("d-none");
+                    $("#edit-minimal-grosir-" + id).addClass("d-none");
                     $("#nomor-rak-" + id).removeClass("d-none");
                     $("#edit-nomor-rak-" + id).addClass("d-none");
                     $("#tingkat-rak-" + id).removeClass("d-none");
                     $("#edit-tingkat-rak-" + id).addClass("d-none");
                     $("#posisi-rak-" + id).removeClass("d-none");
                     $("#edit-posisi-rak-" + id).addClass("d-none");
-                    // $("#expired-" + id).removeClass("d-none");
-                    // $("#edit-expired-" + id).addClass("d-none");
                     $("#edit-" + id).removeClass("d-none");
                     $("#hapus-" + id).removeClass("d-none");
                     $("#terapkan-" + id).addClass("d-none");
@@ -236,11 +236,11 @@ function terapkan(id) {
                     $("#hpp-" + id).html(response.barang.hpp);
                     $("#harga-jual-" + id).html(response.barang.harga_jual);
                     $("#stok-" + id).html(response.barang.stok);
-                    $("#satuan-" + id).html(response.barang.satuan);
+                    $("#harga-grosir-" + id).html(response.barang.harga_grosir);
+                    $("#minimal-grosir-" + id).html(response.barang.minimal_grosir);
                     $("#nomor-rak-" + id).html(response.barang.satuan);
                     $("#tingkat-rak-" + id).html(response.barang.satuan);
                     $("#posisi-rak-" + id).html(response.barang.satuan);
-                    // $("#expired-" + id).html(response.barang.expired);
                 }
             }
         });
