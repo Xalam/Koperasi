@@ -266,7 +266,7 @@ class SHUController extends Controller
             $keaktifanAnggota = $saldoWajib + $saldoSukarela + $totalPinjaman + $totalPenjualan;
 
             #Pembagian SHU
-            $persenAnggota = PembagianSHU::where('nama', 'LIKE', '%Jasa Anggota%')->first();
+            $persenAnggota = PembagianSHU::where('nama', 'LIKE', '%Anggota%')->first();
 
             $shu = 0;
             if ($keaktifanAnggota != 0) {
