@@ -29,28 +29,59 @@ class JatuhTempoController extends Controller
         // })->where('jenis', 2)->orderBy('id', 'DESC')->get();
 
         $angsuran = Angsuran::with('pinjaman')->where('jenis', 2)->orderBy('id', 'DESC')->get();
+        $angsuranWaiting = $angsuran->where('status', 0);
+        $angsuranAcc     = $angsuran->where('status', 1);
 
         if (request()->ajax()) {
-            $data = [];
-            $no   = 1;
-            foreach ($angsuran as $key => $value) {
-                $data[] = [
-                    'no'            => $no++,
-                    'kode'          => $value->pinjaman->kode_pinjaman,
-                    'kode_anggota'  => $value->pinjaman->anggota->kd_anggota,
-                    'tanggal'       => date('d-m-Y', strtotime($value->tanggal)),
-                    'nama'          => $value->pinjaman->anggota->nama_anggota,
-                    'nominal'       => 'Rp. ' . number_format($value->total_bayar, '0', '', '.'),
-                    'angsuran'      => $value->pinjaman->tenor - $value->sisa_bayar,
-                    'status'        => (($value->status == 0) ? '<a href="#modalKonfirmasi" data-remote="' . route('tempo.konfirmasi', $value->id) . '" 
-                           data-toggle="modal" data-target="#modalKonfirmasi" class="btn btn-primary btn-sm"><i class="far fa-plus-square"></i>&nbsp; Proses</a>' :
-                        '<span class="badge badge-success">Disetujui</span>') . (($value->lunas == 1) ? '<span class="badge badge-success">Lunas</span>' : ''),
-                    'jurnal'        => (($value->kode_jurnal == null) ? '-' : $value->kode_jurnal),
-                    'action'        => (($value->status == 1) ? '<a href="' . route('tempo.print-show', $value->id) . '" class="btn btn-light btn-sm"><i class="fas fa-print"></i>&nbsp; Cetak</a>' :
-                        '<a href="#modalKonfirmasi" data-remote="' . route('tempo.modal', $value->id) . '" data-toggle="modal" data-target="#modalKonfirmasi" class="btn btn-danger btn-sm"><i class="fas fa-trash"></i>&nbsp; Hapus</a>')
-                ];
+            switch (request()->type) {
+                case 'waiting':
+                    $data = [];
+                    $no   = 1;
+                    foreach ($angsuranWaiting as $key => $value) {
+                        $data[] = [
+                            'no'            => $no++,
+                            'kode'          => $value->pinjaman->kode_pinjaman,
+                            'kode_anggota'  => $value->pinjaman->anggota->kd_anggota,
+                            'tanggal'       => date('d-m-Y', strtotime($value->tanggal)),
+                            'nama'          => $value->pinjaman->anggota->nama_anggota,
+                            'nominal'       => 'Rp. ' . number_format($value->total_bayar, '0', '', '.'),
+                            'angsuran'      => $value->pinjaman->tenor - $value->sisa_bayar,
+                            'status'        => (($value->status == 0) ? '<a href="#modalKonfirmasi" data-remote="' . route('tempo.konfirmasi', $value->id) . '" 
+                                            data-toggle="modal" data-target="#modalKonfirmasi" class="btn btn-primary btn-sm"><i class="far fa-plus-square"></i>&nbsp; Proses</a>' :
+                                '<span class="badge badge-success">Disetujui</span>') . (($value->lunas == 1) ? '<span class="badge badge-success">Lunas</span>' : ''),
+                            'image'         => (($value->image != null) ? '<a href="#modalKonfirmasi" data-remote="' . route('tempo.image', $value->id) . '" 
+                                            data-toggle="modal" data-target="#modalKonfirmasi" class="btn btn-info btn-sm">
+                                            <i class="fas fa-image"></i></a>' : '-'),
+                            'action'        => (($value->status == 1) ? '<a href="' . route('tempo.print-show', $value->id) . '" class="btn btn-light btn-sm"><i class="fas fa-print"></i>&nbsp; Cetak</a>' :
+                                '<a href="#modalKonfirmasi" data-remote="' . route('tempo.modal', $value->id) . '" data-toggle="modal" data-target="#modalKonfirmasi" class="btn btn-danger btn-sm"><i class="fas fa-trash"></i>&nbsp; Hapus</a>')
+                        ];
+                    }
+                    return response()->json(compact('data'));
+                    break;
+                case 'accept':
+                    $data = [];
+                    $no   = 1;
+                    foreach ($angsuranAcc as $key => $value) {
+                        $data[] = [
+                            'no'            => $no++,
+                            'kode'          => $value->pinjaman->kode_pinjaman,
+                            'kode_anggota'  => $value->pinjaman->anggota->kd_anggota,
+                            'tanggal'       => date('d-m-Y', strtotime($value->tanggal)),
+                            'nama'          => $value->pinjaman->anggota->nama_anggota,
+                            'nominal'       => 'Rp. ' . number_format($value->total_bayar, '0', '', '.'),
+                            'angsuran'      => $value->pinjaman->tenor - $value->sisa_bayar,
+                            'status'        => (($value->status == 0) ? '<a href="#modalKonfirmasi" data-remote="' . route('tempo.konfirmasi', $value->id) . '" 
+                                            data-toggle="modal" data-target="#modalKonfirmasi" class="btn btn-primary btn-sm"><i class="far fa-plus-square"></i>&nbsp; Proses</a>' :
+                                '<span class="badge badge-success">Disetujui</span>') . (($value->lunas == 1) ? '<span class="badge badge-success">Lunas</span>' : ''),
+                            'jurnal'        => (($value->kode_jurnal == null) ? '-' : $value->kode_jurnal),
+                            'action'        => (($value->status == 1) ? '<a href="' . route('tempo.print-show', $value->id) . '" class="btn btn-light btn-sm"><i class="fas fa-print"></i>&nbsp; Cetak</a>' :
+                                '<a href="#modalKonfirmasi" data-remote="' . route('tempo.modal', $value->id) . '" data-toggle="modal" data-target="#modalKonfirmasi" class="btn btn-danger btn-sm"><i class="fas fa-trash"></i>&nbsp; Hapus</a>')
+                        ];
+                    }
+                    return response()->json(compact('data'));
+                    break;
+                    break;
             }
-            return response()->json(compact('data'));
         }
         return view('Simpan_Pinjam.pinjaman.angsuran-tempo.index');
     }
@@ -356,6 +387,13 @@ class JatuhTempoController extends Controller
         $angsuran = Angsuran::findOrFail($id);
 
         return view('Simpan_Pinjam.pinjaman.angsuran-tempo.modal-delete', compact('angsuran'));
+    }
+
+    public function modal_image($id)
+    {
+        $angsuran = Angsuran::findOrFail($id);
+
+        return view('Simpan_Pinjam.pinjaman.angsuran-tempo.image', compact('angsuran'));
     }
 
     public function delete_angsuran()

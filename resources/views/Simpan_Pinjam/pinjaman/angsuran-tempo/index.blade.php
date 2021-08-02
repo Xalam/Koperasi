@@ -66,6 +66,34 @@
                                 <th class="text-center">Nominal Pelunasan</th>
                                 <th class="text-center">Angsuran ke -</th>
                                 <th width="10%">Status</th>
+                                <th>Bukti Transfer</th>
+                                <th>Aksi</th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title"><b>Pelunasan Sebelum Jatuh Tempo </b><b class="text-success">(Disetujui)</b></h3>
+                </div>
+                <div class="card-body">
+                    <table id="table-angsuran-acc" class="table table-bordered table-hover">
+                        <thead>
+                            <tr>
+                                <th>No</th>
+                                <th>Kode Pinjaman</th>
+                                <th>Kode Anggota</th>
+                                <th>Tanggal</th>
+                                <th class="text-center">Nama Anggota</th>
+                                <th class="text-center">Nominal Pelunasan</th>
+                                <th class="text-center">Angsuran ke -</th>
+                                <th width="10%">Status</th>
                                 <th>Kode Jurnal</th>
                                 <th>Aksi</th>
                             </tr>
@@ -140,7 +168,93 @@
                     }
                 ],
                 "ajax": {
-                    url: "{{ route('tempo.index') }}"
+                    url: "{{ route('tempo.index') }}?type=waiting"
+                },
+                "columns": [{
+                        data: 'no'
+                    },
+                    {
+                        data: 'kode'
+                    },
+                    {
+                        data: 'kode_anggota'
+                    },
+                    {
+                        data: 'tanggal'
+                    },
+                    {
+                        data: 'nama'
+                    },
+                    {
+                        data: 'nominal'
+                    },
+                    {
+                        data: 'angsuran'
+                    },
+                    {
+                        data: 'status'
+                    },
+                    {
+                        data: 'image'
+                    },
+                    {
+                        data: 'action'
+                    }
+                ]
+            });
+
+            $('#table-angsuran-acc').DataTable({
+                "paging": true,
+                "lengthChange": true,
+                "searching": true,
+                "ordering": true,
+                "info": true,
+                "autoWidth": true,
+                "responsive": true,
+                "lengthMenu": [
+                    [10, 25, 50, -1],
+                    [10, 25, 50, "All"]
+                ],
+                "deferRender": true,
+                "columnDefs": [{
+                        "targets": 0,
+                        "className": "text-center",
+                    },
+                    {
+                        "targets": 1,
+                        "className": "text-center",
+                    },
+                    {
+                        "targets": 2,
+                        "className": "text-center",
+                    },
+                    {
+                        "targets": 3,
+                        "className": "text-center",
+                    },
+                    {
+                        "targets": 5,
+                        "className": "text-right",
+                    },
+                    {
+                        "targets": 6,
+                        "className": "text-center",
+                    },
+                    {
+                        "targets": 7,
+                        "className": "text-center",
+                    },
+                    {
+                        "targets": 8,
+                        "className": "text-center"
+                    },
+                    {
+                        "targets": 9,
+                        "className": "text-center"
+                    }
+                ],
+                "ajax": {
+                    url: "{{ route('tempo.index') }}?type=accept"
                 },
                 "columns": [{
                         data: 'no'
@@ -200,6 +314,7 @@
                 var button = $(e.relatedTarget);
                 var modal = $(this);
 
+                modal.find('.modal-content').html('<i>&nbsp;</i>')
                 modal.find('.modal-content').load(button.data("remote"));
             });
         });
@@ -215,7 +330,7 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <i class="fa fa-spinner fa-spin"></i>
+
                 </div>
             </div>
         </div>

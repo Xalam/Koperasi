@@ -13,6 +13,7 @@ use App\Models\Simpan_Pinjam\Pinjaman\Angsuran;
 use App\Models\Simpan_Pinjam\Pinjaman\Pinjaman;
 use App\Models\Toko\Transaksi\Piutang\PiutangModel;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class PinjamanController extends Controller
 {
@@ -328,5 +329,63 @@ class PinjamanController extends Controller
         }
 
         return ResponseFormatter::error('Tidak terdapat pinjaman');
+    }
+
+    public function upload_transfer_angsuran(Request $request)
+    {
+        $angsuran = Angsuran::findOrFail($request->id);
+
+        if ($angsuran->image != null) {
+            Storage::delete('public/transfer/' . $angsuran->image);
+        }
+
+        $extension = $request->file('image')->extension();
+
+        $imageName =  $angsuran->kode_angsuran . '.' . $extension;
+
+        Storage::putFileAs('public/transfer', $request->file('image'), $imageName);
+
+        $angsuran->image = $imageName;
+        $angsuran->save();
+
+        #Pusher
+        event(new PusherNotification(4, 'Notifikasi Baru'));
+
+        #Save Notifikasi
+        $notifikasi = new Notifikasi();
+
+        $notifikasi->create([
+            'id_anggota' => $angsuran->pinjaman->id_anggota,
+            'title'      => 'Upload Bukti Pelunasan Baru!',
+            'content'    => 'Bukti transfer angsuran pelunasan pinjaman ' . $angsuran->kode_angsuran . '.',
+            'type'       => 1
+        ]);
+
+        $data['image'] = asset('storage/transfer/' . $angsuran->image);
+
+        return ResponseFormatter::success($data, 'Berhasil upload bukti transfer');
+    }
+
+    public function upload_info_angsuran()
+    {
+        $idAnggota = getallheaders()['id'];
+
+        $pengaturan = Pengaturan::where('id', 6)->first();
+
+        $pinjaman = Pinjaman::where('id_anggota', $idAnggota)->where('lunas', 0)->where('status', 2)->orderBy('id', 'DESC')->first();
+        $angsuran = Angsuran::where('id_pinjaman', $pinjaman->id)->where('status', 0)->where('jenis', 2)->orderBy('id', 'DESC')->first();
+
+        if ($angsuran) {
+            $data['max_date'] = date('d-m-Y H:i', strtotime($angsuran->created_at . '+1 days'));
+            $data['account_bank']   = $pengaturan->nama;
+            $data['account_number'] = $pengaturan->angka;
+
+            $data['id_upload'] = $angsuran->id;
+            $data['nominal'] = $angsuran->total_bayar;
+
+            return ResponseFormatter::success($data, 'Berhasil mendapatkan pelunasan pinjaman');
+        }
+
+        return ResponseFormatter::error('Tidak terdapat pelunasan pinjaman');
     }
 }

@@ -404,6 +404,7 @@ Route::group(['prefix' => 'simpan-pinjam', 'middleware' => ['auth:simpan-pinjam'
         Route::get('tempo/cetak/show/{id}', 'Simpan_Pinjam\Pinjaman\JatuhTempoController@print_show')->name('tempo.print-show');
         Route::get('tempo/konfirmasi/{id}', 'Simpan_Pinjam\Pinjaman\JatuhTempoController@konfirmasi')->name('tempo.konfirmasi');
         Route::get('tempo/modal/{id}', 'Simpan_Pinjam\Pinjaman\JatuhTempoController@modal')->name('tempo.modal');
+        Route::get('tempo/image/{id}', 'Simpan_Pinjam\Pinjaman\JatuhTempoController@modal_image')->name('tempo.image');
     });
 
     #Laporan
