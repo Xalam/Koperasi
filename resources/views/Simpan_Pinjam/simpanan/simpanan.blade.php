@@ -28,12 +28,40 @@
         <div class="col-12">
             <div class="card">
                 <div class="card-header">
-                    <h3 class="card-title"><b>Data Simpanan Anggota</b></h3>
+                    <h3 class="card-title"><b>Data Simpanan Anggota </b><b class="text-warning">(Proses)</b></h3>
                     <a href="{{ route('data.create') }}" class="btn btn-sm btn-primary float-right">Tambah Simpanan</a>
                     <br><span class="text-secondary">Silahkan klik <button class="btn btn-info btn-xs"><i
                                 class="far fa-plus-square"></i>&nbsp;Proses</button> apabila telah dibayar atau <button
                             class="btn btn-danger btn-xs"><i class="fas fa-trash"></i></button> untuk menolak
                         pengajuan simpanan berikut.</span>
+                </div>
+                <div class="card-body">
+                    <table id="table-simpanan-waiting" class="table table-bordered table-hover">
+                        <thead>
+                            <tr>
+                                <th>No</th>
+                                <th>Kode Simpanan</th>
+                                <th>Tanggal Simpan</th>
+                                <th>Jenis Simpanan</th>
+                                <th class="text-center">Nama Anggota</th>
+                                <th class="text-center">Nominal Setoran (Rp)</th>
+                                <th>Status Bayar</th>
+                                <th>Bukti Transfer</th>
+                                <th class="text-center">Keterangan</th>
+                                <th>Aksi</th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title"><b>Data Simpanan Anggota </b><b class="text-success">(Disetujui)</b></h3>
                 </div>
                 <div class="card-body">
                     <div class="row">
@@ -162,6 +190,89 @@
 
             $('#tanggal').datetimepicker({
                 format: 'YYYY-MM-DD'
+            });
+
+            $('#table-simpanan-waiting').DataTable({
+                "paging": true,
+                "lengthChange": true,
+                "searching": true,
+                "ordering": true,
+                "info": true,
+                "autoWidth": false,
+                "responsive": true,
+                "lengthMenu": [
+                    [10, 25, 50, -1],
+                    [10, 25, 50, "All"]
+                ],
+                "deferRender": true,
+                "columnDefs": [{
+                        "targets": 0,
+                        "className": "text-center",
+                    },
+                    {
+                        "targets": 1,
+                        "className": "text-center",
+                    },
+                    {
+                        "targets": 2,
+                        "className": "text-center",
+                    },
+                    {
+                        "targets": 3,
+                        "className": "text-center",
+                    },
+                    {
+                        "targets": 5,
+                        "className": "text-right",
+                    },
+                    {
+                        "targets": 6,
+                        "className": "text-center",
+                    },
+                    {
+                        "targets": 7,
+                        "className": "text-center",
+                    },
+                    {
+                        "targets": 9,
+                        "className": "text-center",
+                    }
+                ],
+                "ajax": {
+                    url: "{{ route('data.index') }}?type=waiting"
+                },
+                "columns": [{
+                        data: 'no'
+                    },
+                    {
+                        data: 'kode_simpanan'
+                    },
+                    {
+                        data: 'tanggal'
+                    },
+                    {
+                        data: 'jenis_simpanan'
+                    },
+                    {
+                        data: 'nama_anggota'
+                    },
+                    {
+                        data: 'nominal'
+                    },
+                    {
+                        data: 'status'
+                    },
+                    {
+                        data: 'image'
+                    },
+                    {
+                        data: 'keterangan'
+                    },
+                    {
+                        data: 'action',
+                        orderable: false
+                    }
+                ]
             });
 
             var table = $('#table-simpanan').DataTable({
