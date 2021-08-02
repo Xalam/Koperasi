@@ -96,29 +96,36 @@ class BarangController extends Controller
         }
         
         $id_supplier = SupplierModel::where('nama', $request->input('text_supplier'))->first()->id;
-        
-        BarangModel::create([
-            'kode' => $request->input('kode'),
-            'nama' => $request->input('nama'),
-            'id_supplier' => $id_supplier,
-            'harga_jual' => $request->input('harga_jual'),
-            'minimal_grosir' => $request->input('minimal_grosir'),
-            'harga_grosir' => $request->input('harga_grosir'),
-            'stok_minimal' => $request->input('stok_minimal'),
-            'satuan' => $request->input('text_satuan'),
-            'nomor_rak' => $request->input('nomor_rak'),
-            'tingkat_rak' => $request->input('tingkat_rak'),
-            'posisi_rak' => $request->input('posisi_rak'),
-            'foto' => $request->input('nama') .'.' . $request->file('foto')->getClientOriginalExtension(),
-            'expired_bulan' => $request->input('bulan'),
-            'expired_tahun' => $request->input('tahun')
-        ]);
 
-        if ($request->file('foto')->isValid()) {
-            $request->file('foto')->move(public_path('../../public_html/storage/toko/barang/foto/'), $request->input('nama') .'.' . $request->file('foto')->getClientOriginalExtension());
-        }
+        $kodeExist = BarangModel::where('kode', $request->kode)->get();
         
-        Session::flash('success', 'Berhasil');
+        if (count($kodeExist) > 0) {
+            Session::flash('failed', 'Kode barang sudah ada');
+        } else {
+            BarangModel::create([
+                'kode' => $request->input('kode'),
+                'nama' => $request->input('nama'),
+                'id_supplier' => $id_supplier,
+                'harga_jual' => $request->input('harga_jual'),
+                'minimal_grosir' => $request->input('minimal_grosir'),
+                'harga_grosir' => $request->input('harga_grosir'),
+                'stok_minimal' => $request->input('stok_minimal'),
+                'satuan' => $request->input('text_satuan'),
+                'nomor_rak' => $request->input('nomor_rak'),
+                'tingkat_rak' => $request->input('tingkat_rak'),
+                'posisi_rak' => $request->input('posisi_rak'),
+                'foto' => $request->input('nama') .'.' . $request->file('foto')->getClientOriginalExtension(),
+                'expired_bulan' => $request->input('bulan'),
+                'expired_tahun' => $request->input('tahun')
+            ]);
+    
+            if ($request->file('foto')->isValid()) {
+                $request->file('foto')->move(public_path('../../public_html/storage/toko/barang/foto/'), $request->input('nama') .'.' . $request->file('foto')->getClientOriginalExtension());
+            }
+            
+            Session::flash('success', 'Berhasil');
+        }
+
         return view('toko.master.barang.create', compact('data_notified', 'data_notif', 'rak', 'supplier', 'tahun'));
     }
 

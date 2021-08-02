@@ -126,7 +126,28 @@
 @endsection
 
 @section('script')
-@if(Session::get('success'))
+@if(Session::get('failed'))
+<script>
+$(document).ready(function() {
+    const Toast = Swal.mixin({
+        toast: true,
+        position: 'middle',
+        showConfirmButton: false,
+        timer: 2000,
+        timerProgressBar: true
+    });
+
+    Toast.fire({
+        icon: 'error',
+        title: 'Gagal',
+        text: `{{Session::get('failed')}}`
+    });
+    setTimeout(function() {
+        window.location = "/toko/master/barang/create";
+    }, 2000);
+});
+</script>
+@elseif (Session::get('success'))
 <script>
 $(document).ready(function() {
     const Toast = Swal.mixin({
