@@ -38,13 +38,22 @@ class SimpananController extends Controller
             if (request()->type == 'waiting') {
                 $data = [];
                 $no   = 1;
+                $jenis = '';
+                
                 foreach ($simWaiting as $key => $value) {
+                    if ($value->jenis_simpanan == 1) {
+                        $jenis = 'Simpanan Pokok';
+                    } else if ($value->jenis_simpanan == 2) {
+                        $jenis = 'Simpanan Wajib';
+                    } else {
+                        $jenis = 'Simpanan Sukarela';
+                    }
 
                     $data[] = [
                         'no' => $no++,
                         'kode_simpanan'  => $value->kode_simpanan,
                         'tanggal'        => date('d-m-Y', strtotime($value->tanggal)),
-                        'jenis_simpanan' => 'Simpanan Pokok',
+                        'jenis_simpanan' => $jenis,
                         'nama_anggota'   => $value->anggota->nama_anggota,
                         'nominal'        => number_format($value->nominal, 2, ',', '.'),
                         'status'         => ($value->status == 0) ? '<a href="#modalKonfirmasi" data-remote="' . route('data.konfirmasi', $value->id) . '" 
