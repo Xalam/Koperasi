@@ -111,8 +111,8 @@
                                 <td class="text-right"><b>{{ number_format($sumTidakLancar, 2, ',', '.') }}</b></td>
                             </tr>
                             <tr>
-                                <td><b>TOTAL ASET</b></td>
-                                <td class="text-right">
+                                <td class="table-secondary"><b>TOTAL ASET</b></td>
+                                <td class="text-right table-secondary">
                                     <b>{{ number_format($sumLancar + $sumTidakLancar + $sumPenyertaan, 2, ',', '.') }}</b>
                                 </td>
                             </tr>
@@ -160,13 +160,17 @@
                             @endforeach
                             <tr>
                                 <td><b>Total Kewajiban Jangka Panjang</b></td>
-                                <td class="text-right"><b>{{ number_format($sumPanjang, 2, ',', '.') }}</b></td>
+                                @if ($sumPanjang < 0)
+                                    <td class="text-right"><b>{{ number_format($sumPanjang * -1, 2, ',', '.') }}</b></td>
+                                @else
+                                    <td class="text-right"><b>{{ number_format($sumPanjang, 2, ',', '.') }}</b></td>
+                                @endif
                             </tr>
                             <tr>
                                 <td><b>TOTAL KEWAJIBAN</b></td>
                                 @if ($sumPendek + $sumPanjang < 0)
                                     <td class="text-right">
-                                        <b>{{ number_format($sumPendek + $sumPanjang * -1, 2, ',', '.') }}</b>
+                                        <b>{{ number_format(($sumPendek + $sumPanjang) * -1, 2, ',', '.') }}</b>
                                     </td>
                                 @else
                                     <td class="text-right">
@@ -199,21 +203,17 @@
                             </tr>
                             <tr>
                                 <td><b>SHU {{ isset($reqEnd) ? date('Y', strtotime($reqEnd)) : date('Y') }}</b></td>
-                                @if ($shuTotal < 0)
-                                    <td class="text-right"><b>{{ number_format($shuTotal * -1, 2, ',', '.') }}</b></td>
-                                @else
-                                    <td class="text-right"><b>{{ number_format($shuTotal, 2, ',', '.') }}</b></td>
-                                @endif
+                                <td class="text-right"><b>{{ number_format($sumSHU, 2, ',', '.') }}</b></td>
                             </tr>
                             <tr>
-                                <td><b>TOTAL KEWAJIBAN & EKUITAS</b></td>
+                                <td class="table-secondary"><b>TOTAL KEWAJIBAN & EKUITAS</b></td>
                                 @if ($sumPendek + $sumPanjang + $sumEkuitas < 0)
-                                    <td class="text-right">
-                                        <b>{{ number_format(($sumPendek + $sumPanjang + $sumEkuitas) * -1, 2, ',', '.') }}</b>
+                                    <td class="text-right table-secondary">
+                                        <b>{{ number_format(($sumPendek + $sumPanjang + $sumEkuitas) * -1 + $sumSHU, 2, ',', '.') }}</b>
                                     </td>
                                 @else
-                                    <td class="text-right">
-                                        <b>{{ number_format($sumPendek + $sumPanjang + $sumEkuitas, 2, ',', '.') }}</b>
+                                    <td class="text-right table-secondary">
+                                        <b>{{ number_format($sumPendek + $sumPanjang + $sumEkuitas + $sumSHU, 2, ',', '.') }}</b>
                                     </td>
                                 @endif
                             </tr>

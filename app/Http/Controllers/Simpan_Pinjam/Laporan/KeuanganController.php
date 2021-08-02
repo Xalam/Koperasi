@@ -262,7 +262,7 @@ class KeuanganController extends Controller
             'endDate',
             'reqStart',
             'reqEnd',
-            'shuTotal'
+            'sumSHU'
         ));
     }
 
@@ -512,7 +512,7 @@ class KeuanganController extends Controller
             'endDate',
             'reqStart',
             'reqEnd',
-            'shuTotal'
+            'sumSHU'
         ));
     }
 }

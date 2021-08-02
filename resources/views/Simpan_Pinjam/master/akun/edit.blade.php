@@ -4,9 +4,9 @@
 
 @section('content_header', 'Edit Akun')
 
-@push('style')
+    @push('style')
 
-@endpush
+    @endpush
 
 @section('breadcrumb')
     <li class="breadcrumb-item"><a href="#">Master</a></li>
@@ -22,8 +22,8 @@
                     <h3 class="card-title">Edit Akun</h3>
                 </div>
                 <div class="card-body col-md-6 mx-auto">
-                    <form action="{{ route('akun.update', $akun->id) }}" role="form" method="post" enctype="multipart/form-data"
-                        autocomplete="off">
+                    <form action="{{ route('akun.update', $akun->id) }}" role="form" method="post"
+                        enctype="multipart/form-data" autocomplete="off">
                         @csrf
                         @method('put')
                         <div class="form-group">
@@ -49,7 +49,8 @@
                                 <div class="input-group-prepend">
                                     <span class="input-group-text">Rp</span>
                                 </div>
-                                <input type="text" class="form-control" placeholder="Masukkan jumlah saldo" id="saldo" name="saldo" value="{{ $akun->saldo }}">
+                                <input type="text" class="form-control" placeholder="Masukkan jumlah saldo" id="saldo"
+                                    name="saldo" value="{{ $akun->saldo }}">
                             </div>
                             @if ($errors->has('saldo'))
                                 <span class="text-danger">{{ $errors->first('saldo') }}</span>
@@ -72,10 +73,11 @@
 @section('script')
     <script>
         $(function() {
-            $('#saldo').maskMoney({ 
+            $('#saldo').maskMoney({
                 allowNegative: true,
-                thousands:'.',
-                decimal: ','     
+                thousands: '.',
+                decimal: ',',
+                allowZero: true
             });
 
             $('input.number').keyup(function(event) {

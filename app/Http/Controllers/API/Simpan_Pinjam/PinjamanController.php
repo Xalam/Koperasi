@@ -313,7 +313,7 @@ class PinjamanController extends Controller
     {
         $idAnggota = getallheaders()['id'];
 
-        $pinjaman = Pinjaman::where('id_anggota', $idAnggota)->where('lunas', 0)->where('status', 1)->orderBy('id', 'DESC')->first();
+        $pinjaman = Pinjaman::where('id_anggota', $idAnggota)->where('lunas', 0)->where('status', 2)->orderBy('id', 'DESC')->first();
         $angsuran = Angsuran::where('id_pinjaman', $pinjaman->id)->where('status', 1)->orderBy('id', 'DESC')->first();
 
         if ($pinjaman) {
