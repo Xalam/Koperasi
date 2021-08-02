@@ -34,6 +34,8 @@ Route::namespace('API')->group(function () {
 
         Route::post('angsuran', 'Simpan_Pinjam\PinjamanController@angsuran');
         Route::post('angsuran-lunas', 'Simpan_Pinjam\PinjamanController@angsuran_lunas');
+        Route::post('angsuran-upload', 'Simpan_Pinjam\PinjamanController@upload_transfer_angsuran');
+        Route::get('angsuran-upload-info', 'Simpan_Pinjam\PinjamanController@upload_info_angsuran');
 
         Route::get('notifikasi', 'Simpan_Pinjam\NotifikasiController@index');
         Route::get('notifikasi-unread', 'Simpan_Pinjam\NotifikasiController@unread');

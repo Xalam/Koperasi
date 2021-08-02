@@ -175,7 +175,8 @@ class SaldoController extends Controller
             $data['account_bank']   = $pengaturan->nama;
             $data['account_number'] = $pengaturan->angka;
 
-            $data['simpanan'] = $simpanan;
+            $data['id_upload'] = $simpanan->id;
+            $data['nominal'] = $simpanan->nominal;
 
             return ResponseFormatter::success($data, 'Berhasil mendapatkan deposit simpanan');
         }

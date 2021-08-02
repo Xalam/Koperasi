@@ -30,7 +30,6 @@ class BukuBesarController extends Controller
             }
 
             return view('Simpan_Pinjam.laporan.buku-besar.show', compact('jurnal', 'akun'));
-
         } else {
             $reqStart   = $request->start_date;
             $reqEnd     = $request->end_date;
@@ -60,7 +59,6 @@ class BukuBesarController extends Controller
             $jurnal = JurnalUmum::where('id_akun', $request->id_akun)->get();
 
             return view('Simpan_Pinjam.laporan.buku-besar.print-show', compact('jurnal', 'akun', 'reqStart', 'reqEnd'));
-
         } else {
             $reqStart   = $request->start_date;
             $reqEnd     = $request->end_date;

@@ -309,17 +309,17 @@ Route::group(['prefix' => 'toko'], function () {
 
 //Clear Cache
 Route::get('/route-cache', function () {
-    $exitCode = Artisan::call('route:cache');
+    Artisan::call('route:cache');
     return 'Routes cache cleared';
 });
 
 Route::get('/config-cache', function () {
-    $exitCode = Artisan::call('config:cache');
+    Artisan::call('config:cache');
     return 'Config cache cleared';
 });
 
 Route::get('/cache-clear', function () {
-    $exitCode = Artisan::call('cache:clear');
+    Artisan::call('cache:clear');
     return 'Application cache cleared';
 });
 
@@ -335,6 +335,8 @@ Route::prefix('simpan-pinjam')->group(function () {
     });
 
     Route::get('delete-simpanan', 'Simpan_Pinjam\Simpanan\SimpananController@delete_simpanan')->name('delete.simpanan');
+    Route::get('delete-pinjaman', 'Simpan_Pinjam\Pinjaman\PengajuanController@delete_pinjaman')->name('delete.pinjaman');
+    Route::get('delete-angsuran-tempo', 'Simpan_Pinjam\Pinjaman\JatuhTempoController@delete_angsuran')->name('delete.angsuran-tempo');
 });
 
 //checkrole:admin,bendahara,bendahara_pusat,ketua_koperasi,simpan_pinjam
@@ -402,6 +404,7 @@ Route::group(['prefix' => 'simpan-pinjam', 'middleware' => ['auth:simpan-pinjam'
         Route::get('tempo/cetak/show/{id}', 'Simpan_Pinjam\Pinjaman\JatuhTempoController@print_show')->name('tempo.print-show');
         Route::get('tempo/konfirmasi/{id}', 'Simpan_Pinjam\Pinjaman\JatuhTempoController@konfirmasi')->name('tempo.konfirmasi');
         Route::get('tempo/modal/{id}', 'Simpan_Pinjam\Pinjaman\JatuhTempoController@modal')->name('tempo.modal');
+        Route::get('tempo/image/{id}', 'Simpan_Pinjam\Pinjaman\JatuhTempoController@modal_image')->name('tempo.image');
     });
 
     #Laporan

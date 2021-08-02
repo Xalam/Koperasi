@@ -26,6 +26,7 @@ class CreateAngsuranTable extends Migration
             $table->integer('lunas')->default(0)->comment('0 = Belum Lunas, 1 = Lunas');
             $table->integer('jenis')->default(1)->comment('1 = Biasa, 2 = Jatuh Tempo');
             $table->double('total_bayar')->default(0)->comment('Total bayar jika pelunasan');
+            $table->string('image')->nullable();
             $table->string('keterangan')->nullable();
             $table->string('kode_jurnal')->nullable();
             $table->timestamps();

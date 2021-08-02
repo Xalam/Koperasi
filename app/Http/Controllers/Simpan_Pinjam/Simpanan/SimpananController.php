@@ -25,123 +25,152 @@ class SimpananController extends Controller
     public function index()
     {
         $simpanan   = Simpanan::with('anggota')->orderBy('id', 'DESC')->get();
-        $pokok      = $simpanan->where('jenis_simpanan', 1);
-        $wajib      = $simpanan->where('jenis_simpanan', 2);
-        $sukarela   = $simpanan->where('jenis_simpanan', 3);
+        $simWaiting = $simpanan->where('status', 0);
+        $simAccept  = $simpanan->where('status', 1);
+        $pokok      = $simpanan->where('status', 1)->where('jenis_simpanan', 1);
+        $wajib      = $simpanan->where('status', 1)->where('jenis_simpanan', 2);
+        $sukarela   = $simpanan->where('status', 1)->where('jenis_simpanan', 3);
 
         $anggota    = Anggota::all();
 
         if (request()->ajax()) {
-            switch (request()->filter) {
-                case 'pokok':
-                    $data = [];
-                    $no   = 1;
-                    foreach ($pokok as $key => $value) {
 
-                        $data[] = [
-                            'no' => $no++,
-                            'kode_simpanan'  => $value->kode_simpanan,
-                            'tanggal'        => date('d-m-Y', strtotime($value->tanggal)),
-                            'jenis_simpanan' => 'Simpanan Pokok',
-                            'nama_anggota'   => $value->anggota->nama_anggota,
-                            'nominal'        => number_format($value->nominal, 2, ',', '.'),
-                            'status'         => ($value->status == 0) ? '<a href="#modalKonfirmasi" data-remote="' . route('data.konfirmasi', $value->id) . '" 
-                                                data-toggle="modal" data-target="#modalKonfirmasi" class="btn btn-info btn-sm">
-                                                <i class="far fa-plus-square"></i>&nbsp; Proses</a>' : '<span class="badge bg-success">Sudah Bayar</span>',
-                            'image'          => (($value->image != null) ? '<a href="#modalTransfer" data-remote="' . route('data.image', $value->id) . '" 
-                                                data-toggle="modal" data-target="#modalTransfer" class="btn btn-info btn-sm">
-                                                <i class="fas fa-image"></i></a>' : '-'),
-                            'keterangan'     => $value->keterangan == null ? '-' : $value->keterangan,
-                            'action'         => ($value->status == 0) ? '<span data-remote="' . route('data.modal', $value->id) . '" data-toggle="modal" data-target="#modalKonfirmasi"><a href="#modalKonfirmasi" class="btn btn-danger btn-sm" data-toggle="tooltip" data-placement="top" title="Hapus"><i class="fas fa-trash"></i></a></span>'
-                                : '<a href="' . route('data.print', $value->id) . '" class="btn btn-default btn-sm" data-toggle="tooltip" data-placement="top" title="Cetak"><i class="fas fa-print"></i></a>' . '<a href="' . route('data.edit', $value->id) . '" class="btn btn-sm btn-warning" data-toggle="tooltip" data-placement="top" title="Edit"><i class="fas fa-edit"></i></a>'
-                        ];
-                    }
-                    return response()->json(compact('data'));
-                    break;
-                case 'wajib':
-                    $data = [];
-                    $no   = 1;
-                    foreach ($wajib as $key => $value) {
+            if (request()->type == 'waiting') {
+                $data = [];
+                $no   = 1;
+                foreach ($simWaiting as $key => $value) {
 
-                        $data[] = [
-                            'no' => $no++,
-                            'kode_simpanan'  => $value->kode_simpanan,
-                            'tanggal'        => date('d-m-Y', strtotime($value->tanggal)),
-                            'jenis_simpanan' => 'Simpanan Wajib',
-                            'nama_anggota'   => $value->anggota->nama_anggota,
-                            'nominal'        => number_format($value->nominal, 2, ',', '.'),
-                            'status'         => ($value->status == 0) ? '<a href="#modalKonfirmasi" data-remote="' . route('data.konfirmasi', $value->id) . '" 
-                                                data-toggle="modal" data-target="#modalKonfirmasi" class="btn btn-info btn-sm">
-                                                <i class="far fa-plus-square"></i>&nbsp; Proses</a>' : '<span class="badge bg-success">Sudah Bayar</span>',
-                            'image'          => (($value->image != null) ? '<a href="#modalTransfer" data-remote="' . route('data.image', $value->id) . '" 
-                                                data-toggle="modal" data-target="#modalTransfer" class="btn btn-info btn-sm">
-                                                <i class="fas fa-image"></i></a>' : '-'),
-                            'keterangan'     => $value->keterangan == null ? '-' : $value->keterangan,
-                            'action'         => ($value->status == 0) ? '<span data-remote="' . route('data.modal', $value->id) . '" data-toggle="modal" data-target="#modalKonfirmasi"><a href="#modalKonfirmasi" class="btn btn-danger btn-sm" data-toggle="tooltip" data-placement="top" title="Hapus"><i class="fas fa-trash"></i></a></span>'
-                                : '<a href="' . route('data.print', $value->id) . '" class="btn btn-default btn-sm" data-toggle="tooltip" data-placement="top" title="Cetak"><i class="fas fa-print"></i></a>' . '<a href="' . route('data.edit', $value->id) . '" class="btn btn-sm btn-warning" data-toggle="tooltip" data-placement="top" title="Edit"><i class="fas fa-edit"></i></a>'
-                        ];
-                    }
-                    return response()->json(compact('data'));
-                    break;
-                case 'sukarela':
-                    $data = [];
-                    $no   = 1;
-                    foreach ($sukarela as $key => $value) {
+                    $data[] = [
+                        'no' => $no++,
+                        'kode_simpanan'  => $value->kode_simpanan,
+                        'tanggal'        => date('d-m-Y', strtotime($value->tanggal)),
+                        'jenis_simpanan' => 'Simpanan Pokok',
+                        'nama_anggota'   => $value->anggota->nama_anggota,
+                        'nominal'        => number_format($value->nominal, 2, ',', '.'),
+                        'status'         => ($value->status == 0) ? '<a href="#modalKonfirmasi" data-remote="' . route('data.konfirmasi', $value->id) . '" 
+                                                    data-toggle="modal" data-target="#modalKonfirmasi" class="btn btn-info btn-sm">
+                                                    <i class="far fa-plus-square"></i>&nbsp; Proses</a>' : '<span class="badge bg-success">Sudah Bayar</span>',
+                        'image'          => (($value->image != null) ? '<a href="#modalTransfer" data-remote="' . route('data.image', $value->id) . '" 
+                                                    data-toggle="modal" data-target="#modalTransfer" class="btn btn-info btn-sm">
+                                                    <i class="fas fa-image"></i></a>' : '-'),
+                        'keterangan'     => $value->keterangan == null ? '-' : $value->keterangan,
+                        'action'         => ($value->status == 0) ? '<span data-remote="' . route('data.modal', $value->id) . '" data-toggle="modal" data-target="#modalKonfirmasi"><a href="#modalKonfirmasi" class="btn btn-danger btn-sm" data-toggle="tooltip" data-placement="top" title="Hapus"><i class="fas fa-trash"></i></a></span>'
+                            : '<a href="' . route('data.print', $value->id) . '" class="btn btn-default btn-sm" data-toggle="tooltip" data-placement="top" title="Cetak"><i class="fas fa-print"></i></a>' . '<a href="' . route('data.edit', $value->id) . '" class="btn btn-sm btn-warning" data-toggle="tooltip" data-placement="top" title="Edit"><i class="fas fa-edit"></i></a>'
+                    ];
+                }
+                return response()->json(compact('data'));
+            } else {
+                switch (request()->filter) {
+                    case 'pokok':
+                        $data = [];
+                        $no   = 1;
+                        foreach ($pokok as $key => $value) {
 
-                        $data[] = [
-                            'no' => $no++,
-                            'kode_simpanan'  => $value->kode_simpanan,
-                            'tanggal'        => date('d-m-Y', strtotime($value->tanggal)),
-                            'jenis_simpanan' => 'Simpanan Sukarela',
-                            'nama_anggota'   => $value->anggota->nama_anggota,
-                            'nominal'        => number_format($value->nominal, 2, ',', '.'),
-                            'status'         => ($value->status == 0) ? '<a href="#modalKonfirmasi" data-remote="' . route('data.konfirmasi', $value->id) . '" 
-                                                data-toggle="modal" data-target="#modalKonfirmasi" class="btn btn-info btn-sm">
-                                                <i class="far fa-plus-square"></i>&nbsp; Proses</a>' : '<span class="badge bg-success">Sudah Bayar</span>',
-                            'image'          => (($value->image != null) ? '<a href="#modalTransfer" data-remote="' . route('data.image', $value->id) . '" 
-                                                data-toggle="modal" data-target="#modalTransfer" class="btn btn-info btn-sm">
-                                                <i class="fas fa-image"></i></a>' : '-'),
-                            'keterangan'     => $value->keterangan == null ? '-' : $value->keterangan,
-                            'action'         => ($value->status == 0) ? '<span data-remote="' . route('data.modal', $value->id) . '" data-toggle="modal" data-target="#modalKonfirmasi"><a href="#modalKonfirmasi" class="btn btn-danger btn-sm" data-toggle="tooltip" data-placement="top" title="Hapus"><i class="fas fa-trash"></i></a></span>'
-                                : '<a href="' . route('data.print', $value->id) . '" class="btn btn-default btn-sm" data-toggle="tooltip" data-placement="top" title="Cetak"><i class="fas fa-print"></i></a>' . '<a href="' . route('data.edit', $value->id) . '" class="btn btn-sm btn-warning" data-toggle="tooltip" data-placement="top" title="Edit"><i class="fas fa-edit"></i></a>'
-                        ];
-                    }
-                    return response()->json(compact('data'));
-                    break;
-                default:
-                    $data = [];
-                    $no   = 1;
-                    $jenis = '';
-
-                    foreach ($simpanan as $key => $value) {
-                        if ($value->jenis_simpanan == 1) {
-                            $jenis = 'Simpanan Pokok';
-                        } else if ($value->jenis_simpanan == 2) {
-                            $jenis = 'Simpanan Wajib';
-                        } else {
-                            $jenis = 'Simpanan Sukarela';
+                            $data[] = [
+                                'no' => $no++,
+                                'kode_simpanan'  => $value->kode_simpanan,
+                                'tanggal'        => date('d-m-Y', strtotime($value->tanggal)),
+                                'jenis_simpanan' => 'Simpanan Pokok',
+                                'nama_anggota'   => $value->anggota->nama_anggota,
+                                'nominal'        => number_format($value->nominal, 2, ',', '.'),
+                                'status'         => ($value->status == 0) ? '<a href="#modalKonfirmasi" data-remote="' . route('data.konfirmasi', $value->id) . '" 
+                                                    data-toggle="modal" data-target="#modalKonfirmasi" class="btn btn-info btn-sm">
+                                                    <i class="far fa-plus-square"></i>&nbsp; Proses</a>' : '<span class="badge bg-success">Sudah Bayar</span>',
+                                'image'          => (($value->image != null) ? '<a href="#modalTransfer" data-remote="' . route('data.image', $value->id) . '" 
+                                                    data-toggle="modal" data-target="#modalTransfer" class="btn btn-info btn-sm">
+                                                    <i class="fas fa-image"></i></a>' : '-'),
+                                'keterangan'     => $value->keterangan == null ? '-' : $value->keterangan,
+                                'action'         => ($value->status == 0) ? '<span data-remote="' . route('data.modal', $value->id) . '" data-toggle="modal" data-target="#modalKonfirmasi"><a href="#modalKonfirmasi" class="btn btn-danger btn-sm" data-toggle="tooltip" data-placement="top" title="Hapus"><i class="fas fa-trash"></i></a></span>'
+                                    : '<a href="' . route('data.print', $value->id) . '" class="btn btn-default btn-sm" data-toggle="tooltip" data-placement="top" title="Cetak"><i class="fas fa-print"></i></a>' . '<a href="' . route('data.edit', $value->id) . '" class="btn btn-sm btn-warning" data-toggle="tooltip" data-placement="top" title="Edit"><i class="fas fa-edit"></i></a>'
+                            ];
                         }
+                        return response()->json(compact('data'));
+                        break;
+                    case 'wajib':
+                        $data = [];
+                        $no   = 1;
+                        foreach ($wajib as $key => $value) {
 
-                        $data[] = [
-                            'no' => $no++,
-                            'kode_simpanan'  => $value->kode_simpanan,
-                            'tanggal'        => date('d-m-Y', strtotime($value->tanggal)),
-                            'jenis_simpanan' => $jenis,
-                            'nama_anggota'   => $value->anggota->nama_anggota,
-                            'nominal'        => number_format($value->nominal, 2, ',', '.'),
-                            'status'         => ($value->status == 0) ? '<a href="#modalKonfirmasi" data-remote="' . route('data.konfirmasi', $value->id) . '" 
-                                                data-toggle="modal" data-target="#modalKonfirmasi" class="btn btn-info btn-sm">
-                                                <i class="far fa-plus-square"></i>&nbsp; Proses</a>' : '<span class="badge bg-success">Sudah Bayar</span>',
-                            'image'          => (($value->image != null) ? '<a href="#modalTransfer" data-remote="' . route('data.image', $value->id) . '" 
-                                                data-toggle="modal" data-target="#modalTransfer" class="btn btn-info btn-sm">
-                                                <i class="fas fa-image"></i></a>' : '-'),
-                            'keterangan'     => $value->keterangan == null ? '-' : $value->keterangan,
-                            'action'         => ($value->status == 0) ? '<span data-remote="' . route('data.modal', $value->id) . '" data-toggle="modal" data-target="#modalKonfirmasi"><a href="#modalKonfirmasi" class="btn btn-danger btn-sm" data-toggle="tooltip" data-placement="top" title="Hapus"><i class="fas fa-trash"></i></a></span>'
-                                : '<a href="' . route('data.print', $value->id) . '" class="btn btn-default btn-sm" data-toggle="tooltip" data-placement="top" title="Cetak"><i class="fas fa-print"></i></a>' . '<a href="' . route('data.edit', $value->id) . '" class="btn btn-sm btn-warning" data-toggle="tooltip" data-placement="top" title="Edit"><i class="fas fa-edit"></i></a>'
-                        ];
-                    }
-                    return response()->json(compact('data'));
-                    break;
+                            $data[] = [
+                                'no' => $no++,
+                                'kode_simpanan'  => $value->kode_simpanan,
+                                'tanggal'        => date('d-m-Y', strtotime($value->tanggal)),
+                                'jenis_simpanan' => 'Simpanan Wajib',
+                                'nama_anggota'   => $value->anggota->nama_anggota,
+                                'nominal'        => number_format($value->nominal, 2, ',', '.'),
+                                'status'         => ($value->status == 0) ? '<a href="#modalKonfirmasi" data-remote="' . route('data.konfirmasi', $value->id) . '" 
+                                                    data-toggle="modal" data-target="#modalKonfirmasi" class="btn btn-info btn-sm">
+                                                    <i class="far fa-plus-square"></i>&nbsp; Proses</a>' : '<span class="badge bg-success">Sudah Bayar</span>',
+                                'image'          => (($value->image != null) ? '<a href="#modalTransfer" data-remote="' . route('data.image', $value->id) . '" 
+                                                    data-toggle="modal" data-target="#modalTransfer" class="btn btn-info btn-sm">
+                                                    <i class="fas fa-image"></i></a>' : '-'),
+                                'keterangan'     => $value->keterangan == null ? '-' : $value->keterangan,
+                                'action'         => ($value->status == 0) ? '<span data-remote="' . route('data.modal', $value->id) . '" data-toggle="modal" data-target="#modalKonfirmasi"><a href="#modalKonfirmasi" class="btn btn-danger btn-sm" data-toggle="tooltip" data-placement="top" title="Hapus"><i class="fas fa-trash"></i></a></span>'
+                                    : '<a href="' . route('data.print', $value->id) . '" class="btn btn-default btn-sm" data-toggle="tooltip" data-placement="top" title="Cetak"><i class="fas fa-print"></i></a>' . '<a href="' . route('data.edit', $value->id) . '" class="btn btn-sm btn-warning" data-toggle="tooltip" data-placement="top" title="Edit"><i class="fas fa-edit"></i></a>'
+                            ];
+                        }
+                        return response()->json(compact('data'));
+                        break;
+                    case 'sukarela':
+                        $data = [];
+                        $no   = 1;
+                        foreach ($sukarela as $key => $value) {
+
+                            $data[] = [
+                                'no' => $no++,
+                                'kode_simpanan'  => $value->kode_simpanan,
+                                'tanggal'        => date('d-m-Y', strtotime($value->tanggal)),
+                                'jenis_simpanan' => 'Simpanan Sukarela',
+                                'nama_anggota'   => $value->anggota->nama_anggota,
+                                'nominal'        => number_format($value->nominal, 2, ',', '.'),
+                                'status'         => ($value->status == 0) ? '<a href="#modalKonfirmasi" data-remote="' . route('data.konfirmasi', $value->id) . '" 
+                                                    data-toggle="modal" data-target="#modalKonfirmasi" class="btn btn-info btn-sm">
+                                                    <i class="far fa-plus-square"></i>&nbsp; Proses</a>' : '<span class="badge bg-success">Sudah Bayar</span>',
+                                'image'          => (($value->image != null) ? '<a href="#modalTransfer" data-remote="' . route('data.image', $value->id) . '" 
+                                                    data-toggle="modal" data-target="#modalTransfer" class="btn btn-info btn-sm">
+                                                    <i class="fas fa-image"></i></a>' : '-'),
+                                'keterangan'     => $value->keterangan == null ? '-' : $value->keterangan,
+                                'action'         => ($value->status == 0) ? '<span data-remote="' . route('data.modal', $value->id) . '" data-toggle="modal" data-target="#modalKonfirmasi"><a href="#modalKonfirmasi" class="btn btn-danger btn-sm" data-toggle="tooltip" data-placement="top" title="Hapus"><i class="fas fa-trash"></i></a></span>'
+                                    : '<a href="' . route('data.print', $value->id) . '" class="btn btn-default btn-sm" data-toggle="tooltip" data-placement="top" title="Cetak"><i class="fas fa-print"></i></a>' . '<a href="' . route('data.edit', $value->id) . '" class="btn btn-sm btn-warning" data-toggle="tooltip" data-placement="top" title="Edit"><i class="fas fa-edit"></i></a>'
+                            ];
+                        }
+                        return response()->json(compact('data'));
+                        break;
+                    default:
+                        $data = [];
+                        $no   = 1;
+                        $jenis = '';
+
+                        foreach ($simAccept as $key => $value) {
+                            if ($value->jenis_simpanan == 1) {
+                                $jenis = 'Simpanan Pokok';
+                            } else if ($value->jenis_simpanan == 2) {
+                                $jenis = 'Simpanan Wajib';
+                            } else {
+                                $jenis = 'Simpanan Sukarela';
+                            }
+
+                            $data[] = [
+                                'no' => $no++,
+                                'kode_simpanan'  => $value->kode_simpanan,
+                                'tanggal'        => date('d-m-Y', strtotime($value->tanggal)),
+                                'jenis_simpanan' => $jenis,
+                                'nama_anggota'   => $value->anggota->nama_anggota,
+                                'nominal'        => number_format($value->nominal, 2, ',', '.'),
+                                'status'         => ($value->status == 0) ? '<a href="#modalKonfirmasi" data-remote="' . route('data.konfirmasi', $value->id) . '" 
+                                                    data-toggle="modal" data-target="#modalKonfirmasi" class="btn btn-info btn-sm">
+                                                    <i class="far fa-plus-square"></i>&nbsp; Proses</a>' : '<span class="badge bg-success">Sudah Bayar</span>',
+                                'image'          => (($value->image != null) ? '<a href="#modalTransfer" data-remote="' . route('data.image', $value->id) . '" 
+                                                    data-toggle="modal" data-target="#modalTransfer" class="btn btn-info btn-sm">
+                                                    <i class="fas fa-image"></i></a>' : '-'),
+                                'keterangan'     => $value->keterangan == null ? '-' : $value->keterangan,
+                                'action'         => ($value->status == 0) ? '<span data-remote="' . route('data.modal', $value->id) . '" data-toggle="modal" data-target="#modalKonfirmasi"><a href="#modalKonfirmasi" class="btn btn-danger btn-sm" data-toggle="tooltip" data-placement="top" title="Hapus"><i class="fas fa-trash"></i></a></span>'
+                                    : '<a href="' . route('data.print', $value->id) . '" class="btn btn-default btn-sm" data-toggle="tooltip" data-placement="top" title="Cetak"><i class="fas fa-print"></i></a>' . '<a href="' . route('data.edit', $value->id) . '" class="btn btn-sm btn-warning" data-toggle="tooltip" data-placement="top" title="Edit"><i class="fas fa-edit"></i></a>'
+                            ];
+                        }
+                        return response()->json(compact('data'));
+                        break;
+                }
             }
         }
         return view('Simpan_Pinjam.simpanan.simpanan', compact('anggota'));

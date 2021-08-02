@@ -158,11 +158,11 @@ class DashboardController extends Controller
             $sumAkunFourTwo    = LaporanSHUAkun::sum($valueAkunFourTwo);
 
             //Kalkulasi
-            $labaKotor = $sumAkunFour - $sumAkunFive;
-            $totalBeban = $sumAkunSix + $sumAkunSixThree + $sumAkunSixFour;
-            $pendapatanOperasional = $labaKotor - $totalBeban;
+            $labaKotor = ($sumAkunFour * -1) - $sumAkunFive;
+            $totalBeban = ($sumAkunSix + $sumAkunSixThree + $sumAkunSixFour) * -1;
+            $pendapatanOperasional = $labaKotor + $totalBeban;
 
-            $sumSHU = $pendapatanOperasional + $sumAkunFourTwo;
+            $sumSHU = $pendapatanOperasional + ($sumAkunFourTwo * -1);
 
             // array_push($monthly, (object)['month' =>  date('Y-') . $countMonth, 'laba' => $sumSHU]);
 

@@ -233,11 +233,11 @@ class KeuanganController extends Controller
         $sumAkunFourTwo    = LaporanSHUAkun::sum($valueAkunFourTwo);
 
         //Kalkulasi
-        $labaKotor = $sumAkunFour - $sumAkunFive;
-        $totalBeban = $sumAkunSix + $sumAkunSixThree + $sumAkunSixFour;
-        $pendapatanOperasional = $labaKotor - $totalBeban;
+        $labaKotor = ($sumAkunFour * -1) - $sumAkunFive;
+        $totalBeban = ($sumAkunSix + $sumAkunSixThree + $sumAkunSixFour) * -1;
+        $pendapatanOperasional = $labaKotor + $totalBeban;
 
-        $shuTotal = $pendapatanOperasional + $sumAkunFourTwo;
+        $sumSHU = $pendapatanOperasional + ($sumAkunFourTwo * -1);
 
         return view('Simpan_Pinjam.laporan.keuangan.show', compact(
             'asetLancar',
@@ -483,11 +483,11 @@ class KeuanganController extends Controller
         $sumAkunFourTwo    = LaporanSHUAkun::sum($valueAkunFourTwo);
 
         //Kalkulasi
-        $labaKotor = $sumAkunFour - $sumAkunFive;
-        $totalBeban = $sumAkunSix + $sumAkunSixThree + $sumAkunSixFour;
-        $pendapatanOperasional = $labaKotor - $totalBeban;
+        $labaKotor = ($sumAkunFour * -1) - $sumAkunFive;
+        $totalBeban = ($sumAkunSix + $sumAkunSixThree + $sumAkunSixFour) * -1;
+        $pendapatanOperasional = $labaKotor + $totalBeban;
 
-        $shuTotal = $pendapatanOperasional + $sumAkunFourTwo;
+        $sumSHU = $pendapatanOperasional + ($sumAkunFourTwo * -1);
 
         return view('Simpan_Pinjam.laporan.keuangan.print-show', compact(
             'asetLancar',
