@@ -32,6 +32,7 @@
                                 <th class="text-center">Nama Anggota</th>
                                 <th class="text-center">Nominal (Rp)</th>
                                 <th>Jenis Simpanan</th>
+                                <th>Kode Jurnal</th>
                                 <th>Aksi</th>
                             </tr>
                         </thead>
@@ -73,6 +74,10 @@
                     {
                         "targets": 5,
                         "className": "text-center",
+                    },
+                    {
+                        "targets": 6,
+                        "className": "text-center",
                     }
                 ],
                 "ajax": {
@@ -92,6 +97,9 @@
                     },
                     {
                         data: 'jenis'
+                    },
+                    {
+                        data: 'jurnal'
                     },
                     {
                         data: 'action'

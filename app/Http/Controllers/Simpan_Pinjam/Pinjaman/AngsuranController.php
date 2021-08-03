@@ -359,7 +359,7 @@ class AngsuranController extends Controller
     public function store_all(Request $request)
     {
         $date           = $request->tanggal . '-' . date('d');
-        $pinjaman       = Pinjaman::where('status', 2)->where('lunas', 0)->get();
+        $pinjaman       = Pinjaman::where('status', 2)->where('lunas', 0)->where(DB::raw("DATE_FORMAT(tanggal, '%Y-%m')"), '<', date('Y-m'))->get();
         $angsuranGet    = Angsuran::where('jenis', 1)->orderBy('id', 'DESC')->first();
         $count          = $pinjaman->count();
 

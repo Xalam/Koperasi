@@ -413,6 +413,6 @@ class PengajuanController extends Controller
 
     public function delete_pinjaman()
     {
-        Pinjaman::where('status', 0)->where(DB::raw("DATE_ADD(tanggal, INTERVAL 1 DAY)"), '<', date('Y-m-d'))->delete();
+        Pinjaman::whereIn('status', [0, 1])->where(DB::raw("DATE_ADD(tanggal, INTERVAL 1 DAY)"), '<', date('Y-m-d'))->delete();
     }
 }

@@ -257,6 +257,7 @@ class TarikSaldoController extends Controller
                     'nama'      => $value->saldo->anggota->nama_anggota,
                     'nominal'   => number_format($value->nominal, 2, ',', '.'),
                     'jenis'     => $jenisSimpanan,
+                    'jurnal'    => $value->kode_jurnal,
                     'action'    => '<a href="' . route('tarik-saldo.print', $value->id) . '" class="btn btn-default btn-sm">
                     <i class="fas fa-print"></i>&nbsp; Cetak</a>'
                 ];
