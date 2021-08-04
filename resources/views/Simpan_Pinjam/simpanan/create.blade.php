@@ -4,12 +4,12 @@
 
 @section('content_header', 'Tambah Simpanan')
 
-@push('style')
-    <link rel="stylesheet"
-        href="{{ asset('assets/plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css') }}">
-    <link rel="stylesheet" href="{{ asset('assets/plugins/select2/css/select2.min.css') }}">
-    <link rel="stylesheet" href="{{ asset('assets/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css') }}">
-@endpush
+    @push('style')
+        <link rel="stylesheet"
+            href="{{ asset('assets/plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css') }}">
+        <link rel="stylesheet" href="{{ asset('assets/plugins/select2/css/select2.min.css') }}">
+        <link rel="stylesheet" href="{{ asset('assets/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css') }}">
+    @endpush
 
 @section('breadcrumb')
     <li class="breadcrumb-item"><a href="#">Simpanan</a></li>
@@ -31,7 +31,8 @@
                 <div class="card-body col-md-6 mx-auto">
                     <form id="form-data" action="{{ route('data.store') }}" role="form" method="post" autocomplete="off">
                         @csrf
-                        <input type="text" class="form-control" name="kode_simpanan" id="kode_simpanan" placeholder="Masukkan kode" hidden>
+                        <input type="text" class="form-control" name="kode_simpanan" id="kode_simpanan"
+                            placeholder="Masukkan kode" hidden>
                         <div class="form-group">
                             <label>Nama Anggota</label>
                             <select class="form-control select2" style="width: 100%;" name="id_anggota">
@@ -46,7 +47,7 @@
                             <label>Tanggal</label>
                             <div class="input-group date" id="tanggal" data-target-input="nearest">
                                 <input type="text" class="form-control datetimepicker-input" data-target="#tanggal"
-                                    name="tanggal" placeholder="Tanggal"/>
+                                    id="tanggal-input" name="tanggal" placeholder="Tanggal" />
                                 <div class="input-group-append" data-target="#tanggal" data-toggle="datetimepicker">
                                     <div class="input-group-text"><i class="fa fa-calendar"></i></div>
                                 </div>
@@ -82,7 +83,8 @@
                         </div>
                         <div class="form-group">
                             <label for="keterangan">Keterangan</label>
-                            <input type="text" class="form-control" name="keterangan" id="keterangan" placeholder="Masukkan keterangan">
+                            <input type="text" class="form-control" name="keterangan" id="keterangan"
+                                placeholder="Masukkan keterangan">
                         </div>
                         <a href="{{ route('data.index') }}" class="btn btn-light">Kembali</a>&nbsp;
                         <button type="submit" class="btn btn-primary">Simpan</button>
@@ -103,13 +105,14 @@
                     </div>
                 </div>
                 <div class="card-body col-md-6 mx-auto">
-                    <form id="form-data-setor" action="{{ route('data.store-all') }}" role="form" method="post" autocomplete="off">
+                    <form id="form-data-setor" action="{{ route('data.store-all') }}" role="form" method="post"
+                        autocomplete="off">
                         @csrf
                         <div class="form-group">
                             <label>Tanggal Setor</label>
                             <div class="input-group date" id="tanggal-setor" data-target-input="nearest">
                                 <input type="text" class="form-control datetimepicker-input" data-target="#tanggal-setor"
-                                    name="tanggal" placeholder="Tanggal"/>
+                                    id="tanggal-input-setor" name="tanggal" placeholder="Tanggal" />
                                 <div class="input-group-append" data-target="#tanggal-setor" data-toggle="datetimepicker">
                                     <div class="input-group-text"><i class="fa fa-calendar"></i></div>
                                 </div>
@@ -121,8 +124,8 @@
                                 <div class="input-group-prepend">
                                     <span class="input-group-text">Rp</span>
                                 </div>
-                                <input type="text" class="form-control" placeholder="Masukkan jumlah nominal" id="nominal-setor"
-                                    name="nominal">
+                                <input type="text" class="form-control" placeholder="Masukkan jumlah nominal"
+                                    id="nominal-setor" name="nominal">
                             </div>
                         </div>
                         {{-- <div class="form-group">
@@ -134,7 +137,8 @@
                         </div> --}}
                         <div class="form-group">
                             <label for="keterangan">Keterangan</label>
-                            <input type="text" class="form-control" name="keterangan" id="keterangan-setor" placeholder="Masukkan keterangan">
+                            <input type="text" class="form-control" name="keterangan" id="keterangan-setor"
+                                placeholder="Masukkan keterangan">
                         </div>
                         <a href="{{ route('data.index') }}" class="btn btn-light">Kembali</a>&nbsp;
                         <button type="submit" class="btn btn-success">Simpan</button>
@@ -171,14 +175,22 @@
                 format: 'YYYY-MM-DD'
             });
 
+            $('#tanggal-input').keydown(function(event) {
+                event.preventDefault();
+            });
+
             $('#tanggal-setor').datetimepicker({
                 format: 'YYYY-MM-DD'
+            });
+
+            $('#tanggal-input-setor').keydown(function(event) {
+                event.preventDefault();
             });
 
             $('.select2').select2();
 
             $.validator.setDefaults({
-                submitHandler: function () {
+                submitHandler: function() {
                     form.submit();
                 }
             });
@@ -242,6 +254,5 @@
                 }
             });
         })
-
     </script>
 @endsection

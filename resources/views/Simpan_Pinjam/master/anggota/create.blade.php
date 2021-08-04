@@ -81,7 +81,8 @@
                             <label>Tanggal Lahir</label>
                             <div class="input-group date" id="tanggal-lahir" data-target-input="nearest">
                                 <input type="text" class="form-control datetimepicker-input" data-target="#tanggal-lahir"
-                                    name="tanggal_lahir" placeholder="Tanggal lahir" value="{{ old('tanggal_lahir') }}" />
+                                    id="tanggal-input" name="tanggal_lahir" placeholder="Tanggal lahir"
+                                    value="{{ old('tanggal_lahir') }}" />
                                 <div class="input-group-append" data-target="#tanggal-lahir" data-toggle="datetimepicker">
                                     <div class="input-group-text"><i class="fa fa-calendar"></i></div>
                                 </div>
@@ -243,6 +244,10 @@
         $(function() {
             $('#tanggal-lahir').datetimepicker({
                 format: 'YYYY-MM-DD'
+            });
+
+            $('#tanggal-input').keydown(function(event) {
+                event.preventDefault();
             });
 
             $('#gaji').mask('#.##0,00', {
