@@ -413,6 +413,18 @@ class PengajuanController extends Controller
 
     public function delete_pinjaman()
     {
-        Pinjaman::where('status', 0)->where(DB::raw("DATE_ADD(tanggal, INTERVAL 1 DAY)"), '<', date('Y-m-d'))->delete();
+        $pinjaman = Pinjaman::whereIn('status', [0, 1])->where(DB::raw("DATE_ADD(tanggal, INTERVAL 1 DAY)"), '<', date('Y-m-d'))->get();
+
+        for ($i = 0; $i < sizeof($pinjaman); $i++) {
+            $notifikasi = new Notifikasi();
+
+            $notifikasi->create([
+                'id_anggota' => $pinjaman[$i]->id_anggota,
+                'title'      => 'Penolakan Pengajuan Pinjaman',
+                'content'    => 'Pengajuan pinjaman Anda pada tanggal ' . date('d-m-Y', strtotime($pinjaman[$i]->tanggal)) . ' sebesar Rp ' . number_format($pinjaman[$i]->nominal_pinjaman, 0, '', '.') . ' ditolak karena melebihi batas waktu yang telah ditentukan.'
+            ]);
+
+            $pinjaman[$i]->delete();
+        }
     }
 }

@@ -398,6 +398,18 @@ class JatuhTempoController extends Controller
 
     public function delete_angsuran()
     {
-        Angsuran::where('status', 0)->where('jenis', 2)->where(DB::raw("DATE_ADD(created_at, INTERVAL 1 DAY)"), '<', DB::raw("NOW()"))->delete();
+        $angsuran = Angsuran::where('status', 0)->where('jenis', 2)->where(DB::raw("DATE_ADD(created_at, INTERVAL 1 DAY)"), '<', DB::raw("NOW()"))->get();
+
+        for ($i = 0; $i < sizeof($angsuran); $i++) {
+            $notifikasi = new Notifikasi();
+
+            $notifikasi->create([
+                'id_anggota' => $angsuran[$i]->pinjaman->id_anggota,
+                'title'      => 'Penolakan Pelunasan Sebelum Jatuh Tempo',
+                'content'    => 'Pengajuan pelunasan Anda pada tanggal ' . date('d-m-Y', strtotime($angsuran[$i]->tanggal)) . ' sebesar Rp ' . number_format($angsuran[$i]->total_bayar, 0, '', '.') . ' ditolak karena melebihi batas waktu yang telah ditentukan.'
+            ]);
+
+            $angsuran[$i]->delete();
+        }
     }
 }
