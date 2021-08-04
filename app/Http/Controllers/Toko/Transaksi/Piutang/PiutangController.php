@@ -6,11 +6,13 @@ use App\Http\Controllers\Controller;
 use App\Models\Simpan_Pinjam\Laporan\JurnalUmum;
 use App\Models\Toko\Master\Akun\AkunModel;
 use App\Models\Toko\Master\Barang\BarangModel;
+use App\Models\Toko\Transaksi\Hutang\HutangModel;
 use App\Models\Toko\Transaksi\Jurnal\JurnalModel;
 use App\Models\Toko\Transaksi\Piutang\PiutangDetailModel;
 use App\Models\Toko\Transaksi\Piutang\PiutangModel;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class PiutangController extends Controller
 {
@@ -29,6 +31,14 @@ class PiutangController extends Controller
         }
 
         $data_notif = BarangModel::where('alert_status', 1)->get();
+
+        HutangModel::where(DB::raw('DATE_ADD(DATE(NOW()), INTERVAL 3 DAY)'), '>=', DB::raw('DATE(jatuh_tempo)'))->update([
+            'alert_status' => 1
+        ]);
+
+        $data_notif_hutang = HutangModel::join('supplier', 'supplier.id', '=', 'hutang.id_supplier')
+                                    ->select('hutang.*', 'supplier.nama AS nama_supplier')
+                                    ->get();
 
         $cur_date = Carbon::now();
         
@@ -49,7 +59,7 @@ class PiutangController extends Controller
                             'tb_anggota.kd_anggota AS kode_anggota', 'tb_anggota.limit_gaji AS limit_belanja')
                             ->get();
 
-        return view('toko.transaksi.piutang.index', compact('cur_date', 'data_notified', 'data_notif', 'nomor', 'piutang'));
+        return view('toko.transaksi.piutang.index', compact('cur_date', 'data_notified', 'data_notif', 'data_notif_hutang', 'nomor', 'piutang'));
     }
     
     public function show($id_piutang) {

@@ -16,6 +16,7 @@ class PesananOnlineModel extends Model
         'id_aggota',
         'daftar_barang',
         'jumlah_harga',
-        'proses'
+        'proses',
+        'pickup'
     ];
 }

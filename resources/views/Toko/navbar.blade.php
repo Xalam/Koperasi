@@ -12,8 +12,6 @@
                             @php
                             $now = explode('-', date('y-m-d'));
 
-                            $diffYears = $data->expired_tahun - $now[0];
-                            $diffMonths = $data->expired_bulan - $now[1];
                             $diffDays = date('t') + 1 - $now[2];
                             
                             if ($data->alert_status > 0) { $total_notif++; }
@@ -21,6 +19,26 @@
                             if ($diffDays <= 3) { $total_notif++; }
                             @endphp
                         @endforeach
+                        @if(isset($data_notif_hutang))
+                        @foreach ($data_notif_hutang as $data)
+                            @php
+                            $now = date('y-m-d');
+                            $jatuhTempo = $data->jatuh_tempo;
+                            $dateNow = date('Y-m-d', strtotime($now. ' + 3 days'));
+
+                            $diff = abs(strtotime($dateNow) - strtotime($jatuhTempo));
+
+                            $years = floor($diff / (365*60*60*24));
+                            $months = floor(($diff - $years * 365*60*60*24) / (30*60*60*24));
+                            $days = floor(($diff - $years * 365*60*60*24 - $months*30*60*60*24)/ (60*60*24));
+                            if (strtotime($dateNow) - strtotime($jatuhTempo) < 0) {
+                                $days *= -1;
+                            }
+
+                            if ($days >= 0) { $total_notif++; }
+                            @endphp
+                        @endforeach
+                        @endif
                         <i id="notification" class="fas fa-bell fa-lg position-relative" style="cursor: pointer;"
                             data-toggle="dropdown">
                             <span id="notification-count" class="notification-count">{{$total_notif}}</span>
@@ -74,7 +92,8 @@
                                 @if ($diffYears == 0 && $diffMonths == 0 && $diffDays < 0)
                                 <div class="alert dropdown-notification-item">
                                     <div class="alert-close close" data-dismiss="alert" aria-label="close">
-                                        <i class="fas fa-times" aria-hidden="true"></i>
+                                        <i id="<?php echo $data->id; ?>" class="fas fa-times" aria-hidden="true"
+                                            onclick="close_notification(<?php echo $data->id; ?>)"></i>
                                     </div>
                                     <p class="alert-message text-wrap"><b>Pemberitahuan Persediaan Barang</b> <br> Persediaan
                                         <b class="text-danger">{{$data->nama}}</b> telah <b class="text-danger">expired</b> pada tanggal <b class="text-danger">{{$data->expired}}</b>.</p>
@@ -83,7 +102,8 @@
                                 @elseif ($diffYears == 0 && $diffMonths == 0 && $diffDays == 0)
                                 <div class="alert dropdown-notification-item">
                                     <div class="alert-close close" data-dismiss="alert" aria-label="close">
-                                        <i class="fas fa-times" aria-hidden="true"></i>
+                                        <i id="<?php echo $data->id; ?>" class="fas fa-times" aria-hidden="true"
+                                            onclick="close_notification(<?php echo $data->id; ?>)"></i>
                                     </div>
                                     <p class="alert-message text-wrap"><b>Pemberitahuan Persediaan Barang</b> <br> Persediaan
                                         <b class="text-danger">{{$data->nama}}</b> akan <b class="text-danger">expired</b> hari ini.</p>
@@ -92,7 +112,8 @@
                                 @elseif ($diffYears == 0 && $diffMonths == 0 && $diffDays <= 3)
                                 <div class="alert dropdown-notification-item">
                                     <div class="alert-close close" data-dismiss="alert" aria-label="close">
-                                        <i class="fas fa-times" aria-hidden="true"></i>
+                                        <i id="<?php echo $data->id; ?>" class="fas fa-times" aria-hidden="true"
+                                            onclick="close_notification(<?php echo $data->id; ?>)"></i>
                                     </div>
                                     <p class="alert-message text-wrap"><b>Pemberitahuan Persediaan Barang</b> <br> Persediaan
                                         <b class="text-danger">{{$data->nama}}</b> akan <b class="text-danger">expired</b> dalam waktu {{$diffDays}} hari.</p>
@@ -100,6 +121,37 @@
                                 </div>
                                 @endif
                                 @endforeach
+                                @if (isset($data_notif_hutang))
+                                @foreach ($data_notif_hutang as $data)
+                                    @php
+                                    $now = date('y-m-d');
+                                    $jatuhTempo = $data->jatuh_tempo;
+                                    $dateNow = date('Y-m-d', strtotime($now. ' + 3 days'));
+
+                                    $diff = abs(strtotime($dateNow) - strtotime($jatuhTempo));
+
+                                    $years = floor($diff / (365*60*60*24));
+                                    $months = floor(($diff - $years * 365*60*60*24) / (30*60*60*24));
+                                    $days = floor(($diff - $years * 365*60*60*24 - $months*30*60*60*24)/ (60*60*24));
+                                    if (strtotime($dateNow) - strtotime($jatuhTempo) < 0) {
+                                        $days *= -1;
+                                    }
+                                    @endphp
+
+                                    @if ($data->alert_status > 0)
+                                    <div class="alert dropdown-notification-item">
+                                        <div class="alert-close close" data-dismiss="alert" aria-label="close">
+                                            <i id="<?php echo $data->id; ?>" class="fas fa-times" aria-hidden="true"
+                                                onclick="close_notification_utang(<?php echo $data->id; ?>)"></i>
+                                        </div>
+                                        <p class="alert-message text-wrap"><b>Pemberitahuan Jatuh Tempo Utang</b> <br> Utang pada
+                                            <b class="text-danger">{{$data->nama_supplier}}</b> dengan nomor beli 
+                                            <b class="text-danger">{{$data->nomor_beli}}</b> jatuh tempo pada tanggal 
+                                            <b class="text-danger">{{$data->jatuh_tempo}}</b>.</p>
+                                    </div>
+                                    @endif
+                                @endforeach
+                                @endif
                         </ul>
                     </li>
                 </ul>

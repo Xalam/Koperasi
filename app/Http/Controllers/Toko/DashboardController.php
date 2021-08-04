@@ -5,8 +5,8 @@ namespace App\Http\Controllers\Toko;
 use App\Http\Controllers\Controller;
 use App\Models\Toko\ChartModel;
 use App\Models\Toko\Master\Barang\BarangModel;
+use App\Models\Toko\Transaksi\Hutang\HutangModel;
 use App\Models\Toko\Transaksi\Jurnal\JurnalModel;
-use App\Models\Toko\Transaksi\Pembelian\PembelianBarangModel;
 use App\Models\Toko\Transaksi\Pembelian\PembelianModel;
 use App\Models\Toko\Transaksi\Penjualan\PenjualanBarangModel;
 use App\Models\Toko\Transaksi\Penjualan\PenjualanModel;
@@ -31,6 +31,14 @@ class DashboardController extends Controller
         }
 
         $data_notif = BarangModel::where('alert_status', 1)->get();
+
+        HutangModel::where(DB::raw('DATE_ADD(DATE(NOW()), INTERVAL 3 DAY)'), '>=', DB::raw('DATE(jatuh_tempo)'))->update([
+            'alert_status' => 1
+        ]);
+
+        $data_notif_hutang = HutangModel::join('supplier', 'supplier.id', '=', 'hutang.id_supplier')
+                                    ->select('hutang.*', 'supplier.nama AS nama_supplier')
+                                    ->get();
 
         $year = Carbon::now()->year;
         
@@ -146,6 +154,6 @@ class DashboardController extends Controller
         $chartLaba->colours = $coloursLaba;
         $chartLaba->borders = $bordersLaba;
 
-        return view ('toko.dashboard', compact('chartLaba', 'chartPenjualan', 'data_notif', 'data_notified', 'total_penjualan', 'total_pembelian', 'total_pendapatan', 'year'));
+        return view ('toko.dashboard', compact('chartLaba', 'chartPenjualan', 'data_notif_hutang', 'data_notif', 'data_notified', 'total_penjualan', 'total_pembelian', 'total_pendapatan', 'year'));
     }
 }

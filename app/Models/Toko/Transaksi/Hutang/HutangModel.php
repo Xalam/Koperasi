@@ -18,6 +18,7 @@ class HutangModel extends Model
         'jumlah_angsuran',
         'sisa_hutang',
         'status',
-        'jatuh_tempo'
+        'jatuh_tempo',
+        'alert_status'
     ];
 }

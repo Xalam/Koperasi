@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Toko\Laporan\Anggota;
 use App\Http\Controllers\Controller;
 use App\Models\Simpan_Pinjam\Master\Anggota\Anggota;
 use App\Models\Toko\Master\Barang\BarangModel;
+use App\Models\Toko\Transaksi\Hutang\HutangModel;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -28,6 +29,14 @@ class LaporanAnggotaController extends Controller
         }
 
         $data_notif = BarangModel::where('alert_status', 1)->get();
+
+        HutangModel::where(DB::raw('DATE_ADD(DATE(NOW()), INTERVAL 3 DAY)'), '>=', DB::raw('DATE(jatuh_tempo)'))->update([
+            'alert_status' => 1
+        ]);
+
+        $data_notif_hutang = HutangModel::join('supplier', 'supplier.id', '=', 'hutang.id_supplier')
+                                    ->select('hutang.*', 'supplier.nama AS nama_supplier')
+                                    ->get();
 
         $tanggal_awal = $request->input('tanggal_awal');
         $tanggal_akhir = $request->input('tanggal_akhir');
@@ -65,6 +74,14 @@ class LaporanAnggotaController extends Controller
 
         $data_notif = BarangModel::where('alert_status', 1)->get();
 
+        HutangModel::where(DB::raw('DATE_ADD(DATE(NOW()), INTERVAL 3 DAY)'), '>=', DB::raw('DATE(jatuh_tempo)'))->update([
+            'alert_status' => 1
+        ]);
+
+        $data_notif_hutang = HutangModel::join('supplier', 'supplier.id', '=', 'hutang.id_supplier')
+                                    ->select('hutang.*', 'supplier.nama AS nama_supplier')
+                                    ->get();
+
         if ($tanggal_awal && $tanggal_akhir) {
             $laporan_detail_anggota = Anggota::join('penjualan', 'penjualan.id_anggota', '=', 'tb_anggota.id')
                                             ->select('tb_anggota.kd_anggota AS kode_anggota', 'tb_anggota.nama_anggota AS nama_anggota', 
@@ -74,9 +91,9 @@ class LaporanAnggotaController extends Controller
                                             ->orderBy('tb_anggota.nama_anggota')
                                             ->get();
 
-            return view ('toko.laporan.anggota.detail', compact('cur_date', 'laporan_detail_anggota', 'data_notified', 'data_notif', 'id', 'tanggal_awal', 'tanggal_akhir'));
+            return view ('toko.laporan.anggota.detail', compact('cur_date', 'laporan_detail_anggota', 'data_notified', 'data_notif_hutang', 'data_notif', 'id', 'tanggal_awal', 'tanggal_akhir'));
         } else {
-            return view ('toko.laporan.anggota.detail', compact('cur_date', 'data_notified', 'data_notif'));
+            return view ('toko.laporan.anggota.detail', compact('cur_date', 'data_notified', 'data_notif', 'data_notif_hutang'));
         }
     }
 }

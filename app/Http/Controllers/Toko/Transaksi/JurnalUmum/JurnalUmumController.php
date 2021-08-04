@@ -6,11 +6,13 @@ use App\Http\Controllers\Controller;
 use App\Models\Toko\Master\Akun\AkunJenisModel;
 use App\Models\Toko\Master\Akun\AkunModel;
 use App\Models\Toko\Master\Barang\BarangModel;
+use App\Models\Toko\Transaksi\Hutang\HutangModel;
 use App\Models\Toko\Transaksi\Jurnal\JurnalModel;
 use App\Models\Toko\Transaksi\JurnalUmum\JurnalUmumDetailModel;
 use App\Models\Toko\Transaksi\JurnalUmum\JurnalUmumModel;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Session;
 
@@ -34,7 +36,15 @@ class JurnalUmumController extends Controller
             }
         }
 
-        return view('toko.transaksi.jurnal_umum.index', compact('jurnal_umum', 'data_notified', 'data_notif'));
+        HutangModel::where(DB::raw('DATE_ADD(DATE(NOW()), INTERVAL 3 DAY)'), '>=', DB::raw('DATE(jatuh_tempo)'))->update([
+            'alert_status' => 1
+        ]);
+
+        $data_notif_hutang = HutangModel::join('supplier', 'supplier.id', '=', 'hutang.id_supplier')
+                                    ->select('hutang.*', 'supplier.nama AS nama_supplier')
+                                    ->get();
+
+        return view('toko.transaksi.jurnal_umum.index', compact('jurnal_umum', 'data_notified', 'data_notif', 'data_notif_hutang'));
     }
 
     public function show($nomor) {
@@ -64,6 +74,14 @@ class JurnalUmumController extends Controller
 
         $data_notif = BarangModel::where('alert_status', 1)->get();
 
+        HutangModel::where(DB::raw('DATE_ADD(DATE(NOW()), INTERVAL 3 DAY)'), '>=', DB::raw('DATE(jatuh_tempo)'))->update([
+            'alert_status' => 1
+        ]);
+
+        $data_notif_hutang = HutangModel::join('supplier', 'supplier.id', '=', 'hutang.id_supplier')
+                                    ->select('hutang.*', 'supplier.nama AS nama_supplier')
+                                    ->get();
+
         $data_akun = AkunModel::orderBy('kode')->get();
 
         $kode_akun[''] = "-- Pilih Kode Akun --";
@@ -78,7 +96,7 @@ class JurnalUmumController extends Controller
             $nama_akun[$data->id] = $data->nama;
         }
 
-        return view('toko.transaksi.jurnal.create', compact('cur_date', 'data_notified', 'data_notif', 'kode_akun', 'nama_akun'));
+        return view('toko.transaksi.jurnal.create', compact('cur_date', 'data_notified', 'data_notif', 'data_notif_hutang', 'kode_akun', 'nama_akun'));
     }
 
     public function store(Request $request) {

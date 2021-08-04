@@ -7,6 +7,7 @@ use App\Models\Simpan_Pinjam\Laporan\JurnalUmum;
 use App\Models\Toko\Master\Akun\AkunModel;
 use App\Models\Toko\Master\Barang\BarangModel;
 use App\Models\Toko\Master\Anggota\AnggotaModel;
+use App\Models\Toko\Transaksi\Hutang\HutangModel;
 use App\Models\Toko\Transaksi\Jurnal\JurnalModel;
 use App\Models\Toko\Transaksi\PembayaranModel;
 use App\Models\Toko\Transaksi\Penjualan\PenjualanBarangModel;
@@ -34,6 +35,14 @@ class PenjualanController extends Controller
         }
 
         $data_notif = BarangModel::where('alert_status', 1)->get();
+
+        HutangModel::where(DB::raw('DATE_ADD(DATE(NOW()), INTERVAL 3 DAY)'), '>=', DB::raw('DATE(jatuh_tempo)'))->update([
+            'alert_status' => 1
+        ]);
+
+        $data_notif_hutang = HutangModel::join('supplier', 'supplier.id', '=', 'hutang.id_supplier')
+                                    ->select('hutang.*', 'supplier.nama AS nama_supplier')
+                                    ->get();
 
         $cur_date = Carbon::now();
 
@@ -78,7 +87,7 @@ class PenjualanController extends Controller
             $kode_anggota[$data->id] = $data->kd_anggota;
         }
 
-        return view('toko.transaksi.penjualan.index', compact('barang', 'cur_date', 'data_notified', 'data_notif', 'kode_barang', 'kode_anggota', 'pembayaran', 'anggota'));
+        return view('toko.transaksi.penjualan.index', compact('barang', 'cur_date', 'data_notified', 'data_notif', 'data_notif_hutang', 'kode_barang', 'kode_anggota', 'pembayaran', 'anggota'));
     }
 
     public function show($nomor) {
@@ -131,15 +140,15 @@ class PenjualanController extends Controller
                                         ->where('id_barang', $data_barang->id)->first();
 
         if ($barang) {
-            if (($barang->jumlah + $request->jumlah) >= $data_barang->minimal_grosir) {
-                PenjualanBarangModel::where('id_barang', $request->id_barang)->update([
-                    'jumlah' => $barang->jumlah + $request->jumlah, 
-                    'total_harga' => $data_barang->harga_grosir * ($barang->jumlah + $request->jumlah)
+            if (($barang->jumlah + 1) >= $data_barang->minimal_grosir) {
+                PenjualanBarangModel::where('id_barang', $data_barang->id)->update([
+                    'jumlah' => $barang->jumlah + 1, 
+                    'total_harga' => $data_barang->harga_grosir * ($barang->jumlah + 1)
                     ]);
             } else {
-                PenjualanBarangModel::where('id_barang', $request->id_barang)->update([
-                    'jumlah' => $barang->jumlah + $request->jumlah, 
-                    'total_harga' => $data_barang->harga_jual * ($barang->jumlah + $request->jumlah)
+                PenjualanBarangModel::where('id_barang', $data_barang->id)->update([
+                    'jumlah' => $barang->jumlah + 1, 
+                    'total_harga' => $data_barang->harga_jual * ($barang->jumlah + 1)
                     ]);
             }
         } else {
@@ -164,6 +173,7 @@ class PenjualanController extends Controller
         $pembayaran = [];
         $data_notified = [];
         $data_notif = [];
+        $data_notif_hutang = [];
 
         $nomor = $request->input('nomor');
         $tanggal = $request->input('tanggal');
@@ -422,7 +432,7 @@ class PenjualanController extends Controller
             Session::flash('failed', 'Daftar Penjualan Kosong');
         }
 
-        return view('toko.transaksi.penjualan.index', compact('barang', 'cur_date', 'data_notified', 'data_notif', 'kode_barang', 'kode_anggota', 'pembayaran', 'anggota'));
+        return view('toko.transaksi.penjualan.index', compact('barang', 'cur_date', 'data_notified', 'data_notif', 'data_notif_hutang', 'kode_barang', 'kode_anggota', 'pembayaran', 'anggota'));
     }
 
     public function delete($id) {

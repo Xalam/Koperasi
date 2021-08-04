@@ -15,6 +15,7 @@ use App\Models\Toko\Transaksi\Hutang\HutangModel;
 use App\Models\Toko\Transaksi\Jurnal\JurnalModel;
 use App\Models\Toko\Transaksi\Pembelian\PembelianModel;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
 
 class PembelianController extends Controller
@@ -34,6 +35,14 @@ class PembelianController extends Controller
         }
 
         $data_notif = BarangModel::where('alert_status', 1)->get();
+
+        HutangModel::where(DB::raw('DATE_ADD(DATE(NOW()), INTERVAL 3 DAY)'), '>=', DB::raw('DATE(jatuh_tempo)'))->update([
+            'alert_status' => 1
+        ]);
+
+        $data_notif_hutang = HutangModel::join('supplier', 'supplier.id', '=', 'hutang.id_supplier')
+                                    ->select('hutang.*', 'supplier.nama AS nama_supplier')
+                                    ->get();
 
         $cur_date = Carbon::now();
 
@@ -75,7 +84,7 @@ class PembelianController extends Controller
         foreach ($data_supplier as $data) {
             $kode_supplier[$data->id] = $data->kode;
         }
-        return view('toko.transaksi.pembelian.index', compact('barang', 'cur_date', 'data_notified', 'data_notif', 'kode_barang', 'kode_supplier', 'pembayaran', 'supplier'));
+        return view('toko.transaksi.pembelian.index', compact('barang', 'cur_date', 'data_notified', 'data_notif', 'data_notif_hutang', 'kode_barang', 'kode_supplier', 'pembayaran', 'supplier'));
     }
 
     public function show($nomor) {
@@ -124,6 +133,7 @@ class PembelianController extends Controller
         $supplier = [];
         $data_notified = [];
         $data_notif = [];
+        $data_notif_hutang = [];
 
         $nomor = $request->input('nomor');
 
@@ -274,7 +284,7 @@ class PembelianController extends Controller
             Session::flash('failed', 'Daftar Pembelian Kosong');
         }
 
-        return view('toko.transaksi.pembelian.index', compact('barang', 'cur_date', 'data_notified', 'data_notif', 'kode_barang', 'kode_supplier', 'pembayaran', 'supplier'));
+        return view('toko.transaksi.pembelian.index', compact('barang', 'cur_date', 'data_notified', 'data_notif', 'data_notif_hutang', 'kode_barang', 'kode_supplier', 'pembayaran', 'supplier'));
     }
 
     public function delete($id) {

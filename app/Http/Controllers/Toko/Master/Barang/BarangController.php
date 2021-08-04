@@ -7,8 +7,11 @@ use Illuminate\Http\Request;
 
 use App\Models\Toko\Master\Barang\BarangModel;
 use App\Models\Toko\Master\Supplier\SupplierModel;
+use App\Models\Toko\Transaksi\Hutang\HutangModel;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\File; 
 
 class BarangController extends Controller
 {
@@ -34,7 +37,15 @@ class BarangController extends Controller
 
         $data_notif = BarangModel::where('alert_status', 1)->get();
 
-        return view('toko.master.barang.index', compact('barang', 'data_notified', 'data_notif'));
+        HutangModel::where(DB::raw('DATE_ADD(DATE(NOW()), INTERVAL 3 DAY)'), '>=', DB::raw('DATE(jatuh_tempo)'))->update([
+            'alert_status' => 1
+        ]);
+
+        $data_notif_hutang = HutangModel::join('supplier', 'supplier.id', '=', 'hutang.id_supplier')
+                                    ->select('hutang.*', 'supplier.nama AS nama_supplier')
+                                    ->get();
+
+        return view('toko.master.barang.index', compact('barang', 'data_notified', 'data_notif', 'data_notif_hutang'));
     }
     
     public function create() {
@@ -52,6 +63,14 @@ class BarangController extends Controller
                 ]);
             }
         }
+
+        HutangModel::where(DB::raw('DATE_ADD(DATE(NOW()), INTERVAL 3 DAY)'), '>=', DB::raw('DATE(jatuh_tempo)'))->update([
+            'alert_status' => 1
+        ]);
+
+        $data_notif_hutang = HutangModel::join('supplier', 'supplier.id', '=', 'hutang.id_supplier')
+                                    ->select('hutang.*', 'supplier.nama AS nama_supplier')
+                                    ->get();
 
         for ($i = 0; $i < 10; $i++) {
             $tahun[substr(Carbon::now()->year + $i, 2, 2)] = Carbon::now()->year + $i;
@@ -72,7 +91,7 @@ class BarangController extends Controller
             }
         }
         
-        return view('toko.master.barang.create', compact('data_notified', 'data_notif', 'rak', 'supplier', 'tahun'));
+        return view('toko.master.barang.create', compact('data_notified', 'data_notif', 'data_notif_hutang', 'rak', 'supplier', 'tahun'));
     }
 
     public function store(Request $request) {
@@ -120,7 +139,7 @@ class BarangController extends Controller
             ]);
     
             if ($request->file('foto')->isValid()) {
-                $request->file('foto')->move(public_path('../../public_html/storage/toko/barang/foto/'), $request->input('nama') .'.' . $request->file('foto')->getClientOriginalExtension());
+                $request->file('foto')->move(public_path('storage/toko/barang/foto/'), $request->input('nama') .'.' . $request->file('foto')->getClientOriginalExtension());
             }
             
             Session::flash('success', 'Berhasil');
@@ -138,6 +157,10 @@ class BarangController extends Controller
     }
 
     public function delete(Request $request) {
+        $oldBarang = BarangModel::where('id', $request->id)->first();
+        
+        File::delete(public_path('storage/toko/barang/foto/' . $oldBarang->foto));
+        
         BarangModel::where('id', $request->id)->delete();
 
         $barang = BarangModel::where('id', $request->id)->first();
@@ -145,13 +168,38 @@ class BarangController extends Controller
         return response()->json(['code' => 200, 'barang' => $barang]);
     }
 
+    public function barcode($kode) {
+        $data_notif = BarangModel::where('alert_status', 1)->get();
+
+        $data_notified = BarangModel::all();
+        foreach ($data_notified AS $data) {
+            if ($data->stok_etalase <= $data->stok_minimal || $data->stok_gudang <= $data->stok_minimal) {
+                BarangModel::where('id', $data->id)->update([
+                    'alert_status' => 1
+                ]);
+            } else {
+                BarangModel::where('id', $data->id)->update([
+                    'alert_status' => 0
+                ]);
+            }
+        }
+
+        HutangModel::where(DB::raw('DATE_ADD(DATE(NOW()), INTERVAL 3 DAY)'), '>=', DB::raw('DATE(jatuh_tempo)'))->update([
+            'alert_status' => 1
+        ]);
+
+        $data_notif_hutang = HutangModel::join('supplier', 'supplier.id', '=', 'hutang.id_supplier')
+                                    ->select('hutang.*', 'supplier.nama AS nama_supplier')
+                                    ->get();
+        
+        $kode = $kode;
+
+        return view('toko.master.barang.barcode', compact('kode', 'data_notif', 'data_notified'));
+    }
+
     public function removeNotification($id) {
         BarangModel::where('id', $id)->update([
             'alert_status' => 0
         ]);
-
-        $data_barang = BarangModel::where('alert_status', 1)->get();
-
-        return response()->json(['code' => 200, 'data_barang' => $data_barang]);
     }
 }

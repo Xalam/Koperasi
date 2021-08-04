@@ -8,8 +8,10 @@ use App\Models\Toko\Master\Admin\AdminModel;
 use App\Models\Toko\Master\Anggota\AnggotaModel;
 use App\Models\Toko\Master\Barang\BarangModel;
 use App\Models\Toko\Master\Supplier\SupplierModel;
+use App\Models\Toko\Transaksi\Hutang\HutangModel;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Facades\Excel;
 
 class LaporanMasterController extends Controller
@@ -32,6 +34,14 @@ class LaporanMasterController extends Controller
 
         $data_notif = BarangModel::where('alert_status', 1)->get();
 
+        HutangModel::where(DB::raw('DATE_ADD(DATE(NOW()), INTERVAL 3 DAY)'), '>=', DB::raw('DATE(jatuh_tempo)'))->update([
+            'alert_status' => 1
+        ]);
+
+        $data_notif_hutang = HutangModel::join('supplier', 'supplier.id', '=', 'hutang.id_supplier')
+                                    ->select('hutang.*', 'supplier.nama AS nama_supplier')
+                                    ->get();
+
         $bagian = $request->input('bagian');
 
         if ($bagian) {
@@ -45,9 +55,9 @@ class LaporanMasterController extends Controller
                 $laporan_master = SupplierModel::all();
             }
 
-            return view ('toko.laporan.master.index', compact('bagian', 'cur_date', 'data_notified', 'data_notif', 'laporan_master'));
+            return view ('toko.laporan.master.index', compact('bagian', 'cur_date', 'data_notified', 'data_notif', 'data_notif_hutang', 'laporan_master'));
         } else {
-            return view ('toko.laporan.master.index', compact('cur_date', 'data_notified', 'data_notif'));
+            return view ('toko.laporan.master.index', compact('cur_date', 'data_notified', 'data_notif', 'data_notif_hutang'));
         }
     }
 

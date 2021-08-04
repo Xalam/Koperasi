@@ -114,7 +114,7 @@ Route::group(['prefix' => 'toko'], function () {
                 Route::post('/delete/{nomor}', [PembelianController::class, 'delete']);
             });
 
-            Route::group(['prefix' => 'penjualan', 'middleware' => ['auth:toko', 'checkjabatan:Kanit,Super_Admin']], function () {
+            Route::group(['prefix' => 'penjualan', 'middleware' => ['auth:toko', 'checkjabatan:Super_Admin,Kasir']], function () {
                 Route::get('/', [PenjualanController::class, 'index']);
                 Route::post('/scan', [PenjualanController::class, 'scan']);
                 Route::post('/store', [PenjualanController::class, 'store']);
@@ -135,15 +135,16 @@ Route::group(['prefix' => 'toko'], function () {
                 Route::post('/delete/{nomor}', [ReturPembelianController::class, 'delete']);
             });
 
-            Route::group(['prefix' => 'hutang', 'middleware' => ['auth:toko', 'checkjabatan:Super_Admin,Kanit']], function () {
+            Route::group(['prefix' => 'hutang', 'middleware' => ['auth:toko', 'checkjabatan:Super_Admin,Gudang']], function () {
                 Route::get('/', [HutangController::class, 'index']);
                 Route::post('/store', [HutangController::class, 'store']);
                 Route::post('/cancel', [HutangController::class, 'cancel']);
                 Route::get('/{nomor_beli}', [HutangController::class, 'show']);
                 Route::post('/delete/{nomor}', [HutangController::class, 'delete']);
+                Route::post('/remove-notification/{id}', [HutangController::class, 'removeNotification']);
             });
 
-            Route::group(['prefix' => 'konsinyasi', 'middleware' => ['auth:toko', 'checkjabatan:Super_Admin,Kanit']], function () {
+            Route::group(['prefix' => 'konsinyasi', 'middleware' => ['auth:toko', 'checkjabatan:Super_Admin']], function () {
                 Route::get('/', [KonsinyasiController::class, 'index']);
                 Route::post('/store', [KonsinyasiController::class, 'store']);
                 Route::post('/cancel', [KonsinyasiController::class, 'cancel']);
@@ -151,7 +152,7 @@ Route::group(['prefix' => 'toko'], function () {
                 Route::post('/delete/{nomor}', [KonsinyasiController::class, 'delete']);
             });
 
-            Route::group(['prefix' => 'piutang', 'middleware' => ['auth:toko', 'checkjabatan:Super_Admin,Kanit']], function () {
+            Route::group(['prefix' => 'piutang', 'middleware' => ['auth:toko', 'checkjabatan:Super_Admin,Kasir']], function () {
                 Route::get('/', [PiutangController::class, 'index']);
                 Route::post('/store', [PiutangController::class, 'store']);
                 Route::post('/cancel', [PiutangController::class, 'cancel']);
@@ -169,7 +170,7 @@ Route::group(['prefix' => 'toko'], function () {
                 Route::post('/delete/{nomor}', [TitipJualController::class, 'delete']);
             });
 
-            Route::group(['prefix' => 'jurnal', 'middleware' => ['auth:toko', 'checkjabatan:Gudang,Super_Admin,Kanit']], function () {
+            Route::group(['prefix' => 'jurnal', 'middleware' => ['auth:toko', 'checkjabatan:Gudang,Super_Admin']], function () {
                 Route::get('/', [JurnalController::class, 'index']);
             });
 
@@ -183,14 +184,16 @@ Route::group(['prefix' => 'toko'], function () {
                 Route::post('/delete/{id}', [JurnalUmumController::class, 'delete']);
             });
 
-            Route::group(['prefix' => 'pesanan-online', 'middleware' => ['auth:toko', 'checkjabatan:Super_Admin,Kanit']], function () {
+            Route::group(['prefix' => 'pesanan-online', 'middleware' => ['auth:toko', 'checkjabatan:Super_Admin,Kasir']], function () {
                 Route::get('/', [PesananOnlineController::class, 'index']);
                 Route::post('/delete', [PesananOnlineController::class, 'delete']);
+                Route::post('/pickup', [PesananOnlineController::class, 'pickup']);
+                Route::post('/batal-pickup', [PesananOnlineController::class, 'batalPickup']);
                 Route::get('/nota/{nomor}', [PesananOnlineController::class, 'nota']);
                 Route::post('/proses/{id}/{proses}', [PesananOnlineController::class, 'proses']);
             });
 
-            Route::group(['prefix' => 'persediaan', 'middleware' => ['auth:toko', 'checkjabatan:Super_Admin,Kanit']], function () {
+            Route::group(['prefix' => 'persediaan', 'middleware' => ['auth:toko', 'checkjabatan:Super_Admin,Gudang']], function () {
                 Route::get('/', [PersediaanController::class, 'index']);
             });
         });
@@ -263,12 +266,13 @@ Route::group(['prefix' => 'toko'], function () {
 
         //Master
         Route::group(['prefix' => 'master'], function () {
-            Route::group(['prefix' => 'barang', 'middleware' => ['auth:toko', 'checkjabatan:Super_Admin,Kanit']], function () {
+            Route::group(['prefix' => 'barang', 'middleware' => ['auth:toko', 'checkjabatan:Super_Admin,Kanit,Gudang,Kasir']], function () {
                 Route::get('/', [BarangController::class, 'index']);
                 Route::get('/create', [BarangController::class, 'create']);
                 Route::post('/store', [BarangController::class, 'store']);
                 Route::post('/update', [BarangController::class, 'update']);
                 Route::post('/delete', [BarangController::class, 'delete']);
+                Route::get('/barcode/{kode}', [BarangController::class, 'barcode']);
                 Route::post('/remove-notification/{id}', [BarangController::class, 'removeNotification']);
             });
 
@@ -288,7 +292,7 @@ Route::group(['prefix' => 'toko'], function () {
                 Route::post('/delete', [AkunController::class, 'delete']);
             });
 
-            Route::group(['prefix' => 'anggota', 'middleware' => ['auth:toko', 'checkjabatan:Kanit,Super_Admin,Kanit']], function () {
+            Route::group(['prefix' => 'anggota', 'middleware' => ['auth:toko', 'checkjabatan:Kanit,Super_Admin,Kasir']], function () {
                 Route::get('/', [AnggotaController::class, 'index']);
                 Route::get('/create', [AnggotaController::class, 'create']);
                 Route::post('/store', [AnggotaController::class, 'store']);

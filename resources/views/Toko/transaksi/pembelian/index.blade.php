@@ -365,6 +365,37 @@ function close_popup_hapus() {
 $(document).ready(function() {
     $('#table-pembayaran').DataTable();
 
+    onScan.attachTo(document, {
+        onScan: function(key) {
+            $('[name="kode_barang"] option:selected').removeAttr(
+                'selected');
+            $('[name="kode_barang"] option:contains(' + key + ')').attr(
+                'selected', 'selected');
+            $('[name="nama_barang"]').val($(
+                    '[name="kode_barang"] option:contains(' + key + ')')
+                .val());
+
+            const id_barang = $('[name="kode_barang"]').val();
+            if (id_barang != '') {
+                $('[name="nama_barang"]').val(id_barang);
+                $.get(`${base_url}api/data-barang/${id_barang}`, function(data, status) {
+                    data.forEach(x => {
+                        $('[name="stok"]').val(x.stok_etalase);
+                        $('[name="jumlah"]').val(1);
+                        $('[name="total_harga"]').val($('[name="harga_satuan"]')
+                            .val() * $('[name="jumlah"]').val());
+                        $('[name="jumlah"]').removeAttr('readonly');
+                    });
+                });
+            } else {
+                $('[name="nama_barang"]').val("");
+                $('[name="stok"]').val(0);
+                $('[name="jumlah"]').val(0);
+                $('[name="jumlah"]').attr('readonly', true);
+            }
+        }
+    });
+
     $('[name="pembayaran"]').change(function() {
         if ($(this).val() == 1) {
             $('[for="dibayar"]').addClass('d-none');

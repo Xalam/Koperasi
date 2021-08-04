@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Toko\Transaksi\Persediaan;
 
 use App\Http\Controllers\Controller;
 use App\Models\Toko\Master\Barang\BarangModel;
+use App\Models\Toko\Transaksi\Hutang\HutangModel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -36,6 +37,14 @@ class PersediaanController extends Controller
 
         $data_notif = BarangModel::where('alert_status', 1)->get();
 
-        return view('toko.transaksi.persediaan.index', compact('data_notified', 'data_notif', 'per_barang', 'per_supplier'));
+        HutangModel::where(DB::raw('DATE_ADD(DATE(NOW()), INTERVAL 3 DAY)'), '>=', DB::raw('DATE(jatuh_tempo)'))->update([
+            'alert_status' => 1
+        ]);
+
+        $data_notif_hutang = HutangModel::join('supplier', 'supplier.id', '=', 'hutang.id_supplier')
+                                    ->select('hutang.*', 'supplier.nama AS nama_supplier')
+                                    ->get();
+
+        return view('toko.transaksi.persediaan.index', compact('data_notified', 'data_notif', 'data_notif_hutang', 'per_barang', 'per_supplier'));
     }
 }

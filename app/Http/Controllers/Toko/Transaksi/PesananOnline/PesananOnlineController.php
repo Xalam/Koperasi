@@ -31,18 +31,51 @@ class PesananOnlineController extends Controller
         }
 
         $data_notif = BarangModel::where('alert_status', 1)->get();
+
+        HutangModel::where(DB::raw('DATE_ADD(DATE(NOW()), INTERVAL 3 DAY)'), '>=', DB::raw('DATE(jatuh_tempo)'))->update([
+            'alert_status' => 1
+        ]);
+
+        $data_notif_hutang = HutangModel::join('supplier', 'supplier.id', '=', 'hutang.id_supplier')
+                                    ->select('hutang.*', 'supplier.nama AS nama_supplier')
+                                    ->get();
         
         $pesanan_online = PesananOnlineModel::join('tb_anggota', 'tb_anggota.id', '=', 'pesanan_online.id_anggota')
                                                 ->select('pesanan_online.*', 'tb_anggota.kd_anggota AS kode_anggota',
                                                             'tb_anggota.nama_anggota AS nama_anggota')
+                                                ->where('pesanan_online.pickup', 0)
+                                                ->orderBy('pesanan_online.id', 'desc')
+                                                ->get();
+        
+        $pickup_pesanan = PesananOnlineModel::join('tb_anggota', 'tb_anggota.id', '=', 'pesanan_online.id_anggota')
+                                                ->select('pesanan_online.*', 'tb_anggota.kd_anggota AS kode_anggota',
+                                                            'tb_anggota.nama_anggota AS nama_anggota')
+                                                ->where('pesanan_online.pickup', 1)
+                                                ->orderBy('pesanan_online.id', 'desc')
                                                 ->get();
 
-        return view('toko.transaksi.pesanan_online.index', compact('data_notified', 'data_notif', 'pesanan_online'));
+        return view('toko.transaksi.pesanan_online.index', compact('data_notified', 'data_notif', 'data_notif_hutang', 'pesanan_online', 'pickup_pesanan'));
     }
 
     public function proses($id, $proses) {
         PesananOnlineModel::where('id', $id)->update([
             'proses' => $proses
+        ]);
+
+        return response()->json(['code' => 200]);
+    }
+
+    public function pickup(Request $request) {
+        PesananOnlineModel::where('id', $request->id)->update([
+            'pickup' => 1
+        ]);
+
+        return response()->json(['code' => 200]);
+    }
+
+    public function batalPickup(Request $request) {
+        PesananOnlineModel::where('id', $request->id)->update([
+            'pickup' => 0
         ]);
 
         return response()->json(['code' => 200]);
@@ -56,9 +89,11 @@ class PesananOnlineController extends Controller
         foreach ($data_barang as $data) {
             $barang = BarangModel::where('id', $data->id_barang)->first();
 
-            BarangModel::where('id', $data->id_barang)->update([
-                'stok_etalase' => $barang->stok_etalase + $data->jumlah
-            ]);
+            if ($barang) {
+                BarangModel::where('id', $data->id_barang)->update([
+                    'stok_etalase' => $barang->stok_etalase + $data->jumlah
+                ]);
+            }
         }
 
         $kodePiutang = 1122;
@@ -97,13 +132,14 @@ class PesananOnlineController extends Controller
     public function nota($nomor) {
         $pembeli = PenjualanModel::leftJoin('tb_anggota', 'tb_anggota.id', '=', 'penjualan.id_anggota')
                                     ->select(DB::raw('IFNULL(tb_anggota.nama_anggota, "Masyarakat Umum") AS nama_anggota'), 'penjualan.*')
-                                    ->orderBy('id', 'desc')
+                                    ->orderBy('penjualan.id', 'desc')
                                     ->where('nomor', $nomor)
                                     ->get();
 
         $pesanan_online = PenjualanBarangModel::join('barang', 'barang.id', '=', 'detail_jual.id_barang')
                                             ->select('barang.nama AS nama_barang', 'barang.harga_jual AS harga_jual',
                                                     'detail_jual.jumlah AS jumlah', 'detail_jual.total_harga AS total_harga')
+                                            ->orderBy('detail_jual.id', 'desc')
                                             ->where('nomor', $nomor)->get();
 
         return view('toko.transaksi.pesanan_online.nota', compact('pembeli', 'pesanan_online'));

@@ -12,6 +12,7 @@ use App\Models\Toko\Transaksi\Hutang\HutangModel;
 use App\Models\Toko\Transaksi\Jurnal\JurnalModel;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
 
 class HutangController extends Controller
@@ -31,6 +32,14 @@ class HutangController extends Controller
                 ]);
             }
         }
+
+        HutangModel::where(DB::raw('DATE_ADD(DATE(NOW()), INTERVAL 3 DAY)'), '>=', DB::raw('DATE(jatuh_tempo)'))->update([
+            'alert_status' => 1
+        ]);
+
+        $data_notif_hutang = HutangModel::join('supplier', 'supplier.id', '=', 'hutang.id_supplier')
+                                    ->select('hutang.*', 'supplier.nama AS nama_supplier')
+                                    ->get();
 
         $data_notif = BarangModel::where('alert_status', 1)->get();
 
@@ -68,7 +77,7 @@ class HutangController extends Controller
                             'supplier.kode AS kode_supplier', 'supplier.nama AS nama_supplier')
                             ->get();
 
-        return view('toko.transaksi.hutang.index', compact('cur_date', 'data_notified', 'data_notif', 'hutang', 'kode_supplier', 'pembayaran', 'supplier'));
+        return view('toko.transaksi.hutang.index', compact('cur_date', 'data_notified', 'data_notif', 'data_notif_hutang', 'data_hutang', 'hutang', 'kode_supplier', 'pembayaran', 'supplier'));
     }
     
     public function show($nomor_beli) {
@@ -195,7 +204,9 @@ class HutangController extends Controller
         return response()->json(['code'=>200]);
     }
 
-    public function notification() {
-        $data_hutang = HutangModel::join();
+    public function removeNotification($id) {
+        HutangModel::where('id', $id)->update([
+            'alert_status' => 0
+        ]);
     }
 }
