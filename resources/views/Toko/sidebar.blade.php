@@ -4,7 +4,7 @@
 <nav id="sidebar" class="sidebar-wrapper">
     <div class="sidebar-content">
         <div class="sidebar-brand">
-            <a class="font-3 text-center"><img src="{{ asset('assets/dist/img/logo-koperasi.png') }}" alt=""
+            <a class="font-3 text-center mt-2 mb-4"><img src="{{ asset('assets/dist/img/logo-koperasi.png') }}" alt=""
                     width="72px"></a>
             <div id="close-sidebar">
                 <i class="fas fa-times" aria-hidden="true"></i>

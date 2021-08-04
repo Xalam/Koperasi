@@ -194,4 +194,8 @@ class HutangController extends Controller
     public function cancel(Request $request) {
         return response()->json(['code'=>200]);
     }
+
+    public function notification() {
+        $data_hutang = HutangModel::join();
+    }
 }

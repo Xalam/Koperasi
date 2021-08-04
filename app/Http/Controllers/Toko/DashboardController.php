@@ -78,7 +78,7 @@ class DashboardController extends Controller
                                                 ->get();
 
         foreach ($listPenjualan as $data) {
-            $penjualan[$data->tanggal] = $data->jumlah;
+            $penjualan[$data->tanggal-1] = $data->jumlah;
         }
 
         for ($i = 0; $i < count($list_bulan); $i++) {
@@ -117,11 +117,11 @@ class DashboardController extends Controller
                                     ->get();
 
         foreach ($listPemasukanBulan as $data) {
-            $dataPemasukan[$data->tanggal] = $data->jumlah;
+            $dataPemasukan[$data->tanggal-1] = $data->jumlah;
         }
 
         foreach ($listPengeluaranBulan as $data) {
-            $dataPengeluaran[$data->tanggal] = $data->jumlah;
+            $dataPengeluaran[$data->tanggal-1] = $data->jumlah;
         }
 
         for ($i = 0; $i < count($list_bulan); $i++) {
