@@ -4,6 +4,11 @@ $('[name="kode_anggota"]').change(function () {
         $('[name="nama_anggota"]').val(id_anggota);
         $.get(`${base_url}api/data-anggota/${id_anggota}`, function (data, status) {
             data.forEach(x => {
+                if (x.status_pinjaman == 1) {
+                    $('[name="limit_toko"]').val(x.limit_gaji - x.sisa_piutang);
+                } else {
+                    $('[name="limit_toko"]').val(x.limit_gaji - x.angsuran - x.sisa_piutang);
+                }
                 $('[name="alamat"]').val(x.alamat);
                 $('[name="telepon"]').val(x.no_hp);
                 $('[name="wa"]').val(x.no_wa);
@@ -23,6 +28,11 @@ $('[name="nama_anggota"]').change(function () {
         $('[name="kode_anggota"]').val(id_anggota);
         $.get(`${base_url}api/data-anggota/${id_anggota}`, function (data, status) {
             data.forEach(x => {
+                if (x.status_pinjaman == 1) {
+                    $('[name="limit_toko"]').val(x.limit_gaji - x.sisa_piutang);
+                } else {
+                    $('[name="limit_toko"]').val(x.limit_gaji - x.angsuran - x.sisa_piutang);
+                }
                 $('[name="alamat"]').val(x.alamat);
                 $('[name="telepon"]').val(x.no_hp);
                 $('[name="wa"]').val(x.no_wa);

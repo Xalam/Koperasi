@@ -34,12 +34,14 @@
                     @foreach ($laporan_detail_anggota AS $data)
                     @php
                     $totalBelanja += $data->jumlah_harga;
-                    $transaksi = 'Penjualan ' . ($data->type_penjualan == 1) ? 'Offline' : 'Online' . ($data->pembayaran == 1) ? 'Kredit' : 'Tunai';
+                    $transaksi = 'Penjualan';
+                    $typePenjualan = ($data->type_penjualan == 1) ? 'Offline' : 'Online';
+                    $typePembayaran = ($data->pembayaran == 1) ? 'Kredit' : 'Tunai';
                     @endphp
                     <tr>
                         <th class="align-middle text-center">{{$i++}}</th>
                         <td class="align-middle text-center">{{$data->tanggal}}</td>
-                        <td class="align-middle text-center">{{$transaksi}}</td>
+                        <td class="align-middle text-center">{{$transaksi . ' ' . $typePenjualan . ' ' . $typePembayaran}}</td>
                         <td class="align-middle text-center">{{$data->jumlah_harga}}</td>
                         <td class="align-middle text-center">{{$totalBelanja}}</td>
                     </tr>

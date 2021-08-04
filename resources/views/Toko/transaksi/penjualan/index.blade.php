@@ -74,6 +74,8 @@
                 'col-lg-12 form-select form-select-sm']) !!}
             </div>
             <div class="col-lg-6">
+                {!! Form::label('limit_toko', 'Sisa Limit Toko', ['class' => 'col-lg-12']) !!}
+                {!! Form::number('limit_toko', 0, ['class' => 'col-lg-12 form-control form-control-sm', 'readonly']) !!}
                 {!! Form::label('dibayar', 'Dibayar', ['class' => 'col-lg-12 d-none']) !!}
                 {!! Form::number('jumlah_bayar', 0, ['class' => 'col-lg-12 form-control form-control-sm d-none']) !!}
             </div>
@@ -221,7 +223,8 @@ function tambah_daftar() {
             if (response.code == 200) {
                 tampil_daftar();
                 $('[name="jumlah"]').val(1);
-                $('[name="total_harga"]').val(parseInt($('[name="harga_satuan"]').val()) * parseInt($('[name="jumlah"]').val()));
+                $('[name="total_harga"]').val(parseInt($('[name="harga_satuan"]').val()) * parseInt($(
+                    '[name="jumlah"]').val()));
             }
         }
     });
@@ -252,7 +255,8 @@ function tampil_daftar() {
             if (response.code == 200) {
                 $('#table-data-penjualan').empty();
                 $.each(response.barang_penjualan, function(index, value) {
-                    var harga = (value.jumlah_barang >= value.minimal_grosir) ? value.harga_grosir : value.harga_jual;
+                    var harga = (value.jumlah_barang >= value.minimal_grosir) ? value.harga_grosir :
+                        value.harga_jual;
                     $('#table-data-penjualan').append('<tr>' +
                         '<th class="align-middle text-center">' + i++ + '</th>' +
                         '<td class="align-middle text-center">' + value.kode_barang + '</td>' +
@@ -260,7 +264,8 @@ function tampil_daftar() {
                         '<td class="align-middle text-center">' + harga + '</td>' +
                         '<td class="align-middle text-center">' + value.jumlah_barang +
                         '</td>' +
-                        '<td class="align-middle text-center">' + harga * value.jumlah_barang + '</td>' +
+                        '<td class="align-middle text-center">' + harga * value.jumlah_barang +
+                        '</td>' +
                         '<td class="align-middle text-center"><a id="hapus-' + value
                         .id + '" class="btn btn-sm btn-danger" onclick="show_popup_hapus(' +
                         value
@@ -335,6 +340,29 @@ function batal_transaksi() {
 function kalkulasi_pembayaran() {
     $('#jumlah-kembalian').html("Rp. " + ($('[name="jumlah_bayar"]').val() - jumlah_harga) + ",-");
     $('[name="jumlah_kembalian"]').val($('[name="jumlah_bayar"]').val() - jumlah_harga);
+
+    activeBeli();
+}
+
+function activeBeli() {
+    if (parseInt($('[name="jumlah_harga"]').val()) > 0) {
+        if (parseInt($('[name="pembayaran"]').val()) == 1) {
+            if (parseInt($('[name="jumlah_harga"]').val()) <= parseInt($('[name="limit_toko"]').val())) {
+                $('[type="submit"]').removeAttr('disabled');
+            } else {
+                $('[type="submit"]').attr('disabled', true);
+            }
+        } else {
+            if (parseInt($('[name="jumlah_bayar"]').val()) >= parseInt($('[name="jumlah_harga"]').val()) && parseInt($(
+                    '[name="jumlah_bayar"]').val()) > 0) {
+                $('[type="submit"]').removeAttr('disabled');
+            } else {
+                $('[type="submit"]').attr('disabled', true);
+            }
+        }
+    } else {
+        $('[type="submit"]').attr('disabled', true);
+    }
 }
 
 function show_popup_hapus(id) {
@@ -377,7 +405,7 @@ $(document).ready(function() {
                 success: function(response) {
                     if (response.code == 200) {
                         $('[name="kode_barang"] option:selected').removeAttr(
-                        'selected');
+                            'selected');
                         $('[name="kode_barang"] option:contains(' + key + ')').attr(
                             'selected', 'selected');
                         $('[name="nama_barang"]').val($(
@@ -415,6 +443,9 @@ $(document).ready(function() {
     $('[name="pembayaran"]').change(function() {
         if ($(this).val() == 1) {
             $('[for="dibayar"]').addClass('d-none');
+            $('[for="limit_toko"]').removeClass('d-none');
+            $('[name="limit_toko"]').attr('required', true);
+            $('[name="limit_toko"]').removeClass('d-none');
             $('[name="jumlah_bayar"]').addClass('d-none');
             $('[name="jumlah_bayar"]').removeAttr('required');
             $('#jumlah-kembalian').addClass('d-none');
@@ -422,12 +453,17 @@ $(document).ready(function() {
             $('#jumlah-harga').addClass('col-lg-12');
         } else {
             $('[for="dibayar"]').removeClass('d-none');
+            $('[for="limit_toko"]').addClass('d-none');
+            $('[name="limit_toko"]').addClass('d-none');
+            $('[name="limit_toko"]').removeAttr('required');
             $('[name="jumlah_bayar"]').removeClass('d-none');
             $('[name="jumlah_bayar"]').attr('required', true);
             $('#jumlah-kembalian').removeClass('d-none');
             $('#jumlah-harga').removeClass('col-lg-12');
             $('#jumlah-harga').addClass('col-lg-6');
         }
+
+        activeBeli();
     });
 
     $('[name="jumlah"]').change(function() {
@@ -487,23 +523,39 @@ $(document).ready(function() {
     });
 
     $('#tambah').click(function() {
-        var allFilled = false;
-        var skip = false;
+        if (parseInt($('[name="jumlah_harga"]').val()) > parseInt($('[name="limit_toko"]').val())) {
+            const Toast = Swal.mixin({
+                toast: true,
+                position: 'middle',
+                showConfirmButton: false,
+                timer: 2000,
+                timerProgressBar: true
+            });
 
-        document.getElementById('form').querySelectorAll('[required]').forEach(function(
-            i) {
-            if (!skip) {
-                if (!i.value) {
-                    i.focus();
-                    allFilled = false;
-                    skip = true;
+            Toast.fire({
+                icon: 'warning',
+                title: 'Pembayaran Kredit',
+                text: 'Sisa limit toko tidak mencukupi.'
+            });
+        } else {
+            var allFilled = false;
+            var skip = false;
+
+            document.getElementById('form').querySelectorAll('[required]').forEach(function(
+                i) {
+                if (!skip) {
+                    if (!i.value) {
+                        i.focus();
+                        allFilled = false;
+                        skip = true;
+                    } else {
+                        allFilled = true;
+                    }
                 } else {
-                    allFilled = true;
+                    return;
                 }
-            } else {
-                return;
-            }
-        });
+            });
+        }
 
         if (allFilled) {
             tambah_daftar();
