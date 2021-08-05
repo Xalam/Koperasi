@@ -7,6 +7,8 @@ use App\Models\Toko\Master\Barang\BarangModel;
 use Illuminate\Http\Request;
 
 use App\Models\Toko\Master\Supplier\SupplierModel;
+use App\Models\Toko\Transaksi\Hutang\HutangModel;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
 
 class SupplierController extends Controller
@@ -29,7 +31,15 @@ class SupplierController extends Controller
 
         $data_notif = BarangModel::where('alert_status', 1)->get();
 
-        return view('toko.master.supplier.index', compact('data_notified', 'data_notif', 'supplier'));
+        HutangModel::where(DB::raw('DATE_ADD(DATE(NOW()), INTERVAL 3 DAY)'), '>=', DB::raw('DATE(jatuh_tempo)'))->update([
+            'alert_status' => 1
+        ]);
+
+        $data_notif_hutang = HutangModel::join('supplier', 'supplier.id', '=', 'hutang.id_supplier')
+                                    ->select('hutang.*', 'supplier.nama AS nama_supplier')
+                                    ->get();
+
+        return view('toko.master.supplier.index', compact('data_notified', 'data_notif', 'data_notif_hutang', 'supplier'));
     }
     
     public function create() {
@@ -48,6 +58,14 @@ class SupplierController extends Controller
             }
         }
 
+        HutangModel::where(DB::raw('DATE_ADD(DATE(NOW()), INTERVAL 3 DAY)'), '>=', DB::raw('DATE(jatuh_tempo)'))->update([
+            'alert_status' => 1
+        ]);
+
+        $data_notif_hutang = HutangModel::join('supplier', 'supplier.id', '=', 'hutang.id_supplier')
+                                    ->select('hutang.*', 'supplier.nama AS nama_supplier')
+                                    ->get();
+
         $last_nomor = SupplierModel::all();
 
         // if (count($last_nomor) > 0) {
@@ -56,7 +74,7 @@ class SupplierController extends Controller
         //     $kode = "SUP" . str_pad(strval(1), 5, '0', STR_PAD_LEFT);
         // }
         
-        return view('toko.master.supplier.create', compact('data_notified', 'data_notif'));
+        return view('toko.master.supplier.create', compact('data_notified', 'data_notif', 'data_notif_hutang'));
     }
 
     public function store(Request $request) {
@@ -88,7 +106,7 @@ class SupplierController extends Controller
     
             Session::flash('success', 'Berhasil');
         }
-        return view('toko.master.supplier.create', compact('data_notified', 'data_notif'));
+        return view('toko.master.supplier.create', compact('data_notified', 'data_notif', 'data_notif_hutang'));
     }
 
     public function update(Request $request) {

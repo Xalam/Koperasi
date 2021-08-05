@@ -78,30 +78,6 @@
                     @endforeach
                 </tbody>
                 @endif
-                    <tbody>
-                        <tr>
-                            <td colspan="3" class="align-middle text-center">
-                                <div class="fs-5 fw-bold">Balance</div>
-                            </td>
-                            <td class="d-none"></td>
-                            <td class="d-none"></td>
-                            <td class="align-middle text-center">
-                                <div id="total-debit">{{$total_debit}}</div>
-                            </td>
-                            <td class="align-middle text-center">
-                                <div id="total-kredit">{{$total_kredit}}</div>
-                            </td>
-                            <td class="fw-bold align-middle text-center">
-                                @if ($total_debit > $total_kredit)
-                                    <div>Total Debit > Total Kredit</div>
-                                @elseif ($total_debit < $total_kredit)
-                                    <div>Total Debit < Total Kredit</div>
-                                @else
-                                    <div>Total Debit = Total Kredit</div>
-                                @endif
-                            </td>
-                        </tr>
-                    </tbody>
             </table>
             <p class="fw-bold p-2">Jumlah Data Akun : {{count($akun)}}</p>
         </div>

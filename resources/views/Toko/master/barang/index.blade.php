@@ -10,7 +10,8 @@
 @endsection
 
 @section('main')
-<a href="{{url('toko/master/barang/create')}}" class="btn btn-sm btn-success mt-4 ms-4 pe-4"><i class="fas fa-plus"></i><b>Tambah</b></a>
+<a href="{{url('toko/master/barang/create')}}" class="btn btn-sm btn-success mt-4 ms-4 pe-4"><i
+        class="fas fa-plus"></i><b>Tambah</b></a>
 <div class="card m-6">
     <p class="card-header bg-light">Daftar Barang</p>
     <div class="card-body">
@@ -30,6 +31,7 @@
                         <th>Kode Supplier</th>
                         <th>Nama Supplier</th>
                         <th class="w-20">Opsi</th>
+                        <th>Barcode</th>
                     </tr>
                 </thead>
                 @if (count($barang) > 0)
@@ -46,37 +48,44 @@
                             <div id="kode-<?php echo $data->id ?>">{{$data->kode}}</div>
                         </td>
                         <td class="align-middle">
-                            {!! Form::text('edit_nama', $data->nama, ['class' => 'd-none form-control form-control-sm', 'id' =>
+                            {!! Form::text('edit_nama', $data->nama, ['class' => 'd-none form-control form-control-sm',
+                            'id' =>
                             'edit-nama-'.$data->id]) !!}
                             <div id="nama-<?php echo $data->id ?>">{{$data->nama}}</div>
                         </td>
                         <td class="align-middle text-center">
-                            {!! Form::text('edit_harga_jual', $data->harga_jual, ['class' => 'd-none form-control form-control-sm', 'id' =>
+                            {!! Form::text('edit_harga_jual', $data->harga_jual, ['class' => 'd-none form-control
+                            form-control-sm', 'id' =>
                             'edit-harga-jual-'.$data->id]) !!}
                             <div id="harga-jual-<?php echo $data->id ?>">{{$data->harga_jual}}</div>
                         </td>
                         <td class="align-middle text-center">
-                            {!! Form::text('edit_harga_grosir', $data->harga_grosir, ['class' => 'd-none form-control form-control-sm', 'id' =>
+                            {!! Form::text('edit_harga_grosir', $data->harga_grosir, ['class' => 'd-none form-control
+                            form-control-sm', 'id' =>
                             'edit-harga-grosir-'.$data->id]) !!}
                             <div id="harga-grosir-<?php echo $data->id ?>">{{$data->harga_grosir}}</div>
                         </td>
                         <td class="align-middle text-center">
-                            {!! Form::number('edit_minimal_grosir', $data->minimal_grosir, ['class' => 'd-none form-control form-control-sm', 'id' =>
+                            {!! Form::number('edit_minimal_grosir', $data->minimal_grosir, ['class' => 'd-none
+                            form-control form-control-sm', 'id' =>
                             'edit-minimal-grosir-'.$data->id]) !!}
                             <div id="minimal-grosir-<?php echo $data->id ?>">{{$data->minimal_grosir}}</div>
                         </td>
                         <td class="align-middle">
-                            {!! Form::text('edit_nomor_rak', $data->nomor_rak, ['class' => 'd-none form-control form-control-sm', 'id' =>
+                            {!! Form::text('edit_nomor_rak', $data->nomor_rak, ['class' => 'd-none form-control
+                            form-control-sm', 'id' =>
                             'edit-nomor-rak-'.$data->id]) !!}
                             <div id="nomor-rak-<?php echo $data->id ?>">{{$data->nomor_rak}}</div>
                         </td>
                         <td class="align-middle text-center">
-                            {!! Form::text('edit_tingkat_rak', $data->tingkat_rak, ['class' => 'd-none form-control form-control-sm', 'id' =>
+                            {!! Form::text('edit_tingkat_rak', $data->tingkat_rak, ['class' => 'd-none form-control
+                            form-control-sm', 'id' =>
                             'edit-tingkat-rak-'.$data->id]) !!}
                             <div id="tingkat-rak-<?php echo $data->id ?>">{{$data->tingkat_rak}}</div>
                         </td>
                         <td class="align-middle text-center">
-                            {!! Form::text('edit_posisi_rak', $data->posisi_rak, ['class' => 'd-none form-control form-control-sm', 'id' =>
+                            {!! Form::text('edit_posisi_rak', $data->posisi_rak, ['class' => 'd-none form-control
+                            form-control-sm', 'id' =>
                             'edit-posisi-rak-'.$data->id]) !!}
                             <div id="posisi-rak-<?php echo $data->id ?>">{{$data->posisi_rak}}</div>
                         </td>
@@ -92,10 +101,15 @@
                             <a id=<?php echo "terapkan-" . $data->id ?> class="w-48 btn btn-sm btn-warning d-none"
                                 onclick="terapkan(<?php echo $data->id ?>)">Terapkan</a>
                             <a id=<?php echo "hapus-" . $data->id ?> class="w-50 btn btn-sm btn-danger"
-                                onclick="show_popup_hapus(<?php echo $data->id ?>)"><i class="fas fa-trash-alt p-1"></i> Hapus</a>
+                                onclick="show_popup_hapus(<?php echo $data->id ?>)"><i class="fas fa-trash-alt p-1"></i>
+                                Hapus</a>
                             <a id=<?php echo "batal-" . $data->id ?> class="w-50 btn btn-sm btn-danger d-none"
                                 onclick="batal(<?php echo $data->id ?>)">Batal</a>
                         </td>
+                        <td class="align-middle text-center"><a
+                                href="<?php echo url('/toko/master/barang/barcode/' . $data->kode); ?>"
+                                target="_blank"><i class="text-success fas fa-print" style="cursor: pointer;"
+                                    title="Print"></i></a></td>
                     </tr>
                     @endforeach
                 </tbody>
@@ -108,7 +122,6 @@
 
 @section('script')
 <script>
-
 function edit(id) {
     $("#nama-" + id).addClass("d-none");
     $("#edit-nama-" + id).removeClass("d-none");
@@ -173,8 +186,12 @@ function terapkan(id) {
     var index = 0;
 
     $('#row-' + id).find('input').each(function() {
-        if(!$(this).val()){
-            $(this).popover({content: "Tidak boleh kosong", placement: "top", trigger: "focus"}).popover('show');
+        if (!$(this).val()) {
+            $(this).popover({
+                content: "Tidak boleh kosong",
+                placement: "top",
+                trigger: "focus"
+            }).popover('show');
             allFilled = false;
         } else {
             if (index == 0) {

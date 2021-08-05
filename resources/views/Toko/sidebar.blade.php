@@ -35,6 +35,7 @@
                     <a><i class="fas fa-server" aria-hidden="true"></i>Master</a>
                     <div class="sidebar-submenu">
                         <ul>
+                            <li><a href="/toko/master/barang">Barang</a></li>
                             <li><a href="/toko/master/supplier">Supplier</a></li>
                         </ul>
                     </div>
@@ -46,6 +47,7 @@
                     <div class="sidebar-submenu">
                         <ul>
                             <li><a href="/toko/master/anggota">Anggota</a></li>
+                            <li><a href="/toko/master/barang">Barang</a></li>
                         </ul>
                     </div>
                 </li>
@@ -90,20 +92,6 @@
                     </div>
                 </li>
                 @endif
-                @if (auth()->user()->jabatan == 'Kanit')
-                <li class="sidebar-dropdown">
-                    <a><i class="fas fa-receipt" aria-hidden="true"></i>Transaksi</a>
-                    <div class="sidebar-submenu">
-                        <ul>
-                            <!-- <li><a href="/toko/transaksi/konsinyasi">Bayar Titip Jual</a></li> -->
-                            <li><a href="/toko/transaksi/hutang">Utang</a></li>
-                            <li><a href="/toko/transaksi/piutang">Piutang</a></li>
-                            <li><a href="/toko/transaksi/jurnal">Jurnal</a></li>
-                            <li><a href="/toko/transaksi/pesanan-online">Pesanan Online</a></li>
-                        </ul>
-                    </div>
-                </li>
-                @endif
                 @if (auth()->user()->jabatan == 'Gudang')
                 <li class="sidebar-dropdown">
                     <a><i class="fas fa-receipt" aria-hidden="true"></i>Transaksi</a>
@@ -119,6 +107,8 @@
                                 </div>
                             </li>
                             <li><a href="/toko/transaksi/jurnal">Jurnal</a></li>
+                            <li><a href="/toko/transaksi/persediaan">Persediaan</a></li>
+                            <li><a href="/toko/transaksi/hutang">Utang</a></li>
                         </ul>
                     </div>
                 </li>
@@ -128,7 +118,16 @@
                     <a><i class="fas fa-receipt" aria-hidden="true"></i>Transaksi</a>
                     <div class="sidebar-submenu">
                         <ul>
-                            <li><a href="/toko/transaksi/penjualan">Penjualan</a></li>
+                            <li class="sidebar-dropdown2">
+                                <a>Penjualan</a>
+                                <div class="sidebar-submenu2">
+                                    <ul>
+                                        <li><a href="/toko/transaksi/penjualan">Transaksi Penjualan</a></li>
+                                        <li><a href="/toko/transaksi/piutang">Piutang</a></li>
+                                    </ul>
+                                </div>
+                            </li>
+                            <li><a href="/toko/transaksi/pesanan-online">Pesanan Online</a></li>
                         </ul>
                     </div>
                 </li>

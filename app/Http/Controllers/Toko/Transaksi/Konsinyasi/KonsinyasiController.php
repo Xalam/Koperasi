@@ -7,11 +7,13 @@ use App\Models\Simpan_Pinjam\Laporan\JurnalUmum;
 use App\Models\Toko\Master\Akun\AkunModel;
 use App\Models\Toko\Master\Barang\BarangModel;
 use App\Models\Toko\Master\Supplier\SupplierModel;
+use App\Models\Toko\Transaksi\Hutang\HutangModel;
 use App\Models\Toko\Transaksi\Jurnal\JurnalModel;
 use App\Models\Toko\Transaksi\Konsinyasi\KonsinyasiDetailModel;
 use App\Models\Toko\Transaksi\Konsinyasi\KonsinyasiModel;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class KonsinyasiController extends Controller
 {
@@ -32,6 +34,14 @@ class KonsinyasiController extends Controller
         }
 
         $data_notif = BarangModel::where('alert_status', 1)->get();
+
+        HutangModel::where(DB::raw('DATE_ADD(DATE(NOW()), INTERVAL 3 DAY)'), '>=', DB::raw('DATE(jatuh_tempo)'))->update([
+            'alert_status' => 1
+        ]);
+
+        $data_notif_hutang = HutangModel::join('supplier', 'supplier.id', '=', 'hutang.id_supplier')
+                                    ->select('hutang.*', 'supplier.nama AS nama_supplier')
+                                    ->get();
 
         $data_supplier = SupplierModel::orderBy('nama')
                                         ->get();
@@ -55,7 +65,7 @@ class KonsinyasiController extends Controller
                             'supplier.kode AS kode_supplier', 'supplier.nama AS nama_supplier')
                             ->get();
 
-        return view('toko.transaksi.konsinyasi.index', compact('cur_date', 'data_notified', 'data_notif', 'konsinyasi', 'kode_supplier', 'supplier'));
+        return view('toko.transaksi.konsinyasi.index', compact('cur_date', 'data_notified', 'data_notif', 'data_notif_hutang', 'konsinyasi', 'kode_supplier', 'supplier'));
     }
     
     public function show($nomor_titip_jual) {

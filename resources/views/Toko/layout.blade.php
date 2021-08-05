@@ -94,6 +94,7 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js@3.4.1/dist/chart.min.js"></script>
     <script src="{{ asset('js/onScan.js') }}"></script>
     <script src="{{ asset('js/jquery.dataTables.js') }}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.4/dist/JsBarcode.all.min.js"></script>
 </body>
 
 @yield('script')
@@ -115,9 +116,17 @@ function close_notification($id) {
         url: '/toko/master/barang/remove-notification/' + $id,
         type: 'POST',
         success: function(response) {
-            if (response.code == 200) {
-                $('#notification-count').text(response.data_barang.length);
-            }
+
+        }
+    });
+}
+
+function close_notification_utang($id) {
+    $.ajax({
+        url: '/toko/transaksi/hutang/remove-notification/' + $id,
+        type: 'POST',
+        success: function(response) {
+            
         }
     });
 }

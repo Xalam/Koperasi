@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Toko\Laporan\Retur;
 use App\Exports\Toko\Laporan\LaporanReturPembelianExport;
 use App\Http\Controllers\Controller;
 use App\Models\Toko\Master\Barang\BarangModel;
+use App\Models\Toko\Transaksi\Hutang\HutangModel;
 use App\Models\Toko\Transaksi\Retur\ReturPembelianBarangModel;
 use App\Models\Toko\Transaksi\Retur\ReturPembelianModel;
 use Carbon\Carbon;
@@ -32,6 +33,14 @@ class LaporanReturPembelianController extends Controller
 
         $data_notif = BarangModel::where('alert_status', 1)->get();
 
+        HutangModel::where(DB::raw('DATE_ADD(DATE(NOW()), INTERVAL 3 DAY)'), '>=', DB::raw('DATE(jatuh_tempo)'))->update([
+            'alert_status' => 1
+        ]);
+
+        $data_notif_hutang = HutangModel::join('supplier', 'supplier.id', '=', 'hutang.id_supplier')
+                                    ->select('hutang.*', 'supplier.nama AS nama_supplier')
+                                    ->get();
+
         $tanggal = $request->input('tanggal');
         
         if ($tanggal) {
@@ -45,9 +54,9 @@ class LaporanReturPembelianController extends Controller
                                                                 'detail_retur.total_harga AS total_harga')
                                                         ->get();
                                                 
-            return view ('toko.laporan.retur.index', compact('cur_date', 'laporan_retur_pembelian', 'data_notified', 'data_notif', 'tanggal'));
+            return view ('toko.laporan.retur.index', compact('cur_date', 'laporan_retur_pembelian', 'data_notified', 'data_notif', 'data_notif_hutang', 'tanggal'));
         } else {
-            return view ('toko.laporan.retur.index', compact('cur_date', 'data_notified', 'data_notif', 'tanggal'));
+            return view ('toko.laporan.retur.index', compact('cur_date', 'data_notified', 'data_notif', 'data_notif_hutang', 'tanggal'));
         }
     }
 

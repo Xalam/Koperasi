@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Toko\Laporan\Persediaan;
 use App\Exports\Toko\Laporan\LaporanPersediaanExport;
 use App\Http\Controllers\Controller;
 use App\Models\Toko\Master\Barang\BarangModel;
+use App\Models\Toko\Transaksi\Hutang\HutangModel;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -30,6 +31,14 @@ class LaporanPersediaanController extends Controller
 
         $data_notif = BarangModel::where('alert_status', 1)->get();
 
+        HutangModel::where(DB::raw('DATE_ADD(DATE(NOW()), INTERVAL 3 DAY)'), '>=', DB::raw('DATE(jatuh_tempo)'))->update([
+            'alert_status' => 1
+        ]);
+
+        $data_notif_hutang = HutangModel::join('supplier', 'supplier.id', '=', 'hutang.id_supplier')
+                                    ->select('hutang.*', 'supplier.nama AS nama_supplier')
+                                    ->get();
+
         $jumlah_barang = $request->input('jumlah_barang');
 
         if ($jumlah_barang) {
@@ -39,10 +48,10 @@ class LaporanPersediaanController extends Controller
                                     ->having(DB::raw('SUM(stok_etalase + stok_gudang)'), '<', $jumlah_barang)
                                     ->get();
 
-            return view ('toko.laporan.persediaan.index', compact('cur_date', 'laporan_persediaan', 'data_notified', 'data_notif', 'jumlah_barang'));
+            return view ('toko.laporan.persediaan.index', compact('cur_date', 'laporan_persediaan', 'data_notified', 'data_notif', 'data_notif_hutang', 'jumlah_barang'));
         }
 
-        return view ('toko.laporan.persediaan.index', compact('cur_date', 'data_notified', 'data_notif'));
+        return view ('toko.laporan.persediaan.index', compact('cur_date', 'data_notified', 'data_notif', 'data_notif_hutang'));
     }
 
     public function minimalPersediaan() {
@@ -62,10 +71,18 @@ class LaporanPersediaanController extends Controller
         }
 
         $data_notif = BarangModel::where('alert_status', 1)->get();
+
+        HutangModel::where(DB::raw('DATE_ADD(DATE(NOW()), INTERVAL 3 DAY)'), '>=', DB::raw('DATE(jatuh_tempo)'))->update([
+            'alert_status' => 1
+        ]);
+
+        $data_notif_hutang = HutangModel::join('supplier', 'supplier.id', '=', 'hutang.id_supplier')
+                                    ->select('hutang.*', 'supplier.nama AS nama_supplier')
+                                    ->get();
         
         $laporan_minimal_persediaan = BarangModel::all();
 
-        return view ('toko.laporan.minimal_persediaan.index', compact('cur_date', 'data_notified', 'data_notif', 'laporan_minimal_persediaan'));
+        return view ('toko.laporan.minimal_persediaan.index', compact('cur_date', 'data_notified', 'data_notif', 'data_notif_hutang', 'laporan_minimal_persediaan'));
     }
 
     public function print($minimal_stok) {

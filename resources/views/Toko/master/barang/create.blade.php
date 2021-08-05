@@ -73,7 +73,7 @@
                     !!}
                 </div>
                 <div class="row-lg align-item-center mb-2">
-                    {!! Form::label(null, 'Exired', ['class' => 'col-lg-2 col-form-label']) !!}
+                    {!! Form::label(null, 'Expired', ['class' => 'col-lg-2 col-form-label']) !!}
                     {!! Form::select('bulan', ['01' => 'Januari', '02' => 'Februari', '03' => 'Maret',
                     '04' => 'April', '05' => 'Mei',
                     '06' => 'Juni', '07' => 'Juli', '08' => 'Agustus', '09' => 'September', '10' =>

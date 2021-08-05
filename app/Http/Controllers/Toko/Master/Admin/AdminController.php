@@ -7,7 +7,9 @@ use Illuminate\Http\Request;
 
 use App\Models\Toko\Master\Admin\AdminModel;
 use App\Models\Toko\Master\Barang\BarangModel;
+use App\Models\Toko\Transaksi\Hutang\HutangModel;
 use App\Models\Toko\User;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Session;
 
@@ -31,7 +33,15 @@ class AdminController extends Controller
 
         $data_notif = BarangModel::where('alert_status', 1)->get();
 
-        return view('toko.master.admin.index', compact('admin', 'data_notified', 'data_notif'));
+        HutangModel::where(DB::raw('DATE_ADD(DATE(NOW()), INTERVAL 3 DAY)'), '>=', DB::raw('DATE(jatuh_tempo)'))->update([
+            'alert_status' => 1
+        ]);
+
+        $data_notif_hutang = HutangModel::join('supplier', 'supplier.id', '=', 'hutang.id_supplier')
+                                    ->select('hutang.*', 'supplier.nama AS nama_supplier')
+                                    ->get();
+
+        return view('toko.master.admin.index', compact('admin', 'data_notified', 'data_notif_hutang', 'data_notif'));
     }
     
     public function create() {
@@ -50,7 +60,15 @@ class AdminController extends Controller
             }
         }
 
-        return view('toko.master.admin.create', compact('data_notified', 'data_notif'));
+        HutangModel::where(DB::raw('DATE_ADD(DATE(NOW()), INTERVAL 3 DAY)'), '>=', DB::raw('DATE(jatuh_tempo)'))->update([
+            'alert_status' => 1
+        ]);
+
+        $data_notif_hutang = HutangModel::join('supplier', 'supplier.id', '=', 'hutang.id_supplier')
+                                    ->select('hutang.*', 'supplier.nama AS nama_supplier')
+                                    ->get();
+
+        return view('toko.master.admin.create', compact('data_notified', 'data_notif', 'data_notif_hutang'));
     }
 
     public function store(Request $request) {

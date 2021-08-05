@@ -14,6 +14,7 @@ use App\Models\Toko\Transaksi\Retur\ReturPembelianBarangModel;
 use App\Models\Toko\Transaksi\Retur\ReturPembelianModel;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
 
 class ReturPembelianController extends Controller
@@ -34,6 +35,14 @@ class ReturPembelianController extends Controller
 
         $data_notif = BarangModel::where('alert_status', 1)->get();
 
+        HutangModel::where(DB::raw('DATE_ADD(DATE(NOW()), INTERVAL 3 DAY)'), '>=', DB::raw('DATE(jatuh_tempo)'))->update([
+            'alert_status' => 1
+        ]);
+
+        $data_notif_hutang = HutangModel::join('supplier', 'supplier.id', '=', 'hutang.id_supplier')
+                                    ->select('hutang.*', 'supplier.nama AS nama_supplier')
+                                    ->get();
+
         $cur_date = Carbon::now();
         
         $data_nomor_beli = PembelianModel::orderBy('nomor')->get();
@@ -43,7 +52,7 @@ class ReturPembelianController extends Controller
             $nomor_beli[$data->id] = $data->nomor;
         }
 
-        return view('toko.transaksi.retur.index', compact('cur_date', 'data_notified', 'data_notif', 'nomor_beli'));
+        return view('toko.transaksi.retur.index', compact('cur_date', 'data_notified', 'data_notif', 'data_notif_hutang', 'nomor_beli'));
     }
 
     public function show($nomor) {
@@ -226,8 +235,9 @@ class ReturPembelianController extends Controller
         $nomor_beli = [];
         $data_notified = [];
         $data_notif = [];
+        $data_notif_hutang = [];
 
-        return view('toko.transaksi.retur.index', compact('cur_date', 'data_notified', 'data_notif', 'nomor_beli'));
+        return view('toko.transaksi.retur.index', compact('cur_date', 'data_notified', 'data_notif', 'data_notif_hutang', 'nomor_beli'));
     }
 
     public function delete($id) {
