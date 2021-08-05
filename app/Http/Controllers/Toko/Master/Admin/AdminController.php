@@ -92,8 +92,8 @@ class AdminController extends Controller
         ]);
 
         $data_notif_hutang = HutangModel::join('supplier', 'supplier.id', '=', 'hutang.id_supplier')
-                                    ->select('hutang.*', 'supplier.nama AS nama_supplier')
-                                    ->get();
+                                        ->select('hutang.*', 'supplier.nama AS nama_supplier')
+                                        ->get();
         
         $nameExist = AdminModel::where('jabatan', $request->jabatan)
                                 ->where('nama', $request->nama)
