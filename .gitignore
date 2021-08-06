@@ -2,6 +2,7 @@
 /public/hot
 /public/storage
 /storage/*.key
+/database/seeders/UserSeeder.php
 /vendor
 .env
 .env.backup
