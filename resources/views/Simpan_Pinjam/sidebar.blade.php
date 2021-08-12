@@ -69,7 +69,7 @@
                         @endif
                     </ul>
                 </li>
-                @if (auth()->user()->role == 'simpan_pinjam' || auth()->user()->role == 'ketua_koperasi' || auth()->user()->role == 'admin')
+                @if (auth()->user()->role == 'simpan_pinjam' || auth()->user()->role == 'ketua_koperasi' || auth()->user()->role == 'admin' || auth()->user()->role == 'bendahara')
                     <li class="nav-item {{ request()->is('simpan-pinjam/simpanan*') ? ' menu-open' : '' }}">
                         <a href="#" class="nav-link {{ request()->is('simpan-pinjam/simpanan*') ? ' active' : '' }}">
                             <i class="nav-icon fas fa-wallet"></i>
@@ -88,13 +88,15 @@
                                     <span class="right pulsate-child" id="pulsate-child-simpanan" hidden>&nbsp;</span>
                                 </a>
                             </li>
-                            <li class="nav-item">
-                                <a href="{{ route('saldo.index') }}"
-                                    class="nav-link {{ request()->is('simpan-pinjam/simpanan/saldo*') ? ' active' : '' }}">
-                                    <i class="far fa-circle nav-icon"></i>
-                                    <p>Saldo Simpanan</p>
-                                </a>
-                            </li>
+                            @if (auth()->user()->role != 'bendahara')
+                                <li class="nav-item">
+                                    <a href="{{ route('saldo.index') }}"
+                                        class="nav-link {{ request()->is('simpan-pinjam/simpanan/saldo*') ? ' active' : '' }}">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>Saldo Simpanan</p>
+                                    </a>
+                                </li>
+                            @endif
                             <li class="nav-item">
                                 <a href="{{ route('tarik-saldo.index') }}"
                                     class="nav-link {{ request()->is('simpan-pinjam/simpanan/tarik-saldo*') ? ' active' : '' }}">
@@ -103,17 +105,19 @@
                                     <span class="right pulsate-child" id="pulsate-child-penarikan" hidden>&nbsp;</span>
                                 </a>
                             </li>
-                            <li class="nav-item">
-                                <a href="{{ route('tarik-saldo.history') }}"
-                                    class="nav-link {{ request()->is('simpan-pinjam/simpanan/riwayat*') ? ' active' : '' }}">
-                                    <i class="far fa-circle nav-icon"></i>
-                                    <p>Riwayat Penarikan</p>
-                                </a>
-                            </li>
+                            @if (auth()->user()->role != 'bendahara')
+                                <li class="nav-item">
+                                    <a href="{{ route('tarik-saldo.history') }}"
+                                        class="nav-link {{ request()->is('simpan-pinjam/simpanan/riwayat*') ? ' active' : '' }}">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>Riwayat Penarikan</p>
+                                    </a>
+                                </li>
+                            @endif
                         </ul>
                     </li>
                 @endif
-                @if (auth()->user()->role == 'simpan_pinjam' || auth()->user()->role == 'ketua_koperasi' || auth()->user()->role == 'admin')
+                @if (auth()->user()->role == 'simpan_pinjam' || auth()->user()->role == 'ketua_koperasi' || auth()->user()->role == 'admin' || auth()->user()->role == 'bendahara')
                     <li class="nav-item {{ request()->is('simpan-pinjam/pinjaman*') ? ' menu-open' : '' }}">
                         <a href="#" class="nav-link {{ request()->is('simpan-pinjam/pinjaman*') ? ' active' : '' }}">
                             <i class="nav-icon fas fa-hand-holding-usd"></i>
@@ -132,13 +136,15 @@
                                     <span class="right pulsate-child" id="pulsate-child-pengajuan" hidden>&nbsp;</span>
                                 </a>
                             </li>
-                            <li class="nav-item">
-                                <a href="{{ route('angsuran.index') }}"
-                                    class="nav-link {{ request()->is('simpan-pinjam/pinjaman/angsuran*') ? ' active' : '' }}">
-                                    <i class="far fa-circle nav-icon"></i>
-                                    <p>Angsuran</p>
-                                </a>
-                            </li>
+                            @if (auth()->user()->role != 'bendahara')
+                                <li class="nav-item">
+                                    <a href="{{ route('angsuran.index') }}"
+                                        class="nav-link {{ request()->is('simpan-pinjam/pinjaman/angsuran*') ? ' active' : '' }}">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>Angsuran</p>
+                                    </a>
+                                </li>
+                            @endif
                             <li class="nav-item">
                                 <a href="{{ route('tempo.index') }}"
                                     class="nav-link {{ request()->is('simpan-pinjam/pinjaman/tempo*') ? ' active' : '' }}">
@@ -176,21 +182,21 @@
                                     <p>Buku Besar</p>
                                 </a>
                             </li>
+                            <li class="nav-item">
+                                <a href="{{ route('lap-simpanan.index') }}"
+                                    class="nav-link {{ request()->is('simpan-pinjam/laporan/simpanan*') ? ' active' : '' }}">
+                                    <i class="far fa-circle nav-icon"></i>
+                                    <p>Simpanan</p>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="{{ route('lap-pinjaman.index') }}"
+                                    class="nav-link {{ request()->is('simpan-pinjam/laporan/pinjaman*') ? ' active' : '' }}">
+                                    <i class="far fa-circle nav-icon"></i>
+                                    <p>Pinjaman</p>
+                                </a>
+                            </li>
                         @endif
-                        <li class="nav-item">
-                            <a href="{{ route('lap-simpanan.index') }}"
-                                class="nav-link {{ request()->is('simpan-pinjam/laporan/simpanan*') ? ' active' : '' }}">
-                                <i class="far fa-circle nav-icon"></i>
-                                <p>Simpanan</p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="{{ route('lap-pinjaman.index') }}"
-                                class="nav-link {{ request()->is('simpan-pinjam/laporan/pinjaman*') ? ' active' : '' }}">
-                                <i class="far fa-circle nav-icon"></i>
-                                <p>Pinjaman</p>
-                            </a>
-                        </li>
                         <li class="nav-item">
                             <a href="{{ route('data-anggota.index') }}"
                                 class="nav-link {{ request()->is('simpan-pinjam/laporan/anggota*') ? ' active' : '' }}">
@@ -220,6 +226,8 @@
                                     <p>Posisi Keuangan</p>
                                 </a>
                             </li>
+                        @endif
+                        @if (auth()->user()->role != 'simpan_pinjam')
                             <li class="nav-item">
                                 <a href="{{ route('bendahara.index') }}"
                                     class="nav-link {{ request()->is('simpan-pinjam/laporan/bendahara*') ? ' active' : '' }}">
@@ -230,7 +238,7 @@
                         @endif
                     </ul>
                 </li>
-                @if (auth()->user()->role != 'bendahara_pusat')
+                @if (auth()->user()->role == 'admin' || auth()->user()->role == 'ketua_koperasi')
                     <li class="nav-item {{ request()->is('simpan-pinjam/pengaturan*') ? ' menu-open' : '' }}">
                         <a href="#"
                             class="nav-link {{ request()->is('simpan-pinjam/pengaturan*') ? ' active' : '' }}">
