@@ -33,7 +33,7 @@
 </head>
 
 <body>
-    <table class="table table-striped table-bordered table-hover nowrap">
+    <table id="table-data" class="table table-striped table-bordered table-hover nowrap">
         <thead class="text-center">
             <tr>
                 <th>No.</th>
@@ -41,7 +41,7 @@
                 <th>Tanggal Transaksi</th>
                 <th>Kode Anggota</th>
                 <th>Nama Anggota</th>
-                <th>Status</th>
+                <th>Status Anggota</th>
                 <th>Kode Barang</th>
                 <th>Nama Barang</th>
                 <th>Harga Jual</th>
@@ -71,7 +71,8 @@
                 @endif
                 <td class="align-middle text-center">{{$data->kode}}</td>
                 <td class="align-middle">{{$data->nama}}</td>
-                <td class="align-middle text-center">{{($data->jumlah >= $data->minimal-grosir) ? $data->harga_grosir : $data->harga_jual}}</td>
+                <td class="align-middle text-center">
+                    {{($data->jumlah >= $data->minimal_grosir) ? $data->harga_grosir : $data->harga_jual}}</td>
                 <td class="align-middle text-center">{{$data->jumlah}}</td>
                 <td class="align-middle text-center">{{$data->total_harga}}</td>
                 <td class="align-middle text-center">{{($data->type_penjualan == 1) ? 'Offline' : 'Online'}}</td>

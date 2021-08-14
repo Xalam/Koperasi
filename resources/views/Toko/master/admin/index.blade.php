@@ -53,7 +53,7 @@
                             <div id="password-<?php echo $data->id ?>">{{$data->password}}</div>
                         </td>
                         <td class="align-middle text-center">
-                            {!! Form::select('edit_jabatan', ['Super_Admin' => 'Super Admin', 'Kanit' => 'Kanit',
+                            {!! Form::select('edit_jabatan', ['Super_Admin' => 'Super Admin', 'Bendahara' => 'Bendahara', 'Kanit' => 'Kanit',
                             'Gudang' => 'Gudang', 'Kasir' => 'Kasir'], $data->jabatan, ['class' => 'd-none form-select form-select-sm', 'id' =>
                             'edit-jabatan-'.$data->id]) !!}
                             <div id="jabatan-<?php echo $data->id ?>">{{($data->jabatan == 'Super_Admin') ? 'Super Admin' : $data->jabatan}}</div>

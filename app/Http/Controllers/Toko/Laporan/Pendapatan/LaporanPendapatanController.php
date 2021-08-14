@@ -40,13 +40,14 @@ class LaporanPendapatanController extends Controller
                                     ->select('hutang.*', 'supplier.nama AS nama_supplier')
                                     ->get();
 
-        $tanggal = $request->input('tanggal');
+        $tanggal_awal = $request->input('tanggal_awal');
+        $tanggal_akhir = $request->input('tanggal_akhir');
         
-        if ($tanggal) {
+        if ($tanggal_awal && $tanggal_akhir) {
             $laporan_pendapatan = JurnalModel::join('akun', 'akun.id', '=', 'jurnal.id_akun')
                                                 ->select('jurnal.tanggal AS tanggal', 'jurnal.keterangan AS keterangan', 'akun.kode AS kode_akun', 
                                                 'akun.nama AS nama_akun', DB::raw('SUM(jurnal.debit) AS debit'), DB::raw('SUM(jurnal.kredit) AS kredit'))
-                                                ->where('jurnal.tanggal', $tanggal)
+                                                ->whereBetween('jurnal.tanggal', [$tanggal_awal, $tanggal_akhir])
                                                 ->where(function($i) {
                                                     $i->where('akun.kode', 'like', '4%')
                                                         ->orWhere('akun.kode', 'like', '5%')
@@ -58,34 +59,36 @@ class LaporanPendapatanController extends Controller
             $pemasukan = JurnalModel::join('akun', 'akun.id', '=', 'jurnal.id_akun')
                                                 ->select('jurnal.tanggal AS tanggal', 
                                                 DB::raw('IFNULL(SUM(jurnal.debit+jurnal.kredit), 0) AS jumlah'))
-                                                ->where('jurnal.tanggal', $tanggal)
+                                                ->whereBetween('jurnal.tanggal', [$tanggal_awal, $tanggal_akhir])
                                                 ->where('akun.kode', 'like', '4%')
-                                                ->groupBy('jurnal.tanggal')
+                                                ->groupBy('akun.kode')
                                                 ->first();
                                                 
             $pengeluaran = JurnalModel::join('akun', 'akun.id', '=', 'jurnal.id_akun')
                                                 ->select('jurnal.tanggal AS tanggal', 
                                                 DB::raw('IFNULL(SUM(jurnal.debit+jurnal.kredit), 0) AS jumlah'))
-                                                ->where('jurnal.tanggal', $tanggal)
-                                                ->where('akun.kode', 'like', '5%')
-                                                ->orWhere('akun.kode', 'like', '6%')
-                                                ->groupBy('jurnal.tanggal')
+                                                ->whereBetween('jurnal.tanggal', [$tanggal_awal, $tanggal_akhir])
+                                                ->where(function($i) {
+                                                    $i->where('akun.kode', 'like', '5%')
+                                                    ->orWhere('akun.kode', 'like', '6%');
+                                                })
+                                                ->groupBy('akun.kode')
                                                 ->first();
             
             // echo $laporan_pendapatan;
 
-            return view ('toko.laporan.pendapatan.index', compact('cur_date', 'data_notif', 'data_notified', 'data_notif_hutang', 'laporan_pendapatan', 'pemasukan', 'pengeluaran', 'tanggal'));
+            return view ('toko.laporan.pendapatan.index', compact('cur_date', 'data_notif', 'data_notified', 'data_notif_hutang', 'laporan_pendapatan', 'pemasukan', 'pengeluaran', 'tanggal_awal', 'tanggal_akhir'));
         } else {
             return view ('toko.laporan.pendapatan.index', compact('cur_date', 'data_notif', 'data_notified', 'data_notif_hutang'));
         }
     }
 
-    public function print($tanggal) {
-        if ($tanggal) {
+    public function print($tanggal_awal, $tanggal_akhir) {
+        if ($tanggal_awal && $tanggal_akhir) {
             $laporan_pendapatan = JurnalModel::join('akun', 'akun.id', '=', 'jurnal.id_akun')
                                                 ->select('jurnal.tanggal AS tanggal', 'jurnal.keterangan AS keterangan', 'akun.kode AS kode_akun', 
                                                 'akun.nama AS nama_akun', DB::raw('SUM(jurnal.debit) AS debit'), DB::raw('SUM(jurnal.kredit) AS kredit'))
-                                                ->where('jurnal.tanggal', $tanggal)
+                                                ->whereBetween('jurnal.tanggal', [$tanggal_awal, $tanggal_akhir])
                                                 ->where(function($i) {
                                                     $i->where('akun.kode', 'like', '4%')
                                                         ->orWhere('akun.kode', 'like', '5%')
@@ -97,7 +100,7 @@ class LaporanPendapatanController extends Controller
             $pemasukan = JurnalModel::join('akun', 'akun.id', '=', 'jurnal.id_akun')
                                                 ->select('jurnal.tanggal AS tanggal', 
                                                 DB::raw('IFNULL(SUM(jurnal.debit+jurnal.kredit), 0) AS jumlah'))
-                                                ->where('jurnal.tanggal', $tanggal)
+                                                ->whereBetween('jurnal.tanggal', [$tanggal_awal, $tanggal_akhir])
                                                 ->where('akun.kode', 'like', '4%')
                                                 ->groupBy('jurnal.tanggal')
                                                 ->first();
@@ -105,22 +108,23 @@ class LaporanPendapatanController extends Controller
             $pengeluaran = JurnalModel::join('akun', 'akun.id', '=', 'jurnal.id_akun')
                                                 ->select('jurnal.tanggal AS tanggal', 
                                                 DB::raw('IFNULL(SUM(jurnal.debit+jurnal.kredit), 0) AS jumlah'))
-                                                ->where('jurnal.tanggal', $tanggal)
+                                                ->whereBetween('jurnal.tanggal', [$tanggal_awal, $tanggal_akhir])
                                                 ->where('akun.kode', 'like', '5%')
                                                 ->orWhere('akun.kode', 'like', '6%')
                                                 ->groupBy('jurnal.tanggal')
-                                                ->first();                         
+                                                ->first();                      
         }
 
-        return view ('toko.laporan.pendapatan.print', compact('laporan_pendapatan', 'pemasukan', 'pengeluaran', 'tanggal'));
+        return view ('toko.laporan.pendapatan.print', compact('laporan_pendapatan', 'pemasukan', 'pengeluaran', 'tanggal_awal', 'tanggal_akhir'));
         
         // $pdf = PDF::loadview('toko.laporan.pembelian.print', ['laporan_pembelian'=>$laporan_pembelian]);
         // return $pdf->download('Laporan Pembelian ' . $pembayaran . $tanggal . '.pdf');
     }
 
-    public function export($tanggal) {
+    public function export($tanggal_awal, $tanggal_akhir) {
         return Excel::download(new LaporanPendapatanExport(
-                                    $tanggal
-                                ), 'Laporan Laba Rugi ' . $tanggal . '.xlsx');
+                                    $tanggal_awal,
+                                    $tanggal_akhir
+                                ), 'Laporan Laba Rugi ' . $tanggal_awal . ' - ' . $tanggal_akhir . '.xlsx');
     }
 }

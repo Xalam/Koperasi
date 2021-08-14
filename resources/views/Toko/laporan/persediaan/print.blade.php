@@ -33,7 +33,7 @@
 </head>
 
 <body>
-    <table class="table table-striped table-bordered table-hover nowrap">
+    <table id="table-data" class="table table-striped table-bordered table-hover nowrap">
         <thead class="text-center">
             <tr>
                 <th>No</th>

@@ -19,9 +19,9 @@ class BendaharaController extends Controller
     public function show_data(Request $request)
     {
         $tanggal = date('Y-m');
-
+        
         if ($request->tanggal) {
-            $tanggal = $request->tanggal;
+            $tanggal = date('Y-m', strtotime($request->tanggal));
         }
 
         $anggota = Anggota::query()

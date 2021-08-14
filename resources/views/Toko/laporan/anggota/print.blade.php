@@ -39,20 +39,20 @@
                 <th>No.</th>
                 <th>Kode Anggota</th>
                 <th>Nama Anggota</th>
-                <th>Sisa Piutang</th>
+                <th>Total Belanja Toko</th>
             </tr>
         </thead>
-        @if (isset($laporan_piutang) && count($laporan_piutang) > 0)
+        @if (isset($laporan_anggota) && count($laporan_anggota) > 0)
         <tbody>
             @php
             $i = 1;
             @endphp
-            @foreach ($laporan_piutang AS $data)
+            @foreach ($laporan_anggota AS $data)
             <tr>
                 <th class="align-middle text-center">{{$i++}}</th>
                 <td class="align-middle text-center">{{$data->kode_anggota}}</td>
                 <td class="align-middle text-center">{{$data->nama_anggota}}</td>
-                <td class="align-middle text-center">{{$data->sisa_piutang}}</td>
+                <td class="align-middle text-center">{{$data->total_belanja}}</td>
             </tr>
             @endforeach
         </tbody>

@@ -199,65 +199,67 @@ Route::group(['prefix' => 'toko'], function () {
         });
 
         //Laporan
-        Route::group(['prefix' => 'laporan', 'middleware' => ['auth:toko', 'checkjabatan:Super_Admin,Kanit']], function () {
-            Route::group(['prefix' => 'anggota'], function () {
+        Route::group(['prefix' => 'laporan'], function () {
+            Route::group(['prefix' => 'anggota', 'middleware' => ['auth:toko', 'checkjabatan:Super_Admin,Kanit,Bendahara']], function () {
                 Route::get('/', [LaporanAnggotaController::class, 'index']);
+                Route::get('/print/{tanggal_awal}/{tanggal_akhir}', [LaporanAnggotaController::class, 'print']);
+                Route::get('/export/{tanggal_awal}/{tanggal_akhir}', [LaporanAnggotaController::class, 'export']);
                 Route::get('/detail/{id}/{tanggal_awal}/{tanggal_akhir}', [LaporanAnggotaController::class, 'detail']);
             });
 
-            Route::group(['prefix' => 'data-master'], function () {
+            Route::group(['prefix' => 'data-master', 'middleware' => ['auth:toko', 'checkjabatan:Super_Admin,Kanit']], function () {
                 Route::get('/', [LaporanMasterController::class, 'index']);
                 Route::get('/print/{bagian}', [LaporanMasterController::class, 'print']);
                 Route::get('/export/{bagian}', [LaporanMasterController::class, 'export']);
             });
 
-            Route::group(['prefix' => 'pembelian'], function () {
+            Route::group(['prefix' => 'pembelian', 'middleware' => ['auth:toko', 'checkjabatan:Super_Admin,Kanit,Bendahara']], function () {
                 Route::get('/', [LaporanPembelianController::class, 'index']);
                 Route::get('/nota/{nomor}', [LaporanPembelianController::class, 'nota']);
                 Route::get('/print/{type}/{awal}/{akhir}', [LaporanPembelianController::class, 'print']);
                 Route::get('/export/{type}/{awal}/{akhir}', [LaporanPembelianController::class, 'export']);
             });
 
-            Route::group(['prefix' => 'retur-pembelian'], function () {
+            Route::group(['prefix' => 'retur-pembelian', 'middleware' => ['auth:toko', 'checkjabatan:Super_Admin,Kanit,Bendahara']], function () {
                 Route::get('/', [LaporanReturPembelianController::class, 'index']);
                 Route::get('/nota/{nomor}', [LaporanReturPembelianController::class, 'nota']);
                 Route::get('/print/{tanggal}', [LaporanReturPembelianController::class, 'print']);
                 Route::get('/export/{tanggal}', [LaporanReturPembelianController::class, 'export']);
             });
 
-            Route::group(['prefix' => 'penjualan'], function () {
+            Route::group(['prefix' => 'penjualan', 'middleware' => ['auth:toko', 'checkjabatan:Super_Admin,Kanit,Bendahara']], function () {
                 Route::get('/', [LaporanPenjualanController::class, 'index']);
                 Route::get('/nota/{nomor}', [LaporanPenjualanController::class, 'nota']);
                 Route::get('/print/{type}/{awal}/{akhir}', [LaporanPenjualanController::class, 'print']);
                 Route::get('/export/{type}/{awal}/{akhir}', [LaporanPenjualanController::class, 'export']);
             });
 
-            Route::group(['prefix' => 'persediaan'], function () {
+            Route::group(['prefix' => 'persediaan', 'middleware' => ['auth:toko', 'checkjabatan:Super_Admin,Kanit']], function () {
                 Route::get('/', [LaporanPersediaanController::class, 'index']);
                 Route::get('/minimal-persediaan', [LaporanPersediaanController::class, 'minimalPersediaan']);
                 Route::get('/print/{stok}', [LaporanPersediaanController::class, 'print']);
                 Route::get('/export/{stok}', [LaporanPersediaanController::class, 'export']);
             });
 
-            Route::group(['prefix' => 'kas-masuk'], function () {
+            Route::group(['prefix' => 'kas-masuk', 'middleware' => ['auth:toko', 'checkjabatan:Super_Admin,Kanit,Bendahara']], function () {
                 Route::get('/', [LaporanKasMasukController::class, 'index']);
                 Route::get('/print/{jenis}/{awal}/{akhir}', [LaporanKasMasukController::class, 'print']);
                 Route::get('/export/{jenis}/{awal}/{akhir}', [LaporanKasMasukController::class, 'export']);
             });
 
-            Route::group(['prefix' => 'kas-keluar'], function () {
+            Route::group(['prefix' => 'kas-keluar', 'middleware' => ['auth:toko', 'checkjabatan:Super_Admin,Kanit,Bendahara']], function () {
                 Route::get('/', [LaporanKasKeluarController::class, 'index']);
                 Route::get('/print/{jenis}/{awal}/{akhir}', [LaporanKasKeluarController::class, 'print']);
                 Route::get('/export/{jenis}/{awal}/{akhir}', [LaporanKasKeluarController::class, 'export']);
             });
 
-            Route::group(['prefix' => 'pendapatan'], function () {
+            Route::group(['prefix' => 'pendapatan', 'middleware' => ['auth:toko', 'checkjabatan:Super_Admin,Kanit,Bendahara']], function () {
                 Route::get('/', [LaporanPendapatanController::class, 'index']);
-                Route::get('/print/{tanggal}', [LaporanPendapatanController::class, 'print']);
-                Route::get('/export/{tanggal}', [LaporanPendapatanController::class, 'export']);
+                Route::get('/print/{tanggal_awal}/{tanggal_akhir}', [LaporanPendapatanController::class, 'print']);
+                Route::get('/export/{tanggal_awal}/{tanggal_akhir}', [LaporanPendapatanController::class, 'export']);
             });
 
-            Route::group(['prefix' => 'piutang'], function () {
+            Route::group(['prefix' => 'piutang', 'middleware' => ['auth:toko', 'checkjabatan:Super_Admin,Kanit,Bendahara']], function () {
                 Route::get('/', [LaporanPiutangController::class, 'index']);
                 Route::get('/print/{awal}/{akhir}', [LaporanPiutangController::class, 'print']);
                 Route::get('/export/{awal}/{akhir}', [LaporanPiutangController::class, 'export']);

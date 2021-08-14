@@ -93,6 +93,14 @@ class SupplierController extends Controller
             }
         }
         
+        HutangModel::where(DB::raw('DATE_ADD(DATE(NOW()), INTERVAL 3 DAY)'), '>=', DB::raw('DATE(jatuh_tempo)'))->update([
+            'alert_status' => 1
+        ]);
+
+        $data_notif_hutang = HutangModel::join('supplier', 'supplier.id', '=', 'hutang.id_supplier')
+                                    ->select('hutang.*', 'supplier.nama AS nama_supplier')
+                                    ->get();
+        
         $namaExist = SupplierModel::where('nama', $request->nama)->get();
         $emailExist = SupplierModel::where('email', $request->email)->get();
 

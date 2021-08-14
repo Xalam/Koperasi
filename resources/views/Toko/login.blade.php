@@ -48,7 +48,7 @@
                 'Password', 'required', 'oninvalid' => "this.setCustomValidity('Password tidak boleh kosong')",
                 'oninput' => "this.setCustomValidity('')"]) !!}
                 {!! Form::label(null, 'Jabatan', ['class' => 'font-3 fw-bold']) !!}
-                {!! Form::select('jabatan', ['Super_Admin' => 'Super Admin', 'Kanit' => 'Kanit', 'Gudang' => 'Gudang',
+                {!! Form::select('jabatan', ['Super_Admin' => 'Super Admin', 'Bendahara' => 'Bendahara', 'Kanit' => 'Kanit', 'Gudang' => 'Gudang',
                 'Kasir' => 'Kasir'], null, ['class' => 'form-select form-select-sm mb-2']) !!}
                 <div class="d-grid gap-2 mt-2">
                     {!! Form::submit('Login', ['class' => 'btn btn-small btn-primary']) !!}

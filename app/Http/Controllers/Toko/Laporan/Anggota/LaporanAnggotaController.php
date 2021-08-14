@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Toko\Laporan\Anggota;
 
+use App\Exports\Toko\Laporan\LaporanAnggotaExport;
 use App\Http\Controllers\Controller;
 use App\Models\Simpan_Pinjam\Master\Anggota\Anggota;
 use App\Models\Toko\Master\Barang\BarangModel;
@@ -9,6 +10,7 @@ use App\Models\Toko\Transaksi\Hutang\HutangModel;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Maatwebsite\Excel\Facades\Excel;
 
 class LaporanAnggotaController extends Controller
 {
@@ -95,5 +97,29 @@ class LaporanAnggotaController extends Controller
         } else {
             return view ('toko.laporan.anggota.detail', compact('cur_date', 'data_notified', 'data_notif', 'data_notif_hutang'));
         }
+    }
+
+    public function print($tanggal_awal, $tanggal_akhir) {
+        if ($tanggal_awal && $tanggal_akhir) {
+            $laporan_anggota = Anggota::join('penjualan', 'penjualan.id_anggota', '=', 'tb_anggota.id')
+                                            ->select('tb_anggota.id AS id', 'tb_anggota.kd_anggota AS kode_anggota', 'tb_anggota.nama_anggota AS nama_anggota', 
+                                                    DB::raw('SUM(penjualan.jumlah_harga) AS total_belanja'))
+                                            ->groupBy('penjualan.id_anggota')
+                                            ->whereBetween('penjualan.tanggal', [$tanggal_awal, $tanggal_akhir])
+                                            ->orderBy('tb_anggota.nama_anggota')
+                                            ->get();              
+        }
+
+        return view ('toko.laporan.anggota.print', compact('laporan_anggota', 'tanggal_awal', 'tanggal_akhir'));
+        
+        // $pdf = PDF::loadview('toko.laporan.pembelian.print', ['laporan_pembelian'=>$laporan_pembelian]);
+        // return $pdf->download('Laporan Pembelian ' . $pembayaran . $tanggal . '.pdf');
+    }
+
+    public function export($tanggal_awal, $tanggal_akhir) {
+        return Excel::download(new LaporanAnggotaExport(
+                                    $tanggal_awal,
+                                    $tanggal_akhir
+                                ), 'Laporan Anggota ' . $tanggal_awal . ' - ' . $tanggal_akhir . '.xlsx');
     }
 }

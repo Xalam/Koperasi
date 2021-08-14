@@ -194,15 +194,15 @@ $(function() {
     function setKode() {
         var split = $("input[name='nama']").val().split(' ');
 
-        var initial = "";
+        var initial = '';
 
         for (var i = 0; i < split.length; i++) {
-            if (split[i].length > 0) {
+            if (i < 3 && split[i][0] != null) {
                 initial += split[i][0];
             }
         }
 
-        $("input[name='kode']").val(initial + $("[name='kemasan'] option:selected").val() + $(
+        $("input[name='kode']").val(initial.toUpperCase() + $("[name='kemasan'] option:selected").val() + $(
                 "[name='jenis'] option:selected").val() + $("[name='satuan'] option:selected").val() + $(
                 "[name='supplier'] option:selected").val() + $("[name='bulan']").val() + $("[name='tahun']")
             .val() + $("[name='nomor_rak'] option:selected").val() + $("[name='tingkat_rak'] option:selected").val() + $("[name='posisi_rak'] option:selected").val());

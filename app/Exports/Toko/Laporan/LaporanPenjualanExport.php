@@ -26,9 +26,9 @@ class LaporanPenjualanExport implements FromCollection, WithHeadings {
                                                     ->where('pembayaran', '=', $this->type_pembayaran)
                                                     ->join('detail_jual', 'detail_jual.nomor', '=', 'penjualan.nomor')
                                                     ->join('barang', 'barang.id', '=', 'detail_jual.id_barang')
-                                                    ->join('anggota', 'anggota.id', '=', 'penjualan.id_anggota')
+                                                    ->join('tb_anggota', 'tb_anggota.id', '=', 'penjualan.id_anggota')
                                                     ->select('detail_jual.nomor AS nomor', 'penjualan.tanggal AS tanggal', 
-                                                            'anggota.kode AS kode_anggota', 'anggota.nama AS nama_anggota', 
+                                                            'tb_anggota.kd_anggota AS kode_anggota', 'tb_anggota.nama_anggota AS nama_anggota', 
                                                             'barang.kode AS kode', 'barang.nama AS nama',
                                                             'barang.harga_jual AS harga_jual', 'detail_jual.jumlah AS jumlah', 
                                                             'detail_jual.total_harga AS total_harga')
@@ -37,9 +37,9 @@ class LaporanPenjualanExport implements FromCollection, WithHeadings {
                 return PenjualanModel::where('penjualan.tanggal', '>=', $this->tanggal_awal)
                                     ->join('detail_jual', 'detail_jual.nomor', '=', 'penjualan.nomor')
                                     ->join('barang', 'barang.id', '=', 'detail_jual.id_barang')
-                                    ->join('anggota', 'anggota.id', '=', 'penjualan.id_anggota')
+                                    ->join('tb_anggota', 'tb_anggota.id', '=', 'penjualan.id_anggota')
                                     ->select('detail_jual.nomor AS nomor', 'penjualan.tanggal AS tanggal', 
-                                            'anggota.kode AS kode_anggota', 'anggota.nama AS nama_anggota', 
+                                            'tb_anggota.kd_anggota AS kode_anggota', 'tb_anggota.nama_anggota AS nama_anggota', 
                                             'barang.kode AS kode', 'barang.nama AS nama',
                                             'barang.harga_jual AS harga_jual', 'detail_jual.jumlah AS jumlah', 
                                             'detail_jual.total_harga AS total_harga')
@@ -51,9 +51,9 @@ class LaporanPenjualanExport implements FromCollection, WithHeadings {
                                                     ->where('pembayaran', '=', $this->type_pembayaran)
                                                     ->join('detail_jual', 'detail_jual.nomor', '=', 'penjualan.nomor')
                                                     ->join('barang', 'barang.id', '=', 'detail_jual.id_barang')
-                                                    ->join('anggota', 'anggota.id', '=', 'penjualan.id_anggota')
+                                                    ->join('tb_anggota', 'tb_anggota.id', '=', 'penjualan.id_anggota')
                                                     ->select('detail_jual.nomor AS nomor', 'penjualan.tanggal AS tanggal', 
-                                                            'anggota.kode AS kode_anggota', 'anggota.nama AS nama_anggota', 
+                                                            'tb_anggota.kd_anggota AS kode_anggota', 'tb_anggota.nama_anggota AS nama_anggota', 
                                                             'barang.kode AS kode', 'barang.nama AS nama',
                                                             'barang.harga_jual AS harga_jual', 'detail_jual.jumlah AS jumlah', 
                                                             'detail_jual.total_harga AS total_harga')
@@ -62,9 +62,9 @@ class LaporanPenjualanExport implements FromCollection, WithHeadings {
                 return PenjualanModel::where('penjualan.tanggal', '<=', $this->tanggal_akhir)
                                     ->join('detail_jual', 'detail_jual.nomor', '=', 'penjualan.nomor')
                                     ->join('barang', 'barang.id', '=', 'detail_jual.id_barang')
-                                    ->join('anggota', 'anggota.id', '=', 'penjualan.id_anggota')
+                                    ->join('tb_anggota', 'tb_anggota.id', '=', 'penjualan.id_anggota')
                                     ->select('detail_jual.nomor AS nomor', 'penjualan.tanggal AS tanggal', 
-                                            'anggota.kode AS kode_anggota', 'anggota.nama AS nama_anggota', 
+                                            'tb_anggota.kd_anggota AS kode_anggota', 'tb_anggota.nama_anggota AS nama_anggota', 
                                             'barang.kode AS kode', 'barang.nama AS nama',
                                             'barang.harga_jual AS harga_jual', 'detail_jual.jumlah AS jumlah', 
                                             'detail_jual.total_harga AS total_harga')
@@ -76,9 +76,9 @@ class LaporanPenjualanExport implements FromCollection, WithHeadings {
                                                     ->where('pembayaran', '=', $this->type_pembayaran)
                                                     ->join('detail_jual', 'detail_jual.nomor', '=', 'penjualan.nomor')
                                                     ->join('barang', 'barang.id', '=', 'detail_jual.id_barang')
-                                                    ->join('anggota', 'anggota.id', '=', 'penjualan.id_anggota')
+                                                    ->join('tb_anggota', 'tb_anggota.id', '=', 'penjualan.id_anggota')
                                                     ->select('detail_jual.nomor AS nomor', 'penjualan.tanggal AS tanggal', 
-                                                            'anggota.kode AS kode_anggota', 'anggota.nama AS nama_anggota', 
+                                                            'tb_anggota.kd_anggota AS kode_anggota', 'tb_anggota.nama_anggota AS nama_anggota', 
                                                             'barang.kode AS kode', 'barang.nama AS nama',
                                                             'barang.harga_jual AS harga_jual', 'detail_jual.jumlah AS jumlah', 
                                                             'detail_jual.total_harga AS total_harga')
@@ -87,9 +87,9 @@ class LaporanPenjualanExport implements FromCollection, WithHeadings {
                 return PenjualanModel::whereBetween('penjualan.tanggal', [$this->tanggal_awal, $this->tanggal_akhir])
                                                     ->join('detail_jual', 'detail_jual.nomor', '=', 'penjualan.nomor')
                                                     ->join('barang', 'barang.id', '=', 'detail_jual.id_barang')
-                                                    ->join('anggota', 'anggota.id', '=', 'penjualan.id_anggota')
+                                                    ->join('tb_anggota', 'tb_anggota.id', '=', 'penjualan.id_anggota')
                                                     ->select('detail_jual.nomor AS nomor', 'penjualan.tanggal AS tanggal', 
-                                                            'anggota.kode AS kode_anggota', 'anggota.nama AS nama_anggota', 
+                                                            'tb_anggota.kd_anggota AS kode_anggota', 'tb_anggota.nama_anggota AS nama_anggota', 
                                                             'barang.kode AS kode', 'barang.nama AS nama',
                                                             'barang.harga_jual AS harga_jual', 'detail_jual.jumlah AS jumlah', 
                                                             'detail_jual.total_harga AS total_harga')

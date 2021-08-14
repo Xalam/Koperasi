@@ -42,10 +42,10 @@ class LaporanPersediaanController extends Controller
         $jumlah_barang = $request->input('jumlah_barang');
 
         if ($jumlah_barang) {
-            $laporan_persediaan = BarangModel::select('id', 'kode', 'nama', 'hpp', DB::raw('SUM(stok_etalase + stok_gudang) AS stok'), 'satuan')
+            $laporan_persediaan = BarangModel::select('id', 'kode', 'nama', 'hpp', DB::raw('(stok_etalase + stok_gudang) AS stok'), 'satuan')
                                     ->groupBy('nama')
                                     ->orderBy('nama')
-                                    ->having(DB::raw('SUM(stok_etalase + stok_gudang)'), '<', $jumlah_barang)
+                                    ->having('stok', '<', $jumlah_barang)
                                     ->get();
 
             return view ('toko.laporan.persediaan.index', compact('cur_date', 'laporan_persediaan', 'data_notified', 'data_notif', 'data_notif_hutang', 'jumlah_barang'));
@@ -86,7 +86,11 @@ class LaporanPersediaanController extends Controller
     }
 
     public function print($minimal_stok) {
-        $laporan_persediaan = BarangModel::where(DB::raw('SUM(stok_etalase + stok_gudang)'), '<', $minimal_stok)->get();
+        $laporan_persediaan = BarangModel::select('id', 'kode', 'nama', 'hpp', DB::raw('(stok_etalase + stok_gudang) AS stok'), 'satuan')
+                                ->groupBy('nama')
+                                ->orderBy('nama')
+                                ->having('stok', '<', $minimal_stok)
+                                ->get();
 
         return view ('toko.laporan.persediaan.print', compact('laporan_persediaan'));
         

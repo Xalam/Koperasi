@@ -18,10 +18,13 @@ class LaporanPersediaanExport implements FromCollection, WithHeadings {
     }
 
     public function collection() {
-        return BarangModel::select('kode AS kode', 'nama AS nama', 'stok AS stok', 
-                                    'hpp AS HPP', 'harga_jual AS harga_jual', 
-                                    DB::raw('(hpp * stok) AS jumlah_hpp'), DB::raw('(harga_jual * stok) AS jumlah_harga_jual'))
-                            ->where('stok', '<', $this->minimal_stok)->get();
+        return BarangModel::select('kode', 'nama', DB::raw('(stok_etalase + stok_gudang) AS stok'), 
+                                    'hpp', 'harga_jual', DB::raw('((stok_etalase + stok_gudang) * hpp) AS jumlah_hpp'), 
+                                    DB::raw('((stok_etalase + stok_gudang) * harga_jual) AS jumlah_harga_jual'))
+                                ->groupBy('nama')
+                                ->orderBy('nama')
+                                ->having('stok', '<', $this->minimal_stok)
+                                ->get();
     }
 
     public function headings(): array {
