@@ -113,14 +113,6 @@ class BarangController extends Controller
                 ]);
             }
         }
-
-        HutangModel::where(DB::raw('DATE_ADD(DATE(NOW()), INTERVAL 3 DAY)'), '>=', DB::raw('DATE(jatuh_tempo)'))->update([
-            'alert_status' => 1
-        ]);
-
-        $data_notif_hutang = HutangModel::join('supplier', 'supplier.id', '=', 'hutang.id_supplier')
-                                    ->select('hutang.*', 'supplier.nama AS nama_supplier')
-                                    ->get();
         
         $id_supplier = SupplierModel::where('nama', $request->input('text_supplier'))->first()->id;
 
@@ -153,7 +145,7 @@ class BarangController extends Controller
             Session::flash('success', 'Berhasil');
         }
 
-        return view('toko.master.barang.create', compact('data_notified', 'data_notif', 'data_notif_hutang', 'rak', 'supplier', 'tahun'));
+        return view('toko.master.barang.create', compact('data_notified', 'data_notif', 'rak', 'supplier', 'tahun'));
     }
 
     public function update(Request $request) {

@@ -33,7 +33,7 @@
 </head>
 
 <body>
-    <table class="table table-striped table-bordered table-hover nowrap">
+    <table id="table-data" class="table table-striped table-bordered table-hover nowrap">
         <thead class="text-center">
             <tr>
                 @if (isset($laporan_master) && count($laporan_master) > 0)
@@ -49,7 +49,8 @@
                 <th>HPP</th>
                 <th>Harga Jual</th>
                 <th>Satuan</th>
-                <th>Stok</th>
+                <th>Stok Etalase</th>
+                <th>Stok Gudang</th>
                 @elseif ($bagian == 'Anggota')
                 <th>No</th>
                 <th>Kode Anggota</th>
@@ -96,15 +97,16 @@
                 <td class="align-middle text-center">{{$data->hpp}}</td>
                 <td class="align-middle text-center">{{$data->harga_jual}}</td>
                 <td class="align-middle text-center">{{$data->satuan}}</td>
-                <td class="align-middle text-center">{{$data->stok}}</td>
+                <td class="align-middle text-center">{{$data->stok_etalase}}</td>
+                <td class="align-middle text-center">{{$data->stok_gudang}}</td>
                 @elseif ($bagian == 'Anggota')
                 <th class="align-middle text-center">{{$i++}}</th>
-                <td class="align-middle text-center">{{$data->kode}}</td>
-                <td class="align-middle">{{$data->nama}}</td>
+                <td class="align-middle text-center">{{$data->kd_anggota}}</td>
+                <td class="align-middle">{{$data->nama_anggota}}</td>
                 <td class="align-middle text-center">{{$data->jabatan}}</td>
                 <td class="align-middle">{{$data->alamat}}</td>
-                <td class="align-middle text-center">{{$data->telepon}}</td>
-                <td class="align-middle text-center">{{$data->wa}}</td>
+                <td class="align-middle text-center">{{$data->no_hp}}</td>
+                <td class="align-middle text-center">{{$data->no_wa}}</td>
                 <td class="align-middle text-center">{{$data->status}}</td>
                 @else
                 <th class="align-middle text-center">{{$i++}}</th>
@@ -118,7 +120,6 @@
             </tr>
             @endforeach
         </tbody>
-        @endif
     </table>
 </body>
 

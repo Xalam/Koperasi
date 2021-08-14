@@ -86,14 +86,6 @@ class AdminController extends Controller
                 ]);
             }
         }
-
-        HutangModel::where(DB::raw('DATE_ADD(DATE(NOW()), INTERVAL 3 DAY)'), '>=', DB::raw('DATE(jatuh_tempo)'))->update([
-            'alert_status' => 1
-        ]);
-
-        $data_notif_hutang = HutangModel::join('supplier', 'supplier.id', '=', 'hutang.id_supplier')
-                                        ->select('hutang.*', 'supplier.nama AS nama_supplier')
-                                        ->get();
         
         $nameExist = AdminModel::where('jabatan', $request->jabatan)
                                 ->where('nama', $request->nama)
@@ -118,7 +110,7 @@ class AdminController extends Controller
     
             Session::flash('success', 'Berhasil');
         }
-        return view('toko.master.admin.create', compact('data_notified', 'data_notif', 'data_notif_hutang'));
+        return view('toko.master.admin.create', compact('data_notified', 'data_notif'));
     }
 
     public function update(Request $request) {

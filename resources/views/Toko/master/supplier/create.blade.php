@@ -125,15 +125,15 @@ $(document).ready(function() {
 function setKode() {
     var split = $("input[name='nama']").val().split(' ');
 
-    var initial = "";
+    var initial = '';
 
     for (var i = 0; i < split.length; i++) {
-        if (split[i].length > 0) {
+        if (i < 3 && split[i][0] != null) {
             initial += split[i][0];
         }
     }
 
-    $("input[name='kode']").val("S" + initial + $("[name='jarak']").val() + $(
+    $("input[name='kode']").val("S" + initial.toUpperCase() + $("[name='jarak']").val() + $(
         "[name='lama_kirim']").val());
 }
 

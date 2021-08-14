@@ -40,7 +40,7 @@ class AkunController extends Controller
                                     ->select('hutang.*', 'supplier.nama AS nama_supplier')
                                     ->get();
 
-        return view('toko.master.akun.index', compact('akun', 'data_notified', 'data_notif', 'data_notif_hutang', 'data_notif_hutang'));
+        return view('toko.master.akun.index', compact('akun', 'data_notified', 'data_notif', 'data_notif_hutang'));
     }
     
     public function create() {
@@ -85,14 +85,6 @@ class AkunController extends Controller
                 ]);
             }
         }
-
-        HutangModel::where(DB::raw('DATE_ADD(DATE(NOW()), INTERVAL 3 DAY)'), '>=', DB::raw('DATE(jatuh_tempo)'))->update([
-            'alert_status' => 1
-        ]);
-
-        $data_notif_hutang = HutangModel::join('supplier', 'supplier.id', '=', 'hutang.id_supplier')
-                                    ->select('hutang.*', 'supplier.nama AS nama_supplier')
-                                    ->get();
         
         $jenis_akun = AkunJenisModel::where('id', substr($request->input('kode'), 0, 1))->first();
         if ($jenis_akun->nama == 'Debit') {
