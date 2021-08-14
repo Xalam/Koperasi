@@ -25,7 +25,7 @@
         </div>
         <div class="row-lg align-item-center mb-2">
             {!! Form::label(null, 'Jabatan', ['class' => 'col-lg-2']) !!}
-            {!! Form::select('jabatan', ['Super_Admin' => 'Super Admin', 'Kanit' => 'Kanit', 'Gudang' => 'Gudang',
+            {!! Form::select('jabatan', ['Super_Admin' => 'Super Admin', 'Bendahara' => 'Bendahara', 'Kanit' => 'Kanit', 'Gudang' => 'Gudang',
             'Kasir' => 'Kasir'], null, ['class' => 'col-lg-2 form-select form-select-sm',
             'required', 'oninvalid' => "this.setCustomValidity('Tidak boleh kosong')", 'oninput' =>
             "this.setCustomValidity('')"]) !!}
