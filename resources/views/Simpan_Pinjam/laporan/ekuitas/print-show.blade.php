@@ -53,10 +53,10 @@
             </div>
             <div>
                 <address>
-                    @if (isset($reqStart) && isset($reqEnd))
-                        Periode : {{ $reqStart }} / {{ $reqEnd }}
+                    @if ($startDate != '')
+                        Tanggal: {{ $startDate }} / {{ $endDate }}
                     @else
-                        Sampai Tanggal : {{ date('d-m-Y') }}
+                        Tanggal: {{ $endDate }}
                     @endif
                 </address>
             </div>
