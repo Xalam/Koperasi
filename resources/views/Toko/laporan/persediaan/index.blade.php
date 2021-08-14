@@ -21,11 +21,8 @@
     <div class="d-flex flex-row">
         @if (isset($laporan_persediaan) && count($laporan_persediaan) > 0)
         <p class="card-header col-lg">Daftar Persediaan Barang Kurang Dari {{$jumlah_barang}}</p>
-        <a href=<?php echo 'persediaan/export/'.$jumlah_barang ?> target="_blank"><i
-                class="card-header text-success fas fa-file-export" style="cursor: pointer;"
-                title="Export to Excel"></i></a>
-        <a href=<?php echo 'persediaan/print/'.$jumlah_barang ?> target="_blank"><i
-                class="card-header text-success fas fa-print" style="cursor: pointer;" title="Print"></i></a>
+        <a href=<?php echo 'persediaan/export/'.$jumlah_barang ?> target="_blank"><i class="card-header text-success fas fa-file-export" style="cursor: pointer;" title="Export to Excel"></i></a>
+        <a href=<?php echo 'persediaan/print/'.$jumlah_barang ?> target="_blank"><i class="card-header text-success fas fa-print" style="cursor: pointer;" title="Print"></i></a>
         @else
         <p class="card-header col-lg">Daftar Persediaan Barang </p>
         @endif
@@ -59,9 +56,9 @@
                     </tr>
                     @endforeach
                 </tbody>
-                @endif
             </table>
         </div>
+        @endif
     </div>
 </div>
 @endsection

@@ -20,7 +20,7 @@
 @endsection
 
 @section('content_main')
-
+    @if (auth()->user()->role != 'bendahara')
     <div class="row">
         <div class="col-12">
             <div class="card card-outline card-primary">
@@ -75,7 +75,7 @@
             </div>
         </div>
     </div>
-
+    @endif
     <div class="row">
         <div class="col-12">
             <div class="card">

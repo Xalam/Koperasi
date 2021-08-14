@@ -18,7 +18,7 @@
 @endsection
 
 @section('content_main')
-
+    @if (auth()->user()->role != 'bendahara')
     <div class="row">
         <div class="col-12">
             <div class="card">
@@ -50,7 +50,7 @@
             </div>
         </div>
     </div>
-
+    @endif
     <div class="row">
         <div class="col-12">
             <div class="card">
@@ -80,7 +80,7 @@
             </div>
         </div>
     </div>
-
+    @if (auth()->user()->role != 'bendahara')
     <div class="row">
         <div class="col-12">
             <div class="card">
@@ -107,6 +107,7 @@
             </div>
         </div>
     </div>
+    @endif
 @endsection
 
 @section('script')

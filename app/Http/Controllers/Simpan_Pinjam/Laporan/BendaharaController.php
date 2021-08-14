@@ -19,9 +19,9 @@ class BendaharaController extends Controller
     public function show_data(Request $request)
     {
         $tanggal = date('Y-m');
-
+        
         if ($request->tanggal) {
-            $tanggal = $request->tanggal;
+            $tanggal = date('Y-m', strtotime($request->tanggal));
         }
 
         $anggota = Anggota::query()
@@ -29,7 +29,7 @@ class BendaharaController extends Controller
                 $join->on('tb_anggota.id', '=', 'tb_pinjaman.id_anggota')
                     ->where('tb_pinjaman.lunas', 0)
                     ->where('tb_pinjaman.status', 2)
-                    ->where(DB::raw("DATE_FORMAT(tb_pinjaman.tanggal, '%Y-%m')"), $tanggal);
+                    ->where(DB::raw("DATE_FORMAT(tb_pinjaman.tanggal, '%Y-%m')"), '<', $tanggal);
             })
             ->leftJoin(DB::raw("(SELECT * FROM (SELECT MAX(id) as maxid FROM piutang GROUP BY id_anggota) t INNER JOIN piutang p ON p.id = t.maxid) as hutang"), function ($join) {
                 $join->on('tb_anggota.id', '=', 'hutang.id_anggota');
@@ -71,7 +71,7 @@ class BendaharaController extends Controller
         #Jumlah Total Piutang
         $sumTotalPiutang = array_sum($totalPiutang);
 
-        return view('Simpan_Pinjam.laporan.bendahara.show', compact('anggota', 'simpananWajib', 'sumHutang', 'sumAngsuran', 'sumSimpanan', 'totalPiutang', 'sumTotalPiutang'));
+        return view('Simpan_Pinjam.laporan.bendahara.show', compact('anggota', 'simpananWajib', 'sumHutang', 'sumAngsuran', 'sumSimpanan', 'totalPiutang', 'sumTotalPiutang', 'tanggal'));
     }
 
     public function print_show(Request $request)
@@ -87,7 +87,7 @@ class BendaharaController extends Controller
                 $join->on('tb_anggota.id', '=', 'tb_pinjaman.id_anggota')
                     ->where('tb_pinjaman.lunas', 0)
                     ->where('tb_pinjaman.status', 2)
-                    ->where(DB::raw("DATE_FORMAT(tb_pinjaman.tanggal, '%Y-%m')"), $tanggal);
+                    ->where(DB::raw("DATE_FORMAT(tb_pinjaman.tanggal, '%Y-%m')"), '<', $tanggal);
             })
             ->leftJoin(DB::raw("(SELECT * FROM (SELECT MAX(id) as maxid FROM piutang GROUP BY id_anggota) t INNER JOIN piutang p ON p.id = t.maxid) as hutang"), function ($join) {
                 $join->on('tb_anggota.id', '=', 'hutang.id_anggota');
@@ -129,6 +129,6 @@ class BendaharaController extends Controller
         #Jumlah Total Piutang
         $sumTotalPiutang = array_sum($totalPiutang);
 
-        return view('Simpan_Pinjam.laporan.bendahara.print-show', compact('anggota', 'simpananWajib', 'sumHutang', 'sumAngsuran', 'sumSimpanan', 'totalPiutang', 'sumTotalPiutang'));
+        return view('Simpan_Pinjam.laporan.bendahara.print-show', compact('anggota', 'simpananWajib', 'sumHutang', 'sumAngsuran', 'sumSimpanan', 'totalPiutang', 'sumTotalPiutang', 'tanggal'));
     }
 }

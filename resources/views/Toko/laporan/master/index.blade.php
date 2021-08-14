@@ -22,11 +22,8 @@
     <div class="d-flex flex-row">
         @if (isset($laporan_master) && count($laporan_master) > 0)
         <p class="card-header col-lg">Daftar {{$bagian}}</p>
-        <a href=<?php echo 'data-master/export/'.$bagian ?> target="_blank"><i
-                class="card-header text-success fas fa-file-export" style="cursor: pointer;"
-                title="Export to Excel"></i></a>
-        <a href=<?php echo 'data-master/print/'.$bagian ?> target="_blank"><i
-                class="card-header text-success fas fa-print" style="cursor: pointer;" title="Print"></i></a>
+        <a href=<?php echo 'data-master/export/'.$bagian ?> target="_blank"><i class="card-header text-success fas fa-file-export" style="cursor: pointer;" title="Export to Excel"></i></a>
+        <a href=<?php echo 'data-master/print/'.$bagian ?> target="_blank"><i class="card-header text-success fas fa-print" style="cursor: pointer;" title="Print"></i></a>
         @else
         <p class="card-header col-lg">Daftar</p>
         @endif
@@ -120,9 +117,9 @@
                     </tr>
                     @endforeach
                 </tbody>
-                @endif
             </table>
         </div>
+        @endif
     </div>
 </div>
 @endsection

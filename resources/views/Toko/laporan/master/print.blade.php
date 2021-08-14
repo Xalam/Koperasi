@@ -120,6 +120,7 @@
             </tr>
             @endforeach
         </tbody>
+        @endif
     </table>
 </body>
 
