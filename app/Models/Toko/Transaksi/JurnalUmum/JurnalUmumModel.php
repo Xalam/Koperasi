@@ -13,9 +13,10 @@ class JurnalUmumModel extends Model
 
     protected $fillable = [
         'nomor',
+        'id_akun',
         'tanggal',
         'keterangan',
-        'debit', 
+        'debit',
         'kredit'
     ];
 }

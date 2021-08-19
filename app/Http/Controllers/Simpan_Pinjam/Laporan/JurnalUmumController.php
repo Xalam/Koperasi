@@ -3,9 +3,13 @@
 namespace App\Http\Controllers\Simpan_Pinjam\Laporan;
 
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\Simpan_Pinjam\Utils\KodeJurnal;
 use App\Models\Simpan_Pinjam\Laporan\JurnalUmum;
 use App\Models\Simpan_Pinjam\Master\Akun\Akun;
+use App\Models\Toko\Transaksi\Jurnal\JurnalModel;
+use App\Models\Toko\Transaksi\JurnalUmum\JurnalUmumModel;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class JurnalUmumController extends Controller
 {
@@ -16,7 +20,10 @@ class JurnalUmumController extends Controller
      */
     public function index()
     {
-        $jurnal = JurnalUmum::orderBy('id', 'DESC')->get();
+        $a = JurnalUmumModel::select(DB::raw("id, nomor as kode_jurnal, id_akun, tanggal, keterangan, debit as debet, kredit"));
+        $b = JurnalModel::select(DB::raw("id, nomor as kode_jurnal, id_akun, tanggal, keterangan, debit as debet, kredit"));
+        $jurnal = JurnalUmum::select(DB::raw("id, CONVERT(kode_jurnal USING utf8) as kode_jurnal, id_akun, tanggal, CONVERT(keterangan USING utf8) as keterangan, debet, kredit"))->orderBy('id', 'DESC')->union($a)->union($b)->orderBy('id', 'DESC')->get();
+
         $debet  = $jurnal->sum('debet');
         $kredit = $jurnal->sum('kredit');
 
@@ -33,8 +40,8 @@ class JurnalUmumController extends Controller
                     'nama_akun'  => $value->akun->nama_akun,
                     'debet'      => number_format($value->debet, 2, ',', '.'),
                     'kredit'     => number_format($value->kredit, 2, ',', '.'),
-                    'action'     => '<a href="' . route('jurnal.edit', $value->id) . '" class="btn btn-warning btn-sm"><i class="far fa-edit"></i>&nbsp; Edit</a>
-                                    &nbsp; <a href="#mymodalJurnal" data-remote="' . route('jurnal.modal', $value->id) . '" data-toggle="modal" data-target="#mymodalJurnal" class="btn btn-danger btn-sm"><i class="far fa-trash-alt"></i>&nbsp; Hapus</a>'
+                    'action'     => ((substr($value->kode_jurnal, 0, 3) == 'JU-') ? '<a href="' . route('jurnal.edit', $value->id) . '" class="btn btn-warning btn-sm"><i class="far fa-edit"></i></a>
+                                    <a href="#mymodalJurnal" data-remote="' . route('jurnal.modal', $value->id) . '" data-toggle="modal" data-target="#mymodalJurnal" class="btn btn-danger btn-sm"><i class="far fa-trash-alt"></i></a>' : '')
                 ];
             }
             return response()->json(compact('data'));
@@ -64,13 +71,7 @@ class JurnalUmumController extends Controller
     public function store(Request $request)
     {
         #Kode Jurnal
-        $check = JurnalUmum::select('*')->orderBy('id', 'DESC')->first();
-        if ($check == null) {
-            $id = 1;
-        } else {
-            $substrKode = substr($check->kode_jurnal, 3);
-            $id   = $substrKode + 1;
-        }
+        $kodeJurnal = KodeJurnal::kode();
 
         if (count($request->rows) > 0) {
             for ($i = 0; $i < count($request->rows); $i++) {
@@ -79,7 +80,7 @@ class JurnalUmumController extends Controller
                 $cleanKredit[$i] = str_replace('.', '', $request->kredit[$i]);
 
                 JurnalUmum::create([
-                    'kode_jurnal' => 'JU-' . str_pad($id, 6, '0', STR_PAD_LEFT),
+                    'kode_jurnal' => $kodeJurnal,
                     'id_akun'     => $request->id_akun[$i],
                     'tanggal'     => date('Y-m-d'),
                     'keterangan'  => $request->keterangan[$i],
@@ -171,10 +172,16 @@ class JurnalUmumController extends Controller
             $startDate = date('Y-m-d', strtotime($request->start_date));
             $endDate   = date('Y-m-d', strtotime($request->end_date));
 
-            $jurnal = JurnalUmum::whereBetween('tanggal', [$startDate, $endDate])->orderBy('id', 'DESC')->get();
+            $a = JurnalUmumModel::select(DB::raw("id, nomor as kode_jurnal, id_akun, tanggal, keterangan, debit as debet, kredit"))->whereBetween('tanggal', [$startDate, $endDate]);
+            $b = JurnalModel::select(DB::raw("id, nomor as kode_jurnal, id_akun, tanggal, keterangan, debit as debet, kredit"))->whereBetween('tanggal', [$startDate, $endDate]);
+            $jurnal = JurnalUmum::select(DB::raw("id, CONVERT(kode_jurnal USING utf8) as kode_jurnal, id_akun, tanggal, CONVERT(keterangan USING utf8) as keterangan, debet, kredit"))->whereBetween('tanggal', [$startDate, $endDate])->orderBy('id', 'DESC')->union($a)->union($b)->orderBy('id', 'DESC')->get();
+
             return view('Simpan_Pinjam.laporan.jurnal-umum.print-show', compact('jurnal', 'reqStart', 'reqEnd'));
         } else {
-            $jurnal = JurnalUmum::orderBy('id', 'DESC')->get();
+            $a = JurnalUmumModel::select(DB::raw("id, nomor as kode_jurnal, id_akun, tanggal, keterangan, debit as debet, kredit"));
+            $b = JurnalModel::select(DB::raw("id, nomor as kode_jurnal, id_akun, tanggal, keterangan, debit as debet, kredit"));
+            $jurnal = JurnalUmum::select(DB::raw("id, CONVERT(kode_jurnal USING utf8) as kode_jurnal, id_akun, tanggal, CONVERT(keterangan USING utf8) as keterangan, debet, kredit"))->orderBy('id', 'DESC')->union($a)->union($b)->orderBy('id', 'DESC')->get();
+
             return view('Simpan_Pinjam.laporan.jurnal-umum.print-show', compact('jurnal', 'reqStart', 'reqEnd'));
         }
     }
