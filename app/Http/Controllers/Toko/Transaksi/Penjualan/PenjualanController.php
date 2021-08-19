@@ -229,14 +229,14 @@ class PenjualanController extends Controller
                     'kredit' => 0
                 ]); 
                     
-                JurnalUmum::create([
-                    'kode_jurnal' => $request->input('nomor_jurnal'),
-                    'id_akun' => $hpp->id,
-                    'tanggal' => $tanggal,
-                    'keterangan' => $keterangan,
-                    'debet' => $jumlah_hpp->total_hpp,
-                    'kredit' => 0
-                ]); 
+                // JurnalUmum::create([
+                //     'kode_jurnal' => $request->input('nomor_jurnal'),
+                //     'id_akun' => $hpp->id,
+                //     'tanggal' => $tanggal,
+                //     'keterangan' => $keterangan,
+                //     'debet' => $jumlah_hpp->total_hpp,
+                //     'kredit' => 0
+                // ]); 
                     
                 JurnalModel::create([
                     'nomor' => $request->input('nomor_jurnal'),
@@ -247,14 +247,14 @@ class PenjualanController extends Controller
                     'kredit' => 0
                 ]); 
                     
-                JurnalUmum::create([
-                    'kode_jurnal' => $request->input('nomor_jurnal'),
-                    'id_akun' => $kas->id,
-                    'tanggal' => $request->input('tanggal'),
-                    'keterangan' => $keterangan,
-                    'debet' => $request->input('jumlah_harga'),
-                    'kredit' => 0
-                ]); 
+                // JurnalUmum::create([
+                //     'kode_jurnal' => $request->input('nomor_jurnal'),
+                //     'id_akun' => $kas->id,
+                //     'tanggal' => $request->input('tanggal'),
+                //     'keterangan' => $keterangan,
+                //     'debet' => $request->input('jumlah_harga'),
+                //     'kredit' => 0
+                // ]); 
 
                 JurnalModel::create([
                     'nomor' => $request->input('nomor_jurnal'),
@@ -265,14 +265,14 @@ class PenjualanController extends Controller
                     'kredit' => $jumlah_hpp->total_hpp
                 ]); 
 
-                JurnalUmum::create([
-                    'kode_jurnal' => $request->input('nomor_jurnal'),
-                    'id_akun' => $persediaan->id,
-                    'tanggal' => $tanggal,
-                    'keterangan' => $keterangan,
-                    'debet' => 0,
-                    'kredit' => $jumlah_hpp->total_hpp
-                ]); 
+                // JurnalUmum::create([
+                //     'kode_jurnal' => $request->input('nomor_jurnal'),
+                //     'id_akun' => $persediaan->id,
+                //     'tanggal' => $tanggal,
+                //     'keterangan' => $keterangan,
+                //     'debet' => 0,
+                //     'kredit' => $jumlah_hpp->total_hpp
+                // ]); 
                     
                 JurnalModel::create([
                     'nomor' => $request->input('nomor_jurnal'),
@@ -283,14 +283,14 @@ class PenjualanController extends Controller
                     'kredit' => $request->input('jumlah_harga')
                 ]);
                     
-                JurnalUmum::create([
-                    'kode_jurnal' => $request->input('nomor_jurnal'),
-                    'id_akun' => $pendapatan->id,
-                    'tanggal' => $request->input('tanggal'),
-                    'keterangan' => $keterangan,
-                    'debet' => 0,
-                    'kredit' => $request->input('jumlah_harga')
-                ]);
+                // JurnalUmum::create([
+                //     'kode_jurnal' => $request->input('nomor_jurnal'),
+                //     'id_akun' => $pendapatan->id,
+                //     'tanggal' => $request->input('tanggal'),
+                //     'keterangan' => $keterangan,
+                //     'debet' => 0,
+                //     'kredit' => $request->input('jumlah_harga')
+                // ]);
 
                 $jumlah_bayar = $request->input('jumlah_bayar');
                 $jumlah_kembalian = $request->input('jumlah_kembalian');
@@ -347,14 +347,14 @@ class PenjualanController extends Controller
                     'kredit' => 0
                 ]); 
 
-                JurnalUmum::create([
-                    'kode_jurnal' => $request->input('nomor_jurnal'),
-                    'id_akun' => $piutang->id,
-                    'tanggal' => $request->input('tanggal'),
-                    'keterangan' => $keterangan,
-                    'debet' => $request->input('jumlah_harga'),
-                    'kredit' => 0
-                ]); 
+                // JurnalUmum::create([
+                //     'kode_jurnal' => $request->input('nomor_jurnal'),
+                //     'id_akun' => $piutang->id,
+                //     'tanggal' => $request->input('tanggal'),
+                //     'keterangan' => $keterangan,
+                //     'debet' => $request->input('jumlah_harga'),
+                //     'kredit' => 0
+                // ]); 
                     
                 JurnalModel::create([
                     'nomor' => $request->input('nomor_jurnal'),
@@ -365,14 +365,14 @@ class PenjualanController extends Controller
                     'kredit' => 0
                 ]);
                     
-                JurnalUmum::create([
-                    'kode_jurnal' => $request->input('nomor_jurnal'),
-                    'id_akun' => $hpp->id,
-                    'tanggal' => $request->input('tanggal'),
-                    'keterangan' => $keterangan,
-                    'debet' => $jumlah_hpp->total_hpp,
-                    'kredit' => 0
-                ]);
+                // JurnalUmum::create([
+                //     'kode_jurnal' => $request->input('nomor_jurnal'),
+                //     'id_akun' => $hpp->id,
+                //     'tanggal' => $request->input('tanggal'),
+                //     'keterangan' => $keterangan,
+                //     'debet' => $jumlah_hpp->total_hpp,
+                //     'kredit' => 0
+                // ]);
                     
                 JurnalModel::create([
                     'nomor' => $request->input('nomor_jurnal'),
@@ -383,14 +383,14 @@ class PenjualanController extends Controller
                     'kredit' => $request->input('jumlah_harga')
                 ]); 
                     
-                JurnalUmum::create([
-                    'kode_jurnal' => $request->input('nomor_jurnal'),
-                    'id_akun' => $pendapatan->id,
-                    'tanggal' => $request->input('tanggal'),
-                    'keterangan' => $keterangan,
-                    'debet' => 0,
-                    'kredit' => $request->input('jumlah_harga')
-                ]); 
+                // JurnalUmum::create([
+                //     'kode_jurnal' => $request->input('nomor_jurnal'),
+                //     'id_akun' => $pendapatan->id,
+                //     'tanggal' => $request->input('tanggal'),
+                //     'keterangan' => $keterangan,
+                //     'debet' => 0,
+                //     'kredit' => $request->input('jumlah_harga')
+                // ]); 
                     
                 JurnalModel::create([
                     'nomor' => $request->input('nomor_jurnal'),
@@ -401,14 +401,14 @@ class PenjualanController extends Controller
                     'kredit' => $jumlah_hpp->total_hpp
                 ]); 
                     
-                JurnalUmum::create([
-                    'kode_jurnal' => $request->input('nomor_jurnal'),
-                    'id_akun' => $persediaan->id,
-                    'tanggal' => $request->input('tanggal'),
-                    'keterangan' => $keterangan,
-                    'debet' => 0,
-                    'kredit' => $jumlah_hpp->total_hpp
-                ]); 
+                // JurnalUmum::create([
+                //     'kode_jurnal' => $request->input('nomor_jurnal'),
+                //     'id_akun' => $persediaan->id,
+                //     'tanggal' => $request->input('tanggal'),
+                //     'keterangan' => $keterangan,
+                //     'debet' => 0,
+                //     'kredit' => $jumlah_hpp->total_hpp
+                // ]); 
 
                 $jumlah_bayar = 0;
                 $jumlah_kembalian = 0;

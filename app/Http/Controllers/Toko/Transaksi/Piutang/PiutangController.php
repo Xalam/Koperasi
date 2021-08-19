@@ -124,14 +124,14 @@ class PiutangController extends Controller
             'kredit' => 0
         ]); 
 
-        JurnalUmum::create([
-            'kode_jurnal' => $request->input('nomor_jurnal'),
-            'id_akun' => $kas->id,
-            'tanggal' => $request->input('tanggal'),
-            'keterangan' => $keterangan,
-            'debet' => $request->input('terima_piutang'),
-            'kredit' => 0
-        ]); 
+        // JurnalUmum::create([
+        //     'kode_jurnal' => $request->input('nomor_jurnal'),
+        //     'id_akun' => $kas->id,
+        //     'tanggal' => $request->input('tanggal'),
+        //     'keterangan' => $keterangan,
+        //     'debet' => $request->input('terima_piutang'),
+        //     'kredit' => 0
+        // ]); 
 
         JurnalModel::create([
             'nomor' => $request->input('nomor_jurnal'),
@@ -142,14 +142,14 @@ class PiutangController extends Controller
             'kredit' => $request->input('terima_piutang')
         ]); 
 
-        JurnalUmum::create([
-            'kode_jurnal' => $request->input('nomor_jurnal'),
-            'id_akun' => $piutang->id,
-            'tanggal' => $request->input('tanggal'),
-            'keterangan' => $keterangan,
-            'debet' => 0,
-            'kredit' => $request->input('terima_piutang')
-        ]); 
+        // JurnalUmum::create([
+        //     'kode_jurnal' => $request->input('nomor_jurnal'),
+        //     'id_akun' => $piutang->id,
+        //     'tanggal' => $request->input('tanggal'),
+        //     'keterangan' => $keterangan,
+        //     'debet' => 0,
+        //     'kredit' => $request->input('terima_piutang')
+        // ]); 
         
         return response()->json(['code'=>200, 'message' => 'Pembayaran Piutang Berhasil']);
     }
@@ -178,7 +178,7 @@ class PiutangController extends Controller
 
         PiutangDetailModel::where('id', $id)->delete();
         JurnalModel::where('nomor', $data_terima_piutang->nomor_jurnal)->delete();
-        JurnalUmum::where('kode_jurnal', $data_terima_piutang->nomor_jurnal)->delete();
+        // JurnalUmum::where('kode_jurnal', $data_terima_piutang->nomor_jurnal)->delete();
         
         return response()->json(['code'=>200]);
     }

@@ -188,14 +188,14 @@ class TitipJualController extends Controller
                 'kredit' => 0
             ]); 
 
-            JurnalUmum::create([
-                'kode_jurnal' => $request->input('nomor_jurnal'),
-                'tanggal' => $request->input('tanggal'),
-                'keterangan' => $keterangan,
-                'id_akun' => $persediaan_konsinyasi->id,
-                'debet' => $request->input('jumlah_harga'),
-                'kredit' => 0
-            ]); 
+            // JurnalUmum::create([
+            //     'kode_jurnal' => $request->input('nomor_jurnal'),
+            //     'tanggal' => $request->input('tanggal'),
+            //     'keterangan' => $keterangan,
+            //     'id_akun' => $persediaan_konsinyasi->id,
+            //     'debet' => $request->input('jumlah_harga'),
+            //     'kredit' => 0
+            // ]); 
                 
             JurnalModel::create([
                 'nomor' => $request->input('nomor_jurnal'),
@@ -206,14 +206,14 @@ class TitipJualController extends Controller
                 'kredit' => $request->input('jumlah_harga')
             ]);
                 
-            JurnalModel::create([
-                'kode_jurnal' => $request->input('nomor_jurnal'),
-                'id_akun' => $hutang_konsinyasi->id,
-                'tanggal' => $request->input('tanggal'),
-                'keterangan' => $keterangan,
-                'debet' => 0,
-                'kredit' => $request->input('jumlah_harga')
-            ]);
+            // JurnalUmum::create([
+            //     'kode_jurnal' => $request->input('nomor_jurnal'),
+            //     'id_akun' => $hutang_konsinyasi->id,
+            //     'tanggal' => $request->input('tanggal'),
+            //     'keterangan' => $keterangan,
+            //     'debet' => 0,
+            //     'kredit' => $request->input('jumlah_harga')
+            // ]);
             
             TitipJualModel::create([
                 'tanggal' => $request->input('tanggal'),

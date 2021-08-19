@@ -136,14 +136,14 @@ class KonsinyasiController extends Controller
             'kredit' => 0 
         ]); 
 
-        JurnalUmum::create([
-            'kode_jurnal' => $request->input('nomor_jurnal'),
-            'id_akun' => $konsinyasi->id,
-            'tanggal' => $request->input('tanggal'),
-            'keterangan' => $keterangan,
-            'debet' => $angsuran,
-            'kredit' => 0 
-        ]); 
+        // JurnalUmum::create([
+        //     'kode_jurnal' => $request->input('nomor_jurnal'),
+        //     'id_akun' => $konsinyasi->id,
+        //     'tanggal' => $request->input('tanggal'),
+        //     'keterangan' => $keterangan,
+        //     'debet' => $angsuran,
+        //     'kredit' => 0 
+        // ]); 
 
         JurnalModel::create([
             'nomor' => $request->input('nomor_jurnal'),
@@ -154,14 +154,14 @@ class KonsinyasiController extends Controller
             'kredit' => $angsuran
         ]); 
 
-        JurnalModel::create([
-            'kode_jurnal' => $request->input('nomor_jurnal'),
-            'id_akun' => $kas->id,
-            'tanggal' => $request->input('tanggal'),
-            'keterangan' => $keterangan,
-            'debet' => 0,
-            'kredit' => $angsuran
-        ]); 
+        // JurnalUmum::create([
+        //     'kode_jurnal' => $request->input('nomor_jurnal'),
+        //     'id_akun' => $kas->id,
+        //     'tanggal' => $request->input('tanggal'),
+        //     'keterangan' => $keterangan,
+        //     'debet' => 0,
+        //     'kredit' => $angsuran
+        // ]); 
         
         return response()->json(['code'=>200, 'message' => 'Pembayaran Konsinyasi Berhasil']);
     }
@@ -190,7 +190,7 @@ class KonsinyasiController extends Controller
 
         KonsinyasiDetailModel::where('id', $id)->delete();
         JurnalModel::where('nomor', $data_angsuran->nomor_jurnal)->delete();
-        JurnalUmum::where('kode_jurnal', $data_angsuran->nomor_jurnal)->delete();
+        // JurnalUmum::where('kode_jurnal', $data_angsuran->nomor_jurnal)->delete();
         
         return response()->json(['code'=>200]);
     }

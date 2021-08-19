@@ -124,7 +124,7 @@ class PesananOnlineController extends Controller
         PenjualanModel::where('nomor', $data_pesanan->nomor)->delete();
         PenjualanBarangModel::where('nomor', $data_pesanan->nomor)->delete();
         JurnalModel::where('nomor', 'J' . $data_pesanan->nomor)->delete();
-        JurnalUmum::where('kode_jurnal', 'J' . $data_pesanan->nomor)->delete();
+        // JurnalUmum::where('kode_jurnal', 'J' . $data_pesanan->nomor)->delete();
 
         return response()->json(['code' => 200]);
     }
