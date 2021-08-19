@@ -141,14 +141,14 @@ class HutangController extends Controller
             'kredit' => 0 
         ]); 
 
-        JurnalUmum::create([
-            'kode_jurnal' => $request->input('nomor_jurnal'),
-            'id_akun' => $hutang->id,
-            'tanggal' => $request->input('tanggal'),
-            'keterangan' => $keterangan,
-            'debet' => $angsuran,
-            'kredit' => 0 
-        ]); 
+        // JurnalUmum::create([
+        //     'kode_jurnal' => $request->input('nomor_jurnal'),
+        //     'id_akun' => $hutang->id,
+        //     'tanggal' => $request->input('tanggal'),
+        //     'keterangan' => $keterangan,
+        //     'debet' => $angsuran,
+        //     'kredit' => 0 
+        // ]); 
 
         JurnalModel::create([
             'nomor' => $request->input('nomor_jurnal'),
@@ -159,14 +159,14 @@ class HutangController extends Controller
             'kredit' => $angsuran
         ]); 
 
-        JurnalUmum::create([
-            'kode_jurnal' => $request->input('nomor_jurnal'),
-            'id_akun' => $kas->id,
-            'tanggal' => $request->input('tanggal'),
-            'keterangan' => $keterangan,
-            'debet' => 0,
-            'kredit' => $angsuran
-        ]); 
+        // JurnalUmum::create([
+        //     'kode_jurnal' => $request->input('nomor_jurnal'),
+        //     'id_akun' => $kas->id,
+        //     'tanggal' => $request->input('tanggal'),
+        //     'keterangan' => $keterangan,
+        //     'debet' => 0,
+        //     'kredit' => $angsuran
+        // ]); 
         
         return response()->json(['code'=>200, 'message' => 'Pembayaran Hutang Berhasil']);
     }
@@ -195,7 +195,7 @@ class HutangController extends Controller
 
         HutangDetailModel::where('id', $id)->delete();
         JurnalModel::where('nomor', $data_angsuran->nomor_jurnal)->delete();
-        JurnalUmum::where('kode_jurnal', $data_angsuran->nomor_jurnal)->delete();
+        // JurnalUmum::where('kode_jurnal', $data_angsuran->nomor_jurnal)->delete();
         
         return response()->json(['code'=>200]);
     }

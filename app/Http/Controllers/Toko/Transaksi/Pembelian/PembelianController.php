@@ -174,14 +174,14 @@ class PembelianController extends Controller
                     'kredit' => 0
                 ]); 
     
-                JurnalUmum::create([
-                    'kode_jurnal' => $request->input('nomor_jurnal'),
-                    'id_akun' => $persediaan->id,
-                    'tanggal' => $request->input('tanggal'),
-                    'keterangan' => $keterangan,
-                    'debet' => $request->input('jumlah_harga'),
-                    'kredit' => 0
-                ]); 
+                // JurnalUmum::create([
+                //     'kode_jurnal' => $request->input('nomor_jurnal'),
+                //     'id_akun' => $persediaan->id,
+                //     'tanggal' => $request->input('tanggal'),
+                //     'keterangan' => $keterangan,
+                //     'debet' => $request->input('jumlah_harga'),
+                //     'kredit' => 0
+                // ]); 
                 
                 JurnalModel::create([
                     'nomor' => $request->input('nomor_jurnal'),
@@ -192,14 +192,14 @@ class PembelianController extends Controller
                     'kredit' => $request->input('jumlah_harga')
                 ]);
                 
-                JurnalUmum::create([
-                    'kode_jurnal' => $request->input('nomor_jurnal'),
-                    'id_akun' => $kas->id,
-                    'tanggal' => $request->input('tanggal'),
-                    'keterangan' => $keterangan,
-                    'debet' => 0,
-                    'kredit' => $request->input('jumlah_harga')
-                ]);
+                // JurnalUmum::create([
+                //     'kode_jurnal' => $request->input('nomor_jurnal'),
+                //     'id_akun' => $kas->id,
+                //     'tanggal' => $request->input('tanggal'),
+                //     'keterangan' => $keterangan,
+                //     'debet' => 0,
+                //     'kredit' => $request->input('jumlah_harga')
+                // ]);
     
                 $jumlah_bayar = $request->input('jumlah_bayar');
                 $jumlah_kembalian = $request->input('jumlah_kembalian');
@@ -240,14 +240,14 @@ class PembelianController extends Controller
                     'kredit' => 0
                 ]); 
     
-                JurnalUmum::create([
-                    'kode_jurnal' => $request->input('nomor_jurnal'),
-                    'id_akun' => $persediaan->id,
-                    'tanggal' => $request->input('tanggal'),
-                    'keterangan' => $keterangan,
-                    'debet' => $request->input('jumlah_harga'),
-                    'kredit' => 0
-                ]); 
+                // JurnalUmum::create([
+                //     'kode_jurnal' => $request->input('nomor_jurnal'),
+                //     'id_akun' => $persediaan->id,
+                //     'tanggal' => $request->input('tanggal'),
+                //     'keterangan' => $keterangan,
+                //     'debet' => $request->input('jumlah_harga'),
+                //     'kredit' => 0
+                // ]); 
                     
                 JurnalModel::create([
                     'nomor' => $request->input('nomor_jurnal'),
@@ -258,14 +258,14 @@ class PembelianController extends Controller
                     'kredit' => $request->input('jumlah_harga')
                 ]);
                     
-                JurnalUmum::create([
-                    'kode_jurnal' => $request->input('nomor_jurnal'),
-                    'id_akun' => $hutang->id,
-                    'tanggal' => $request->input('tanggal'),
-                    'keterangan' => $keterangan,
-                    'debet' => 0,
-                    'kredit' => $request->input('jumlah_harga')
-                ]);
+                // JurnalUmum::create([
+                //     'kode_jurnal' => $request->input('nomor_jurnal'),
+                //     'id_akun' => $hutang->id,
+                //     'tanggal' => $request->input('tanggal'),
+                //     'keterangan' => $keterangan,
+                //     'debet' => 0,
+                //     'kredit' => $request->input('jumlah_harga')
+                // ]);
             }
             
             PembelianModel::create([
