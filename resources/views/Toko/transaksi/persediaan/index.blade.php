@@ -61,13 +61,13 @@
                             {!! Form::text('edit_hpp', $data->hpp, ['class' => 'd-none form-control form-control-sm',
                             'id' =>
                             'edit-hpp-'.$data->id, 'required']) !!}
-                            <div id="hpp-<?php echo $data->id ?>">{{$data->hpp}}</div>
+                            <div id="hpp-<?php echo $data->id ?>">{{number_format($data->hpp, 2, ',', '.')}}</div>
                         </td>
                         <td class="align-middle text-center">
                             {!! Form::text('edit_harga_jual', $data->harga_jual, ['class' => 'd-none form-control
                             form-control-sm', 'id' =>
                             'edit-harga-jual-'.$data->id]) !!}
-                            <div id="harga-jual-<?php echo $data->id ?>">{{$data->harga_jual}}</div>
+                            <div id="harga-jual-<?php echo $data->id ?>">{{number_format($data->harga_jual, 2, ',', '.')}}</div>
                         </td>
                         <td class="align-middle text-center">
                             <div id="stok-<?php echo $data->id ?>">{{$data->stok_etalase + $data->stok_gudang}}</div>
@@ -345,8 +345,8 @@ function terapkan(id) {
                     $("#batal-" + id).addClass("d-none");
 
                     $("#nama-" + id).html(response.barang.nama);
-                    $("#hpp-" + id).html(response.barang.hpp);
-                    $("#harga-jual-" + id).html(response.barang.harga_jual);
+                    $("#hpp-" + id).html(response.barang.hpp.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1.") + ',00');
+                    $("#harga-jual-" + id).html(response.barang.harga_jual.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1.") + ',00');
                     $("#stok-" + id).html(response.barang.stok_etalase + response.barang.stok_gudang);
                     $("#stok-etalase-" + id).html(response.barang.stok_etalase);
                     $("#stok-gudang-" + id).html(response.barang.stok_gudang);

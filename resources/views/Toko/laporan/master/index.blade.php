@@ -91,8 +91,8 @@
                         <th class="align-middle text-center">{{$i++}}</th>
                         <td class="align-middle text-center">{{$data->kode}}</td>
                         <td class="align-middle">{{$data->nama}}</td>
-                        <td class="align-middle text-center">{{$data->hpp}}</td>
-                        <td class="align-middle text-center">{{$data->harga_jual}}</td>
+                        <td class="align-middle text-center">{{number_format($data->hpp, 2, ",", ".")}}</td>
+                        <td class="align-middle text-center">{{number_format($data->harga_jual, 2, ",", ".")}}</td>
                         <td class="align-middle text-center">{{$data->satuan}}</td>
                         <td class="align-middle text-center">{{$data->stok_etalase}}</td>
                         <td class="align-middle text-center">{{$data->stok_gudang}}</td>

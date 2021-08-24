@@ -261,10 +261,10 @@ function tampil_daftar() {
                         '<th class="align-middle text-center">' + i++ + '</th>' +
                         '<td class="align-middle text-center">' + value.kode_barang + '</td>' +
                         '<td class="align-middle">' + value.nama_barang + '</td>' +
-                        '<td class="align-middle text-center">' + value.harga_beli + '</td>' +
+                        '<td class="align-middle text-center">' + value.harga_beli.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1.") + ',00' + '</td>' +
                         '<td class="align-middle text-center">' + value.jumlah_retur +
                         '</td>' +
-                        '<td class="align-middle text-center">' + value.total_harga + '</td>' +
+                        '<td class="align-middle text-center">' + value.total_harga.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1.") + ',00' + '</td>' +
                         '<td class="align-middle text-center"><a id="hapus-' + value
                         .id + '" class="btn btn-small btn-danger" onclick="show_popup_hapus(' +
                         value

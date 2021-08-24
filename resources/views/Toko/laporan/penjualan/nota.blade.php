@@ -66,8 +66,8 @@
                     @endphp
                     <td>{{$data->nama_barang}}</td>
                     <td class="text-center">{{$data->jumlah}}</td>
-                    <td class="text-center">{{($data->jumlah >= $data->minimal_grosir) ? $data->harga_grosir : $data->harga_jual}}</td>
-                    <td class="text-center">{{$data->total_harga}}</td>
+                    <td class="text-center">{{($data->jumlah >= $data->minimal_grosir) ? number_format($data->harga_grosir, 2, ",", ".") : number_format($data->harga_jual, 2, ",", ".")}}</td>
+                    <td class="text-center">{{number_format($data->total_harga, 2, ",", ".")}}</td>
                 </tr>
                 @endforeach
             </tbody>
@@ -80,19 +80,19 @@
                     <td style="width: 100px;">Pembelian</td>
                     <td class="text-center" style="width: 10px;">{{$jumlahItem}}</td>
                     <td class="text-right" style="width: 53px;">Rp. </td>
-                    <td class="text-center" style="width: 53px;">{{$data->jumlah_harga}},-</td>
+                    <td class="text-center" style="width: 53px;">{{number_format($data->jumlah_harga, 2, ",", ".")}}</td>
                 </tr>
                 <tr>
                     <td>Pembayaran</td>
                     <td></td>
                     <td class="text-right">Rp. </td>
-                    <td class="text-center">{{$data->jumlah_bayar}},-</td>
+                    <td class="text-center">{{number_format($data->jumlah_bayar, 2, ",", ".")}}</td>
                 </tr>
                 <tr>
                     <td>Kembalian</td>
                     <td></td>
                     <td class="text-right">Rp. </td>
-                    <td class="text-center">{{$data->jumlah_kembalian}},-</td>
+                    <td class="text-center">{{number_format($data->jumlah_kembalian, 2, ",", ".")}}</td>
                 </tr>
                 <tr>
                     <td colspan="4" class="text-center">

@@ -183,9 +183,9 @@ function tampil_daftar() {
                         '<th class="align-middle text-center">' + i++ + '</th>' +
                         '<td class="align-middle text-center">' + value.kode_akun + '</td>' +
                         '<td class="align-middle">' + value.nama_akun + '</td>' +
-                        '<td class="align-middle text-center">' + value.debit + '</td>' +
-                        '<td class="align-middle text-center">' + value.kredit +
-                        '</td>' +
+                        '<td class="align-middle text-center">' + value.debit.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1.") + ',00</td>' +
+                        '<td class="align-middle text-center">' + value.kredit.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1.") +
+                        ',00</td>' +
                         '<td class="align-middle text-center"><a id="hapus-' + value
                         .id + '" class="btn btn-sm btn-danger" onclick="show_popup_hapus(' +
                         value

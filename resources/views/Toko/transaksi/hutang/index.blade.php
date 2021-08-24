@@ -102,8 +102,8 @@
                             <td class="align-middle text-center">{{$data->nama_supplier}}</td>
                             <td class="align-middle text-center">{{$data->tanggal_beli}}</td>
                             <td class="align-middle text-center">{{$data->jatuh_tempo}}</td>
-                            <td class="align-middle text-center">{{$data->jumlah_hutang}}</td>
-                            <td class="align-middle text-center">{{$data->sisa_hutang}}</td>
+                            <td class="align-middle text-center">{{number_format($data->jumlah_hutang, 2, ',', '.')}}</td>
+                            <td class="align-middle text-center">{{number_format($data->sisa_hutang, 2, ',', '.')}}</td>
                             @if (auth()->user()->jabatan != 'Kanit')
                             <td class="align-middle text-center">
                                 <a id=<?php echo "bayar-" . $data->id ?> class="btn btn-sm btn-success"
@@ -289,9 +289,8 @@ function tampil_daftar() {
                         '<td class="align-middle text-center">' + value.nomor + '</td>' +
                         '<td class="align-middle text-center">' + value.nomor_jurnal + '</td>' +
                         '<td class="align-middle text-center">' + value.tanggal + '</td>' +
-                        '<td class="align-middle text-center">' + value.angsuran + '</td>' +
-                        '<td class="align-middle text-center">' + $sisa_hutang +
-                        '</td>' +
+                        '<td class="align-middle text-center">' + value.angsuran.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1.") + ',00</td>' +
+                        '<td class="align-middle text-center">' + $sisa_hutang.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1.") + ',00</td>' +
                         '<td class="align-middle text-center"><a id="hapus-' + value
                         .id + '" class="btn btn-sm btn-danger" onclick="show_popup_hapus(' +
                         value

@@ -114,9 +114,9 @@
                     <td class="text-left">{{$data->nama_barang}}</td>
                     <td class="text-right">{{$data->jumlah}}</td>
                     <td class="text-center">{{$data->satuan}}</td>
-                    <td class="text-right">{{$data->harga_satuan}}</td>
+                    <td class="text-right">{{number_format($data->harga_satuan, 2, ",", ".")}}</td>
                     <td class="text-right">0</td>
-                    <td class="text-right">{{$data->total_harga}}</td>
+                    <td class="text-right">{{number_format($data->total_harga, 2, ",", ".")}}</td>
                 </tr>
                 @endforeach
             </tbody>
@@ -130,7 +130,7 @@
                 <td></td>
                 <td class="text-right">Sub Total</td>
                 <td>:</td>
-                <td class="text-right" style="width: 100px;">{{$jumlahHarga}}</td>
+                <td class="text-right" style="width: 100px;">{{number_format($jumlahHarga, 2, ",", ".")}}</td>
             </tr>
             <tr>
                 <td colspan="4" class="text-center">
@@ -145,7 +145,7 @@
                 <td class="text-right">0.00</td>
                 <td class="text-right">Total Akhir</td>
                 <td>:</td>
-                <td class="text-right" style="width: 100px;">{{$jumlahHarga}}</td>
+                <td class="text-right" style="width: 100px;">{{number_format($jumlahHarga, 2, ",", ".")}}</td>
             </tr>
             <tr>
                 <td colspan="4"></td>

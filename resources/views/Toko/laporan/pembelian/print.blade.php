@@ -60,9 +60,9 @@
                 <td class="align-middle">{{$data->supplier}}</td>
                 <td class="align-middle text-center">{{$data->kode}}</td>
                 <td class="align-middle">{{$data->nama}}</td>
-                <td class="align-middle text-center">{{$data->harga_satuan}}</td>
+                <td class="align-middle text-center">{{number_format($data->harga_satuan, 2, ",", ".")}}</td>
                 <td class="align-middle text-center">{{$data->jumlah}}</td>
-                <td class="align-middle text-center">{{$data->total_harga}}</td>
+                <td class="align-middle text-center">{{number_format($data->total_harga, 2, ",", ".")}}</td>
             </tr>
             @endforeach
         </tbody>

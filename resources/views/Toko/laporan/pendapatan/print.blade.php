@@ -53,8 +53,8 @@
                 <th class="align-middle text-center">{{$i++}}</th>
                 <td class="align-middle text-center">{{$data->kode_akun}}</td>
                 <td class="align-middle text-center">{{$data->nama_akun}}</td>
-                <td class="align-middle">{{$data->debit}}</td>
-                <td class="align-middle text-center">{{$data->kredit}}</td>
+                <td class="align-middle">{{number_format($data->debit, 2, ",", ".")}}</td>
+                <td class="align-middle text-center">{{number_format($data->kredit, 2, ",", ".")}}</td>
             </tr>
             @endforeach
         </tbody>
@@ -66,7 +66,7 @@
                 <th class="d-none"></th>
                 <th class="d-none"></th>
                 <th class="d-none"></th>
-                <th class="align-middle text-center">{{$pemasukan->jumlah-$pengeluaran->jumlah}}</th>
+                <th class="align-middle text-center">{{number_format(($pemasukan->jumlah-$pengeluaran->jumlah), 2, ",", ".")}}</th>
         </tr>
         @endif
     </table>
