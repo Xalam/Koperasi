@@ -33,7 +33,9 @@
                         <th>Kode Supplier</th>
                         <th>Nama Supplier</th>
                         <th>Transfer Barang</th>
+                        @if (auth()->user()->jabatan != 'Kasir')
                         <th class="w-20">Opsi</th>
+                        @endif
                     </tr>
                 </thead>
                 @if (count($per_supplier) > 0)
@@ -97,6 +99,7 @@
                         <td class="align-middle">
                             <div id="nama-supplier-<?php echo $data->id ?>">{{$data->nama_supplier}}</div>
                         </td>
+                        @if (auth()->user()->jabatan != 'Kasir')
                         <td class="align-middle text-center">
                             <a id=<?php echo "transfer-" . $data->id ?> class="btn btn-sm btn-info"
                                 onclick="transfer(<?php echo $data->id ?>)"><i class="fas fa-exchange-alt p-1"></i> Transfer</a>
@@ -112,6 +115,7 @@
                             <a id=<?php echo "batal-" . $data->id ?> class="w-50 btn btn-sm btn-danger d-none"
                                 onclick="batal(<?php echo $data->id ?>)">Batal</a>
                         </td>
+                        @endif
                     </tr>
                     @endforeach
                 </tbody>
