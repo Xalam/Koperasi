@@ -63,6 +63,7 @@
                                 <th class="text-center">No</th>
                                 <th class="text-center">NRP</th>
                                 <th class="text-center">Nama Anggota</th>
+                                <th class="text-center">Tanggal Registrasi</th>
                                 <th class="text-center">Piutang Toko (Rp)</th>
                                 <th class="text-center">Angsuran Pinjaman (Rp)</th>
                                 <th class="text-center">Simpanan Wajib (Rp)</th>
@@ -78,6 +79,7 @@
                                     <td class="text-center">{{ $no++ }}</td>
                                     <td class="text-center">{{ $value->username }}</td>
                                     <td>{{ $value->nama_anggota }}</td>
+                                    <td class="text-center">{{ date('d-m-Y', strtotime($value->created_at)) }}</td>
                                     <td class="text-right">
                                         {{ $value->sisa_piutang != null ? number_format($value->sisa_piutang, 0, '', '.') : '-' }}
                                     </td>
@@ -94,7 +96,7 @@
                         </tbody>
                         <tfoot>
                             <tr>
-                                <td colspan="3" class="text-center"><b>TOTAL</b></td>
+                                <td colspan="4" class="text-center"><b>TOTAL</b></td>
                                 <td class="text-right"><b>{{ number_format($sumHutang, 0, '', '.') }}</b></td>
                                 <td class="text-right"><b>{{ number_format($sumAngsuran, 0, '', '.') }}</b></td>
                                 <td class="text-right"><b>{{ number_format($sumSimpanan, 0, '', '.') }}</b></td>
