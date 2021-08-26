@@ -84,7 +84,8 @@
                                     <td class="text-right">
                                         {{ $value->nominal_angsuran != null ? number_format($value->nominal_angsuran, 0, '', '.') : '-' }}
                                     </td>
-                                    <td class="text-right">{{ number_format($simpananWajib->angka, 0, '', '.') }}
+                                    <td class="text-right">
+                                        {{ date('Y-m', strtotime($value->created_at)) < $tanggal ? number_format($simpananWajib, 0, '', '.') : '-' }}
                                     </td>
                                     <td class="text-right">{{ number_format($totalPiutang[$key], 0, '', '.') }}
                                     </td>

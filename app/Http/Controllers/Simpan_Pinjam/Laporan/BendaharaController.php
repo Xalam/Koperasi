@@ -19,7 +19,7 @@ class BendaharaController extends Controller
     public function show_data(Request $request)
     {
         $tanggal = date('Y-m');
-        
+
         if ($request->tanggal) {
             $tanggal = date('Y-m', strtotime($request->tanggal));
         }
@@ -38,11 +38,14 @@ class BendaharaController extends Controller
                 'tb_anggota.id',
                 'tb_anggota.username',
                 'tb_anggota.nama_anggota',
+                'tb_anggota.created_at',
                 'tb_pinjaman.nominal_angsuran',
                 'hutang.sisa_piutang'
             ]);
 
-        $simpananWajib = Pengaturan::where('id', 5)->first();
+        $simpanan = Pengaturan::where('id', 5)->first();
+        $expBunga = explode(" ", $simpanan->angka);
+        $simpananWajib = $expBunga[0];
 
         #Jumlah Hutang
         $sumHutang = 0;
@@ -59,13 +62,23 @@ class BendaharaController extends Controller
         #Jumlah Simpanan
         $sumSimpanan = 0;
         for ($i = 0; $i < count($anggota); $i++) {
-            $sumSimpanan += $simpananWajib->angka;
+            if (date('Y-m', strtotime($anggota[$i]->created_at)) < $tanggal) {
+                $simWajib = $expBunga[0];
+            } else {
+                $simWajib = 0;
+            }
+            $sumSimpanan += $simWajib;
         }
 
         #Total Piutang
         $totalPiutang = array();
         foreach ($anggota as $key => $value) {
-            array_push($totalPiutang, $value->sisa_piutang + $value->nominal_angsuran + $simpananWajib->angka);
+            if (date('Y-m', strtotime($value->created_at)) < $tanggal) {
+                $simWajibPiutang = $expBunga[0];
+            } else {
+                $simWajibPiutang = 0;
+            }
+            array_push($totalPiutang, $value->sisa_piutang + $value->nominal_angsuran + $simWajibPiutang);
         }
 
         #Jumlah Total Piutang
@@ -96,11 +109,14 @@ class BendaharaController extends Controller
                 'tb_anggota.id',
                 'tb_anggota.username',
                 'tb_anggota.nama_anggota',
+                'tb_anggota.created_at',
                 'tb_pinjaman.nominal_angsuran',
                 'hutang.sisa_piutang'
             ]);
 
-        $simpananWajib = Pengaturan::where('id', 5)->first();
+        $simpanan = Pengaturan::where('id', 5)->first();
+        $expBunga = explode(" ", $simpanan->angka);
+        $simpananWajib = $expBunga[0];
 
         #Jumlah Hutang
         $sumHutang = 0;
@@ -117,13 +133,23 @@ class BendaharaController extends Controller
         #Jumlah Simpanan
         $sumSimpanan = 0;
         for ($i = 0; $i < count($anggota); $i++) {
-            $sumSimpanan += $simpananWajib->angka;
+            if (date('Y-m', strtotime($anggota[$i]->created_at)) < $tanggal) {
+                $simWajib = $expBunga[0];
+            } else {
+                $simWajib = 0;
+            }
+            $sumSimpanan += $simWajib;
         }
 
         #Total Piutang
         $totalPiutang = array();
         foreach ($anggota as $key => $value) {
-            array_push($totalPiutang, $value->sisa_piutang + $value->nominal_angsuran + $simpananWajib->angka);
+            if (date('Y-m', strtotime($value->created_at)) < $tanggal) {
+                $simWajibPiutang = $expBunga[0];
+            } else {
+                $simWajibPiutang = 0;
+            }
+            array_push($totalPiutang, $value->sisa_piutang + $value->nominal_angsuran + $simWajibPiutang);
         }
 
         #Jumlah Total Piutang
