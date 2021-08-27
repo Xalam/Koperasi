@@ -56,7 +56,7 @@
                             <td class="align-middle text-center">{{$data->kode_anggota}}</td>
                             <td class="align-middle">{{$data->nama_anggota}}</td>
                             <td class="align-middle"><?php echo nl2br($daftarBarang); ?></td>
-                            <td class="align-middle text-center">{{$data->jumlah_harga}}</td>
+                            <td class="align-middle text-center">{{number_format($data->jumlah_harga, 2, ',', '.')}}</td>
 
                             <td class="align-middle text-center">
                                 @if (auth()->user()->jabatan != 'Kanit')
@@ -145,7 +145,7 @@
                             <td class="align-middle text-center">{{$data->kode_anggota}}</td>
                             <td class="align-middle">{{$data->nama_anggota}}</td>
                             <td class="align-middle"><?php echo nl2br($daftarBarang); ?></td>
-                            <td class="align-middle text-center">{{$data->jumlah_harga}}</td>
+                            <td class="align-middle text-center">{{number_format($data->jumlah_harga, 2, ',', '.')}}</td>
                             <td class="align-middle text-center"><a
                                     href="<?php echo url('/toko/transaksi/pesanan-online/nota/' . $data->nomor); ?>"
                                     target="_blank"><i class="text-success fas fa-print" style="cursor: pointer;"

@@ -104,7 +104,7 @@ Route::group(['prefix' => 'toko'], function () {
 
         //Transaksi
         Route::group(['prefix' => 'transaksi'], function () {
-            Route::group(['prefix' => 'pembelian', 'middleware' => ['auth:toko', 'checkjabatan:Gudang,Super_Admin']], function () {
+            Route::group(['prefix' => 'pembelian', 'middleware' => ['auth:toko', 'checkjabatan:Gudang,Super_Admin,Kanit']], function () {
                 Route::get('/', [PembelianController::class, 'index']);
                 Route::post('/store', [PembelianController::class, 'store']);
                 Route::post('/beli', [PembelianController::class, 'buy']);
@@ -114,7 +114,7 @@ Route::group(['prefix' => 'toko'], function () {
                 Route::post('/delete/{nomor}', [PembelianController::class, 'delete']);
             });
 
-            Route::group(['prefix' => 'penjualan', 'middleware' => ['auth:toko', 'checkjabatan:Super_Admin,Kasir']], function () {
+            Route::group(['prefix' => 'penjualan', 'middleware' => ['auth:toko', 'checkjabatan:Super_Admin,Kasir,Kanit']], function () {
                 Route::get('/', [PenjualanController::class, 'index']);
                 Route::post('/scan', [PenjualanController::class, 'scan']);
                 Route::post('/store', [PenjualanController::class, 'store']);
@@ -125,7 +125,7 @@ Route::group(['prefix' => 'toko'], function () {
                 Route::post('/delete/{nomor}', [PenjualanController::class, 'delete']);
             });
 
-            Route::group(['prefix' => 'retur-pembelian', 'middleware' => ['auth:toko', 'checkjabatan:Gudang,Super_Admin']], function () {
+            Route::group(['prefix' => 'retur-pembelian', 'middleware' => ['auth:toko', 'checkjabatan:Gudang,Super_Admin,Kanit']], function () {
                 Route::get('/', [ReturPembelianController::class, 'index']);
                 Route::post('/store', [ReturPembelianController::class, 'store']);
                 Route::post('/retur', [ReturPembelianController::class, 'retur']);
@@ -135,7 +135,7 @@ Route::group(['prefix' => 'toko'], function () {
                 Route::post('/delete/{nomor}', [ReturPembelianController::class, 'delete']);
             });
 
-            Route::group(['prefix' => 'hutang', 'middleware' => ['auth:toko', 'checkjabatan:Super_Admin,Gudang']], function () {
+            Route::group(['prefix' => 'hutang', 'middleware' => ['auth:toko', 'checkjabatan:Super_Admin,Gudang,Kanit']], function () {
                 Route::get('/', [HutangController::class, 'index']);
                 Route::post('/store', [HutangController::class, 'store']);
                 Route::post('/cancel', [HutangController::class, 'cancel']);
@@ -144,7 +144,7 @@ Route::group(['prefix' => 'toko'], function () {
                 Route::post('/remove-notification/{id}', [HutangController::class, 'removeNotification']);
             });
 
-            Route::group(['prefix' => 'konsinyasi', 'middleware' => ['auth:toko', 'checkjabatan:Super_Admin']], function () {
+            Route::group(['prefix' => 'konsinyasi', 'middleware' => ['auth:toko', 'checkjabatan:Super_Admin,Kanit']], function () {
                 Route::get('/', [KonsinyasiController::class, 'index']);
                 Route::post('/store', [KonsinyasiController::class, 'store']);
                 Route::post('/cancel', [KonsinyasiController::class, 'cancel']);
@@ -152,7 +152,7 @@ Route::group(['prefix' => 'toko'], function () {
                 Route::post('/delete/{nomor}', [KonsinyasiController::class, 'delete']);
             });
 
-            Route::group(['prefix' => 'piutang', 'middleware' => ['auth:toko', 'checkjabatan:Super_Admin,Kasir']], function () {
+            Route::group(['prefix' => 'piutang', 'middleware' => ['auth:toko', 'checkjabatan:Super_Admin,Kasir,Kanit']], function () {
                 Route::get('/', [PiutangController::class, 'index']);
                 Route::post('/store', [PiutangController::class, 'store']);
                 Route::post('/cancel', [PiutangController::class, 'cancel']);
@@ -160,7 +160,7 @@ Route::group(['prefix' => 'toko'], function () {
                 Route::post('/delete/{nomor}', [PiutangController::class, 'delete']);
             });
 
-            Route::group(['prefix' => 'titip-jual', 'middleware' => ['auth:toko', 'checkjabatan:Super_Admin']], function () {
+            Route::group(['prefix' => 'titip-jual', 'middleware' => ['auth:toko', 'checkjabatan:Super_Admin,Kanit']], function () {
                 Route::get('/', [TitipJualController::class, 'index']);
                 Route::post('/store', [TitipJualController::class, 'store']);
                 Route::post('/cancel', [TitipJualController::class, 'cancel']);
@@ -170,11 +170,11 @@ Route::group(['prefix' => 'toko'], function () {
                 Route::post('/delete/{nomor}', [TitipJualController::class, 'delete']);
             });
 
-            Route::group(['prefix' => 'jurnal', 'middleware' => ['auth:toko', 'checkjabatan:Gudang,Super_Admin']], function () {
+            Route::group(['prefix' => 'jurnal', 'middleware' => ['auth:toko', 'checkjabatan:Gudang,Super_Admin,Kanit']], function () {
                 Route::get('/', [JurnalController::class, 'index']);
             });
 
-            Route::group(['prefix' => 'jurnal-umum', 'middleware' => ['auth:toko', 'checkjabatan:Gudang,Super_Admin']], function () {
+            Route::group(['prefix' => 'jurnal-umum', 'middleware' => ['auth:toko', 'checkjabatan:Gudang,Super_Admin,Kanit']], function () {
                 Route::get('/', [JurnalUmumController::class, 'create']);
                 Route::get('/create', [JurnalUmumController::class, 'create']);
                 Route::post('/store', [JurnalUmumController::class, 'store']);
@@ -184,7 +184,7 @@ Route::group(['prefix' => 'toko'], function () {
                 Route::post('/delete/{id}', [JurnalUmumController::class, 'delete']);
             });
 
-            Route::group(['prefix' => 'pesanan-online', 'middleware' => ['auth:toko', 'checkjabatan:Super_Admin,Kasir']], function () {
+            Route::group(['prefix' => 'pesanan-online', 'middleware' => ['auth:toko', 'checkjabatan:Super_Admin,Kasir,Kanit']], function () {
                 Route::get('/', [PesananOnlineController::class, 'index']);
                 Route::post('/delete', [PesananOnlineController::class, 'delete']);
                 Route::post('/pickup', [PesananOnlineController::class, 'pickup']);
@@ -193,73 +193,73 @@ Route::group(['prefix' => 'toko'], function () {
                 Route::post('/proses/{id}/{proses}', [PesananOnlineController::class, 'proses']);
             });
 
-            Route::group(['prefix' => 'persediaan', 'middleware' => ['auth:toko', 'checkjabatan:Super_Admin,Gudang']], function () {
+            Route::group(['prefix' => 'persediaan', 'middleware' => ['auth:toko', 'checkjabatan:Super_Admin,Gudang,Kasir,Kanit']], function () {
                 Route::get('/', [PersediaanController::class, 'index']);
             });
         });
 
         //Laporan
         Route::group(['prefix' => 'laporan'], function () {
-            Route::group(['prefix' => 'anggota', 'middleware' => ['auth:toko', 'checkjabatan:Super_Admin,Kanit,Bendahara']], function () {
+            Route::group(['prefix' => 'anggota', 'middleware' => ['auth:toko', 'checkjabatan:Super_Admin,Kanit,Bendahara,Ketua_Koperasi']], function () {
                 Route::get('/', [LaporanAnggotaController::class, 'index']);
                 Route::get('/print/{tanggal_awal}/{tanggal_akhir}', [LaporanAnggotaController::class, 'print']);
                 Route::get('/export/{tanggal_awal}/{tanggal_akhir}', [LaporanAnggotaController::class, 'export']);
                 Route::get('/detail/{id}/{tanggal_awal}/{tanggal_akhir}', [LaporanAnggotaController::class, 'detail']);
             });
 
-            Route::group(['prefix' => 'data-master', 'middleware' => ['auth:toko', 'checkjabatan:Super_Admin,Kanit']], function () {
+            Route::group(['prefix' => 'data-master', 'middleware' => ['auth:toko', 'checkjabatan:Super_Admin,Kanit,Ketua_Koperasi']], function () {
                 Route::get('/', [LaporanMasterController::class, 'index']);
                 Route::get('/print/{bagian}', [LaporanMasterController::class, 'print']);
                 Route::get('/export/{bagian}', [LaporanMasterController::class, 'export']);
             });
 
-            Route::group(['prefix' => 'pembelian', 'middleware' => ['auth:toko', 'checkjabatan:Super_Admin,Kanit,Bendahara']], function () {
+            Route::group(['prefix' => 'pembelian', 'middleware' => ['auth:toko', 'checkjabatan:Super_Admin,Kanit,Bendahara,Gudang,Ketua_Koperasi']], function () {
                 Route::get('/', [LaporanPembelianController::class, 'index']);
                 Route::get('/nota/{nomor}', [LaporanPembelianController::class, 'nota']);
                 Route::get('/print/{type}/{awal}/{akhir}', [LaporanPembelianController::class, 'print']);
                 Route::get('/export/{type}/{awal}/{akhir}', [LaporanPembelianController::class, 'export']);
             });
 
-            Route::group(['prefix' => 'retur-pembelian', 'middleware' => ['auth:toko', 'checkjabatan:Super_Admin,Kanit,Bendahara']], function () {
+            Route::group(['prefix' => 'retur-pembelian', 'middleware' => ['auth:toko', 'checkjabatan:Super_Admin,Kanit,Bendahara,Gudang,Ketua_Koperasi']], function () {
                 Route::get('/', [LaporanReturPembelianController::class, 'index']);
                 Route::get('/nota/{nomor}', [LaporanReturPembelianController::class, 'nota']);
                 Route::get('/print/{tanggal}', [LaporanReturPembelianController::class, 'print']);
                 Route::get('/export/{tanggal}', [LaporanReturPembelianController::class, 'export']);
             });
 
-            Route::group(['prefix' => 'penjualan', 'middleware' => ['auth:toko', 'checkjabatan:Super_Admin,Kanit,Bendahara']], function () {
+            Route::group(['prefix' => 'penjualan', 'middleware' => ['auth:toko', 'checkjabatan:Super_Admin,Kanit,Bendahara,Kasir,Ketua_Koperasi']], function () {
                 Route::get('/', [LaporanPenjualanController::class, 'index']);
                 Route::get('/nota/{nomor}', [LaporanPenjualanController::class, 'nota']);
                 Route::get('/print/{type}/{awal}/{akhir}', [LaporanPenjualanController::class, 'print']);
                 Route::get('/export/{type}/{awal}/{akhir}', [LaporanPenjualanController::class, 'export']);
             });
 
-            Route::group(['prefix' => 'persediaan', 'middleware' => ['auth:toko', 'checkjabatan:Super_Admin,Kanit']], function () {
+            Route::group(['prefix' => 'persediaan', 'middleware' => ['auth:toko', 'checkjabatan:Super_Admin,Kanit,Gudang,Ketua_Koperasi']], function () {
                 Route::get('/', [LaporanPersediaanController::class, 'index']);
                 Route::get('/minimal-persediaan', [LaporanPersediaanController::class, 'minimalPersediaan']);
                 Route::get('/print/{stok}', [LaporanPersediaanController::class, 'print']);
                 Route::get('/export/{stok}', [LaporanPersediaanController::class, 'export']);
             });
 
-            Route::group(['prefix' => 'kas-masuk', 'middleware' => ['auth:toko', 'checkjabatan:Super_Admin,Kanit,Bendahara']], function () {
+            Route::group(['prefix' => 'kas-masuk', 'middleware' => ['auth:toko', 'checkjabatan:Super_Admin,Kanit,Bendahara,Ketua_Koperasi']], function () {
                 Route::get('/', [LaporanKasMasukController::class, 'index']);
                 Route::get('/print/{jenis}/{awal}/{akhir}', [LaporanKasMasukController::class, 'print']);
                 Route::get('/export/{jenis}/{awal}/{akhir}', [LaporanKasMasukController::class, 'export']);
             });
 
-            Route::group(['prefix' => 'kas-keluar', 'middleware' => ['auth:toko', 'checkjabatan:Super_Admin,Kanit,Bendahara']], function () {
+            Route::group(['prefix' => 'kas-keluar', 'middleware' => ['auth:toko', 'checkjabatan:Super_Admin,Kanit,Bendahara,Gudang,Ketua_Koperasi']], function () {
                 Route::get('/', [LaporanKasKeluarController::class, 'index']);
                 Route::get('/print/{jenis}/{awal}/{akhir}', [LaporanKasKeluarController::class, 'print']);
                 Route::get('/export/{jenis}/{awal}/{akhir}', [LaporanKasKeluarController::class, 'export']);
             });
 
-            Route::group(['prefix' => 'pendapatan', 'middleware' => ['auth:toko', 'checkjabatan:Super_Admin,Kanit,Bendahara']], function () {
+            Route::group(['prefix' => 'pendapatan', 'middleware' => ['auth:toko', 'checkjabatan:Super_Admin,Kanit,Bendahara,Ketua_Koperasi']], function () {
                 Route::get('/', [LaporanPendapatanController::class, 'index']);
                 Route::get('/print/{tanggal_awal}/{tanggal_akhir}', [LaporanPendapatanController::class, 'print']);
                 Route::get('/export/{tanggal_awal}/{tanggal_akhir}', [LaporanPendapatanController::class, 'export']);
             });
 
-            Route::group(['prefix' => 'piutang', 'middleware' => ['auth:toko', 'checkjabatan:Super_Admin,Kanit,Bendahara']], function () {
+            Route::group(['prefix' => 'piutang', 'middleware' => ['auth:toko', 'checkjabatan:Super_Admin,Kanit,Bendahara,Ketua_Koperasi']], function () {
                 Route::get('/', [LaporanPiutangController::class, 'index']);
                 Route::get('/print/{awal}/{akhir}', [LaporanPiutangController::class, 'print']);
                 Route::get('/export/{awal}/{akhir}', [LaporanPiutangController::class, 'export']);
@@ -268,7 +268,7 @@ Route::group(['prefix' => 'toko'], function () {
 
         //Master
         Route::group(['prefix' => 'master'], function () {
-            Route::group(['prefix' => 'barang', 'middleware' => ['auth:toko', 'checkjabatan:Super_Admin,Kanit,Gudang,Kasir']], function () {
+            Route::group(['prefix' => 'barang', 'middleware' => ['auth:toko', 'checkjabatan:Super_Admin,Kanit,Gudang,Kasir,Ketua_Koperasi']], function () {
                 Route::get('/', [BarangController::class, 'index']);
                 Route::get('/create', [BarangController::class, 'create']);
                 Route::post('/store', [BarangController::class, 'store']);
@@ -278,7 +278,7 @@ Route::group(['prefix' => 'toko'], function () {
                 Route::post('/remove-notification/{id}', [BarangController::class, 'removeNotification']);
             });
 
-            Route::group(['prefix' => 'admin', 'middleware' => ['auth:toko', 'checkjabatan:Super_Admin,Kanit']], function () {
+            Route::group(['prefix' => 'admin', 'middleware' => ['auth:toko', 'checkjabatan:Super_Admin,Kanit,Ketua_Koperasi']], function () {
                 Route::get('/', [AdminController::class, 'index']);
                 Route::get('/create', [AdminController::class, 'create']);
                 Route::post('/store', [AdminController::class, 'store']);
@@ -286,7 +286,7 @@ Route::group(['prefix' => 'toko'], function () {
                 Route::post('/delete', [AdminController::class, 'delete']);
             });
 
-            Route::group(['prefix' => 'akun', 'middleware' => ['auth:toko', 'checkjabatan:Super_Admin,Kanit']], function () {
+            Route::group(['prefix' => 'akun', 'middleware' => ['auth:toko', 'checkjabatan:Super_Admin,Kanit,Ketua_Koperasi']], function () {
                 Route::get('/', [AkunController::class, 'index']);
                 Route::get('/create', [AkunController::class, 'create']);
                 Route::post('/store', [AkunController::class, 'store']);
@@ -294,7 +294,7 @@ Route::group(['prefix' => 'toko'], function () {
                 Route::post('/delete', [AkunController::class, 'delete']);
             });
 
-            Route::group(['prefix' => 'anggota', 'middleware' => ['auth:toko', 'checkjabatan:Kanit,Super_Admin,Kasir']], function () {
+            Route::group(['prefix' => 'anggota', 'middleware' => ['auth:toko', 'checkjabatan:Kanit,Super_Admin,Kasir,Ketua_Koperasi']], function () {
                 Route::get('/', [AnggotaController::class, 'index']);
                 Route::get('/create', [AnggotaController::class, 'create']);
                 Route::post('/store', [AnggotaController::class, 'store']);
@@ -302,7 +302,7 @@ Route::group(['prefix' => 'toko'], function () {
                 Route::post('/delete', [AnggotaController::class, 'delete']);
             });
 
-            Route::group(['prefix' => 'supplier', 'middleware' => ['auth:toko', 'checkjabatan:Gudang,Super_Admin,Kanit']], function () {
+            Route::group(['prefix' => 'supplier', 'middleware' => ['auth:toko', 'checkjabatan:Gudang,Super_Admin,Kanit,Ketua_Koperasi']], function () {
                 Route::get('/', [SupplierController::class, 'index']);
                 Route::get('/create', [SupplierController::class, 'create']);
                 Route::post('/store', [SupplierController::class, 'store']);

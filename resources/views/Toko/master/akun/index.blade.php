@@ -51,7 +51,7 @@
                         <td class="align-middle text-center">
                             {!! Form::text('edit_debit', $data->debit, ['class' => 'd-none form-control form-control-sm', 'id' =>
                             'edit-debit-'.$data->id]) !!}
-                            <div id="debit-<?php echo $data->id ?>">{{$data->debit}}</div>
+                            <div id="debit-<?php echo $data->id ?>">{{number_format($data->debit, 2, ',', '.')}}</div>
                             @php
                             $total_debit += $data->debit;
                             @endphp
@@ -59,7 +59,7 @@
                         <td class="align-middle text-center">
                             {!! Form::text('edit_kredit', $data->kredit, ['class' => 'd-none form-control form-control-sm', 'id' =>
                             'edit-kredit-'.$data->id]) !!}
-                            <div id="kredit-<?php echo $data->id ?>">{{$data->kredit}}</div>
+                            <div id="kredit-<?php echo $data->id ?>">{{number_format($data->kredit, 2, ',', '.')}}</div>
                             @php
                             $total_kredit += $data->kredit;
                             @endphp

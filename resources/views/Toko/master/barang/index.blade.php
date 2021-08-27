@@ -10,8 +10,10 @@
 @endsection
 
 @section('main')
+@if (auth()->user()->jabatan != 'Kasir')
 <a href="{{url('toko/master/barang/create')}}" class="btn btn-sm btn-success mt-4 ms-4 pe-4"><i
         class="fas fa-plus"></i><b>Tambah</b></a>
+@endif
 <div class="card m-6">
     <p class="card-header bg-light">Daftar Barang</p>
     <div class="card-body">

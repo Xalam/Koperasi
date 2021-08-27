@@ -51,8 +51,8 @@
                         <td class="align-middle text-center">{{$data->kode}}</td>
                         <td class="align-middle">{{$data->nama}}</td>
                         <td class="align-middle text-center">{{$data->stok}}</td>
-                        <td class="align-middle text-center">{{$data->hpp}}</td>
-                        <td class="align-middle text-center">{{$data->stok * $data->hpp}}</td>
+                        <td class="align-middle text-center">{{number_format($data->hpp, 2, ",", ".")}}</td>
+                        <td class="align-middle text-center">{{number_format(($data->stok * $data->hpp), 2, ",", ".")}}</td>
                     </tr>
                     @endforeach
                 </tbody>

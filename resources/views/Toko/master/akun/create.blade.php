@@ -17,8 +17,8 @@
         </div>
         <div class="row-lg align-item-center mb-2">
             {!! Form::label(null, 'Saldo Awal', ['class' => 'col-lg-2']) !!}
-            {!! Form::text('saldo', null, ['class' => 'col-lg-2 form-control form-control-sm', 'required',
-            'oninvalid' => "this.setCustomValidity('Tidak boleh kosong')", 'oninput' => "this.setCustomValidity('')"]) !!}
+            {!! Form::number('saldo', null, ['class' => 'col-lg-2 form-control form-control-sm', 'required',
+            'oninvalid' => "this.setCustomValidity('Tidak boleh kosong')", 'oninput' => "this.setCustomValidity('')", 'onchange' => 'currencyDigit(this)']) !!}
         </div>
         <div class="d-grid gap-2">
             {!! Form::submit('Simpan', ['class' => 'btn btn-sm btn-primary']) !!}

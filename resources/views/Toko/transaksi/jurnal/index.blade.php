@@ -36,8 +36,8 @@
                         <td class="align-middle text-center">{{$data->kode_akun}}</td>
                         <td class="align-middle">{{$data->nama_akun}}</td>
                         <td class="align-middle">{{$data->keterangan}}</td>
-                        <td class="align-middle text-center">{{$data->debit}}</td>
-                        <td class="align-middle text-center">{{$data->kredit}}</td>
+                        <td class="align-middle text-center">{{number_format($data->debit, 2, ',', '.')}}</td>
+                        <td class="align-middle text-center">{{number_format($data->kredit, 2, ',', '.')}}</td>
                     </tr>
                     @endforeach
                 </tbody>

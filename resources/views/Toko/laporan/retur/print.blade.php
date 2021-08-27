@@ -60,9 +60,9 @@
                 <td class="align-middle text-center">{{$data->nomor_beli}}</td>
                 <td class="align-middle text-center">{{$data->kode_barang}}</td>
                 <td class="align-middle text-center">{{$data->nama_barang}}</td>
-                <td class="align-middle text-center">{{$data->hpp}}</td>
+                <td class="align-middle text-center">{{number_format($data->hpp, 2, ",", ".")}}</td>
                 <td class="align-middle text-center">{{$data->jumlah}}</td>
-                <td class="align-middle text-center">{{$data->total_harga}}</td>
+                <td class="align-middle text-center">{{number_format($data->total_harga, 2, ",", ".")}}</td>
             </tr>
             @endforeach
         </tbody>

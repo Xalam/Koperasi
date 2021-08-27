@@ -261,10 +261,10 @@ function tampil_daftar() {
                         '<th class="align-middle text-center">' + i++ + '</th>' +
                         '<td class="align-middle text-center">' + value.kode_barang + '</td>' +
                         '<td class="align-middle">' + value.nama_barang + '</td>' +
-                        '<td class="align-middle text-center">' + harga + '</td>' +
+                        '<td class="align-middle text-center">' + harga.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1.") + ',00' + '</td>' +
                         '<td class="align-middle text-center">' + value.jumlah_barang +
                         '</td>' +
-                        '<td class="align-middle text-center">' + harga * value.jumlah_barang +
+                        '<td class="align-middle text-center">' + (harga * value.jumlah_barang).toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1.") + ',00' +
                         '</td>' +
                         '<td class="align-middle text-center"><a id="hapus-' + value
                         .id + '" class="btn btn-sm btn-danger" onclick="show_popup_hapus(' +
@@ -287,13 +287,12 @@ function tampil_daftar() {
                     $('[name="nama_anggota"]').removeAttr('readonly');
                 }
 
-                $('#jumlah-harga').html("Rp. " + jumlah_harga + ",-");
+                $('#jumlah-harga').html("Rp. " + jumlah_harga.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1.") + ',00');
                 $('[name="jumlah_harga"]').val(jumlah_harga);
 
                 if (response.anggota_penjualan) {
                     $('[name="jumlah_bayar"]').val(response.anggota_penjualan.jumlah_bayar);
-                    $('#jumlah-kembalian').html("Rp. " + response.anggota_penjualan.jumlah_kembalian +
-                        ",-");
+                    $('#jumlah-kembalian').html("Rp. " + response.anggota_penjualan.jumlah_kembalian.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1.") + ',00');
                     $('[name="jumlah_kembalian"]').val(response.anggota_penjualan.jumlah_kembalian);
 
                     $('[name="tanggal"]').val(response.anggota_penjualan.tanggal);
@@ -338,7 +337,8 @@ function batal_transaksi() {
 }
 
 function kalkulasi_pembayaran() {
-    $('#jumlah-kembalian').html("Rp. " + ($('[name="jumlah_bayar"]').val() - jumlah_harga) + ",-");
+    var kembalian = $('[name="jumlah_bayar"]').val() - jumlah_harga
+    $('#jumlah-kembalian').html("Rp. " + kembalian.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1.") + ',00');
     $('[name="jumlah_kembalian"]').val($('[name="jumlah_bayar"]').val() - jumlah_harga);
 
     activeBeli();

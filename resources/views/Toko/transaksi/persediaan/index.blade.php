@@ -33,7 +33,9 @@
                         <th>Kode Supplier</th>
                         <th>Nama Supplier</th>
                         <th>Transfer Barang</th>
+                        @if (auth()->user()->jabatan != 'Kasir')
                         <th class="w-20">Opsi</th>
+                        @endif
                     </tr>
                 </thead>
                 @if (count($per_supplier) > 0)
@@ -59,13 +61,13 @@
                             {!! Form::text('edit_hpp', $data->hpp, ['class' => 'd-none form-control form-control-sm',
                             'id' =>
                             'edit-hpp-'.$data->id, 'required']) !!}
-                            <div id="hpp-<?php echo $data->id ?>">{{$data->hpp}}</div>
+                            <div id="hpp-<?php echo $data->id ?>">{{number_format($data->hpp, 2, ',', '.')}}</div>
                         </td>
                         <td class="align-middle text-center">
                             {!! Form::text('edit_harga_jual', $data->harga_jual, ['class' => 'd-none form-control
                             form-control-sm', 'id' =>
                             'edit-harga-jual-'.$data->id]) !!}
-                            <div id="harga-jual-<?php echo $data->id ?>">{{$data->harga_jual}}</div>
+                            <div id="harga-jual-<?php echo $data->id ?>">{{number_format($data->harga_jual, 2, ',', '.')}}</div>
                         </td>
                         <td class="align-middle text-center">
                             <div id="stok-<?php echo $data->id ?>">{{$data->stok_etalase + $data->stok_gudang}}</div>
@@ -97,6 +99,7 @@
                         <td class="align-middle">
                             <div id="nama-supplier-<?php echo $data->id ?>">{{$data->nama_supplier}}</div>
                         </td>
+                        @if (auth()->user()->jabatan != 'Kasir')
                         <td class="align-middle text-center">
                             <a id=<?php echo "transfer-" . $data->id ?> class="btn btn-sm btn-info"
                                 onclick="transfer(<?php echo $data->id ?>)"><i class="fas fa-exchange-alt p-1"></i> Transfer</a>
@@ -112,6 +115,7 @@
                             <a id=<?php echo "batal-" . $data->id ?> class="w-50 btn btn-sm btn-danger d-none"
                                 onclick="batal(<?php echo $data->id ?>)">Batal</a>
                         </td>
+                        @endif
                     </tr>
                     @endforeach
                 </tbody>
@@ -341,8 +345,8 @@ function terapkan(id) {
                     $("#batal-" + id).addClass("d-none");
 
                     $("#nama-" + id).html(response.barang.nama);
-                    $("#hpp-" + id).html(response.barang.hpp);
-                    $("#harga-jual-" + id).html(response.barang.harga_jual);
+                    $("#hpp-" + id).html(response.barang.hpp.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1.") + ',00');
+                    $("#harga-jual-" + id).html(response.barang.harga_jual.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1.") + ',00');
                     $("#stok-" + id).html(response.barang.stok_etalase + response.barang.stok_gudang);
                     $("#stok-etalase-" + id).html(response.barang.stok_etalase);
                     $("#stok-gudang-" + id).html(response.barang.stok_gudang);

@@ -72,9 +72,9 @@
                 <td class="align-middle text-center">{{$data->kode}}</td>
                 <td class="align-middle">{{$data->nama}}</td>
                 <td class="align-middle text-center">
-                    {{($data->jumlah >= $data->minimal_grosir) ? $data->harga_grosir : $data->harga_jual}}</td>
+                    {{($data->jumlah >= $data->minimal_grosir) ? number_format($data->harga_grosir, 2, ",", ".") : number_format($data->harga_jual, 2, ",", ".")}}</td>
                 <td class="align-middle text-center">{{$data->jumlah}}</td>
-                <td class="align-middle text-center">{{$data->total_harga}}</td>
+                <td class="align-middle text-center">{{number_format($data->total_harga, 2, ",", ".")}}</td>
                 <td class="align-middle text-center">{{($data->type_penjualan == 1) ? 'Offline' : 'Online'}}</td>
             </tr>
             @endforeach

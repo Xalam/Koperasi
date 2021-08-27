@@ -96,9 +96,9 @@
                             </th>
                             <td class="align-middle text-center">{{$data->kode_anggota}}</td>
                             <td class="align-middle">{{$data->nama_anggota}}</td>
-                            <td class="align-middle text-center">{{$data->jumlah_piutang}}</td>
-                            <td class="align-middle text-center">{{$data->jumlah_terima_piutang}}</td>
-                            <td class="align-middle text-center">{{$data->sisa_piutang}}</td>
+                            <td class="align-middle text-center">{{number_format($data->jumlah_piutang, 2, ',', '.')}}</td>
+                            <td class="align-middle text-center">{{number_format($data->jumlah_terima_piutang, 2, ',', '.')}}</td>
+                            <td class="align-middle text-center">{{number_format($data->sisa_piutang, 2, ',', '.')}}</td>
                             @if (auth()->user()->jabatan != 'Kanit')
                             <td class="align-middle text-center">
                                 <a id=<?php echo "bayar-" . $data->id ?> class="btn btn-sm btn-success"
@@ -239,9 +239,9 @@ function tampil_daftar($id_piutang) {
                         '<td class="align-middle text-center">' + value.nomor + '</td>' +
                         '<td class="align-middle">' + value.nomor_jurnal + '</td>' +
                         '<td class="align-middle text-center">' + value.tanggal + '</td>' +
-                        '<td class="align-middle text-center">' + value.terima_piutang +
+                        '<td class="align-middle text-center">' + value.terima_piutang.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1.") + ',00' +
                         '</td>' +
-                        '<td class="align-middle text-center">' + $sisa_piutang +
+                        '<td class="align-middle text-center">' + $sisa_piutang.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1.") + ',00' +
                         '</td>' +
                         '<td class="align-middle text-center"><a id="hapus-' + value
                         .id + '" class="btn btn-sm btn-danger" onclick="show_popup_hapus(' +

@@ -55,7 +55,7 @@
                         <th class="align-middle text-center">{{$i++}}</th>
                         <td class="align-middle text-center">{{$data->kode_anggota}}</td>
                         <td class="align-middle text-center">{{$data->nama_anggota}}</td>
-                        <td class="align-middle text-center">{{$data->sisa_piutang}}</td>
+                        <td class="align-middle text-center">{{number_format($data->sisa_piutang, 2, ",", ".")}}</td>
                     </tr>
                     @endforeach
                 </tbody>

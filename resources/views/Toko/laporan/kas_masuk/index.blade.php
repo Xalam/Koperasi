@@ -69,7 +69,7 @@
                         <td class="align-middle">{{$data->nama_anggota}}</td>
                         <td class="align-middle text-center">{{$data->status}}</td>
                         <td class="align-middle text-center">{{$data->keterangan}}</td>
-                        <td class="align-middle text-center">{{$data->jumlah_transaksi}}</td>
+                        <td class="align-middle text-center">{{number_format($data->jumlah_transaksi, 2, ",", ".")}}</td>
                     </tr>
                     @endforeach
                 </tbody>
