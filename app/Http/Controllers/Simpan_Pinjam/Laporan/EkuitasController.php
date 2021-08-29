@@ -100,13 +100,13 @@ class EkuitasController extends Controller
             $endDate = date('d-m-Y', strtotime($request->end_date));
         }
 
-        $pokok      = JurnalUmum::selectRaw('SUM(debet) as debet, SUM(kredit) as kredit')->where('id_akun', $idPokok->id)->whereBetween('tanggal', [$startDate, $endDate])->first();
-        $wajib      = JurnalUmum::selectRaw('SUM(debet) as debet, SUM(kredit) as kredit')->where('id_akun', $idWajib->id)->whereBetween('tanggal', [$startDate, $endDate])->first();
-        $inkoppol   = JurnalUmum::selectRaw('SUM(debet) as debet, SUM(kredit) as kredit')->where('id_akun', $idInkoppol->id)->whereBetween('tanggal', [$startDate, $endDate])->first();
-        $dinas      = JurnalUmum::selectRaw('SUM(debet) as debet, SUM(kredit) as kredit')->where('id_akun', $idDinas->id)->whereBetween('tanggal', [$startDate, $endDate])->first();
-        $simsus     = JurnalUmum::selectRaw('SUM(debet) as debet, SUM(kredit) as kredit')->where('id_akun', $idSimsus->id)->whereBetween('tanggal', [$startDate, $endDate])->first();
-        $cadangan   = JurnalUmum::selectRaw('SUM(debet) as debet, SUM(kredit) as kredit')->where('id_akun', $idCadangan->id)->whereBetween('tanggal', [$startDate, $endDate])->first();
-        $resiko     = JurnalUmum::selectRaw('SUM(debet) as debet, SUM(kredit) as kredit')->where('id_akun', $idResiko->id)->whereBetween('tanggal', [$startDate, $endDate])->first();
+        $pokok      = JurnalUmum::selectRaw('SUM(debet) as debet, SUM(kredit) as kredit')->where('id_akun', $idPokok->id)->whereBetween('tanggal', [$reqStart, $reqEnd])->first();
+        $wajib      = JurnalUmum::selectRaw('SUM(debet) as debet, SUM(kredit) as kredit')->where('id_akun', $idWajib->id)->whereBetween('tanggal', [$reqStart, $reqEnd])->first();
+        $inkoppol   = JurnalUmum::selectRaw('SUM(debet) as debet, SUM(kredit) as kredit')->where('id_akun', $idInkoppol->id)->whereBetween('tanggal', [$reqStart, $reqEnd])->first();
+        $dinas      = JurnalUmum::selectRaw('SUM(debet) as debet, SUM(kredit) as kredit')->where('id_akun', $idDinas->id)->whereBetween('tanggal', [$reqStart, $reqEnd])->first();
+        $simsus     = JurnalUmum::selectRaw('SUM(debet) as debet, SUM(kredit) as kredit')->where('id_akun', $idSimsus->id)->whereBetween('tanggal', [$reqStart, $reqEnd])->first();
+        $cadangan   = JurnalUmum::selectRaw('SUM(debet) as debet, SUM(kredit) as kredit')->where('id_akun', $idCadangan->id)->whereBetween('tanggal', [$reqStart, $reqEnd])->first();
+        $resiko     = JurnalUmum::selectRaw('SUM(debet) as debet, SUM(kredit) as kredit')->where('id_akun', $idResiko->id)->whereBetween('tanggal', [$reqStart, $reqEnd])->first();
 
         #SHU
         #Kode Akun 4XXX
@@ -302,13 +302,13 @@ class EkuitasController extends Controller
             $endDate = date('d-m-Y', strtotime($request->end_date));
         }
 
-        $pokok      = JurnalUmum::selectRaw('SUM(debet) as debet, SUM(kredit) as kredit')->where('id_akun', $idPokok->id)->whereBetween('tanggal', [$startDate, $endDate])->first();
-        $wajib      = JurnalUmum::selectRaw('SUM(debet) as debet, SUM(kredit) as kredit')->where('id_akun', $idWajib->id)->whereBetween('tanggal', [$startDate, $endDate])->first();
-        $inkoppol   = JurnalUmum::selectRaw('SUM(debet) as debet, SUM(kredit) as kredit')->where('id_akun', $idInkoppol->id)->whereBetween('tanggal', [$startDate, $endDate])->first();
-        $dinas      = JurnalUmum::selectRaw('SUM(debet) as debet, SUM(kredit) as kredit')->where('id_akun', $idDinas->id)->whereBetween('tanggal', [$startDate, $endDate])->first();
-        $simsus     = JurnalUmum::selectRaw('SUM(debet) as debet, SUM(kredit) as kredit')->where('id_akun', $idSimsus->id)->whereBetween('tanggal', [$startDate, $endDate])->first();
-        $cadangan   = JurnalUmum::selectRaw('SUM(debet) as debet, SUM(kredit) as kredit')->where('id_akun', $idCadangan->id)->whereBetween('tanggal', [$startDate, $endDate])->first();
-        $resiko     = JurnalUmum::selectRaw('SUM(debet) as debet, SUM(kredit) as kredit')->where('id_akun', $idResiko->id)->whereBetween('tanggal', [$startDate, $endDate])->first();
+        $pokok      = JurnalUmum::selectRaw('SUM(debet) as debet, SUM(kredit) as kredit')->where('id_akun', $idPokok->id)->whereBetween('tanggal', [$reqStart, $reqEnd])->first();
+        $wajib      = JurnalUmum::selectRaw('SUM(debet) as debet, SUM(kredit) as kredit')->where('id_akun', $idWajib->id)->whereBetween('tanggal', [$reqStart, $reqEnd])->first();
+        $inkoppol   = JurnalUmum::selectRaw('SUM(debet) as debet, SUM(kredit) as kredit')->where('id_akun', $idInkoppol->id)->whereBetween('tanggal', [$reqStart, $reqEnd])->first();
+        $dinas      = JurnalUmum::selectRaw('SUM(debet) as debet, SUM(kredit) as kredit')->where('id_akun', $idDinas->id)->whereBetween('tanggal', [$reqStart, $reqEnd])->first();
+        $simsus     = JurnalUmum::selectRaw('SUM(debet) as debet, SUM(kredit) as kredit')->where('id_akun', $idSimsus->id)->whereBetween('tanggal', [$reqStart, $reqEnd])->first();
+        $cadangan   = JurnalUmum::selectRaw('SUM(debet) as debet, SUM(kredit) as kredit')->where('id_akun', $idCadangan->id)->whereBetween('tanggal', [$reqStart, $reqEnd])->first();
+        $resiko     = JurnalUmum::selectRaw('SUM(debet) as debet, SUM(kredit) as kredit')->where('id_akun', $idResiko->id)->whereBetween('tanggal', [$reqStart, $reqEnd])->first();
 
         #SHU
         #Kode Akun 4XXX

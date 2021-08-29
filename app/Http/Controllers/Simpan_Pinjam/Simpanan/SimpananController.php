@@ -11,6 +11,7 @@ use App\Models\Simpan_Pinjam\Master\Akun\Akun;
 use App\Models\Simpan_Pinjam\Master\Anggota\Anggota;
 use App\Models\Simpan_Pinjam\Other\Notifikasi;
 use App\Models\Simpan_Pinjam\Simpanan\Saldo;
+use App\Models\Simpan_Pinjam\Simpanan\SaldoTarik;
 use App\Models\Simpan_Pinjam\Simpanan\Simpanan;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -39,7 +40,7 @@ class SimpananController extends Controller
                 $data = [];
                 $no   = 1;
                 $jenis = '';
-                
+
                 foreach ($simWaiting as $key => $value) {
                     if ($value->jenis_simpanan == 1) {
                         $jenis = 'Simpanan Pokok';
