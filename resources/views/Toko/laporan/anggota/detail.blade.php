@@ -42,8 +42,8 @@
                         <th class="align-middle text-center">{{$i++}}</th>
                         <td class="align-middle text-center">{{$data->tanggal}}</td>
                         <td class="align-middle text-center">{{$transaksi . ' ' . $typePenjualan . ' ' . $typePembayaran}}</td>
-                        <td class="align-middle text-center">{{$data->jumlah_harga}}</td>
-                        <td class="align-middle text-center">{{$totalBelanja}}</td>
+                        <td class="align-middle text-center">{{number_format($data->jumlah_harga, 2, ',', '.')}}</td>
+                        <td class="align-middle text-center">{{number_format($totalBelanja, 2, ',', '.')}}</td>
                     </tr>
                     @endforeach
                 </tbody>

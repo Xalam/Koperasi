@@ -159,22 +159,27 @@ class PiutangController extends Controller
         $data_piutang = PiutangModel::where('id', $data_terima_piutang->id_piutang)->first();
 
         PiutangModel::where('id', $data_terima_piutang->id_piutang)->update([
-            'jumlah_terima_piutang' => $data_piutang->jumlah_terima_piutang - $data_terima_piutang->terima_piutang
+            'jumlah_terima_piutang' => $data_piutang->jumlah_terima_piutang - $data_terima_piutang->terima_piutang,
+            'sisa_piutang' => $data_piutang->jumlah_piutang - $data_terima_piutang->terima_piutang
         ]);
-        
-        $data_piutang = PiutangModel::where('id', $data_terima_piutang->id_piutang)->first();
-
-        PiutangModel::where('id', $data_terima_piutang->id_piutang)->update([
-            'sisa_piutang' => $data_piutang->jumlah_piutang - $data_piutang->jumlah_terima_piutang
-        ]);
-        
-        $data_piutang = PiutangModel::where('id', $data_terima_piutang->id_piutang)->first();
 
         if ($data_piutang->sisa_piutang > 0) {
             PiutangModel::where('id', $data_terima_piutang->id_piutang)->update([
                 'status' => 0
             ]);
         }
+
+        $kas = AkunModel::where('kode', 1102)->first();
+
+        AkunModel::where('kode', 1102)->update([
+            'debit' => $kas->debit - $data_terima_piutang->terima_piutang
+        ]);
+
+        $piutang = AkunModel::where('kode', 1122)->first();
+
+        AkunModel::where('kode', 1122)->update([
+            'debit' => $piutang->debit + $data_terima_piutang->terima_piutang
+        ]);
 
         PiutangDetailModel::where('id', $id)->delete();
         JurnalModel::where('nomor', $data_terima_piutang->nomor_jurnal)->delete();

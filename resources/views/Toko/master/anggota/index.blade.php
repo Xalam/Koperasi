@@ -66,10 +66,10 @@
                         <td class="align-middle">
                             {!! Form::text('edit_gaji', $data->gaji, ['class' => 'd-none form-control form-control-sm', 'id' =>
                             'edit-gaji-'.$data->id]) !!}
-                            <div id="gaji-<?php echo $data->id ?>">{{$data->gaji}}</div>
+                            <div id="gaji-<?php echo $data->id ?>">{{number_format($data->gaji, 2, ',', '.')}}</div>
                         </td>
                         <td class="align-middle">
-                            <div id="limit-gaji-<?php echo $data->id ?>">{{$data->limit_gaji}}</div>
+                            <div id="limit-gaji-<?php echo $data->id ?>">{{number_format($data->limit_gaji, 2, ',', '.')}}</div>
                         </td>
                         <td class="align-middle">
                             {!! Form::text('edit_no_hp', $data->no_hp, ['class' => 'd-none form-control form-control-sm', 'id' =>
@@ -206,8 +206,8 @@ function terapkan(id) {
                     $("#nama-anggota-" + id).html(response.supplier.nama_anggota);
                     $("#status-" + id).html(response.supplier.status);
                     $("#alamat-" + id).html(response.supplier.alamat);
-                    $("#gaji-" + id).html(response.supplier.gaji);
-                    $("#limit-gaji-" + id).html(response.supplier.limit_gaji);
+                    $("#gaji-" + id).html(response.supplier.gaji.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1.") + ',00');
+                    $("#limit-gaji-" + id).html(response.supplier.limit_gaji.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1.") + ',00');
                     $("#no-hp-" + id).html(response.supplier.no_hp);
                     $("#no-wa-" + id).html(response.supplier.no_wa);
                 }

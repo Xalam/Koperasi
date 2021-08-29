@@ -172,8 +172,8 @@ function terapkan(id) {
 
                     $("#kode-" + id).html(response.akun.kode);
                     $("#nama-" + id).html(response.akun.nama);
-                    $("#debit-" + id).html(response.akun.debit);
-                    $("#kredit-" + id).html(response.akun.kredit);
+                    $("#debit-" + id).html(response.akun.debit.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1.") + ',00');
+                    $("#kredit-" + id).html(response.akun.kredit.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1.") + ',00');
                 }
             }
         });
