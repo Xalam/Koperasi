@@ -278,7 +278,7 @@ Route::group(['prefix' => 'toko'], function () {
                 Route::post('/remove-notification/{id}', [BarangController::class, 'removeNotification']);
             });
 
-            Route::group(['prefix' => 'admin', 'middleware' => ['auth:toko', 'checkjabatan:Super_Admin,Kanit,Ketua_Koperasi']], function () {
+            Route::group(['prefix' => 'admin', 'middleware' => ['auth:toko', 'checkjabatan:Super_Admin,Kanit']], function () {
                 Route::get('/', [AdminController::class, 'index']);
                 Route::get('/create', [AdminController::class, 'create']);
                 Route::post('/store', [AdminController::class, 'store']);
@@ -286,7 +286,7 @@ Route::group(['prefix' => 'toko'], function () {
                 Route::post('/delete', [AdminController::class, 'delete']);
             });
 
-            Route::group(['prefix' => 'akun', 'middleware' => ['auth:toko', 'checkjabatan:Super_Admin,Kanit,Ketua_Koperasi']], function () {
+            Route::group(['prefix' => 'akun', 'middleware' => ['auth:toko', 'checkjabatan:Super_Admin,Kanit']], function () {
                 Route::get('/', [AkunController::class, 'index']);
                 Route::get('/create', [AkunController::class, 'create']);
                 Route::post('/store', [AkunController::class, 'store']);

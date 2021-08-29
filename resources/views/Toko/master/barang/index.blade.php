@@ -10,7 +10,7 @@
 @endsection
 
 @section('main')
-@if (auth()->user()->jabatan != 'Kasir')
+@if (auth()->user()->jabatan != 'Kasir' && auth()->user()->jabatan != 'Ketua_Koperasi')
 <a href="{{url('toko/master/barang/create')}}" class="btn btn-sm btn-success mt-4 ms-4 pe-4"><i
         class="fas fa-plus"></i><b>Tambah</b></a>
 @endif
