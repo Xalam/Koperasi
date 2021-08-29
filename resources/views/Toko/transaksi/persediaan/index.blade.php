@@ -32,8 +32,8 @@
                         <th>Expired</th>
                         <th>Kode Supplier</th>
                         <th>Nama Supplier</th>
-                        <th>Transfer Barang</th>
                         @if (auth()->user()->jabatan != 'Kasir')
+                        <th>Transfer Barang</th>
                         <th class="w-20">Opsi</th>
                         @endif
                     </tr>

@@ -59,13 +59,13 @@
                             {!! Form::text('edit_harga_jual', $data->harga_jual, ['class' => 'd-none form-control
                             form-control-sm', 'id' =>
                             'edit-harga-jual-'.$data->id]) !!}
-                            <div id="harga-jual-<?php echo $data->id ?>">{{$data->harga_jual}}</div>
+                            <div id="harga-jual-<?php echo $data->id ?>">{{number_format($data->harga_jual, 2, ',', '.')}}</div>
                         </td>
                         <td class="align-middle text-center">
                             {!! Form::text('edit_harga_grosir', $data->harga_grosir, ['class' => 'd-none form-control
                             form-control-sm', 'id' =>
                             'edit-harga-grosir-'.$data->id]) !!}
-                            <div id="harga-grosir-<?php echo $data->id ?>">{{$data->harga_grosir}}</div>
+                            <div id="harga-grosir-<?php echo $data->id ?>">{{number_format($data->harga_grosir, 2, ',', '.')}}</div>
                         </td>
                         <td class="align-middle text-center">
                             {!! Form::number('edit_minimal_grosir', $data->minimal_grosir, ['class' => 'd-none
@@ -127,12 +127,8 @@
 function edit(id) {
     $("#nama-" + id).addClass("d-none");
     $("#edit-nama-" + id).removeClass("d-none");
-    $("#hpp-" + id).addClass("d-none");
-    $("#edit-hpp-" + id).removeClass("d-none");
     $("#harga-jual-" + id).addClass("d-none");
     $("#edit-harga-jual-" + id).removeClass("d-none");
-    $("#stok-" + id).addClass("d-none");
-    $("#edit-stok-" + id).removeClass("d-none");
     $("#harga-grosir-" + id).addClass("d-none");
     $("#edit-harga-grosir-" + id).removeClass("d-none");
     $("#minimal-grosir-" + id).addClass("d-none");
@@ -153,15 +149,9 @@ function batal(id) {
     $("#nama-" + id).removeClass("d-none");
     $("#edit-nama-" + id).val($("#nama-" + id).text());
     $("#edit-nama-" + id).addClass("d-none");
-    $("#hpp-" + id).removeClass("d-none");
-    $("#edit-hpp-" + id).val($("#hpp-" + id).text());
-    $("#edit-hpp-" + id).addClass("d-none");
     $("#harga-jual-" + id).removeClass("d-none");
     $("#edit-harga-jual-" + id).val($("#harga-jual-" + id).text());
     $("#edit-harga-jual-" + id).addClass("d-none");
-    $("#stok-" + id).removeClass("d-none");
-    $("#edit-kode-" + id).val($("#stok-" + id).text());
-    $("#edit-stok-" + id).addClass("d-none");
     $("#harga-grosir-" + id).removeClass("d-none");
     $("#edit-harga-grosir-" + id).val($("#harga-grosir-" + id).text());
     $("#edit-harga-grosir-" + id).addClass("d-none");
@@ -217,9 +207,7 @@ function terapkan(id) {
             data: {
                 id: id,
                 nama: $('#edit-nama-' + id).val(),
-                hpp: $('#edit-hpp-' + id).val(),
                 harga_jual: $('#edit-harga-jual-' + id).val(),
-                stok: $('#edit-stok-' + id).val(),
                 harga_grosir: $('#edit-harga-grosir-' + id).val(),
                 minimal_grosir: $('#edit-minimal-grosir-' + id).val(),
                 nomor_rak: $('#edit-nomor-rak-' + id).val(),
@@ -230,12 +218,8 @@ function terapkan(id) {
                 if (response.code == 200) {
                     $("#nama-" + id).removeClass("d-none");
                     $("#edit-nama-" + id).addClass("d-none");
-                    $("#hpp-" + id).removeClass("d-none");
-                    $("#edit-hpp-" + id).addClass("d-none");
                     $("#harga-jual-" + id).removeClass("d-none");
                     $("#edit-harga-jual-" + id).addClass("d-none");
-                    $("#stok-" + id).removeClass("d-none");
-                    $("#edit-stok-" + id).addClass("d-none");
                     $("#harga-grosir-" + id).removeClass("d-none");
                     $("#edit-harga-grosir-" + id).addClass("d-none");
                     $("#minimal-grosir-" + id).removeClass("d-none");
@@ -252,14 +236,12 @@ function terapkan(id) {
                     $("#batal-" + id).addClass("d-none");
 
                     $("#nama-" + id).html(response.barang.nama);
-                    $("#hpp-" + id).html(response.barang.hpp);
-                    $("#harga-jual-" + id).html(response.barang.harga_jual);
-                    $("#stok-" + id).html(response.barang.stok);
-                    $("#harga-grosir-" + id).html(response.barang.harga_grosir);
+                    $("#harga-jual-" + id).html(response.barang.harga_jual.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1.") + ',00');
+                    $("#harga-grosir-" + id).html(response.barang.harga_grosir.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1.") + ',00');
                     $("#minimal-grosir-" + id).html(response.barang.minimal_grosir);
-                    $("#nomor-rak-" + id).html(response.barang.satuan);
-                    $("#tingkat-rak-" + id).html(response.barang.satuan);
-                    $("#posisi-rak-" + id).html(response.barang.satuan);
+                    $("#nomor-rak-" + id).html(response.barang.nomor_rak);
+                    $("#tingkat-rak-" + id).html(response.barang.tingkat_rak);
+                    $("#posisi-rak-" + id).html(response.barang.posisi_rak);
                 }
             }
         });

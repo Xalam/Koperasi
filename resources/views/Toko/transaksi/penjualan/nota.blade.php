@@ -67,7 +67,7 @@
                     <td>{{$data->nama_barang}}</td>
                     <td class="text-center">{{$data->jumlah}}</td>
                     <td class="text-center">{{($data->jumlah >= $data->minimal_grosir) ? number_format($data->harga_grosir, 2, ',', '.') : number_format($data->harga_jual, 2, ',', '.')}}</td>
-                    <td class="text-center">{{$data->total_harga}}</td>
+                    <td class="text-center">{{number_format($data->total_harga, 2, ',', '.')}}</td>
                 </tr>
                 @endforeach
             </tbody>

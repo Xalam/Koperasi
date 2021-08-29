@@ -55,7 +55,7 @@
                         <th class="align-middle text-center">{{$i++}}</th>
                         <td class="align-middle text-center">{{$data->kode_anggota}}</td>
                         <td class="align-middle text-center">{{$data->nama_anggota}}</td>
-                        <td class="align-middle text-center">{{$data->total_belanja}}</td>
+                        <td class="align-middle text-center">{{number_format($data->total_belanja, 2, ',', '.')}}</td>
                         <td class="align-middle text-center"><a
                                 href="<?php echo url('toko/laporan/anggota/detail/' . $data->id . '/' . $tanggal_awal . '/' . $tanggal_akhir); ?>"
                                 class="btn btn-sm btn-success">Detail</a>

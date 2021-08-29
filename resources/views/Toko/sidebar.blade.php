@@ -76,15 +76,6 @@
                                     </ul>
                                 </div>
                             </li>
-                            <!-- <li class="sidebar-dropdown2">
-                                <a>Konsinyasi</a>
-                                <div class="sidebar-submenu2">
-                                    <ul>
-                                        <li><a href="/toko/transaksi/titip-jual">Titip Jual</a></li>
-                                        <li><a href="/toko/transaksi/konsinyasi">Bayar Titip Jual</a></li>
-                                    </ul>
-                                </div>
-                            </li> -->
                             <li><a href="/toko/transaksi/jurnal">Jurnal</a></li>
                             <li><a href="/toko/transaksi/pesanan-online">Pesanan Online</a></li>
                             <li><a href="/toko/transaksi/persediaan">Persediaan</a></li>
@@ -175,6 +166,35 @@
                     </div>
                 </li>
                 @endif
+                @if (auth()->user()->jabatan == 'Gudang')
+                <li class="sidebar-dropdown">
+                    <a><i class="fas fa-book" aria-hidden="true"></i>Laporan</a>
+                    <div class="sidebar-submenu">
+                        <ul>
+                            <li class="sidebar-dropdown2">
+                                <a>Pembelian</a>
+                                <div class="sidebar-submenu2">
+                                    <ul>
+                                        <li><a href="/toko/laporan/pembelian">Transaksi Pembelian</a></li>
+                                        <li><a href="/toko/laporan/kas-keluar">Kas Keluar</a></li>
+                                        <li><a href="/toko/laporan/retur-pembelian">Retur Pembelian</a></li>
+                                    </ul>
+                                </div>
+                            </li>
+                            <li class="sidebar-dropdown2">
+                                <a>Persediaan</a>
+                                <div class="sidebar-submenu2">
+                                    <ul>
+                                        <li><a href="/toko/laporan/persediaan">Persediaan</a></li>
+                                        <li><a href="/toko/laporan/persediaan/minimal-persediaan">Persediaan Minimal</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
+                @endif
                 @if (auth()->user()->jabatan == 'Kasir')
                 <li class="sidebar-dropdown">
                     <a><i class="fas fa-book" aria-hidden="true"></i>Laporan</a>
@@ -185,6 +205,8 @@
                                 <div class="sidebar-submenu2">
                                     <ul>
                                         <li><a href="/toko/laporan/penjualan">Transaksi Penjualan</a></li>
+                                        <li><a href="/toko/laporan/piutang">Piutang</a></li>
+                                        <li><a href="/toko/laporan/kas-masuk">Kas Masuk</a></li>
                                     </ul>
                                 </div>
                             </li>

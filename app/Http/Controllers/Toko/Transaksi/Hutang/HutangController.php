@@ -176,22 +176,27 @@ class HutangController extends Controller
         $data_hutang = HutangModel::where('id', $data_angsuran->id_hutang)->first();
 
         HutangModel::where('id', $data_angsuran->id_hutang)->update([
-            'jumlah_angsuran' => $data_hutang->jumlah_angsuran - $data_angsuran->angsuran
+            'jumlah_angsuran' => $data_hutang->jumlah_angsuran - $data_angsuran->angsuran,
+            'sisa_hutang' => $data_hutang->jumlah_hutang - $data_angsuran->angsuran
         ]);
-        
-        $data_hutang = HutangModel::where('id', $data_angsuran->id_hutang)->first();
-
-        HutangModel::where('id', $data_angsuran->id_hutang)->update([
-            'sisa_hutang' => $data_hutang->jumlah_hutang - $data_hutang->jumlah_angsuran
-        ]);
-        
-        $data_hutang = HutangModel::where('id', $data_angsuran->id_hutang)->first();
 
         if ($data_hutang->sisa_hutang > 0) {
             HutangModel::where('id', $data_angsuran->id_hutang)->update([
                 'status' => 0
             ]);
         }
+
+        $kas = AkunModel::where('kode', 1102)->first();
+
+        AkunModel::where('kode', 1102)->update([
+            'debit' => $kas->debit + $data_angsuran->angsuran
+        ]);
+
+        $hutang = AkunModel::where('kode', 2101)->first();
+
+        AkunModel::where('kode', 2101)->update([
+            'kredit' => $hutang->kredit + $data_angsuran->angsuran
+        ]);
 
         HutangDetailModel::where('id', $id)->delete();
         JurnalModel::where('nomor', $data_angsuran->nomor_jurnal)->delete();
