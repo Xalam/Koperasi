@@ -94,67 +94,6 @@ class KeuanganController extends Controller
             $endDate = date('d-m-Y', strtotime($request->end_date));
         }
 
-        #Aset Lancar
-        for ($i = 0; $i < sizeof($asetLancar); $i++) {
-            $jur = JurnalUmum::selectRaw('SUM(debet) as debet, SUM(kredit) as kredit')->where('id_akun', $asetLancar[$i]->id)->whereBetween('tanggal', [$reqStart, $reqEnd])->first();
-
-            $calculate = $asetLancar[$i]->saldo - $jur->kredit + $jur->debet;
-
-            array_push($saldoLancar, $calculate);
-        }
-
-        #Penyertaan
-        for ($i = 0; $i < sizeof($penyertaan); $i++) {
-            $jur = JurnalUmum::selectRaw('SUM(debet) as debet, SUM(kredit) as kredit')->where('id_akun', $penyertaan[$i]->id)->whereBetween('tanggal', [$reqStart, $reqEnd])->first();
-
-            $calculate = $penyertaan[$i]->saldo - $jur->kredit + $jur->debet;
-
-            array_push($saldoPenyertaan, $calculate);
-        }
-
-        #Aset Tidak Lancar
-        for ($i = 0; $i < sizeof($asetTidakLancar); $i++) {
-            $jur = JurnalUmum::selectRaw('SUM(debet) as debet, SUM(kredit) as kredit')->where('id_akun', $asetTidakLancar[$i]->id)->whereBetween('tanggal', [$reqStart, $reqEnd])->first();
-
-            $calculate = $asetTidakLancar[$i]->saldo - $jur->kredit + $jur->debet;
-
-            array_push($saldoTidakLancar, $calculate);
-        }
-
-        #Kewajiban Pendek
-        for ($i = 0; $i < sizeof($kewajibanPendek); $i++) {
-            $jur = JurnalUmum::selectRaw('SUM(debet) as debet, SUM(kredit) as kredit')->where('id_akun', $kewajibanPendek[$i]->id)->whereBetween('tanggal', [$reqStart, $reqEnd])->first();
-
-            $calculate = $kewajibanPendek[$i]->saldo - $jur->kredit + $jur->debet;
-
-            array_push($saldoPendek, $calculate);
-        }
-
-        #Kewajiban Panjang            
-        for ($i = 0; $i < sizeof($kewajibanPanjang); $i++) {
-            $jur = JurnalUmum::selectRaw('SUM(debet) as debet, SUM(kredit) as kredit')->where('id_akun', $kewajibanPanjang[$i]->id)->whereBetween('tanggal', [$reqStart, $reqEnd])->first();
-
-            $calculate = $kewajibanPanjang[$i]->saldo - $jur->kredit + $jur->debet;
-
-            array_push($saldoPanjang, $calculate);
-        }
-
-        #Ekuitas
-        for ($i = 0; $i < sizeof($ekuitas); $i++) {
-            $jur = JurnalUmum::selectRaw('SUM(debet) as debet, SUM(kredit) as kredit')->where('id_akun', $ekuitas[$i]->id)->whereBetween('tanggal', [$reqStart, $reqEnd])->first();
-
-            $calculate = $ekuitas[$i]->saldo - $jur->kredit + $jur->debet;
-
-            array_push($saldoEkuitas, $calculate);
-        }
-
-        $sumLancar      = array_sum($saldoLancar);
-        $sumPenyertaan  = array_sum($saldoPenyertaan);
-        $sumTidakLancar = array_sum($saldoTidakLancar);
-        $sumPendek      = array_sum($saldoPendek);
-        $sumPanjang     = array_sum($saldoPanjang);
-        $sumEkuitas     = array_sum($saldoEkuitas);
-
         #SHU
         #Kode Akun 4XXX
         $akunFour = array(
@@ -238,6 +177,82 @@ class KeuanganController extends Controller
         $pendapatanOperasional = $labaKotor + $totalBeban;
 
         $sumSHU = $pendapatanOperasional + ($sumAkunFourTwo * -1);
+
+        $shuKredit = 0;
+        $shuDebet  = 0;
+
+        if ($sumSHU < 0) {
+            $shuDebet = $sumSHU;
+        } else {
+            $shuKredit = $sumSHU;
+        }
+
+        #Aset Lancar
+        for ($i = 0; $i < sizeof($asetLancar); $i++) {
+            $jur = JurnalUmum::selectRaw('SUM(debet) as debet, SUM(kredit) as kredit')->where('id_akun', $asetLancar[$i]->id)->whereBetween('tanggal', [$reqStart, $reqEnd])->first();
+
+            $calculate = $asetLancar[$i]->saldo - $jur->kredit + $jur->debet;
+
+            array_push($saldoLancar, $calculate);
+        }
+
+        #Penyertaan
+        for ($i = 0; $i < sizeof($penyertaan); $i++) {
+            $jur = JurnalUmum::selectRaw('SUM(debet) as debet, SUM(kredit) as kredit')->where('id_akun', $penyertaan[$i]->id)->whereBetween('tanggal', [$reqStart, $reqEnd])->first();
+
+            $calculate = $penyertaan[$i]->saldo - $jur->kredit + $jur->debet;
+
+            array_push($saldoPenyertaan, $calculate);
+        }
+
+        #Aset Tidak Lancar
+        for ($i = 0; $i < sizeof($asetTidakLancar); $i++) {
+            $jur = JurnalUmum::selectRaw('SUM(debet) as debet, SUM(kredit) as kredit')->where('id_akun', $asetTidakLancar[$i]->id)->whereBetween('tanggal', [$reqStart, $reqEnd])->first();
+
+            $calculate = $asetTidakLancar[$i]->saldo - $jur->kredit + $jur->debet;
+
+            array_push($saldoTidakLancar, $calculate);
+        }
+
+        #Kewajiban Pendek
+        for ($i = 0; $i < sizeof($kewajibanPendek); $i++) {
+            $jur = JurnalUmum::selectRaw('SUM(debet) as debet, SUM(kredit) as kredit')->where('id_akun', $kewajibanPendek[$i]->id)->whereBetween('tanggal', [$reqStart, $reqEnd])->first();
+
+            $calculate = $kewajibanPendek[$i]->saldo - $jur->kredit + $jur->debet;
+
+            array_push($saldoPendek, $calculate);
+        }
+
+        #Kewajiban Panjang            
+        for ($i = 0; $i < sizeof($kewajibanPanjang); $i++) {
+            $jur = JurnalUmum::selectRaw('SUM(debet) as debet, SUM(kredit) as kredit')->where('id_akun', $kewajibanPanjang[$i]->id)->whereBetween('tanggal', [$reqStart, $reqEnd])->first();
+
+            $calculate = $kewajibanPanjang[$i]->saldo - $jur->kredit + $jur->debet;
+
+            array_push($saldoPanjang, $calculate);
+        }
+
+        #Ekuitas
+        $idSHUAkun = Akun::where('kode_akun', 3131)->first();
+
+        for ($i = 0; $i < sizeof($ekuitas); $i++) {
+            $jur = JurnalUmum::selectRaw('id_akun, SUM(debet) as debet, SUM(kredit) as kredit')->where('id_akun', $ekuitas[$i]->id)->whereBetween('tanggal', [$reqStart, $reqEnd])->first();
+
+            $calculate = $ekuitas[$i]->saldo - $jur->kredit + $jur->debet;
+
+            if ($ekuitas[$i]->id == $idSHUAkun->id) {
+                $calculate = $ekuitas[$i]->saldo - $shuKredit + $shuDebet;
+            }
+
+            array_push($saldoEkuitas, $calculate);
+        }
+
+        $sumLancar      = array_sum($saldoLancar);
+        $sumPenyertaan  = array_sum($saldoPenyertaan);
+        $sumTidakLancar = array_sum($saldoTidakLancar);
+        $sumPendek      = array_sum($saldoPendek);
+        $sumPanjang     = array_sum($saldoPanjang);
+        $sumEkuitas     = array_sum($saldoEkuitas);
 
         return view('Simpan_Pinjam.laporan.keuangan.show', compact(
             'asetLancar',
@@ -344,67 +359,6 @@ class KeuanganController extends Controller
             $endDate = date('d-m-Y', strtotime($request->end_date));
         }
 
-        #Aset Lancar
-        for ($i = 0; $i < sizeof($asetLancar); $i++) {
-            $jur = JurnalUmum::selectRaw('SUM(debet) as debet, SUM(kredit) as kredit')->where('id_akun', $asetLancar[$i]->id)->whereBetween('tanggal', [$reqStart, $reqEnd])->first();
-
-            $calculate = $asetLancar[$i]->saldo - $jur->kredit + $jur->debet;
-
-            array_push($saldoLancar, $calculate);
-        }
-
-        #Penyertaan
-        for ($i = 0; $i < sizeof($penyertaan); $i++) {
-            $jur = JurnalUmum::selectRaw('SUM(debet) as debet, SUM(kredit) as kredit')->where('id_akun', $penyertaan[$i]->id)->whereBetween('tanggal', [$reqStart, $reqEnd])->first();
-
-            $calculate = $penyertaan[$i]->saldo - $jur->kredit + $jur->debet;
-
-            array_push($saldoPenyertaan, $calculate);
-        }
-
-        #Aset Tidak Lancar
-        for ($i = 0; $i < sizeof($asetTidakLancar); $i++) {
-            $jur = JurnalUmum::selectRaw('SUM(debet) as debet, SUM(kredit) as kredit')->where('id_akun', $asetTidakLancar[$i]->id)->whereBetween('tanggal', [$reqStart, $reqEnd])->first();
-
-            $calculate = $asetTidakLancar[$i]->saldo - $jur->kredit + $jur->debet;
-
-            array_push($saldoTidakLancar, $calculate);
-        }
-
-        #Kewajiban Pendek
-        for ($i = 0; $i < sizeof($kewajibanPendek); $i++) {
-            $jur = JurnalUmum::selectRaw('SUM(debet) as debet, SUM(kredit) as kredit')->where('id_akun', $kewajibanPendek[$i]->id)->whereBetween('tanggal', [$reqStart, $reqEnd])->first();
-
-            $calculate = $kewajibanPendek[$i]->saldo - $jur->kredit + $jur->debet;
-
-            array_push($saldoPendek, $calculate);
-        }
-
-        #Kewajiban Panjang            
-        for ($i = 0; $i < sizeof($kewajibanPanjang); $i++) {
-            $jur = JurnalUmum::selectRaw('SUM(debet) as debet, SUM(kredit) as kredit')->where('id_akun', $kewajibanPanjang[$i]->id)->whereBetween('tanggal', [$reqStart, $reqEnd])->first();
-
-            $calculate = $kewajibanPanjang[$i]->saldo - $jur->kredit + $jur->debet;
-
-            array_push($saldoPanjang, $calculate);
-        }
-
-        #Ekuitas
-        for ($i = 0; $i < sizeof($ekuitas); $i++) {
-            $jur = JurnalUmum::selectRaw('SUM(debet) as debet, SUM(kredit) as kredit')->where('id_akun', $ekuitas[$i]->id)->whereBetween('tanggal', [$reqStart, $reqEnd])->first();
-
-            $calculate = $ekuitas[$i]->saldo - $jur->kredit + $jur->debet;
-
-            array_push($saldoEkuitas, $calculate);
-        }
-
-        $sumLancar      = array_sum($saldoLancar);
-        $sumPenyertaan  = array_sum($saldoPenyertaan);
-        $sumTidakLancar = array_sum($saldoTidakLancar);
-        $sumPendek      = array_sum($saldoPendek);
-        $sumPanjang     = array_sum($saldoPanjang);
-        $sumEkuitas     = array_sum($saldoEkuitas);
-
         #SHU
         #Kode Akun 4XXX
         $akunFour = array(
@@ -488,6 +442,82 @@ class KeuanganController extends Controller
         $pendapatanOperasional = $labaKotor + $totalBeban;
 
         $sumSHU = $pendapatanOperasional + ($sumAkunFourTwo * -1);
+
+        $shuKredit = 0;
+        $shuDebet  = 0;
+
+        if ($sumSHU < 0) {
+            $shuDebet = $sumSHU;
+        } else {
+            $shuKredit = $sumSHU;
+        }
+
+        #Aset Lancar
+        for ($i = 0; $i < sizeof($asetLancar); $i++) {
+            $jur = JurnalUmum::selectRaw('SUM(debet) as debet, SUM(kredit) as kredit')->where('id_akun', $asetLancar[$i]->id)->whereBetween('tanggal', [$reqStart, $reqEnd])->first();
+
+            $calculate = $asetLancar[$i]->saldo - $jur->kredit + $jur->debet;
+
+            array_push($saldoLancar, $calculate);
+        }
+
+        #Penyertaan
+        for ($i = 0; $i < sizeof($penyertaan); $i++) {
+            $jur = JurnalUmum::selectRaw('SUM(debet) as debet, SUM(kredit) as kredit')->where('id_akun', $penyertaan[$i]->id)->whereBetween('tanggal', [$reqStart, $reqEnd])->first();
+
+            $calculate = $penyertaan[$i]->saldo - $jur->kredit + $jur->debet;
+
+            array_push($saldoPenyertaan, $calculate);
+        }
+
+        #Aset Tidak Lancar
+        for ($i = 0; $i < sizeof($asetTidakLancar); $i++) {
+            $jur = JurnalUmum::selectRaw('SUM(debet) as debet, SUM(kredit) as kredit')->where('id_akun', $asetTidakLancar[$i]->id)->whereBetween('tanggal', [$reqStart, $reqEnd])->first();
+
+            $calculate = $asetTidakLancar[$i]->saldo - $jur->kredit + $jur->debet;
+
+            array_push($saldoTidakLancar, $calculate);
+        }
+
+        #Kewajiban Pendek
+        for ($i = 0; $i < sizeof($kewajibanPendek); $i++) {
+            $jur = JurnalUmum::selectRaw('SUM(debet) as debet, SUM(kredit) as kredit')->where('id_akun', $kewajibanPendek[$i]->id)->whereBetween('tanggal', [$reqStart, $reqEnd])->first();
+
+            $calculate = $kewajibanPendek[$i]->saldo - $jur->kredit + $jur->debet;
+
+            array_push($saldoPendek, $calculate);
+        }
+
+        #Kewajiban Panjang            
+        for ($i = 0; $i < sizeof($kewajibanPanjang); $i++) {
+            $jur = JurnalUmum::selectRaw('SUM(debet) as debet, SUM(kredit) as kredit')->where('id_akun', $kewajibanPanjang[$i]->id)->whereBetween('tanggal', [$reqStart, $reqEnd])->first();
+
+            $calculate = $kewajibanPanjang[$i]->saldo - $jur->kredit + $jur->debet;
+
+            array_push($saldoPanjang, $calculate);
+        }
+
+        #Ekuitas
+        $idSHUAkun = Akun::where('kode_akun', 3131)->first();
+
+        for ($i = 0; $i < sizeof($ekuitas); $i++) {
+            $jur = JurnalUmum::selectRaw('id_akun, SUM(debet) as debet, SUM(kredit) as kredit')->where('id_akun', $ekuitas[$i]->id)->whereBetween('tanggal', [$reqStart, $reqEnd])->first();
+
+            $calculate = $ekuitas[$i]->saldo - $jur->kredit + $jur->debet;
+
+            if ($ekuitas[$i]->id == $idSHUAkun->id) {
+                $calculate = $ekuitas[$i]->saldo - $shuKredit + $shuDebet;
+            }
+
+            array_push($saldoEkuitas, $calculate);
+        }
+
+        $sumLancar      = array_sum($saldoLancar);
+        $sumPenyertaan  = array_sum($saldoPenyertaan);
+        $sumTidakLancar = array_sum($saldoTidakLancar);
+        $sumPendek      = array_sum($saldoPendek);
+        $sumPanjang     = array_sum($saldoPanjang);
+        $sumEkuitas     = array_sum($saldoEkuitas);
 
         return view('Simpan_Pinjam.laporan.keuangan.print-show', compact(
             'asetLancar',

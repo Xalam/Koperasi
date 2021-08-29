@@ -4,12 +4,12 @@
 
 @section('content_header', 'Tambah Simpanan')
 
-    @push('style')
-        <link rel="stylesheet"
-            href="{{ asset('assets/plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css') }}">
-        <link rel="stylesheet" href="{{ asset('assets/plugins/select2/css/select2.min.css') }}">
-        <link rel="stylesheet" href="{{ asset('assets/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css') }}">
-    @endpush
+@push('style')
+    <link rel="stylesheet"
+        href="{{ asset('assets/plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/plugins/select2/css/select2.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css') }}">
+@endpush
 
 @section('breadcrumb')
     <li class="breadcrumb-item"><a href="#">Simpanan</a></li>
@@ -45,13 +45,8 @@
                         </div>
                         <div class="form-group">
                             <label>Tanggal</label>
-                            <div class="input-group date" id="tanggal" data-target-input="nearest">
-                                <input type="text" class="form-control datetimepicker-input" data-target="#tanggal"
-                                    id="tanggal-input" name="tanggal" placeholder="Tanggal" />
-                                <div class="input-group-append" data-target="#tanggal" data-toggle="datetimepicker">
-                                    <div class="input-group-text"><i class="fa fa-calendar"></i></div>
-                                </div>
-                            </div>
+                            <input type="text" class="form-control" name="tanggal" id="tanggal-input"
+                                value="{{ date('Y-m-d') }}" disabled>
                         </div>
                         <div class="form-group">
                             <label>Nominal</label>
@@ -110,13 +105,8 @@
                         @csrf
                         <div class="form-group">
                             <label>Tanggal Setor</label>
-                            <div class="input-group date" id="tanggal-setor" data-target-input="nearest">
-                                <input type="text" class="form-control datetimepicker-input" data-target="#tanggal-setor"
-                                    id="tanggal-input-setor" name="tanggal" placeholder="Tanggal" />
-                                <div class="input-group-append" data-target="#tanggal-setor" data-toggle="datetimepicker">
-                                    <div class="input-group-text"><i class="fa fa-calendar"></i></div>
-                                </div>
-                            </div>
+                            <input type="text" class="form-control" name="tanggal" id="tanggal-setor"
+                                value="{{ date('Y-m-d') }}" disabled>
                         </div>
                         <div class="form-group">
                             <label>Nominal</label>
