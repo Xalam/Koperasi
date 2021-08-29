@@ -200,7 +200,7 @@ Route::group(['prefix' => 'toko'], function () {
 
         //Laporan
         Route::group(['prefix' => 'laporan'], function () {
-            Route::group(['prefix' => 'anggota', 'middleware' => ['auth:toko', 'checkjabatan:Super_Admin,Kanit,Bendahara,Ketua_Koperasi']], function () {
+            Route::group(['prefix' => 'anggota', 'middleware' => ['auth:toko', 'checkjabatan:Super_Admin,Kanit,Bendahara,Ketua_Koperasi,Kasir']], function () {
                 Route::get('/', [LaporanAnggotaController::class, 'index']);
                 Route::get('/print/{tanggal_awal}/{tanggal_akhir}', [LaporanAnggotaController::class, 'print']);
                 Route::get('/export/{tanggal_awal}/{tanggal_akhir}', [LaporanAnggotaController::class, 'export']);

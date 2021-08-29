@@ -200,6 +200,7 @@
                     <a><i class="fas fa-book" aria-hidden="true"></i>Laporan</a>
                     <div class="sidebar-submenu">
                         <ul>
+                            <li><a href="/toko/laporan/anggota">Anggota</a></li>
                             <li class="sidebar-dropdown2">
                                 <a>Penjualan</a>
                                 <div class="sidebar-submenu2">
