@@ -7,6 +7,8 @@ use App\Http\Controllers\Simpan_Pinjam\Utils\LaporanSHUAkun;
 use App\Models\Simpan_Pinjam\Laporan\JurnalUmum;
 use App\Models\Simpan_Pinjam\Master\Akun\Akun;
 use App\Models\Simpan_Pinjam\Pengaturan\PembagianSHU;
+use App\Models\Toko\Transaksi\Jurnal\JurnalModel;
+use App\Models\Toko\Transaksi\JurnalUmum\JurnalUmumModel;
 use Illuminate\Http\Request;
 
 class KeuanganController extends Controller
@@ -23,7 +25,7 @@ class KeuanganController extends Controller
         $asetTidakLancar    = Akun::whereIn('kode_akun', [1301, 1302, 1311, 1321, 1312, 1322, 1313, 1323, 1314, 1324, 1315, 1325, 1316, 1326])->select('id', 'nama_akun', 'saldo')->get();
         $kewajibanPendek    = Akun::whereIn('kode_akun', [2101, 2102, 2111, 2112, 2113, 2114, 2115, 2116, 2117, 2121])->select('id', 'nama_akun', 'saldo')->get();
         $kewajibanPanjang   = Akun::whereIn('kode_akun', [2201])->select('id', 'nama_akun', 'saldo')->get();
-        $ekuitas            = Akun::whereIn('kode_akun', [3101, 3102, 3111, 3112, 3113, 3121, 3122, 3131])->select('id', 'nama_akun', 'saldo')->get();
+        $ekuitas            = Akun::whereIn('kode_akun', [3101, 3102, 3111, 3112, 3113, 3121, 3122])->select('id', 'nama_akun', 'saldo')->get();
 
         //SHU
         #Kode Akun 4XXX
@@ -182,67 +184,87 @@ class KeuanganController extends Controller
         $shuDebet  = 0;
 
         if ($sumSHU < 0) {
-            $shuDebet = $sumSHU;
+            $shuDebet = $sumSHU * -1;
         } else {
             $shuKredit = $sumSHU;
         }
 
+        #Sum SHU Akun
+        $shuAkunSaldo = Akun::where('kode_akun', 3131)->first();
+        $sumSHUAkun = $shuAkunSaldo->saldo - $shuKredit + $shuDebet;
+
+        if ($sumSHUAkun < 0) {
+            $sumSHUAkun = $sumSHUAkun * -1;
+        }
+
         #Aset Lancar
         for ($i = 0; $i < sizeof($asetLancar); $i++) {
-            $jur = JurnalUmum::selectRaw('SUM(debet) as debet, SUM(kredit) as kredit')->where('id_akun', $asetLancar[$i]->id)->whereBetween('tanggal', [$reqStart, $reqEnd])->first();
+            $a      = JurnalUmumModel::selectRaw('debit as debet, kredit')->where('id_akun', $asetLancar[$i]->id)->whereBetween('tanggal', [$reqStart, $reqEnd]);
+            $b      = JurnalModel::selectRaw('debit as debet, kredit')->where('id_akun', $asetLancar[$i]->id)->whereBetween('tanggal', [$reqStart, $reqEnd]);
+            $jur    = JurnalUmum::selectRaw('debet, kredit')->unionAll($a)->unionAll($b)->where('id_akun', $asetLancar[$i]->id)->whereBetween('tanggal', [$reqStart, $reqEnd])->get();
+            // $jur = JurnalUmum::selectRaw('SUM(debet) as debet, SUM(kredit) as kredit')->where('id_akun', $asetLancar[$i]->id)->whereBetween('tanggal', [$reqStart, $reqEnd])->first();
 
-            $calculate = $asetLancar[$i]->saldo - $jur->kredit + $jur->debet;
+            $calculate = $asetLancar[$i]->saldo - $jur->sum('kredit') + $jur->sum('debet');
 
             array_push($saldoLancar, $calculate);
         }
 
         #Penyertaan
         for ($i = 0; $i < sizeof($penyertaan); $i++) {
-            $jur = JurnalUmum::selectRaw('SUM(debet) as debet, SUM(kredit) as kredit')->where('id_akun', $penyertaan[$i]->id)->whereBetween('tanggal', [$reqStart, $reqEnd])->first();
+            $a      = JurnalUmumModel::selectRaw('debit as debet, kredit')->where('id_akun', $penyertaan[$i]->id)->whereBetween('tanggal', [$reqStart, $reqEnd]);
+            $b      = JurnalModel::selectRaw('debit as debet, kredit')->where('id_akun', $penyertaan[$i]->id)->whereBetween('tanggal', [$reqStart, $reqEnd]);
+            $jur    = JurnalUmum::selectRaw('debet, kredit')->unionAll($a)->unionAll($b)->where('id_akun', $penyertaan[$i]->id)->whereBetween('tanggal', [$reqStart, $reqEnd])->get();
+            // $jur = JurnalUmum::selectRaw('SUM(debet) as debet, SUM(kredit) as kredit')->where('id_akun', $penyertaan[$i]->id)->whereBetween('tanggal', [$reqStart, $reqEnd])->first();
 
-            $calculate = $penyertaan[$i]->saldo - $jur->kredit + $jur->debet;
+            $calculate = $penyertaan[$i]->saldo - $jur->sum('kredit') + $jur->sum('debet');
 
             array_push($saldoPenyertaan, $calculate);
         }
 
         #Aset Tidak Lancar
         for ($i = 0; $i < sizeof($asetTidakLancar); $i++) {
-            $jur = JurnalUmum::selectRaw('SUM(debet) as debet, SUM(kredit) as kredit')->where('id_akun', $asetTidakLancar[$i]->id)->whereBetween('tanggal', [$reqStart, $reqEnd])->first();
+            $a      = JurnalUmumModel::selectRaw('debit as debet, kredit')->where('id_akun', $asetTidakLancar[$i]->id)->whereBetween('tanggal', [$reqStart, $reqEnd]);
+            $b      = JurnalModel::selectRaw('debit as debet, kredit')->where('id_akun', $asetTidakLancar[$i]->id)->whereBetween('tanggal', [$reqStart, $reqEnd]);
+            $jur    = JurnalUmum::selectRaw('debet, kredit')->unionAll($a)->unionAll($b)->where('id_akun', $asetTidakLancar[$i]->id)->whereBetween('tanggal', [$reqStart, $reqEnd])->get();
+            // $jur = JurnalUmum::selectRaw('SUM(debet) as debet, SUM(kredit) as kredit')->where('id_akun', $asetTidakLancar[$i]->id)->whereBetween('tanggal', [$reqStart, $reqEnd])->first();
 
-            $calculate = $asetTidakLancar[$i]->saldo - $jur->kredit + $jur->debet;
+            $calculate = $asetTidakLancar[$i]->saldo - $jur->sum('kredit') + $jur->sum('debet');
 
             array_push($saldoTidakLancar, $calculate);
         }
 
         #Kewajiban Pendek
         for ($i = 0; $i < sizeof($kewajibanPendek); $i++) {
-            $jur = JurnalUmum::selectRaw('SUM(debet) as debet, SUM(kredit) as kredit')->where('id_akun', $kewajibanPendek[$i]->id)->whereBetween('tanggal', [$reqStart, $reqEnd])->first();
+            $a      = JurnalUmumModel::selectRaw('debit as debet, kredit')->where('id_akun', $kewajibanPendek[$i]->id)->whereBetween('tanggal', [$reqStart, $reqEnd]);
+            $b      = JurnalModel::selectRaw('debit as debet, kredit')->where('id_akun', $kewajibanPendek[$i]->id)->whereBetween('tanggal', [$reqStart, $reqEnd]);
+            $jur    = JurnalUmum::selectRaw('debet, kredit')->unionAll($a)->unionAll($b)->where('id_akun', $kewajibanPendek[$i]->id)->whereBetween('tanggal', [$reqStart, $reqEnd])->get();
+            // $jur = JurnalUmum::selectRaw('SUM(debet) as debet, SUM(kredit) as kredit')->where('id_akun', $kewajibanPendek[$i]->id)->whereBetween('tanggal', [$reqStart, $reqEnd])->first();
 
-            $calculate = $kewajibanPendek[$i]->saldo - $jur->kredit + $jur->debet;
+            $calculate = $kewajibanPendek[$i]->saldo - $jur->sum('kredit') + $jur->sum('debet');
 
             array_push($saldoPendek, $calculate);
         }
 
         #Kewajiban Panjang            
         for ($i = 0; $i < sizeof($kewajibanPanjang); $i++) {
-            $jur = JurnalUmum::selectRaw('SUM(debet) as debet, SUM(kredit) as kredit')->where('id_akun', $kewajibanPanjang[$i]->id)->whereBetween('tanggal', [$reqStart, $reqEnd])->first();
+            $a      = JurnalUmumModel::selectRaw('debit as debet, kredit')->where('id_akun', $kewajibanPanjang[$i]->id)->whereBetween('tanggal', [$reqStart, $reqEnd]);
+            $b      = JurnalModel::selectRaw('debit as debet, kredit')->where('id_akun', $kewajibanPanjang[$i]->id)->whereBetween('tanggal', [$reqStart, $reqEnd]);
+            $jur    = JurnalUmum::selectRaw('debet, kredit')->unionAll($a)->unionAll($b)->where('id_akun', $kewajibanPanjang[$i]->id)->whereBetween('tanggal', [$reqStart, $reqEnd])->get();
+            // $jur = JurnalUmum::selectRaw('SUM(debet) as debet, SUM(kredit) as kredit')->where('id_akun', $kewajibanPanjang[$i]->id)->whereBetween('tanggal', [$reqStart, $reqEnd])->first();
 
-            $calculate = $kewajibanPanjang[$i]->saldo - $jur->kredit + $jur->debet;
+            $calculate = $kewajibanPanjang[$i]->saldo - $jur->sum('kredit') + $jur->sum('debet');
 
             array_push($saldoPanjang, $calculate);
         }
 
         #Ekuitas
-        $idSHUAkun = Akun::where('kode_akun', 3131)->first();
-
         for ($i = 0; $i < sizeof($ekuitas); $i++) {
-            $jur = JurnalUmum::selectRaw('id_akun, SUM(debet) as debet, SUM(kredit) as kredit')->where('id_akun', $ekuitas[$i]->id)->whereBetween('tanggal', [$reqStart, $reqEnd])->first();
+            $a      = JurnalUmumModel::selectRaw('debit as debet, kredit')->where('id_akun', $ekuitas[$i]->id)->whereBetween('tanggal', [$reqStart, $reqEnd]);
+            $b      = JurnalModel::selectRaw('debit as debet, kredit')->where('id_akun', $ekuitas[$i]->id)->whereBetween('tanggal', [$reqStart, $reqEnd]);
+            $jur    = JurnalUmum::selectRaw('debet, kredit')->unionAll($a)->unionAll($b)->where('id_akun', $ekuitas[$i]->id)->whereBetween('tanggal', [$reqStart, $reqEnd])->get();
+            // $jur = JurnalUmum::selectRaw('SUM(debet) as debet, SUM(kredit) as kredit')->where('id_akun', $ekuitas[$i]->id)->whereBetween('tanggal', [$reqStart, $reqEnd])->first();
 
-            $calculate = $ekuitas[$i]->saldo - $jur->kredit + $jur->debet;
-
-            if ($ekuitas[$i]->id == $idSHUAkun->id) {
-                $calculate = $ekuitas[$i]->saldo - $shuKredit + $shuDebet;
-            }
+            $calculate = $ekuitas[$i]->saldo - $jur->sum('kredit') + $jur->sum('debet');
 
             array_push($saldoEkuitas, $calculate);
         }
@@ -277,7 +299,7 @@ class KeuanganController extends Controller
             'endDate',
             'reqStart',
             'reqEnd',
-            'sumSHU'
+            'sumSHUAkun'
         ));
     }
 
@@ -288,7 +310,7 @@ class KeuanganController extends Controller
         $asetTidakLancar    = Akun::whereIn('kode_akun', [1301, 1302, 1311, 1321, 1312, 1322, 1313, 1323, 1314, 1324, 1315, 1325, 1316, 1326])->select('id', 'nama_akun', 'saldo')->get();
         $kewajibanPendek    = Akun::whereIn('kode_akun', [2101, 2102, 2111, 2112, 2113, 2114, 2115, 2116, 2117, 2121])->select('id', 'nama_akun', 'saldo')->get();
         $kewajibanPanjang   = Akun::whereIn('kode_akun', [2201])->select('id', 'nama_akun', 'saldo')->get();
-        $ekuitas            = Akun::whereIn('kode_akun', [3101, 3102, 3111, 3112, 3113, 3121, 3122, 3131])->select('id', 'nama_akun', 'saldo')->get();
+        $ekuitas            = Akun::whereIn('kode_akun', [3101, 3102, 3111, 3112, 3113, 3121, 3122])->select('id', 'nama_akun', 'saldo')->get();
 
         //SHU
         #Kode Akun 4XXX
@@ -447,67 +469,87 @@ class KeuanganController extends Controller
         $shuDebet  = 0;
 
         if ($sumSHU < 0) {
-            $shuDebet = $sumSHU;
+            $shuDebet = $sumSHU * -1;
         } else {
             $shuKredit = $sumSHU;
         }
 
+        #Sum SHU Akun
+        $shuAkunSaldo = Akun::where('kode_akun', 3131)->first();
+        $sumSHUAkun = $shuAkunSaldo->saldo - $shuKredit + $shuDebet;
+
+        if ($sumSHUAkun < 0) {
+            $sumSHUAkun = $sumSHUAkun * -1;
+        }
+
         #Aset Lancar
         for ($i = 0; $i < sizeof($asetLancar); $i++) {
-            $jur = JurnalUmum::selectRaw('SUM(debet) as debet, SUM(kredit) as kredit')->where('id_akun', $asetLancar[$i]->id)->whereBetween('tanggal', [$reqStart, $reqEnd])->first();
+            $a      = JurnalUmumModel::selectRaw('debit as debet, kredit')->where('id_akun', $asetLancar[$i]->id)->whereBetween('tanggal', [$reqStart, $reqEnd]);
+            $b      = JurnalModel::selectRaw('debit as debet, kredit')->where('id_akun', $asetLancar[$i]->id)->whereBetween('tanggal', [$reqStart, $reqEnd]);
+            $jur    = JurnalUmum::selectRaw('debet, kredit')->unionAll($a)->unionAll($b)->where('id_akun', $asetLancar[$i]->id)->whereBetween('tanggal', [$reqStart, $reqEnd])->get();
+            // $jur = JurnalUmum::selectRaw('SUM(debet) as debet, SUM(kredit) as kredit')->where('id_akun', $asetLancar[$i]->id)->whereBetween('tanggal', [$reqStart, $reqEnd])->first();
 
-            $calculate = $asetLancar[$i]->saldo - $jur->kredit + $jur->debet;
+            $calculate = $asetLancar[$i]->saldo - $jur->sum('kredit') + $jur->sum('debet');
 
             array_push($saldoLancar, $calculate);
         }
 
         #Penyertaan
         for ($i = 0; $i < sizeof($penyertaan); $i++) {
-            $jur = JurnalUmum::selectRaw('SUM(debet) as debet, SUM(kredit) as kredit')->where('id_akun', $penyertaan[$i]->id)->whereBetween('tanggal', [$reqStart, $reqEnd])->first();
+            $a      = JurnalUmumModel::selectRaw('debit as debet, kredit')->where('id_akun', $penyertaan[$i]->id)->whereBetween('tanggal', [$reqStart, $reqEnd]);
+            $b      = JurnalModel::selectRaw('debit as debet, kredit')->where('id_akun', $penyertaan[$i]->id)->whereBetween('tanggal', [$reqStart, $reqEnd]);
+            $jur    = JurnalUmum::selectRaw('debet, kredit')->unionAll($a)->unionAll($b)->where('id_akun', $penyertaan[$i]->id)->whereBetween('tanggal', [$reqStart, $reqEnd])->get();
+            // $jur = JurnalUmum::selectRaw('SUM(debet) as debet, SUM(kredit) as kredit')->where('id_akun', $penyertaan[$i]->id)->whereBetween('tanggal', [$reqStart, $reqEnd])->first();
 
-            $calculate = $penyertaan[$i]->saldo - $jur->kredit + $jur->debet;
+            $calculate = $penyertaan[$i]->saldo - $jur->sum('kredit') + $jur->sum('debet');
 
             array_push($saldoPenyertaan, $calculate);
         }
 
         #Aset Tidak Lancar
         for ($i = 0; $i < sizeof($asetTidakLancar); $i++) {
-            $jur = JurnalUmum::selectRaw('SUM(debet) as debet, SUM(kredit) as kredit')->where('id_akun', $asetTidakLancar[$i]->id)->whereBetween('tanggal', [$reqStart, $reqEnd])->first();
+            $a      = JurnalUmumModel::selectRaw('debit as debet, kredit')->where('id_akun', $asetTidakLancar[$i]->id)->whereBetween('tanggal', [$reqStart, $reqEnd]);
+            $b      = JurnalModel::selectRaw('debit as debet, kredit')->where('id_akun', $asetTidakLancar[$i]->id)->whereBetween('tanggal', [$reqStart, $reqEnd]);
+            $jur    = JurnalUmum::selectRaw('debet, kredit')->unionAll($a)->unionAll($b)->where('id_akun', $asetTidakLancar[$i]->id)->whereBetween('tanggal', [$reqStart, $reqEnd])->get();
+            // $jur = JurnalUmum::selectRaw('SUM(debet) as debet, SUM(kredit) as kredit')->where('id_akun', $asetTidakLancar[$i]->id)->whereBetween('tanggal', [$reqStart, $reqEnd])->first();
 
-            $calculate = $asetTidakLancar[$i]->saldo - $jur->kredit + $jur->debet;
+            $calculate = $asetTidakLancar[$i]->saldo - $jur->sum('kredit') + $jur->sum('debet');
 
             array_push($saldoTidakLancar, $calculate);
         }
 
         #Kewajiban Pendek
         for ($i = 0; $i < sizeof($kewajibanPendek); $i++) {
-            $jur = JurnalUmum::selectRaw('SUM(debet) as debet, SUM(kredit) as kredit')->where('id_akun', $kewajibanPendek[$i]->id)->whereBetween('tanggal', [$reqStart, $reqEnd])->first();
+            $a      = JurnalUmumModel::selectRaw('debit as debet, kredit')->where('id_akun', $kewajibanPendek[$i]->id)->whereBetween('tanggal', [$reqStart, $reqEnd]);
+            $b      = JurnalModel::selectRaw('debit as debet, kredit')->where('id_akun', $kewajibanPendek[$i]->id)->whereBetween('tanggal', [$reqStart, $reqEnd]);
+            $jur    = JurnalUmum::selectRaw('debet, kredit')->unionAll($a)->unionAll($b)->where('id_akun', $kewajibanPendek[$i]->id)->whereBetween('tanggal', [$reqStart, $reqEnd])->get();
+            // $jur = JurnalUmum::selectRaw('SUM(debet) as debet, SUM(kredit) as kredit')->where('id_akun', $kewajibanPendek[$i]->id)->whereBetween('tanggal', [$reqStart, $reqEnd])->first();
 
-            $calculate = $kewajibanPendek[$i]->saldo - $jur->kredit + $jur->debet;
+            $calculate = $kewajibanPendek[$i]->saldo - $jur->sum('kredit') + $jur->sum('debet');
 
             array_push($saldoPendek, $calculate);
         }
 
         #Kewajiban Panjang            
         for ($i = 0; $i < sizeof($kewajibanPanjang); $i++) {
-            $jur = JurnalUmum::selectRaw('SUM(debet) as debet, SUM(kredit) as kredit')->where('id_akun', $kewajibanPanjang[$i]->id)->whereBetween('tanggal', [$reqStart, $reqEnd])->first();
+            $a      = JurnalUmumModel::selectRaw('debit as debet, kredit')->where('id_akun', $kewajibanPanjang[$i]->id)->whereBetween('tanggal', [$reqStart, $reqEnd]);
+            $b      = JurnalModel::selectRaw('debit as debet, kredit')->where('id_akun', $kewajibanPanjang[$i]->id)->whereBetween('tanggal', [$reqStart, $reqEnd]);
+            $jur    = JurnalUmum::selectRaw('debet, kredit')->unionAll($a)->unionAll($b)->where('id_akun', $kewajibanPanjang[$i]->id)->whereBetween('tanggal', [$reqStart, $reqEnd])->get();
+            // $jur = JurnalUmum::selectRaw('SUM(debet) as debet, SUM(kredit) as kredit')->where('id_akun', $kewajibanPanjang[$i]->id)->whereBetween('tanggal', [$reqStart, $reqEnd])->first();
 
-            $calculate = $kewajibanPanjang[$i]->saldo - $jur->kredit + $jur->debet;
+            $calculate = $kewajibanPanjang[$i]->saldo - $jur->sum('kredit') + $jur->sum('debet');
 
             array_push($saldoPanjang, $calculate);
         }
 
         #Ekuitas
-        $idSHUAkun = Akun::where('kode_akun', 3131)->first();
-
         for ($i = 0; $i < sizeof($ekuitas); $i++) {
-            $jur = JurnalUmum::selectRaw('id_akun, SUM(debet) as debet, SUM(kredit) as kredit')->where('id_akun', $ekuitas[$i]->id)->whereBetween('tanggal', [$reqStart, $reqEnd])->first();
+            $a      = JurnalUmumModel::selectRaw('debit as debet, kredit')->where('id_akun', $ekuitas[$i]->id)->whereBetween('tanggal', [$reqStart, $reqEnd]);
+            $b      = JurnalModel::selectRaw('debit as debet, kredit')->where('id_akun', $ekuitas[$i]->id)->whereBetween('tanggal', [$reqStart, $reqEnd]);
+            $jur    = JurnalUmum::selectRaw('debet, kredit')->unionAll($a)->unionAll($b)->where('id_akun', $ekuitas[$i]->id)->whereBetween('tanggal', [$reqStart, $reqEnd])->get();
+            // $jur = JurnalUmum::selectRaw('SUM(debet) as debet, SUM(kredit) as kredit')->where('id_akun', $ekuitas[$i]->id)->whereBetween('tanggal', [$reqStart, $reqEnd])->first();
 
-            $calculate = $ekuitas[$i]->saldo - $jur->kredit + $jur->debet;
-
-            if ($ekuitas[$i]->id == $idSHUAkun->id) {
-                $calculate = $ekuitas[$i]->saldo - $shuKredit + $shuDebet;
-            }
+            $calculate = $ekuitas[$i]->saldo - $jur->sum('kredit') + $jur->sum('debet');
 
             array_push($saldoEkuitas, $calculate);
         }
@@ -542,7 +584,7 @@ class KeuanganController extends Controller
             'endDate',
             'reqStart',
             'reqEnd',
-            'sumSHU'
+            'sumSHUAkun'
         ));
     }
 }

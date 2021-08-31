@@ -196,7 +196,7 @@ class EkuitasController extends Controller
         $shuDebet  = 0;
 
         if ($sumSHU < 0) {
-            $shuDebet = $sumSHU;
+            $shuDebet = $sumSHU * -1;
         } else {
             $shuKredit = $sumSHU;
         }
@@ -398,7 +398,7 @@ class EkuitasController extends Controller
         $shuDebet  = 0;
 
         if ($sumSHU < 0) {
-            $shuDebet = $sumSHU;
+            $shuDebet = $sumSHU * -1;
         } else {
             $shuKredit = $sumSHU;
         }

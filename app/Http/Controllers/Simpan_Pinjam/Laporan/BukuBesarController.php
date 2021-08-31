@@ -24,9 +24,9 @@ class BukuBesarController extends Controller
         $akun = Akun::findOrFail($request->id_akun);
 
         if ($request->start_date == '' && $request->end_date == '') {
-            $a = JurnalUmumModel::select(DB::raw("id, nomor as kode_jurnal, id_akun, tanggal, keterangan, debit as debet, kredit"));
-            $b = JurnalModel::select(DB::raw("id, nomor as kode_jurnal, id_akun, tanggal, keterangan, debit as debet, kredit"));
-            $jurnal = JurnalUmum::select(DB::raw("id, CONVERT(kode_jurnal USING utf8) as kode_jurnal, id_akun, tanggal, CONVERT(keterangan USING utf8) as keterangan, debet, kredit"))->union($a)->union($b)->where('id_akun', $request->id_akun)->get();
+            $a = JurnalUmumModel::select(DB::raw("id, nomor as kode_jurnal, id_akun, tanggal, keterangan, debit as debet, kredit"))->where('id_akun', $akun->id);
+            $b = JurnalModel::select(DB::raw("id, nomor as kode_jurnal, id_akun, tanggal, keterangan, debit as debet, kredit"))->where('id_akun', $akun->id);
+            $jurnal = JurnalUmum::select(DB::raw("id, CONVERT(kode_jurnal USING utf8) as kode_jurnal, id_akun, tanggal, CONVERT(keterangan USING utf8) as keterangan, debet, kredit"))->union($a)->union($b)->where('id_akun', $akun->id)->get();
 
             if (sizeof($jurnal) == 0) {
                 return redirect()->route('buku-besar.index')->with([
@@ -41,9 +41,9 @@ class BukuBesarController extends Controller
             $startDate  = date('Y-m-d', strtotime($reqStart));
             $endDate    = date('Y-m-d', strtotime($reqEnd));
 
-            $a = JurnalUmumModel::select(DB::raw("id, nomor as kode_jurnal, id_akun, tanggal, keterangan, debit as debet, kredit"));
-            $b = JurnalModel::select(DB::raw("id, nomor as kode_jurnal, id_akun, tanggal, keterangan, debit as debet, kredit"));
-            $jurnal = JurnalUmum::select(DB::raw("id, CONVERT(kode_jurnal USING utf8) as kode_jurnal, id_akun, tanggal, CONVERT(keterangan USING utf8) as keterangan, debet, kredit"))->union($a)->union($b)->where('id_akun', $request->id_akun)->whereBetween('tanggal', [$startDate, $endDate])->get();
+            $a = JurnalUmumModel::select(DB::raw("id, nomor as kode_jurnal, id_akun, tanggal, keterangan, debit as debet, kredit"))->where('id_akun', $akun->id)->whereBetween('tanggal', [$startDate, $endDate]);
+            $b = JurnalModel::select(DB::raw("id, nomor as kode_jurnal, id_akun, tanggal, keterangan, debit as debet, kredit"))->where('id_akun', $akun->id)->whereBetween('tanggal', [$startDate, $endDate]);
+            $jurnal = JurnalUmum::select(DB::raw("id, CONVERT(kode_jurnal USING utf8) as kode_jurnal, id_akun, tanggal, CONVERT(keterangan USING utf8) as keterangan, debet, kredit"))->union($a)->union($b)->where('id_akun', $akun->id)->whereBetween('tanggal', [$startDate, $endDate])->get();
 
             if (sizeof($jurnal) == 0) {
                 return redirect()->route('buku-besar.index')->with([
@@ -63,9 +63,9 @@ class BukuBesarController extends Controller
             $reqStart   = '';
             $reqEnd     = date('d-m-Y');
 
-            $a = JurnalUmumModel::select(DB::raw("id, nomor as kode_jurnal, id_akun, tanggal, keterangan, debit as debet, kredit"));
-            $b = JurnalModel::select(DB::raw("id, nomor as kode_jurnal, id_akun, tanggal, keterangan, debit as debet, kredit"));
-            $jurnal = JurnalUmum::select(DB::raw("id, CONVERT(kode_jurnal USING utf8) as kode_jurnal, id_akun, tanggal, CONVERT(keterangan USING utf8) as keterangan, debet, kredit"))->union($a)->union($b)->where('id_akun', $request->id_akun)->get();
+            $a = JurnalUmumModel::select(DB::raw("id, nomor as kode_jurnal, id_akun, tanggal, keterangan, debit as debet, kredit"))->where('id_akun', $akun->id);
+            $b = JurnalModel::select(DB::raw("id, nomor as kode_jurnal, id_akun, tanggal, keterangan, debit as debet, kredit"))->where('id_akun', $akun->id);
+            $jurnal = JurnalUmum::select(DB::raw("id, CONVERT(kode_jurnal USING utf8) as kode_jurnal, id_akun, tanggal, CONVERT(keterangan USING utf8) as keterangan, debet, kredit"))->union($a)->union($b)->where('id_akun', $akun->id)->get();
 
             return view('Simpan_Pinjam.laporan.buku-besar.print-show', compact('jurnal', 'akun', 'reqStart', 'reqEnd'));
         } else {
@@ -74,9 +74,9 @@ class BukuBesarController extends Controller
             $startDate  = date('Y-m-d', strtotime($reqStart));
             $endDate    = date('Y-m-d', strtotime($reqEnd));
 
-            $a = JurnalUmumModel::select(DB::raw("id, nomor as kode_jurnal, id_akun, tanggal, keterangan, debit as debet, kredit"));
-            $b = JurnalModel::select(DB::raw("id, nomor as kode_jurnal, id_akun, tanggal, keterangan, debit as debet, kredit"));
-            $jurnal = JurnalUmum::select(DB::raw("id, CONVERT(kode_jurnal USING utf8) as kode_jurnal, id_akun, tanggal, CONVERT(keterangan USING utf8) as keterangan, debet, kredit"))->union($a)->union($b)->where('id_akun', $request->id_akun)->whereBetween('tanggal', [$startDate, $endDate])->get();
+            $a = JurnalUmumModel::select(DB::raw("id, nomor as kode_jurnal, id_akun, tanggal, keterangan, debit as debet, kredit"))->where('id_akun', $akun->id)->whereBetween('tanggal', [$startDate, $endDate]);
+            $b = JurnalModel::select(DB::raw("id, nomor as kode_jurnal, id_akun, tanggal, keterangan, debit as debet, kredit"))->where('id_akun', $akun->id)->whereBetween('tanggal', [$startDate, $endDate]);
+            $jurnal = JurnalUmum::select(DB::raw("id, CONVERT(kode_jurnal USING utf8) as kode_jurnal, id_akun, tanggal, CONVERT(keterangan USING utf8) as keterangan, debet, kredit"))->union($a)->union($b)->where('id_akun', $akun->id)->whereBetween('tanggal', [$startDate, $endDate])->get();
 
             return view('Simpan_Pinjam.laporan.buku-besar.print-show', compact('jurnal', 'akun', 'reqStart', 'reqEnd'));
         }

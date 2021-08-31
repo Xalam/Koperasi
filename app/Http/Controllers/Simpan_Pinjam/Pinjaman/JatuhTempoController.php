@@ -398,7 +398,7 @@ class JatuhTempoController extends Controller
 
     public function delete_angsuran()
     {
-        $angsuran = Angsuran::where('status', 0)->where('jenis', 2)->where(DB::raw("DATE_ADD(created_at, INTERVAL 1 DAY)"), '<', DB::raw("NOW()"))->get();
+        $angsuran = Angsuran::where('status', 0)->where('jenis', 2)->whereNull('image')->where(DB::raw("DATE_ADD(created_at, INTERVAL 1 DAY)"), '<', DB::raw("NOW()"))->get();
 
         for ($i = 0; $i < sizeof($angsuran); $i++) {
             $notifikasi = new Notifikasi();

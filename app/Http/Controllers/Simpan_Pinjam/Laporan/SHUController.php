@@ -273,7 +273,7 @@ class SHUController extends Controller
                 $shu = ($keaktifanAnggota / ($keaktifanAnggota += $keaktifanAnggota)) * ($persenAnggota->angka / 100 * $sumSHUPajak);
             }
 
-            array_push($jasaAnggota, (object)['username' => $anggotaId->username, 'nama_anggota' => $anggotaId->nama_anggota, 'wajib' => $saldoWajib, 'sukarela' => $saldoSukarela, 'total_pinjaman' => $totalPinjaman, 'total_penjualan' => $totalPenjualan, 'keaktifan_anggota' => $keaktifanAnggota]);
+            array_push($jasaAnggota, (object)['username' => $anggotaId->username, 'nama_anggota' => $anggotaId->nama_anggota, 'wajib' => $saldoWajib, 'sukarela' => $saldoSukarela, 'total_pinjaman' => $totalPinjaman, 'total_penjualan' => $totalPenjualan, 'keaktifan_anggota' => $saldoWajib + $saldoSukarela + $totalPinjaman + $totalPenjualan]);
         }
 
         #Pembagian SHU
@@ -558,7 +558,7 @@ class SHUController extends Controller
                 $shu = ($keaktifanAnggota / ($keaktifanAnggota += $keaktifanAnggota)) * ($persenAnggota->angka / 100 * $sumSHUPajak);
             }
 
-            array_push($jasaAnggota, (object)['username' => $anggotaId->username, 'nama_anggota' => $anggotaId->nama_anggota, 'wajib' => $saldoWajib, 'sukarela' => $saldoSukarela, 'total_pinjaman' => $totalPinjaman, 'total_penjualan' => $totalPenjualan, 'keaktifan_anggota' => $keaktifanAnggota]);
+            array_push($jasaAnggota, (object)['username' => $anggotaId->username, 'nama_anggota' => $anggotaId->nama_anggota, 'wajib' => $saldoWajib, 'sukarela' => $saldoSukarela, 'total_pinjaman' => $totalPinjaman, 'total_penjualan' => $totalPenjualan, 'keaktifan_anggota' => $saldoWajib + $saldoSukarela + $totalPinjaman + $totalPenjualan]);
         }
 
         #Pembagian SHU
