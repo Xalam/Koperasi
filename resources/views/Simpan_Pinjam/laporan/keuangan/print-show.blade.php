@@ -229,17 +229,17 @@
                             </tr>
                             <tr>
                                 <td><b>SHU {{ isset($reqEnd) ? date('Y', strtotime($reqEnd)) : date('Y') }}</b></td>
-                                <td class="text-right"><b>{{ number_format($sumSHU, 2, ',', '.') }}</b></td>
+                                <td class="text-right"><b>{{ number_format($sumSHUAkun, 2, ',', '.') }}</b></td>
                             </tr>
                             <tr>
                                 <td class="table-secondary"><b>TOTAL KEWAJIBAN & EKUITAS</b></td>
                                 @if ($sumPendek + $sumPanjang + $sumEkuitas < 0)
                                     <td class="text-right table-secondary">
-                                        <b>{{ number_format(($sumPendek + $sumPanjang + $sumEkuitas) * -1 + $sumSHU, 2, ',', '.') }}</b>
+                                        <b>{{ number_format(($sumPendek + $sumPanjang + $sumEkuitas) * -1 + $sumSHUAkun, 2, ',', '.') }}</b>
                                     </td>
                                 @else
                                     <td class="text-right table-secondary">
-                                        <b>{{ number_format($sumPendek + $sumPanjang + $sumEkuitas + $sumSHU, 2, ',', '.') }}</b>
+                                        <b>{{ number_format($sumPendek + $sumPanjang + $sumEkuitas + $sumSHUAkun, 2, ',', '.') }}</b>
                                     </td>
                                 @endif
                             </tr>

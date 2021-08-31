@@ -656,8 +656,9 @@ class SimpananController extends Controller
 
     public function delete_simpanan()
     {
-        $simpanan   = Simpanan::where('status', 0)->where(DB::raw("DATE_ADD(created_at, INTERVAL 1 DAY)"), '<', DB::raw("NOW()"))->get();
-        $tarikSaldo = SaldoTarik::where('status', 0)->where(DB::raw("DATE_ADD(tanggal, INTERVAL 1 DAY)"), '<', date('Y-m-d'))->get();
+        $simpanan       = Simpanan::where('status', 0)->whereNull('image')->where(DB::raw("DATE_ADD(created_at, INTERVAL 1 DAY)"), '<', DB::raw("NOW()"))->get();
+        $tarikSaldo     = SaldoTarik::where('status', 0)->where(DB::raw("DATE_ADD(tanggal, INTERVAL 1 DAY)"), '<', date('Y-m-d'))->get();
+        $tarikSaldo_    = SaldoTarik::where('status', 1)->where(DB::raw("DATE_ADD(updated_at, INTERVAL 1 DAY)"), '<', DB::raw("NOW()"))->get();
 
         for ($i = 0; $i < sizeof($simpanan); $i++) {
             $notifikasi = new Notifikasi();
@@ -681,6 +682,18 @@ class SimpananController extends Controller
             ]);
 
             $tarikSaldo[$i]->delete();
+        }
+
+        for ($i = 0; $i < sizeof($tarikSaldo_); $i++) {
+            $notifikasi = new Notifikasi();
+
+            $notifikasi->create([
+                'id_anggota' => $tarikSaldo_[$i]->saldo->id_anggota,
+                'title'      => 'Penolakan Penarikan Simpanan',
+                'content'    => 'Pengajuan penarikan simpanan Anda pada tanggal ' . date('d-m-Y', strtotime($tarikSaldo_[$i]->tanggal)) . ' sebesar Rp ' . number_format($tarikSaldo_[$i]->nominal, 0, '', '.') . ' ditolak karena melebihi batas waktu yang telah ditentukan.'
+            ]);
+
+            $tarikSaldo_[$i]->delete();
         }
     }
 }

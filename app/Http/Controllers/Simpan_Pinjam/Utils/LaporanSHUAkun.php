@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Simpan_Pinjam\Utils;
 
 use App\Models\Simpan_Pinjam\Laporan\JurnalUmum;
 use App\Models\Simpan_Pinjam\Master\Akun\Akun;
+use App\Models\Toko\Transaksi\Jurnal\JurnalModel;
+use App\Models\Toko\Transaksi\JurnalUmum\JurnalUmumModel;
 use Illuminate\Support\Facades\DB;
 
 class LaporanSHUAkun
@@ -14,7 +16,9 @@ class LaporanSHUAkun
 
         for ($i = 0; $i < sizeof($arrayId); $i++) {
             $akun   = Akun::findOrFail($arrayId[$i]);
-            $jurnal = JurnalUmum::where('id_akun', $arrayId[$i])->whereBetween('tanggal', [$reqStart, $reqEnd])->get();
+            $a      = JurnalUmumModel::select(DB::raw("id, nomor as kode_jurnal, id_akun, tanggal, keterangan, debit as debet, kredit"))->where('id_akun', $arrayId[$i])->whereBetween('tanggal', [$reqStart, $reqEnd]);
+            $b      = JurnalModel::select(DB::raw("id, nomor as kode_jurnal, id_akun, tanggal, keterangan, debit as debet, kredit"))->where('id_akun', $arrayId[$i])->whereBetween('tanggal', [$reqStart, $reqEnd]);
+            $jurnal = JurnalUmum::select(DB::raw("id, CONVERT(kode_jurnal USING utf8) as kode_jurnal, id_akun, tanggal, CONVERT(keterangan USING utf8) as keterangan, debet, kredit"))->union($a)->union($b)->where('id_akun', $arrayId[$i])->whereBetween('tanggal', [$reqStart, $reqEnd])->get();
 
             $total = $akun->saldo;
             foreach ($jurnal as $key => $value) {
@@ -48,7 +52,9 @@ class LaporanSHUAkun
 
         for ($i = 0; $i < sizeof($arrayId); $i++) {
             $akun   = Akun::findOrFail($arrayId[$i]);
-            $jurnal = JurnalUmum::where('id_akun', $arrayId[$i])->where(DB::raw("DATE_FORMAT(tanggal, '%m')"), $monthly)->whereYear('tanggal', date('Y'))->get();
+            $a = JurnalUmumModel::select(DB::raw("id, nomor as kode_jurnal, id_akun, tanggal, keterangan, debit as debet, kredit"))->where('id_akun', $arrayId[$i])->where(DB::raw("DATE_FORMAT(tanggal, '%m')"), $monthly)->whereYear('tanggal', date('Y'));
+            $b = JurnalModel::select(DB::raw("id, nomor as kode_jurnal, id_akun, tanggal, keterangan, debit as debet, kredit"))->where('id_akun', $arrayId[$i])->where(DB::raw("DATE_FORMAT(tanggal, '%m')"), $monthly)->whereYear('tanggal', date('Y'));
+            $jurnal = JurnalUmum::select(DB::raw("id, CONVERT(kode_jurnal USING utf8) as kode_jurnal, id_akun, tanggal, CONVERT(keterangan USING utf8) as keterangan, debet, kredit"))->union($a)->union($b)->where('id_akun', $arrayId[$i])->where(DB::raw("DATE_FORMAT(tanggal, '%m')"), $monthly)->whereYear('tanggal', date('Y'))->get();
 
             $total = $akun->saldo;
             foreach ($jurnal as $key => $value) {
