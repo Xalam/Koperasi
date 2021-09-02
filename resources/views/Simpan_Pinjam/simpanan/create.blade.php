@@ -24,7 +24,8 @@
                 <div class="card-header">
                     <h3 class="card-title">Tambah Simpanan</h3>
                     <div class="card-tools">
-                        <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-plus"></i>
+                        <button type="button" class="btn btn-tool" data-card-widget="collapse"><i
+                                class="fas fa-plus"></i>
                         </button>
                     </div>
                 </div>
@@ -45,8 +46,9 @@
                         </div>
                         <div class="form-group">
                             <label>Tanggal</label>
-                            <input type="text" class="form-control" name="tanggal" id="tanggal-input"
-                                value="{{ date('Y-m-d') }}" disabled>
+                            <input type="text" class="form-control" id="tanggal-setor" value="{{ date('Y-m-d') }}"
+                                disabled>
+                            <input type="text" class="form-control" name="tanggal" value="{{ date('Y-m-d') }}" hidden>
                         </div>
                         <div class="form-group">
                             <label>Nominal</label>
@@ -95,7 +97,8 @@
                 <div class="card-header">
                     <h3 class="card-title">Tambah Simpanan Wajib (Semua Anggota)</h3>
                     <div class="card-tools">
-                        <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-plus"></i>
+                        <button type="button" class="btn btn-tool" data-card-widget="collapse"><i
+                                class="fas fa-plus"></i>
                         </button>
                     </div>
                 </div>
@@ -106,7 +109,7 @@
                         <div class="form-group">
                             <label>Tanggal Setor</label>
                             <input type="text" class="form-control" name="tanggal" id="tanggal-setor"
-                                value="{{ date('Y-m-d') }}" disabled>
+                                value="{{ date('Y-m-d') }}" readonly>
                         </div>
                         <div class="form-group">
                             <label>Nominal</label>

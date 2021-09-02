@@ -52,8 +52,10 @@
                             </div>
                             <div class="form-group">
                                 <label>Tanggal</label>
-                                <input type="text" class="form-control" name="tanggal" id="tanggal"
-                                    value="{{ date('Y-m-d') }}" disabled>
+                                <input type="text" class="form-control" id="tanggal" value="{{ date('Y-m-d') }}"
+                                    disabled>
+                                <input type="text" class="form-control" name="tanggal" value="{{ date('Y-m-d') }}"
+                                    hidden>
                             </div>
                             <div class="form-group">
                                 <label>Jumlah Pinjaman</label>
@@ -108,8 +110,8 @@
                             <div class="form-group">
                                 <label>Biaya Asuransi</label>
                                 <div class="input-group">
-                                    <input type="text" class="form-control" placeholder="Biaya asuransi" id="biaya-asuransi"
-                                        name="biaya_asuransi" disabled>
+                                    <input type="text" class="form-control" placeholder="Biaya asuransi"
+                                        id="biaya-asuransi" name="biaya_asuransi" disabled>
                                 </div>
                             </div>
                         </div>

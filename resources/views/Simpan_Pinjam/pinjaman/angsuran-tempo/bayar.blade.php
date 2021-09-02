@@ -61,7 +61,7 @@
                         </div>
                         <!-- /.col -->
                         <div class="col-6">
-                            <div class="">
+                            <div class="___class_+?12___">
                                 <table class="table">
                                     <tr>
                                         <th style="width:50%">Tanggal Pelunasan</th>
@@ -74,8 +74,8 @@
                                         <th style="width:50%">Potongan</th>
                                         <td>
                                             <div class="input-group">
-                                                <input type="text" class="form-control" placeholder="Potongan" id="potongan"
-                                                    disabled>
+                                                <input type="text" class="form-control" placeholder="Potongan"
+                                                    id="potongan" disabled>
                                                 <input type="text" class="form-control" name="potongan" id="hide-potongan"
                                                     hidden>
                                             </div>
@@ -108,7 +108,7 @@
                         <div class="col-12">
                             <input type="hidden" name="id_pinjaman" value="{{ $data->id }}">
                             <button class="btn btn-info float-right"><i class="fas fa-credit-card"></i>&nbsp; Bayar</button>
-                            <a href="{{ route('angsuran.index') }}" class="btn btn-default float-right"
+                            <a href="{{ route('tempo.index') }}" class="btn btn-default float-right"
                                 style="margin-right: 5px;"><i></i> Kembali</a>
                         </div>
                     </div>

@@ -174,7 +174,7 @@
                                 </a>
                             </li>
                         @endif
-                        @if (auth()->user()->role != 'bendahara_pusat')
+                        @if (auth()->user()->role != 'bendahara_pusat' && auth()->user()->role != 'simpan_pinjam')
                             <li class="nav-item">
                                 <a href="{{ route('buku-besar.index') }}"
                                     class="nav-link {{ request()->is('simpan-pinjam/laporan/buku-besar*') ? ' active' : '' }}">
