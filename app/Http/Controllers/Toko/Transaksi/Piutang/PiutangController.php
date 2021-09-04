@@ -13,6 +13,7 @@ use App\Models\Toko\Transaksi\Piutang\PiutangModel;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Session;
 
 class PiutangController extends Controller
 {
@@ -41,25 +42,13 @@ class PiutangController extends Controller
                                     ->get();
 
         $cur_date = Carbon::now();
-        
-        $data_piutang = PiutangModel::all();
-
-        if (count($data_piutang) > 0) {
-            $nomor[''] = "-- Pilih Nomor Piutang --";
-            
-            foreach ($data_piutang as $data) {
-                $nomor[$data->id] = $data->nomor_jual;
-            }
-        } else {
-            $nomor[''] = "-- Tidak Ada Data Piutang --";
-        }
 
         $piutang = PiutangModel::join('tb_anggota', 'tb_anggota.id', '=', 'piutang.id_anggota')
                             ->select('piutang.*', 'tb_anggota.nama_anggota AS nama_anggota', 
                             'tb_anggota.kd_anggota AS kode_anggota', 'tb_anggota.limit_gaji AS limit_belanja')
                             ->get();
 
-        return view('toko.transaksi.piutang.index', compact('cur_date', 'data_notified', 'data_notif', 'data_notif_hutang', 'nomor', 'piutang'));
+        return view('toko.transaksi.piutang.index', compact('cur_date', 'data_notified', 'data_notif', 'data_notif_hutang', 'piutang'));
     }
     
     public function show($id_piutang) {
@@ -93,9 +82,7 @@ class PiutangController extends Controller
         $data_piutang = PiutangModel::where('id', $id_piutang)->first();
 
         if ($data_piutang->sisa_piutang == 0) {
-            PiutangModel::where('id', $id_piutang)->update([
-                'status' => 1
-            ]);
+            PiutangModel::where('id', $id_piutang)->delete();
         }
 
 
@@ -124,15 +111,6 @@ class PiutangController extends Controller
             'kredit' => 0
         ]); 
 
-        // JurnalUmum::create([
-        //     'kode_jurnal' => $request->input('nomor_jurnal'),
-        //     'id_akun' => $kas->id,
-        //     'tanggal' => $request->input('tanggal'),
-        //     'keterangan' => $keterangan,
-        //     'debet' => $request->input('terima_piutang'),
-        //     'kredit' => 0
-        // ]); 
-
         JurnalModel::create([
             'nomor' => $request->input('nomor_jurnal'),
             'tanggal' => $request->input('tanggal'),
@@ -141,17 +119,117 @@ class PiutangController extends Controller
             'debit' => 0,
             'kredit' => $request->input('terima_piutang')
         ]); 
-
-        // JurnalUmum::create([
-        //     'kode_jurnal' => $request->input('nomor_jurnal'),
-        //     'id_akun' => $piutang->id,
-        //     'tanggal' => $request->input('tanggal'),
-        //     'keterangan' => $keterangan,
-        //     'debet' => 0,
-        //     'kredit' => $request->input('terima_piutang')
-        // ]); 
         
-        return response()->json(['code'=>200, 'message' => 'Pembayaran Piutang Berhasil']);
+        if ($sisa_piutang == 0) {
+            return response()->json(['code'=>200, 'message' => 'Piutang Lunas']);
+        } else {
+            return response()->json(['code'=>200, 'message' => 'Terima Piutang Berhasil']);
+        }
+    }
+
+    public function terimaPiutang(Request $request) {
+        $data_notified = BarangModel::all();
+        
+        foreach ($data_notified AS $data) {
+            if ($data->stok_etalase <= $data->stok_minimal || $data->stok_gudang <= $data->stok_minimal) {
+                BarangModel::where('id', $data->id)->update([
+                    'alert_status' => 1
+                ]);
+            } else {
+                BarangModel::where('id', $data->id)->update([
+                    'alert_status' => 0
+                ]);
+            }
+        }
+
+        $data_notif = BarangModel::where('alert_status', 1)->get();
+
+        HutangModel::where(DB::raw('DATE_ADD(DATE(NOW()), INTERVAL 3 DAY)'), '>=', DB::raw('DATE(jatuh_tempo)'))->update([
+            'alert_status' => 1
+        ]);
+
+        $data_notif_hutang = HutangModel::join('supplier', 'supplier.id', '=', 'hutang.id_supplier')
+                                    ->select('hutang.*', 'supplier.nama AS nama_supplier')
+                                    ->get();
+
+        $cur_date = Carbon::now();
+
+        $data_piutang = PiutangModel::all();
+
+        if (count($data_piutang) > 0) {
+            foreach ($data_piutang as $data) {
+                $kas = AkunModel::where('kode', 1102)->first();
+
+                AkunModel::where('kode', $kas->kode)->update([
+                    'debit' => $kas->debit + $data->sisa_piutang
+                ]);
+        
+                $piutang = AkunModel::where('kode', 1122)->first();
+        
+                AkunModel::where('kode', $piutang->kode)->update([
+                    'debit' => $piutang->debit - $data->sisa_piutang
+                ]);
+                    
+                $keterangan = $request->keterangan;
+                
+                $last_nomor = PiutangDetailModel::all();
+
+                $nomor = "";
+
+                if (count($last_nomor) > 0) {
+                    $nomor = "JP" . $request->tanggal . str_pad(strval($last_nomor[count($last_nomor) - 1]->id + 1), 6, '0', STR_PAD_LEFT);
+                } else {
+                    $nomor = "JP" . $request->tanggal . str_pad(strval(1), 6, '0', STR_PAD_LEFT);
+                }
+
+                $last_nomor_piutang = PiutangDetailModel::all();
+        
+                if (count($last_nomor) > 0) {
+                    $nomor_piutang = "P" . $request->tanggal . str_pad(strval($last_nomor_piutang[count($last_nomor_piutang) - 1]->id + 1), 6, '0', STR_PAD_LEFT);
+                } else {
+                    $nomor_piutang = "P" . $request->tanggal . str_pad(strval(1), 6, '0', STR_PAD_LEFT);
+                }
+        
+                PiutangDetailModel::create([
+                    'nomor' => $nomor_piutang,
+                    'nomor_jurnal' => $nomor,
+                    'tanggal' => $request->tanggal,
+                    'id_piutang' => $data->id,
+                    'terima_piutang' => $data->sisa_piutang
+                ]);
+        
+                JurnalModel::create([
+                    'nomor' => $nomor,
+                    'tanggal' => $request->tanggal,
+                    'keterangan' => $keterangan,
+                    'id_akun' => $kas->id,
+                    'debit' => $data->sisa_piutang,
+                    'kredit' => 0
+                ]); 
+        
+                JurnalModel::create([
+                    'nomor' => $nomor,
+                    'tanggal' => $request->tanggal,
+                    'keterangan' => $keterangan,
+                    'id_akun' => $piutang->id,
+                    'debit' => 0,
+                    'kredit' => $data->sisa_piutang
+                ]); 
+
+                PiutangModel::where('id', $data->id)->delete();
+            }
+
+            Session::flash('success', 'Terima Semua Piutang Berhasil');
+        } else {
+            Session::flash('failed', 'Tidak Ada Piutang');
+        }
+        
+        $piutang = PiutangModel::join('tb_anggota', 'tb_anggota.id', '=', 'piutang.id_anggota')
+                            ->select('piutang.*', 'tb_anggota.nama_anggota AS nama_anggota', 
+                            'tb_anggota.kd_anggota AS kode_anggota', 'tb_anggota.limit_gaji AS limit_belanja')
+                            ->get();
+        
+        return view('toko.transaksi.piutang.index', compact('cur_date', 'data_notified', 'data_notif', 'data_notif_hutang', 'piutang'));
     }
 
     public function delete($id) {
@@ -160,14 +238,8 @@ class PiutangController extends Controller
 
         PiutangModel::where('id', $data_terima_piutang->id_piutang)->update([
             'jumlah_terima_piutang' => $data_piutang->jumlah_terima_piutang - $data_terima_piutang->terima_piutang,
-            'sisa_piutang' => $data_piutang->jumlah_piutang - $data_terima_piutang->terima_piutang
+            'sisa_piutang' => $data_piutang->sisa_piutang + $data_terima_piutang->terima_piutang
         ]);
-
-        if ($data_piutang->sisa_piutang > 0) {
-            PiutangModel::where('id', $data_terima_piutang->id_piutang)->update([
-                'status' => 0
-            ]);
-        }
 
         $kas = AkunModel::where('kode', 1102)->first();
 

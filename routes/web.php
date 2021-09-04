@@ -156,6 +156,7 @@ Route::group(['prefix' => 'toko'], function () {
                 Route::get('/', [PiutangController::class, 'index']);
                 Route::post('/store', [PiutangController::class, 'store']);
                 Route::post('/cancel', [PiutangController::class, 'cancel']);
+                Route::post('/terima-piutang', [PiutangController::class, 'terimaPiutang']);
                 Route::get('/{nomor_jual}', [PiutangController::class, 'show']);
                 Route::post('/delete/{nomor}', [PiutangController::class, 'delete']);
             });

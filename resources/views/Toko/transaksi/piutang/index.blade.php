@@ -68,6 +68,20 @@
             <i class="card-header fas fa-sync text-success" style="cursor: pointer;" title="Refresh Page" onclick="location.reload()"></i>
         </div>
         <div class="card-body">
+            {!! Form::open(['url' => '/toko/transaksi/piutang/terima-piutang']) !!}
+            <div class="row-lg align-item-center mb-2">
+                {!! Form::label(null, 'Tanggal', ['class' => 'col-lg-2']) !!}
+                {!! Form::date('tanggal', $cur_date, ['class' => 'col-lg-2 form-control form-control-sm', 'required']) !!}
+            </div>
+            <div class="row-lg align-item-center mb-2">
+                {!! Form::label(null, 'Keterangan', ['class' => 'col-lg-2']) !!}
+                {!! Form::text('keterangan', null, ['class' => 'col-lg-9 form-control form-control-sm', 'required']) !!}
+            </div>
+            <div class="d-grid gap-2 mb-4">
+                {!! Form::submit('Terima Semua Piutang', ['class' => 'btn btn-sm btn-success']) !!}
+            </div>
+            {!! Form::close() !!}
+            <hr class="w-100">
             <div class="table-responsive">
                 <table id="table-data" class="table table-striped table-bordered table-hover nowrap">
                     <thead class="text-center">
@@ -89,7 +103,6 @@
                         $i = 1;
                         @endphp
                         @foreach ($piutang as $data)
-                        @if ($data->status == 0)
                         <tr>
                             <th class="align-middle text-center">
                                 <p>{{$i++}}</p>
@@ -106,7 +119,6 @@
                             </td>
                             @endif
                         </tr>
-                        @endif
                         @endforeach
                     </tbody>
                     @endif
@@ -145,6 +157,49 @@
 @section('script')
 <script src="{{ asset('js/base-url.js') }}"></script>
 <script src="{{ asset('js/nomor-terima-piutang.js') }}"></script>
+@if(session('success'))
+<script>
+$(document).ready(function() {
+    const Toast = Swal.mixin({
+        toast: true,
+        position: 'middle',
+        showConfirmButton: false,
+        timer: 1000,
+        timerProgressBar: true
+    });
+
+    Toast.fire({
+        icon: 'success',
+        title: 'Berhasil',
+        text: `{{Session::get('success')}}`
+    });
+    setTimeout(function() {
+        window.location = "/toko/transaksi/piutang";
+    }, 1000);
+});
+</script>
+@elseif (session('failed'))
+<script>
+$(document).ready(function() {
+    const Toast = Swal.mixin({
+        toast: true,
+        position: 'middle',
+        showConfirmButton: false,
+        timer: 2000,
+        timerProgressBar: true
+    });
+
+    Toast.fire({
+        icon: 'error',
+        title: 'Gagal',
+        text: `{{Session::get('failed')}}`
+    });
+    setTimeout(function() {
+        window.location = "/toko/transaksi/piutang";
+    }, 2000);
+});
+</script>
+@endif
 <script>
 
 var id_piutang;
@@ -179,7 +234,7 @@ function terima_piutang() {
             nomor_jurnal: $('[name="nomor_jurnal"]').val(),
             tanggal: $('[name="tanggal"]').val(),
             id_piutang: id_piutang,
-            sisa_piutang: $('[name="sisa_piutang"]').val() - $('[name="terima_piutang"]').val(),
+            sisa_piutang: parseInt($('[name="sisa_piutang"]').val()) - parseInt($('[name="terima_piutang"]').val()),
             terima_piutang: $('[name="terima_piutang"]').val(),
             _token: $('meta[name="csrf-token"]').attr('content')
         },
@@ -193,11 +248,22 @@ function terima_piutang() {
                     timerProgressBar: true
                 });
 
-                Toast.fire({
-                    icon: 'success',
-                    title: 'Proses Transaksi',
-                    text: response.message
-                });
+                if (response.message == "Terima Piutang Berhasil") {
+                    Toast.fire({
+                        icon: 'success',
+                        title: 'Proses Transaksi',
+                        text: response.message
+                    });
+                } else {
+                    Toast.fire({
+                        icon: 'success',
+                        title: 'Proses Transaksi',
+                        text: response.message
+                    });
+                    setTimeout(function() {
+                        location.reload();
+                    }, 2000);
+                }
                 tampil_daftar(id_piutang);
                 nomorTransaksi();
             }
@@ -212,7 +278,7 @@ function hapus_daftar($id) {
         success: function(response) {
             if (response.code == 200) {
                 close_popup_hapus();
-                tampil_daftar();
+                tampil_daftar(id_piutang);
             }
         }
     });
@@ -227,6 +293,7 @@ function tampil_daftar($id_piutang) {
         type: 'GET',
         success: function(response) {
             if (response.code == 200) {
+                $('#table-terima-piutang').DataTable().destroy();
                 $('#table-data-terima-piutang').empty();
 
                 $sisa_piutang = response.anggota_piutang.jumlah_piutang;
