@@ -16,8 +16,8 @@ class LaporanSHUAkun
 
         for ($i = 0; $i < sizeof($arrayId); $i++) {
             $akun   = Akun::findOrFail($arrayId[$i]);
-            $a      = JurnalUmumModel::select(DB::raw("id, nomor as kode_jurnal, id_akun, tanggal, keterangan, debit as debet, kredit"))->where('id_akun', $arrayId[$i])->whereBetween('tanggal', [$reqStart, $reqEnd]);
-            $b      = JurnalModel::select(DB::raw("id, nomor as kode_jurnal, id_akun, tanggal, keterangan, debit as debet, kredit"))->where('id_akun', $arrayId[$i])->whereBetween('tanggal', [$reqStart, $reqEnd]);
+            $a = JurnalUmumModel::select(DB::raw("id, nomor as kode_jurnal, id_akun, tanggal, keterangan, debit as debet, kredit"))->where('id_akun', $arrayId[$i])->whereBetween('tanggal', [$reqStart, $reqEnd]);
+            $b = JurnalModel::select(DB::raw("id, nomor as kode_jurnal, id_akun, tanggal, keterangan, debit as debet, kredit"))->where('id_akun', $arrayId[$i])->whereBetween('tanggal', [$reqStart, $reqEnd]);
             $jurnal = JurnalUmum::select(DB::raw("id, CONVERT(kode_jurnal USING utf8) as kode_jurnal, id_akun, tanggal, CONVERT(keterangan USING utf8) as keterangan, debet, kredit"))->union($a)->union($b)->where('id_akun', $arrayId[$i])->whereBetween('tanggal', [$reqStart, $reqEnd])->get();
 
             $total = $akun->saldo;

@@ -360,6 +360,7 @@ class AngsuranController extends Controller
     {
         $date           = $request->tanggal . '-' . date('d');
         $pinjaman       = Pinjaman::where('status', 2)->where('lunas', 0)->where(DB::raw("DATE_FORMAT(tanggal, '%Y-%m')"), '<', date('Y-m'))->get();
+        // dd($pinjaman);
         $angsuranGet    = Angsuran::where('jenis', 1)->orderBy('id', 'DESC')->first();
         $count          = $pinjaman->count();
 

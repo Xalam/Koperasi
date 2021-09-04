@@ -34,6 +34,7 @@ class BendaharaController extends Controller
             ->leftJoin(DB::raw("(SELECT * FROM (SELECT MAX(id) as maxid FROM piutang GROUP BY id_anggota) t INNER JOIN piutang p ON p.id = t.maxid) as hutang"), function ($join) {
                 $join->on('tb_anggota.id', '=', 'hutang.id_anggota');
             })
+            ->orderBy('tb_anggota.id', 'ASC')
             ->get([
                 'tb_anggota.id',
                 'tb_anggota.username',
@@ -105,6 +106,7 @@ class BendaharaController extends Controller
             ->leftJoin(DB::raw("(SELECT * FROM (SELECT MAX(id) as maxid FROM piutang GROUP BY id_anggota) t INNER JOIN piutang p ON p.id = t.maxid) as hutang"), function ($join) {
                 $join->on('tb_anggota.id', '=', 'hutang.id_anggota');
             })
+            ->orderBy('tb_anggota.id', 'ASC')
             ->get([
                 'tb_anggota.id',
                 'tb_anggota.username',
