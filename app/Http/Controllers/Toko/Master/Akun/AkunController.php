@@ -87,23 +87,31 @@ class AkunController extends Controller
         }
         
         $jenis_akun = AkunJenisModel::where('id', substr($request->input('kode'), 0, 1))->first();
-        if ($jenis_akun->nama == 'Debit') {
-            AkunModel::create([
-                'kode' => $request->input('kode'),
-                'nama' => $request->input('nama'),
-                'debit' => $request->input('saldo'),
-                'kredit' => 0
-            ]);
+        
+        $data_exist = AkunModel::where('kode', $request->kode)->get();
+        
+        if (count($data_exist) > 0) {
+            Session::flash('failed', 'Gagal');
         } else {
-            AkunModel::create([
-                'kode' => $request->input('kode'),
-                'nama' => $request->input('nama'),
-                'debit' => 0,
-                'kredit' => $request->input('saldo')
-            ]);
-        }
+            if ($jenis_akun->nama == 'Debit') {
+                AkunModel::create([
+                    'kode' => $request->input('kode'),
+                    'nama' => $request->input('nama'),
+                    'debit' => $request->input('saldo'),
+                    'kredit' => 0
+                ]);
+            } else {
+                AkunModel::create([
+                    'kode' => $request->input('kode'),
+                    'nama' => $request->input('nama'),
+                    'debit' => 0,
+                    'kredit' => $request->input('saldo')
+                ]);
+            }
 
-        Session::flash('success', 'Berhasil');
+            Session::flash('success', 'Berhasil');
+        }
+        
         return view('toko.master.akun.create', compact('data_notified', 'data_notif'));
     }
 

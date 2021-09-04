@@ -174,7 +174,7 @@
                                 </a>
                             </li>
                         @endif
-                        @if (auth()->user()->role != 'bendahara_pusat')
+                        @if (auth()->user()->role != 'bendahara_pusat' && auth()->user()->role != 'simpan_pinjam')
                             <li class="nav-item">
                                 <a href="{{ route('buku-besar.index') }}"
                                     class="nav-link {{ request()->is('simpan-pinjam/laporan/buku-besar*') ? ' active' : '' }}">
@@ -235,6 +235,15 @@
                                     <p>Bendahara Pusat</p>
                                 </a>
                             </li>
+                        @endif
+                        @if (auth()->user()->role != 'simpan_pinjam')
+                        <li class="nav-item">
+                            <a href="{{ route('bendahara.index') }}"
+                                class="nav-link {{ request()->is('simpan-pinjam/laporan/bendahara*') ? ' active' : '' }}">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>Bendahara Pusat</p>
+                            </a>
+                        </li>
                         @endif
                     </ul>
                 </li>

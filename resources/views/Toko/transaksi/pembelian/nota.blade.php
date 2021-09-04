@@ -136,33 +136,23 @@
                 <td colspan="4" class="text-center">
                     <div class="d-flex flex-row">
                         <div class="col-6">Hormat Kami</div>
-                        <div class="col-6">Penerima</div>
+                        <div class="col-6"></div>
                     </div>
                 </td>
-                <td class="text-right">Potongan</td>
-                <td>:</td>
-                <td class="text-right">0.00%</td>
-                <td class="text-right">0.00</td>
+                <td class="text-right"></td>
+                <td></td>
+                <td class="text-right"></td>
+                <td class="text-right"></td>
                 <td class="text-right">Total Akhir</td>
                 <td>:</td>
                 <td class="text-right" style="width: 100px;">{{number_format($jumlahHarga, 2, ',', '.')}}</td>
             </tr>
             <tr>
                 <td colspan="4"></td>
-                <td class="text-right">Pajak</td>
-                <td>:</td>
-                <td class="text-right">0.00%</td>
-                <td class="text-right">0.00</td>
-                <td class="text-right">DP PO</td>
-                <td>:</td>
-                <td class="text-right" style="width: 100px;">0</td>
-            </tr>
-            <tr>
-                <td colspan="4"></td>
-                <td class="text-right">Biaya Lain</td>
-                <td>:</td>
-                <td class="text-right">0</td>
-                <td class="text-right">0.00</td>
+                <td class="text-right"></td>
+                <td></td>
+                <td class="text-right"></td>
+                <td class="text-right"></td>
                 <td class="text-right">Tunai</td>
                 <td>:</td>
                 <td class="text-right" style="width: 100px;">{{($pembayaran == 2) ? number_format($jumlahBayar, 2, ',', '.') : 0.00}}</td>
@@ -171,12 +161,12 @@
                 <td colspan="4" class="text-center">
                     <div class="d-flex flex-row">
                         <div class="col-6">( _____________________________ )</div>
-                        <div class="col-6">( _____________________________ )</div>
+                        <div class="col-6"></div>
                     </div>
                 </td>
-                <td class="text-right">Tanggal Jt</td>
-                <td>:</td>
-                <td class="text-right">{{$tanggal}}</td>
+                <td class="text-right"></td>
+                <td></td>
+                <td class="text-right"></td>
                 <td class="text-right"></td>
                 <td class="text-right">Kredit</td>
                 <td>:</td>

@@ -59,8 +59,16 @@ class UserController extends Controller
 
         $data['password'] = Hash::make($data['password']);
 
-        User::create($data);
+        $checkUsername = User::where('username', $data['username'])->get();
+        
+        if ($checkUsername) {
+            return redirect()->route('admin.create')->with([
+                'error' => 'Username telah digunakan'
+            ]);
+        }
 
+        User::create($data);
+        
         return redirect()->route('admin.index')->with([
             'success' => 'Berhasil menambahkan data'
         ]);
