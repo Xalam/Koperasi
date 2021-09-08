@@ -179,7 +179,7 @@ class KeuanganController extends Controller
         $pendapatanOperasional = $labaKotor + $totalBeban;
 
         $sumSHU = $pendapatanOperasional + ($sumAkunFourTwo * -1);
-
+        
         $shuKredit = 0;
         $shuDebet  = 0;
 

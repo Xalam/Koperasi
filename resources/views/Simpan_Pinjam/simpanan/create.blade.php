@@ -4,12 +4,12 @@
 
 @section('content_header', 'Tambah Simpanan')
 
-@push('style')
-    <link rel="stylesheet"
-        href="{{ asset('assets/plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css') }}">
-    <link rel="stylesheet" href="{{ asset('assets/plugins/select2/css/select2.min.css') }}">
-    <link rel="stylesheet" href="{{ asset('assets/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css') }}">
-@endpush
+    @push('style')
+        <link rel="stylesheet"
+            href="{{ asset('assets/plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css') }}">
+        <link rel="stylesheet" href="{{ asset('assets/plugins/select2/css/select2.min.css') }}">
+        <link rel="stylesheet" href="{{ asset('assets/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css') }}">
+    @endpush
 
 @section('breadcrumb')
     <li class="breadcrumb-item"><a href="#">Simpanan</a></li>
@@ -46,9 +46,8 @@
                         </div>
                         <div class="form-group">
                             <label>Tanggal</label>
-                            <input type="text" class="form-control" id="tanggal-setor" value="{{ date('Y-m-d') }}"
-                                disabled>
-                            <input type="text" class="form-control" name="tanggal" value="{{ date('Y-m-d') }}" hidden>
+                            <input type="text" class="form-control" name="tanggal" id="tanggal-input"
+                                value="{{ date('Y-m-d') }}" readonly="readonly">
                         </div>
                         <div class="form-group">
                             <label>Nominal</label>
@@ -108,8 +107,10 @@
                         @csrf
                         <div class="form-group">
                             <label>Tanggal Setor</label>
-                            <input type="text" class="form-control" name="tanggal" id="tanggal-setor"
-                                value="{{ date('Y-m-d') }}" readonly>
+                            <input type="text" class="form-control" id="tanggal-setor"
+                                value="{{ date('Y-m-d') }}" disabled>
+                            <input type="text" class="form-control" name="tanggal"
+                                value="{{ date('Y-m-d') }}" hidden>
                         </div>
                         <div class="form-group">
                             <label>Nominal</label>

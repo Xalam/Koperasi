@@ -48,8 +48,7 @@
                                 <div class="input-group-prepend">
                                     <span class="input-group-text">Rp</span>
                                 </div>
-                                <input type="text" class="form-control" placeholder="Masukkan jumlah saldo" id="saldo"
-                                    name="saldo">
+                                <input type="text" class="form-control" placeholder="Masukkan jumlah saldo" id="saldo" name="saldo">
                             </div>
                             @if ($errors->has('saldo'))
                                 <span class="text-danger">{{ $errors->first('saldo') }}</span>
@@ -72,11 +71,10 @@
 @section('script')
     <script>
         $(function() {
-            $('#saldo').maskMoney({
+            $('#saldo').maskMoney({ 
                 allowNegative: true,
-                thousands: '.',
-                decimal: ',',
-                allowZero: true
+                thousands:'.',
+                decimal: ','     
             });
 
             $('input.number').keyup(function(event) {

@@ -50,5 +50,26 @@ $(document).ready(function() {
     }, 1000);
 });
 </script>
+@elseif(Session::get('failed'))
+<script>
+$(document).ready(function() {
+    const Toast = Swal.mixin({
+        toast: true,
+        position: 'middle',
+        showConfirmButton: false,
+        timer: 1000,
+        timerProgressBar: true
+    });
+
+    Toast.fire({
+        icon: 'error',
+        title: 'Gagal',
+        text: 'Data Gagal Disimpan'
+    });
+    setTimeout(function() {
+        window.location = "/toko/master/akun/create";
+    }, 1000);
+});
+</script>
 @endif
 @endsection

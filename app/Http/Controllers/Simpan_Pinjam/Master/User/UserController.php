@@ -68,7 +68,7 @@ class UserController extends Controller
         }
 
         User::create($data);
-
+        
         return redirect()->route('admin.index')->with([
             'success' => 'Berhasil menambahkan data'
         ]);
