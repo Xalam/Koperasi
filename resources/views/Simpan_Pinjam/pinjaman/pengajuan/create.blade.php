@@ -110,8 +110,8 @@
                             <div class="form-group">
                                 <label>Biaya Asuransi</label>
                                 <div class="input-group">
-                                    <input type="text" class="form-control" placeholder="Biaya asuransi" id="biaya-asuransi"
-                                        name="biaya_asuransi" disabled>
+                                    <input type="text" class="form-control" placeholder="Biaya asuransi"
+                                        id="biaya-asuransi" name="biaya_asuransi" disabled>
                                 </div>
                             </div>
                         </div>

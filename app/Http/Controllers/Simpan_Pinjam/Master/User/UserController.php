@@ -22,7 +22,7 @@ class UserController extends Controller
             $data = [];
             $no   = 1;
 
-            foreach($users as $key => $value) {
+            foreach ($users as $key => $value) {
                 $data[] = [
                     'no'        => $no++,
                     'nama'      => $value->name,
@@ -60,7 +60,7 @@ class UserController extends Controller
         $data['password'] = Hash::make($data['password']);
 
         $checkUsername = User::where('username', $data['username'])->get();
-        
+
         if ($checkUsername) {
             return redirect()->route('admin.create')->with([
                 'error' => 'Username telah digunakan'

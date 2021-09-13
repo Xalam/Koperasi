@@ -236,15 +236,6 @@
                                 </a>
                             </li>
                         @endif
-                        @if (auth()->user()->role != 'simpan_pinjam')
-                        <li class="nav-item">
-                            <a href="{{ route('bendahara.index') }}"
-                                class="nav-link {{ request()->is('simpan-pinjam/laporan/bendahara*') ? ' active' : '' }}">
-                                <i class="far fa-circle nav-icon"></i>
-                                <p>Bendahara Pusat</p>
-                            </a>
-                        </li>
-                        @endif
                     </ul>
                 </li>
                 @if (auth()->user()->role == 'admin' || auth()->user()->role == 'ketua_koperasi')

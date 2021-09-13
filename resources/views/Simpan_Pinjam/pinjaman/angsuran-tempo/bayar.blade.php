@@ -4,10 +4,10 @@
 
 @section('content_header', 'Pembayaran Angsuran')
 
-    @push('style')
-        <link rel="stylesheet"
-            href="{{ asset('assets/plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css') }}">
-    @endpush
+@push('style')
+    <link rel="stylesheet"
+        href="{{ asset('assets/plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css') }}">
+@endpush
 
 @section('breadcrumb')
     <li class="breadcrumb-item"><a href="#">Pinjaman</a></li>
@@ -61,28 +61,23 @@
                         </div>
                         <!-- /.col -->
                         <div class="col-6">
-                            <div class="">
+                            <div class="___class_+?12___">
                                 <table class="table">
                                     <tr>
                                         <th style="width:50%">Tanggal Pelunasan</th>
                                         <td>
-                                            <div class="input-group date" id="tanggal" data-target-input="nearest">
-                                                <input type="text" class="form-control datetimepicker-input"
-                                                    id="tanggal-input" data-target="#tanggal" name="tanggal"
-                                                    placeholder="Tanggal" />
-                                                <div class="input-group-append" data-target="#tanggal"
-                                                    data-toggle="datetimepicker">
-                                                    <div class="input-group-text"><i class="fa fa-calendar"></i></div>
-                                                </div>
-                                            </div>
+                                            <input type="text" class="form-control" id="tanggal"
+                                                value="{{ date('Y-m-d') }}" disabled>
+                                            <input type="text" class="form-control" name="tanggal"
+                                                value="{{ date('Y-m-d') }}" hidden>
                                         </td>
                                     </tr>
                                     <tr>
                                         <th style="width:50%">Potongan</th>
                                         <td>
                                             <div class="input-group">
-                                                <input type="text" class="form-control" placeholder="Potongan" id="potongan"
-                                                    disabled>
+                                                <input type="text" class="form-control" placeholder="Potongan"
+                                                    id="potongan" disabled>
                                                 <input type="text" class="form-control" name="potongan" id="hide-potongan"
                                                     hidden>
                                             </div>
