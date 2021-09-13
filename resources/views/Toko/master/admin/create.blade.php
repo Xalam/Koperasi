@@ -19,7 +19,7 @@
         </div>
         <div class="row-lg align-item-center mb-2">
             {!! Form::label(null, 'Password', ['class' => 'col-lg-2']) !!}
-            {!! Form::text('password', null, ['class' => 'col-lg-4 form-control form-control-sm', 'required',
+            {!! Form::password('password', ['class' => 'col-lg-4 form-control form-control-sm', 'required',
             'oninvalid' => "this.setCustomValidity('Tidak boleh kosong')", 'oninput' => "this.setCustomValidity('')"])
             !!}
         </div>

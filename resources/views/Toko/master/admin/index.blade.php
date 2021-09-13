@@ -48,9 +48,9 @@
                             <div id="nama-<?php echo $data->id ?>">{{$data->nama}}</div>
                         </td>
                         <td class="align-middle">
-                            {!! Form::text('edit_password', $data->password, ['class' => 'd-none form-control form-control-sm', 'id' =>
-                            'edit-password-'.$data->id]) !!}
-                            <div id="password-<?php echo $data->id ?>">{{$data->password}}</div>
+                            {!! Form::password('edit_password', ['class' => 'd-none form-control form-control-sm', 'id' =>
+                            'edit-password-'.$data->id, 'value' => $data->password]) !!}
+                            <div id="password-<?php echo $data->id ?>" style="-webkit-text-security: circle;">{{$data->password}}</div>
                         </td>
                         <td class="align-middle text-center">
                             {!! Form::select('edit_jabatan', ['Super_Admin' => 'Super Admin', 'Kanit' => 'Kanit', 'Ketua_Koperasi' => 'Ketua Koperasi',

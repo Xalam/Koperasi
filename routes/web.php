@@ -161,7 +161,7 @@ Route::group(['prefix' => 'toko'], function () {
                 Route::post('/delete/{nomor}', [PiutangController::class, 'delete']);
             });
 
-            Route::group(['prefix' => 'titip-jual', 'middleware' => ['auth:toko', 'checkjabatan:Super_Admin,Kanit']], function () {
+            Route::group(['prefix' => 'titip-jual', 'middleware' => ['auth:toko', 'checkjabatan:Super_Admin,Kanit,Gudang']], function () {
                 Route::get('/', [TitipJualController::class, 'index']);
                 Route::post('/store', [TitipJualController::class, 'store']);
                 Route::post('/cancel', [TitipJualController::class, 'cancel']);

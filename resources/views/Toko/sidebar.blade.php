@@ -91,6 +91,7 @@
                             <li><a href="/toko/transaksi/jurnal">Jurnal</a></li>
                             <li><a href="/toko/transaksi/pesanan-online">Pesanan Online</a></li>
                             <li><a href="/toko/transaksi/persediaan">Persediaan</a></li>
+                            <li><a href="/toko/transaksi/titip-jual">Titip Jual</a></li>
                         </ul>
                     </div>
                 </li>
@@ -111,6 +112,7 @@
                             </li>
                             <li><a href="/toko/transaksi/jurnal">Jurnal</a></li>
                             <li><a href="/toko/transaksi/persediaan">Persediaan</a></li>
+                            <li><a href="/toko/transaksi/titip-jual">Titip Jual</a></li>
                             <li><a href="/toko/transaksi/hutang">Utang</a></li>
                         </ul>
                     </div>
