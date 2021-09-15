@@ -62,6 +62,7 @@
                     {!! Form::label(null, 'Satuan', ['class' => 'offset-lg-1 col-lg-2 col-form-label']) !!}
                     {!! Form::select('satuan', $satuan_barang, null,
                     ['class' => 'col-lg-3 form-select form-select-sm', 'required']) !!}
+                    {!! Form::text('text_satuan', null, ['class' => 'd-none col-lg-7 form-control form-control-sm']) !!}
                 </div>
                 <div class="row-lg align-item-center mb-2">
                     {!! Form::label(null, 'Kemasan', ['class' => 'col-lg-2 col-form-label text-nowrap']) !!}
@@ -222,6 +223,10 @@ $(function() {
         $("input[name='kode']").val($("[name='kategori'] option:selected").val() + $(
                 "[name='jenis'] option:selected").val() + $("[name='tekstur'] option:selected").val() + $("[name='satuan'] option:selected").val() + 
                 $("[name='kemasan'] option:selected").val() + tanggal_beli + bulan_beli + tahun_beli);
+
+                
+        $('[name="text_satuan"]').val($("[name='satuan'] option:selected").text());
+        $('[name="text_supplier"]').val($("[name='supplier'] option:selected").text());
     }
 });
 </script>

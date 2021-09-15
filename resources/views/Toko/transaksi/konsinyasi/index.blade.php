@@ -138,7 +138,7 @@
                             <th>Tanggal</th>
                             <th>Angsuran</th>
                             <th>Sisa Konsinyasi</th>
-                            <th>Opsi</th>
+                            <!-- <th>Opsi</th> -->
                         </tr>
                     </thead>
                     <tbody id="table-data-angsuran">
@@ -251,11 +251,11 @@ function tampil_daftar() {
                         '<td class="align-middle text-center">' + value.angsuran.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1.") + ',00</td>' +
                         '<td class="align-middle text-center">' + $sisa_konsinyasi.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1.") +
                         ',00</td>' +
-                        '<td class="align-middle text-center"><a id="hapus-' + value
-                        .id + '" class="btn btn-sm btn-danger" onclick="show_popup_hapus(' +
-                        value
-                        .id + ')"><i class="fas fa-trash-alt p-1"></i> Hapus</a>' +
-                        '</td>' +
+                        // '<td class="align-middle text-center"><a id="hapus-' + value
+                        // .id + '" class="btn btn-sm btn-danger" onclick="show_popup_hapus(' +
+                        // value
+                        // .id + ')"><i class="fas fa-trash-alt p-1"></i> Hapus</a>' +
+                        // '</td>' +
                         '</tr>')
                 })
 

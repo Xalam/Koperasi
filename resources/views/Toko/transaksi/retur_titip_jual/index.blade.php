@@ -11,9 +11,9 @@
 
 @section('main')
 <div class="card m-6">
-    <p class="card-header bg-light">Tambah Retur</p>
+    <p class="card-header bg-light">Tambah Pengembalian Titip Jual</p>
     <div id="form" class="card-body">
-        {!! Form::open(['url' => '/toko/transaksi/retur-pembelian/retur']) !!}
+        {!! Form::open(['url' => '/toko/transaksi/retur-titip-jual/retur']) !!}
         <div class="row-lg align-item-center mb-2">
             {!! Form::label(null, 'Tanggal', ['class' => 'col-lg-2']) !!}
             {!! Form::date('tanggal', $cur_date, ['class' => 'col-lg-2 form-control form-control-sm', 'required']) !!}
@@ -22,12 +22,12 @@
             {!! Form::text('nomor_jurnal', null, ['class' => 'd-none', 'readonly']) !!}
         </div>
         <div class="row-lg align-item-center mb-2">
-            {!! Form::label(null, 'Retur', ['class' => 'col-lg-2 fw-bold']) !!}
+            {!! Form::label(null, 'Pengembalian Titip Jual', ['class' => 'col-lg-2 fw-bold']) !!}
             <div class="w-100"></div>
-            {!! Form::label(null, 'No. Beli', ['class' => 'col-lg-2']) !!}
-            {!! Form::select('id_beli', $nomor_beli, null, ['class' => 'col-lg-4 form-select form-select-sm',
+            {!! Form::label(null, 'No. Titip Jual', ['class' => 'col-lg-2']) !!}
+            {!! Form::select('id_titip_jual', $nomor_titip_jual, null, ['class' => 'col-lg-4 form-select form-select-sm',
             'required']) !!}
-            {!! Form::text('nomor_beli', null, ['class' => 'd-none', 'readonly']) !!}
+            {!! Form::text('nomor_titip_jual', null, ['class' => 'd-none', 'readonly']) !!}
         </div>
         <div class="row-lg align-item-center mb-2">
             {!! Form::label(null, 'Nama Supplier', ['class' => 'col-lg-2']) !!}
@@ -74,7 +74,7 @@
     <p class="card-header bg-light">Daftar Retur</p>
     <div class="card-body">
         <div class="table-responsive mb-2">
-            <table id="table-retur" class="table table-striped table-bordered table-hover nowrap">
+            <table id="table-retur-titip-jual" class="table table-striped table-bordered table-hover nowrap">
                 <thead class="text-center">
                     <tr>
                         <th>No</th>
@@ -86,7 +86,7 @@
                         <th>Opsi</th>
                     </tr>
                 </thead>
-                <tbody id="table-data-retur">
+                <tbody id="table-data-retur-titip-jual">
                 </tbody>
             </table>
         </div>
@@ -122,10 +122,10 @@ $(document).ready(function() {
         }
     }).then((result) => {
         if (result.isConfirmed) {
-            window.open("{{url('toko/transaksi/retur-pembelian/nota')}}");
-            window.location = "{{url('toko/transaksi/retur-pembelian')}}";
+            window.open("{{url('toko/transaksi/retur-titip-jual/nota')}}");
+            window.location = "{{url('toko/transaksi/retur-titip-jual')}}";
         } else {
-            window.location = "{{url('toko/transaksi/retur-pembelian')}}";
+            window.location = "{{url('toko/transaksi/retur-titip-jual')}}";
         }
     });
 });
@@ -147,27 +147,27 @@ $(document).ready(function() {
         text: `{{Session::get('failed')}}`
     });
     setTimeout(function() {
-        window.location = "/toko/transaksi/retur-pembelian";
+        window.location = "/toko/transaksi/retur-titip-jual";
     }, 2000);
 });
 </script>
 @endif
 
 <script src="{{ asset('js/base-url.js') }}"></script>
-<script src="{{ asset('js/data-retur-barang.js') }}"></script>
-<script src="{{ asset('js/data-retur-supplier.js') }}"></script>
-<script src="{{ asset('js/nomor-retur-pembelian.js') }}"></script>
+<script src="{{ asset('js/data-retur-titip-jual-barang.js') }}"></script>
+<script src="{{ asset('js/data-retur-titip-jual-supplier.js') }}"></script>
+<script src="{{ asset('js/nomor-retur-titip-jual.js') }}"></script>
 <script>
 var nomor;
 var jumlah_harga;
 
 function tambah_daftar() {
     $.ajax({
-        url: '/toko/transaksi/retur-pembelian/store',
+        url: '/toko/transaksi/retur-titip-jual/store',
         type: 'POST',
         data: {
             nomor: $('[name="nomor"]').val(),
-            nomor_beli: $('[name="id_beli"] option:selected').text(),
+            nomor_titip_jual: $('[name="id_titip_jual"] option:selected').text(),
             id_barang: $('[name="kode_barang"]').val(),
             harga_beli: $('[name="harga_beli"]').val(),
             jumlah: $('[name="jumlah"]').val(),
@@ -178,10 +178,10 @@ function tambah_daftar() {
                 tampil_daftar();
 
                 const id_barang = $('[name="kode_barang"]').val();
-                const nomor_beli = $('[name="id_beli"] option:selected').text();
+                const nomor_titip_jual = $('[name="id_titip_jual"] option:selected').text();
                 if (id_barang != '') {
                     $('[name="nama_barang"]').val(id_barang);
-                    $.get(`${base_url}api/data-retur-detail-barang/${nomor_beli}/${id_barang}`,
+                    $.get(`${base_url}api/data-retur-titip-jual-detail-barang/${nomor_titip_jual}/${id_barang}`,
                         function(data, status) {
                             $('[name="harga_beli"]').val(data.harga);
                             $('#text-maksimal-retur').text('Maksimal Retur : ' + parseInt(data
@@ -208,7 +208,7 @@ function tambah_daftar() {
 
 function hapus_daftar($id) {
     $.ajax({
-        url: '/toko/transaksi/retur-pembelian/delete/' + $id,
+        url: '/toko/transaksi/retur-titip-jual/delete/' + $id,
         type: 'POST',
         success: function(response) {
             if (response.code == 200) {
@@ -216,10 +216,10 @@ function hapus_daftar($id) {
                 tampil_daftar();
 
                 const id_barang = $('[name="kode_barang"]').val();
-                const nomor_beli = $('[name="id_beli"] option:selected').text();
+                const nomor_titip_jual = $('[name="id_titip_jual"] option:selected').text();
                 if (id_barang != '') {
                     $('[name="nama_barang"]').val(id_barang);
-                    $.get(`${base_url}api/data-retur-detail-barang/${nomor_beli}/${id_barang}`,
+                    $.get(`${base_url}api/data-retur-titip-jual-detail-barang/${nomor_titip_jual}/${id_barang}`,
                         function(data, status) {
                             $('[name="harga_beli"]').val(data.harga);
                             $('#text-maksimal-retur').text('Maksimal Retur : ' + parseInt(data
@@ -251,13 +251,13 @@ function tampil_daftar() {
     jumlah_harga = 0;
 
     $.ajax({
-        url: '/toko/transaksi/retur-pembelian/' + nomor,
+        url: '/toko/transaksi/retur-titip-jual/' + nomor,
         type: 'GET',
         success: function(response) {
             if (response.code == 200) {
-                $('#table-data-retur').empty();
+                $('#table-data-retur-titip-jual').empty();
                 $.each(response.barang_retur, function(index, value) {
-                    $('#table-data-retur').append('<tr>' +
+                    $('#table-data-retur-titip-jual').append('<tr>' +
                         '<th class="align-middle text-center">' + i++ + '</th>' +
                         '<td class="align-middle text-center">' + value.kode_barang + '</td>' +
                         '<td class="align-middle">' + value.nama_barang + '</td>' +
@@ -281,15 +281,15 @@ function tampil_daftar() {
 
                 if (response.barang_retur.length > 0) {
                     $('[name="tanggal"]').attr('readonly', true);
-                    $('[name="id_beli"]').attr('readonly', true);
+                    $('[name="id_titip_jual"]').attr('readonly', true);
                 } else {
-                    $('[name="id_beli"]').removeAttr('readonly');
+                    $('[name="id_titip_jual"]').removeAttr('readonly');
                     $('[name="tanggal"]').removeAttr('readonly');
                 }
 
                 if (response.supplier_retur) {
                     $('[name="tanggal"]').val(response.supplier_retur.tanggal);
-                    $('[name="id_beli"]').val(response.supplier_retur.id_beli);
+                    $('[name="id_titip_jual"]').val(response.supplier_retur.id_titip_jual);
                     $('[name="nama_supplier"]').append('<option value=' + response.supplier_retur
                         .id_supplier + '>' + response.supplier_retur.nama_supplier + '</option>');
 
@@ -298,7 +298,7 @@ function tampil_daftar() {
                     $('[name="harga_beli"]').val('');
                     $('[name="jumlah"]').val('');
                 }
-                $('#table-retur').DataTable();
+                $('#table-retur-titip-jual').DataTable();
                 return false;
             }
         }
@@ -307,7 +307,7 @@ function tampil_daftar() {
 
 function batal_transaksi() {
     $.ajax({
-        url: '/toko/transaksi/retur-pembelian/cancel/',
+        url: '/toko/transaksi/retur-titip-jual/cancel/',
         type: 'POST',
         data: {
             nomor: $('[name="nomor"]').val()
@@ -337,20 +337,17 @@ function close_popup_hapus() {
 }
 
 $(document).ready(function() {
-    $('#table-retur').DataTable();
-
-    $('#cek-nomor').click(function() {
-        tampil_daftar();
-    });
+    $('#table-retur-titip-jual').DataTable();
+    tampil_daftar();
 
     setNomorBeli();
 
-    $('[name="id_beli"]').change(function() {
+    $('[name="id_titip_jual"]').change(function() {
         setNomorBeli();
     });
 
     function setNomorBeli() {
-        $('[name="nomor_beli"]').val($('[name="id_beli"] option:selected').text());
+        $('[name="nomor_titip_jual"]').val($('[name="id_beli"] option:selected').text());
     }
 
     $('[name="jumlah"]').change(function() {

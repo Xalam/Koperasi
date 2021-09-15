@@ -88,10 +88,19 @@
                                     </ul>
                                 </div>
                             </li>
+                            <li class="sidebar-dropdown2">
+                                <a>Konsinyasi</a>
+                                <div class="sidebar-submenu2">
+                                    <ul>
+                                        <li><a href="/toko/transaksi/retur-titip-jual">Pengembalian Titip Jual</a></li>
+                                        <li><a href="/toko/transaksi/titip-jual">Titip Jual</a></li>
+                                        <li><a href="/toko/transaksi/konsinyasi">Utang Konsinyasi</a></li>
+                                    </ul>
+                                </div>
+                            </li>
                             <li><a href="/toko/transaksi/jurnal">Jurnal</a></li>
                             <li><a href="/toko/transaksi/pesanan-online">Pesanan Online</a></li>
                             <li><a href="/toko/transaksi/persediaan">Persediaan</a></li>
-                            <li><a href="/toko/transaksi/titip-jual">Titip Jual</a></li>
                         </ul>
                     </div>
                 </li>
@@ -110,9 +119,18 @@
                                     </ul>
                                 </div>
                             </li>
+                            <li class="sidebar-dropdown2">
+                                <a>Konsinyasi</a>
+                                <div class="sidebar-submenu2">
+                                    <ul>
+                                        <li><a href="/toko/transaksi/retur-titip-jual">Pengembalian Titip Jual</a></li>
+                                        <li><a href="/toko/transaksi/titip-jual">Titip Jual</a></li>
+                                        <li><a href="/toko/transaksi/konsinyasi">Utang Konsinyasi</a></li>
+                                    </ul>
+                                </div>
+                            </li>
                             <li><a href="/toko/transaksi/jurnal">Jurnal</a></li>
                             <li><a href="/toko/transaksi/persediaan">Persediaan</a></li>
-                            <li><a href="/toko/transaksi/titip-jual">Titip Jual</a></li>
                             <li><a href="/toko/transaksi/hutang">Utang</a></li>
                         </ul>
                     </div>

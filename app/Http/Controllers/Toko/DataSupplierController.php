@@ -21,6 +21,13 @@ class DataSupplierController extends Controller
                             ->get();
     }
 
+    public function dataReturTitipJualSupplier($id) {
+        return SupplierModel::select('supplier.*')
+                            ->join('titip_jual', 'titip_jual.id_supplier', '=', 'supplier.id')
+                            ->where('titip_jual.id', $id)
+                            ->get();
+    }
+
     public function dataHutangSupplier($id) {
         return SupplierModel::select('supplier.*')
                             ->join('pembelian', 'pembelian.id_supplier', '=', 'supplier.id')

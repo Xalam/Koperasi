@@ -41,6 +41,7 @@ use App\Http\Controllers\Toko\Laporan\Persediaan\LaporanPersediaanController;
 use App\Http\Controllers\Toko\Laporan\Piutang\LaporanPiutangController;
 use App\Http\Controllers\Toko\Laporan\Retur\LaporanReturPembelianController;
 use App\Http\Controllers\Toko\Transaksi\Persediaan\PersediaanController;
+use App\Http\Controllers\Toko\Transaksi\ReturTitipJual\ReturTitipJualController;
 use Illuminate\Support\Facades\Artisan;
 
 /*
@@ -61,9 +62,12 @@ Route::group(['prefix' => 'api'], function () {
     Route::get('/data-barang/{id}', [DataBarangController::class, 'dataBarang']);
     Route::get('/data-beli-barang/{id}', [DataBarangController::class, 'dataBeliBarang']);
     Route::get('/data-retur-barang/{id}', [DataBarangController::class, 'dataReturBarang']);
+    Route::get('/data-retur-titip-jual-barang/{id}', [DataBarangController::class, 'dataReturTitipJualBarang']);
     Route::get('/data-retur-detail-barang/{nomor}/{id}', [DataBarangController::class, 'dataReturDetailBarang']);
+    Route::get('/data-retur-titip-jual-detail-barang/{nomor}/{id}', [DataBarangController::class, 'dataReturTitipJualDetailBarang']);
     Route::get('/data-supplier/{id}', [DataSupplierController::class, 'dataSupplier']);
     Route::get('/data-retur-supplier/{id}', [DataSupplierController::class, 'dataReturSupplier']);
+    Route::get('/data-retur-titip-jual-supplier/{id}', [DataSupplierController::class, 'dataReturTitipJualSupplier']);
     Route::get('/data-hutang-supplier/{id}', [DataSupplierController::class, 'dataHutangSupplier']);
     Route::get('/data-anggota/{id}', [DataAnggotaController::class, 'dataAnggota']);
     Route::get('/show-notification-penjualan', [PenjualanController::class, 'showNotification']);
@@ -72,14 +76,16 @@ Route::group(['prefix' => 'api'], function () {
     Route::get('/nomor-jurnal-pembelian/{tanggal}', [NomorJurnalController::class, 'nomorJurnalPembelian']);
     Route::get('/nomor-retur-pembelian/{tanggal}', [NomorTransaksiController::class, 'nomorReturPembelian']);
     Route::get('/nomor-jurnal-retur-pembelian/{tanggal}', [NomorJurnalController::class, 'nomorJurnalReturPembelian']);
-    Route::get('/nomor-penjualan/{tanggal}', [NomorTransaksiController::class, 'nomorPenjualan']);
-    Route::get('/nomor-jurnal-penjualan/{tanggal}', [NomorJurnalController::class, 'nomorJurnalPenjualan']);
+    Route::get('/nomor-penjualan/{tanggal}/{type}', [NomorTransaksiController::class, 'nomorPenjualan']);
+    Route::get('/nomor-jurnal-penjualan/{tanggal}/{type}', [NomorJurnalController::class, 'nomorJurnalPenjualan']);
     Route::get('/nomor-angsuran/{tanggal}', [NomorTransaksiController::class, 'nomorAngsuran']);
     Route::get('/nomor-jurnal-angsuran/{tanggal}', [NomorJurnalController::class, 'nomorJurnalAngsuran']);
     Route::get('/nomor-terima-piutang/{tanggal}', [NomorTransaksiController::class, 'nomorTerimaPiutang']);
     Route::get('/nomor-jurnal-terima-piutang/{tanggal}', [NomorJurnalController::class, 'nomorJurnalTerimaPiutang']);
     Route::get('/nomor-titip-jual/{tanggal}', [NomorTransaksiController::class, 'nomorTitipJual']);
     Route::get('/nomor-jurnal-titip-jual/{tanggal}', [NomorJurnalController::class, 'nomorJurnalTitipJual']);
+    Route::get('/nomor-retur-titip-jual/{tanggal}', [NomorTransaksiController::class, 'nomorReturTitipJual']);
+    Route::get('/nomor-jurnal-retur-titip-jual/{tanggal}', [NomorJurnalController::class, 'nomorJurnalReturTitipJual']);
     Route::get('/nomor-konsinyasi/{tanggal}', [NomorTransaksiController::class, 'nomorKonsinyasi']);
     Route::get('/nomor-jurnal-konsinyasi/{tanggal}', [NomorJurnalController::class, 'nomorJurnalKonsinyasi']);
     Route::get('/nomor-jurnal-umum/{tanggal}', [NomorJurnalController::class, 'nomorJurnalUmum']);
@@ -135,6 +141,16 @@ Route::group(['prefix' => 'toko'], function () {
                 Route::post('/delete/{nomor}', [ReturPembelianController::class, 'delete']);
             });
 
+            Route::group(['prefix' => 'retur-titip-jual', 'middleware' => ['auth:toko', 'checkjabatan:Gudang,Super_Admin,Kanit,Gudang']], function () {
+                Route::get('/', [ReturTitipJualController::class, 'index']);
+                Route::post('/store', [ReturTitipJualController::class, 'store']);
+                Route::post('/retur', [ReturTitipJualController::class, 'retur']);
+                Route::post('/cancel', [ReturTitipJualController::class, 'cancel']);
+                Route::get('/nota', [ReturTitipJualController::class, 'nota']);
+                Route::get('/{nomor}', [ReturTitipJualController::class, 'show']);
+                Route::post('/delete/{nomor}', [ReturTitipJualController::class, 'delete']);
+            });
+
             Route::group(['prefix' => 'hutang', 'middleware' => ['auth:toko', 'checkjabatan:Super_Admin,Gudang,Kanit']], function () {
                 Route::get('/', [HutangController::class, 'index']);
                 Route::post('/store', [HutangController::class, 'store']);
@@ -144,7 +160,7 @@ Route::group(['prefix' => 'toko'], function () {
                 Route::post('/remove-notification/{id}', [HutangController::class, 'removeNotification']);
             });
 
-            Route::group(['prefix' => 'konsinyasi', 'middleware' => ['auth:toko', 'checkjabatan:Super_Admin,Kanit']], function () {
+            Route::group(['prefix' => 'konsinyasi', 'middleware' => ['auth:toko', 'checkjabatan:Super_Admin,Kanit,Gudang']], function () {
                 Route::get('/', [KonsinyasiController::class, 'index']);
                 Route::post('/store', [KonsinyasiController::class, 'store']);
                 Route::post('/cancel', [KonsinyasiController::class, 'cancel']);

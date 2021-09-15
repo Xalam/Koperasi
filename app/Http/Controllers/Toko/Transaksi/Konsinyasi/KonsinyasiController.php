@@ -110,9 +110,9 @@ class KonsinyasiController extends Controller
             'debit' => $kas->debit - $angsuran
         ]);
 
-        $konsinyasi = AkunModel::where('kode', 2101)->first();
+        $konsinyasi = AkunModel::where('kode', 2102)->first();
 
-        AkunModel::where('kode', 2101)->update([
+        AkunModel::where('kode', 2102)->update([
             'kredit' => $konsinyasi->kredit - $angsuran
         ]);
 
