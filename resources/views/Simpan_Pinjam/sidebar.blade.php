@@ -67,6 +67,15 @@
                                 </a>
                             </li>
                         @endif
+                        @if (auth()->user()->role == 'admin' || auth()->user()->role == 'ketua_koperasi')
+                            <li class="nav-item">
+                                <a href="{{ route('instansi.index') }}"
+                                    class="nav-link {{ request()->is('simpan-pinjam/master/instansi*') ? ' active' : '' }}">
+                                    <i class="far fa-circle nav-icon"></i>
+                                    <p>Instansi</p>
+                                </a>
+                            </li>
+                        @endif
                     </ul>
                 </li>
                 @if (auth()->user()->role == 'simpan_pinjam' || auth()->user()->role == 'ketua_koperasi' || auth()->user()->role == 'admin' || auth()->user()->role == 'bendahara')

@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\Simpan_Pinjam\Utils\ResponseMessage;
 use App\Models\Simpan_Pinjam\Master\Anggota\Anggota;
+use App\Models\Simpan_Pinjam\Master\Instansi\Instansi;
 use App\Models\Simpan_Pinjam\Pengaturan\Pengaturan;
 use App\Models\Simpan_Pinjam\Pinjaman\Angsuran;
 use App\Models\Simpan_Pinjam\Pinjaman\Pinjaman;
@@ -60,12 +61,12 @@ class AnggotaController extends Controller
     public function create()
     {
         $simWajib    = Pengaturan::where('id', 5)->first();
-
         $expWajib    = explode(" ", $simWajib->angka);
+        $wajib       = $expWajib[0];
 
-        $wajib        = $expWajib[0];
+        $instansi    = Instansi::get();
 
-        return view('Simpan_Pinjam.master.anggota.create', compact('wajib'));
+        return view('Simpan_Pinjam.master.anggota.create', compact('wajib', 'instansi'));
     }
 
     /**
@@ -100,8 +101,9 @@ class AnggotaController extends Controller
         $user = $data['username'];
         $passwordClean = $data['password'];
         $phoneNumber = $data['no_wa'];
+        $idInstansi = $data['id_instansi'];
 
-        $kode_anggota = 'ANG-' . $user;
+        $kode_anggota = $idInstansi . '-' . $user;
 
         $extension = $request->file('foto')->extension();
         $imageName = $user . '.' . $extension;
@@ -147,10 +149,9 @@ class AnggotaController extends Controller
     public function show($id)
     {
         $anggota = Anggota::findOrFail($id);
+        $instansi = Instansi::findOrFail($anggota->id_instansi);
 
-        return view('Simpan_Pinjam.master.anggota.show')->with([
-            'anggota' => $anggota
-        ]);
+        return view('Simpan_Pinjam.master.anggota.show', compact('anggota', 'instansi'));
     }
 
     /**
@@ -164,12 +165,12 @@ class AnggotaController extends Controller
         $anggota = Anggota::findOrFail($id);
 
         $simWajib    = Pengaturan::where('id', 5)->first();
-
         $expWajib    = explode(" ", $simWajib->angka);
+        $wajib       = $expWajib[0];
 
-        $wajib        = $expWajib[0];
+        $instansi = Instansi::get();
 
-        return view('Simpan_Pinjam.master.anggota.edit', compact('anggota', 'wajib'));
+        return view('Simpan_Pinjam.master.anggota.edit', compact('anggota', 'wajib', 'instansi'));
     }
 
     /**

@@ -27,6 +27,15 @@ class PinjamanController extends Controller
         $checkLimit = Anggota::where('id', $idAnggota)->first();
         $checkPiutang = PiutangModel::where('id_anggota', $idAnggota)->orderBy('id', 'DESC')->first();
 
+        #Check Jangka Waktu
+        $masa_kerja = date('Y-m', strtotime(date('Y-m', strtotime($checkLimit->tanggal_lahir)) . ' + 58 year'));
+        $sisa_masa_kerja = date_diff(date_create($masa_kerja), date_create(date('Y-m')));
+        $sisa_bulan = ($sisa_masa_kerja->y * 12) + $sisa_masa_kerja->m;
+
+        if ($sisa_bulan < $request->tenor) {
+            return ResponseFormatter::error('Jangka waktu melebihi sisa masa kerja');
+        }
+
         #Check Nominal
         if ($request->nominal > 75000000) {
             return ResponseFormatter::error('Pinjaman melebihi ketentuan');

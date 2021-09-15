@@ -4,12 +4,12 @@
 
 @section('content_header', 'Edit Anggota')
 
-    @push('style')
-        <link rel="stylesheet"
-            href="{{ asset('assets/plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css') }}">
-        <link rel="stylesheet" href="{{ asset('assets/plugins/select2/css/select2.min.css') }}">
-        <link rel="stylesheet" href="{{ asset('assets/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css') }}">
-    @endpush
+@push('style')
+    <link rel="stylesheet"
+        href="{{ asset('assets/plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/plugins/select2/css/select2.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css') }}">
+@endpush
 
 @section('breadcrumb')
     <li class="breadcrumb-item"><a href="#">Master</a></li>
@@ -42,6 +42,17 @@
                             @if ($errors->has('nama_anggota'))
                                 <span class="text-danger">{{ $errors->first('nama_anggota') }}</span>
                             @endif
+                        </div>
+                        <div class="form-group">
+                            <label>Instansi</label>
+                            <select class="form-control select2" style="width: 100%;" name="id_instansi" id="instansi">
+                                @foreach ($instansi as $ins)
+                                    <option value="{{ $ins->id }}"
+                                        {{ $ins->kode_instansi == $anggota->id_instansi ? 'selected="selected"' : '' }}>
+                                        {{ $ins->kode_instansi . ' - ' . $ins->nama_instansi }}
+                                    </option>
+                                @endforeach
+                            </select>
                         </div>
                         <div class="form-group">
                             <label for="pria">Jenis Kelamin</label>

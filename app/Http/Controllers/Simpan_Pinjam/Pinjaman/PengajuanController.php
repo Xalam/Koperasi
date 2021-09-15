@@ -397,7 +397,10 @@ class PengajuanController extends Controller
     public function limit(Request $request)
     {
         $piutang = PiutangModel::where('id_anggota', $request->id)->orderBy('id', 'DESC')->first();
-        $anggota = Anggota::select('limit_gaji')->where('id', $request->id)->first();
+        $anggota = Anggota::select('limit_gaji', 'tanggal_lahir')->where('id', $request->id)->first();
+
+        $masa_kerja = date('Y-m', strtotime(date('Y-m', strtotime($anggota->tanggal_lahir)) . ' + 58 year'));
+        $sisa_masa_kerja = date_diff(date_create($masa_kerja), date_create(date('Y-m')));
 
         $totalPiutang = 0;
         if ($piutang) {
@@ -405,7 +408,9 @@ class PengajuanController extends Controller
         }
 
         $data = array(
-            'limit' => $anggota->limit_gaji - $totalPiutang
+            'limit' => $anggota->limit_gaji - $totalPiutang,
+            'masa_kerja' => $sisa_masa_kerja->y . ' Tahun ' . $sisa_masa_kerja->m . ' Bulan',
+            'sisa_bulan' => ($sisa_masa_kerja->y * 12) + $sisa_masa_kerja->m
         );
 
         return response()->json($data);
