@@ -4,10 +4,10 @@
 
 @section('content_header', 'Profil Anggota')
 
-    @push('style')
-        <link rel="stylesheet"
-            href="{{ asset('assets/plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css') }}">
-    @endpush
+@push('style')
+    <link rel="stylesheet"
+        href="{{ asset('assets/plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css') }}">
+@endpush
 
 @section('breadcrumb')
     <li class="breadcrumb-item"><a href="#">Master</a></li>
@@ -80,6 +80,15 @@
                                     <div class="col-sm-10">
                                         <input type="text" class="form-control form-readonly"
                                             value="{{ $anggota->nama_anggota }}" readonly>
+                                    </div>
+                                </div>
+                                <!-- Instansi -->
+                                <div class="form-group row">
+                                    <label class="col-sm-2 col-form-label">Instansi</label>
+                                    <div class="col-sm-10">
+                                        <input type="text" class="form-control form-readonly"
+                                            value="{{ $instansi->kode_instansi . ' - ' . $instansi->nama_instansi }}"
+                                            readonly>
                                     </div>
                                 </div>
                                 <!-- Gender -->

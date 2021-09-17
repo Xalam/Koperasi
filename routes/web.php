@@ -363,6 +363,9 @@ Route::group(['prefix' => 'simpan-pinjam', 'middleware' => ['auth:simpan-pinjam'
 
         Route::resource('admin', 'Simpan_Pinjam\Master\User\UserController')->middleware('checkrole:admin,ketua_koperasi');
         Route::get('admin/modal/{id}', 'Simpan_Pinjam\Master\User\UserController@modal')->name('admin.modal');
+
+        Route::resource('instansi', 'Simpan_Pinjam\Master\Instansi\InstansiController')->middleware('checkrole:admin,ketua_koperasi');
+        Route::get('instansi/modal/{id}', 'Simpan_Pinjam\Master\Instansi\InstansiController@modal')->name('instansi.modal');
     });
 
     #Simpanan

@@ -4,9 +4,9 @@
 
 @section('content_header', 'Laporan Simpanan')
 
-    @push('style')
+@push('style')
 
-    @endpush
+@endpush
 
 @section('breadcrumb')
     <li class="breadcrumb-item"><a href="#">Laporan</a></li>
@@ -83,14 +83,12 @@
                                     $no = 1;
                                     $total = 0;
                                 @endphp
-                                <tr>
-                                    <td colspan="5" class="text-center"><b>Simpanan</b></td>
-                                </tr>
-                                @foreach ($simpanan as $sim)
+                                @foreach ($simpananUnion as $sim)
                                     @php $total += $sim->nominal; @endphp
                                     <tr>
                                         <td class="text-center">{{ $no++ }}</td>
-                                        <td class="text-center">{{ $sim->kode_simpanan }}</td>
+                                        <td class="text-center">
+                                            {{ $sim->kode_simpanan == '0' ? 'Penarikan' : $sim->kode_simpanan }}</td>
                                         <td class="text-center">{{ date('d-m-Y', strtotime($sim->tanggal)) }}</td>
                                         <td class="text-center">
                                             @if ($sim->jenis_simpanan == 1)
@@ -104,36 +102,11 @@
                                         <td class="text-right">{{ number_format($sim->nominal, 2, ',', '.') }}</td>
                                     </tr>
                                 @endforeach
-                                <tr>
-                                    <td colspan="5" class="text-center"><b>Penarikan</b></td>
-                                </tr>
-                                @php
-                                    $nom = 1;
-                                    $totalSal = 0;
-                                @endphp
-                                @foreach ($saldoTarik as $sal)
-                                    @php $totalSal += $sal->nominal; @endphp
-                                    <tr>
-                                        <td class="text-center">{{ $nom++ }}</td>
-                                        <td class="text-center">Penarikan</td>
-                                        <td class="text-center">{{ date('d-m-Y', strtotime($sal->tanggal)) }}</td>
-                                        <td class="text-center">
-                                            @if ($sal->saldo->jenis_simpanan == 1)
-                                                Simpanan Pokok
-                                            @elseif ($sal->saldo->jenis_simpanan == 2)
-                                                Simpanan Wajib
-                                            @else
-                                                Simpanan Sukarela
-                                            @endif
-                                        </td>
-                                        <td class="text-right">{{ number_format($sal->nominal, 2, ',', '.') }}</td>
-                                    </tr>
-                                @endforeach
                             </tbody>
                             <tfoot>
                                 <tr>
                                     <td colspan="4" class="text-center"><b>Jumlah Simpanan</b></td>
-                                    <td class="text-right"><b>{{ number_format($total - $totalSal, 2, ',', '.') }}</b>
+                                    <td class="text-right"><b>{{ number_format($total, 2, ',', '.') }}</b>
                                     </td>
                                 </tr>
                             </tfoot>

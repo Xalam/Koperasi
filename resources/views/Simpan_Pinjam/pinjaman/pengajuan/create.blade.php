@@ -4,14 +4,14 @@
 
 @section('content_header', 'Tambah Pengajuan Pinjaman')
 
-    @push('style')
-        <link rel="stylesheet"
-            href="{{ asset('assets/plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css') }}">
-        <link rel="stylesheet" href="{{ asset('assets/plugins/select2/css/select2.min.css') }}">
-        <link rel="stylesheet" href="{{ asset('assets/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css') }}">
-        <!-- SweetAlert2 -->
-        <link rel="stylesheet" href="{{ asset('assets/plugins/sweetalert2-theme-bootstrap-4/bootstrap-4.min.css') }}">
-    @endpush
+@push('style')
+    <link rel="stylesheet"
+        href="{{ asset('assets/plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/plugins/select2/css/select2.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css') }}">
+    <!-- SweetAlert2 -->
+    <link rel="stylesheet" href="{{ asset('assets/plugins/sweetalert2-theme-bootstrap-4/bootstrap-4.min.css') }}">
+@endpush
 
 @section('breadcrumb')
     <li class="breadcrumb-item"><a href="#">Pinjaman</a></li>
@@ -42,6 +42,14 @@
                             </select>
                         </div>
                         <div class="cal-angsuran">
+                            <div class="form-group">
+                                <label>Sisa Masa Kerja</label>
+                                <div class="input-group">
+                                    <input type="text" class="form-control" placeholder="Sisa masa kerja" id="masa-kerja"
+                                        disabled>
+                                    <input type="hidden" class="form-control" id="sisa-masa-kerja">
+                                </div>
+                            </div>
                             <div class="form-group">
                                 <label>Limit</label>
                                 <div class="input-group">
@@ -91,8 +99,10 @@
                                     @endforeach
                                 </select>
                                 <input type="text" id="hide-tenor" hidden>
+                                <span id="danger-kerja" style="visibility: hidden;" class="text-danger text-sm">Jangka
+                                    waktu melebihi sisa masa kerja</span>
                             </div>
-                            <div class="form-group">
+                            <div class="form-group" style="margin-top: -15px;">
                                 <label>Angsuran</label>
                                 <div class="input-group">
                                     <input type="text" class="form-control" placeholder="Angsuran" id="angsuran" disabled>
@@ -225,6 +235,8 @@
                     success: function(data) {
                         $('#limit').attr('value', formatMoney(data.limit));
                         $('#limit-gaji').attr('value', data.limit);
+                        $('#masa-kerja').attr('value', data.masa_kerja);
+                        $('#sisa-masa-kerja').attr('value', data.sisa_bulan);
                     }
                 })
             });
@@ -241,6 +253,7 @@
                 let bunga = $('#hide-bunga').val();
                 let tenor = $('#hide-tenor').val();
                 let limit = $('#limit-gaji').val();
+                let sisa_bulan = $('#sisa-masa-kerja').val();
 
                 let newJumPinjaman = 0;
                 let newBunga = 0;
@@ -261,11 +274,21 @@
 
                 let result = (newJumPinjaman / newTenor) + (newJumPinjaman * (newBunga / 100));
 
+                if (sisa_bulan < newTenor) {
+                    document.getElementById('danger-kerja').style.visibility = 'visible';
+                } else {
+                    document.getElementById('danger-kerja').style.visibility = 'hidden';
+                }
+
                 if (result > newLimit) {
                     document.getElementById('danger-limit').style.visibility = 'visible';
-                    document.getElementById('btn-angsuran').disabled = true;
                 } else {
                     document.getElementById('danger-limit').style.visibility = 'hidden';
+                }
+
+                if (sisa_bulan < newTenor || result > newLimit) {
+                    document.getElementById('btn-angsuran').disabled = true;
+                } else {
                     document.getElementById('btn-angsuran').disabled = false;
                 }
 

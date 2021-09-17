@@ -2,6 +2,7 @@
 
 namespace App\Models\Simpan_Pinjam\Master\Anggota;
 
+use App\Models\Simpan_Pinjam\Master\Instansi\Instansi;
 use App\Models\Simpan_Pinjam\Other\Notifikasi;
 use App\Models\Simpan_Pinjam\Pinjaman\Pinjaman;
 use App\Models\Simpan_Pinjam\Simpanan\Saldo;
@@ -18,7 +19,7 @@ class Anggota extends Model
     protected $fillable = [
         'kd_anggota', 'nama_anggota', 'jenis_kelamin', 'agama', 'tempat_lahir',
         'tanggal_lahir', 'alamat', 'no_hp', 'no_wa', 'foto', 'status', 'jabatan',
-        'email', 'username', 'password', 'role', 'gaji', 'limit_gaji'
+        'email', 'username', 'password', 'role', 'gaji', 'limit_gaji', 'id_instansi'
     ];
 
     public function simpanan()
@@ -39,5 +40,10 @@ class Anggota extends Model
     public function notifikasi()
     {
         return $this->hasMany(Notifikasi::class, 'id_anggota');
+    }
+
+    public function instansi()
+    {
+        return $this->belongsTo(Instansi::class, 'id_instansi', 'id');
     }
 }
