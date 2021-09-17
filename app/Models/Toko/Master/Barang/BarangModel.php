@@ -23,10 +23,8 @@ class BarangModel extends Model
         'stok_etalase',
         'stok_gudang',
         'satuan',
-        'nomor_rak',
-        'tingkat_rak',
-        'posisi_rak',
         'foto',
+        'tanggal_beli',
         'expired_bulan',
         'expired_tahun',
         'alert_status'

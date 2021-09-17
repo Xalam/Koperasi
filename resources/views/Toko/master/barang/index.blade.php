@@ -27,9 +27,9 @@
                         <th>Harga Jual</th>
                         <th>Harga Grosir</th>
                         <th>Minimal Grosir</th>
-                        <th>Nomor Rak</th>
+                        <!-- <th>Nomor Rak</th>
                         <th>Tingkat Rak</th>
-                        <th>Posisi Rak</th>
+                        <th>Posisi Rak</th> -->
                         <th>Kode Supplier</th>
                         <th>Nama Supplier</th>
                         <th class="w-20">Opsi</th>
@@ -73,24 +73,24 @@
                             'edit-minimal-grosir-'.$data->id]) !!}
                             <div id="minimal-grosir-<?php echo $data->id ?>">{{$data->minimal_grosir}}</div>
                         </td>
-                        <td class="align-middle">
+                        <!-- <td class="align-middle">
                             {!! Form::text('edit_nomor_rak', $data->nomor_rak, ['class' => 'd-none form-control
                             form-control-sm', 'id' =>
                             'edit-nomor-rak-'.$data->id]) !!}
-                            <div id="nomor-rak-<?php echo $data->id ?>">{{$data->nomor_rak}}</div>
+                            <div id="nomor-rak-<?php //echo $data->id ?>">{{$data->nomor_rak}}</div>
                         </td>
                         <td class="align-middle text-center">
                             {!! Form::text('edit_tingkat_rak', $data->tingkat_rak, ['class' => 'd-none form-control
                             form-control-sm', 'id' =>
                             'edit-tingkat-rak-'.$data->id]) !!}
-                            <div id="tingkat-rak-<?php echo $data->id ?>">{{$data->tingkat_rak}}</div>
+                            <div id="tingkat-rak-<?php //echo $data->id ?>">{{$data->tingkat_rak}}</div>
                         </td>
                         <td class="align-middle text-center">
                             {!! Form::text('edit_posisi_rak', $data->posisi_rak, ['class' => 'd-none form-control
                             form-control-sm', 'id' =>
                             'edit-posisi-rak-'.$data->id]) !!}
-                            <div id="posisi-rak-<?php echo $data->id ?>">{{$data->posisi_rak}}</div>
-                        </td>
+                            <div id="posisi-rak-<?php //echo $data->id ?>">{{$data->posisi_rak}}</div>
+                        </td> -->
                         <td class="align-middle text-center">
                             <div id="kode-supplier-<?php echo $data->id ?>">{{$data->kode_supplier}}</div>
                         </td>
@@ -133,12 +133,12 @@ function edit(id) {
     $("#edit-harga-grosir-" + id).removeClass("d-none");
     $("#minimal-grosir-" + id).addClass("d-none");
     $("#edit-minimal-grosir-" + id).removeClass("d-none");
-    $("#nomor-rak-" + id).addClass("d-none");
-    $("#edit-nomor-rak-" + id).removeClass("d-none");
-    $("#tingkat-rak-" + id).addClass("d-none");
-    $("#edit-tingkat-rak-" + id).removeClass("d-none");
-    $("#posisi-rak-" + id).addClass("d-none");
-    $("#edit-posisi-rak-" + id).removeClass("d-none");
+    // $("#nomor-rak-" + id).addClass("d-none");
+    // $("#edit-nomor-rak-" + id).removeClass("d-none");
+    // $("#tingkat-rak-" + id).addClass("d-none");
+    // $("#edit-tingkat-rak-" + id).removeClass("d-none");
+    // $("#posisi-rak-" + id).addClass("d-none");
+    // $("#edit-posisi-rak-" + id).removeClass("d-none");
     $("#edit-" + id).addClass("d-none");
     $("#hapus-" + id).addClass("d-none");
     $("#terapkan-" + id).removeClass("d-none");
@@ -158,15 +158,15 @@ function batal(id) {
     $("#minimal-grosir-" + id).removeClass("d-none");
     $("#edit-minimal-grosir-" + id).val($("#minimal-grosir-" + id).text());
     $("#edit-minimal-grosir-" + id).addClass("d-none");
-    $("#nomor-rak-" + id).removeClass("d-none");
-    $("#edit-nomor-rak-" + id).val($("#nomor-rak-" + id).text());
-    $("#edit-nomor-rak-" + id).addClass("d-none");
-    $("#tingkat-rak-" + id).removeClass("d-none");
-    $("#edit-tingkat-rak-" + id).val($("#tingkat-rak-" + id).text());
-    $("#edit-tingkat-rak-" + id).addClass("d-none");
-    $("#posisi-rak-" + id).removeClass("d-none");
-    $("#edit-posisi-rak-" + id).val($("#posisi-rak-" + id).text());
-    $("#edit-posisi-rak-" + id).addClass("d-none");
+    // $("#nomor-rak-" + id).removeClass("d-none");
+    // $("#edit-nomor-rak-" + id).val($("#nomor-rak-" + id).text());
+    // $("#edit-nomor-rak-" + id).addClass("d-none");
+    // $("#tingkat-rak-" + id).removeClass("d-none");
+    // $("#edit-tingkat-rak-" + id).val($("#tingkat-rak-" + id).text());
+    // $("#edit-tingkat-rak-" + id).addClass("d-none");
+    // $("#posisi-rak-" + id).removeClass("d-none");
+    // $("#edit-posisi-rak-" + id).val($("#posisi-rak-" + id).text());
+    // $("#edit-posisi-rak-" + id).addClass("d-none");
     $("#edit-" + id).removeClass("d-none");
     $("#hapus-" + id).removeClass("d-none");
     $("#terapkan-" + id).addClass("d-none");
@@ -209,10 +209,10 @@ function terapkan(id) {
                 nama: $('#edit-nama-' + id).val(),
                 harga_jual: $('#edit-harga-jual-' + id).val(),
                 harga_grosir: $('#edit-harga-grosir-' + id).val(),
-                minimal_grosir: $('#edit-minimal-grosir-' + id).val(),
-                nomor_rak: $('#edit-nomor-rak-' + id).val(),
-                tingkat_rak: $('#edit-tingkat-rak-' + id).val(),
-                posisi_rak: $('#edit-posisi-rak-' + id).val()
+                minimal_grosir: $('#edit-minimal-grosir-' + id).val()
+                // nomor_rak: $('#edit-nomor-rak-' + id).val(),
+                // tingkat_rak: $('#edit-tingkat-rak-' + id).val(),
+                // posisi_rak: $('#edit-posisi-rak-' + id).val()
             },
             success: function(response) {
                 if (response.code == 200) {
@@ -224,12 +224,12 @@ function terapkan(id) {
                     $("#edit-harga-grosir-" + id).addClass("d-none");
                     $("#minimal-grosir-" + id).removeClass("d-none");
                     $("#edit-minimal-grosir-" + id).addClass("d-none");
-                    $("#nomor-rak-" + id).removeClass("d-none");
-                    $("#edit-nomor-rak-" + id).addClass("d-none");
-                    $("#tingkat-rak-" + id).removeClass("d-none");
-                    $("#edit-tingkat-rak-" + id).addClass("d-none");
-                    $("#posisi-rak-" + id).removeClass("d-none");
-                    $("#edit-posisi-rak-" + id).addClass("d-none");
+                    // $("#nomor-rak-" + id).removeClass("d-none");
+                    // $("#edit-nomor-rak-" + id).addClass("d-none");
+                    // $("#tingkat-rak-" + id).removeClass("d-none");
+                    // $("#edit-tingkat-rak-" + id).addClass("d-none");
+                    // $("#posisi-rak-" + id).removeClass("d-none");
+                    // $("#edit-posisi-rak-" + id).addClass("d-none");
                     $("#edit-" + id).removeClass("d-none");
                     $("#hapus-" + id).removeClass("d-none");
                     $("#terapkan-" + id).addClass("d-none");
@@ -239,9 +239,9 @@ function terapkan(id) {
                     $("#harga-jual-" + id).html(response.barang.harga_jual.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1.") + ',00');
                     $("#harga-grosir-" + id).html(response.barang.harga_grosir.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1.") + ',00');
                     $("#minimal-grosir-" + id).html(response.barang.minimal_grosir);
-                    $("#nomor-rak-" + id).html(response.barang.nomor_rak);
-                    $("#tingkat-rak-" + id).html(response.barang.tingkat_rak);
-                    $("#posisi-rak-" + id).html(response.barang.posisi_rak);
+                    // $("#nomor-rak-" + id).html(response.barang.nomor_rak);
+                    // $("#tingkat-rak-" + id).html(response.barang.tingkat_rak);
+                    // $("#posisi-rak-" + id).html(response.barang.posisi_rak);
                 }
             }
         });

@@ -29,6 +29,7 @@
                         <th>Stok Etalase</th>
                         <th>Stok Gudang</th>
                         <th>Satuan</th>
+                        <th>Tanggal Beli</th>
                         <th>Expired</th>
                         <th>Kode Supplier</th>
                         <th>Nama Supplier</th>
@@ -89,6 +90,9 @@
                             form-control-sm', 'id' =>
                             'edit-satuan-'.$data->id, 'required']) !!}
                             <div id="satuan-<?php echo $data->id ?>">{{$data->satuan}}</div>
+                        </td>
+                        <td class="align-middle text-center">
+                            <div id="tanggal-beli-<?php echo $data->id ?>">{{$data->tanggal_beli}}</div>
                         </td>
                         <td class="align-middle text-center">
                             <div id="expired-<?php echo $data->id ?>">{{'01/' . $data->expired_bulan . '/20' . $data->expired_tahun}}</div>

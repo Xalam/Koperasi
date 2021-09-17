@@ -48,21 +48,25 @@
             </div>
             <div class="col-lg-6">
                 <div class="row-lg align-item-center mb-2">
-                    {!! Form::label(null, 'Jenis', ['class' => 'col-lg-2 col-form-label']) !!}
-                    {!! Form::select('jenis', ['01' => 'Makanan Ringan', '02' => 'Minuman', '03' => 'Sabun', '04' =>
-                    'Pewangi', '05' => 'Antiseptic', '06' => 'Perawatan Muka', '07' => 'Elektronik', '08' => 'Botol',
-                    '09' => 'Bahan Pokok Makanan'], null, ['class' =>'col-lg-3 form-select
+                    {!! Form::label(null, 'Kategori', ['class' => 'col-lg-2 col-form-label']) !!}
+                    {!! Form::select('kategori', $kategori_barang, null, ['class' =>'col-lg-3 form-select
                     form-select-sm', 'required']) !!}
-                    {!! Form::text('text_jenis', null, ['class' => 'd-none col-lg-7 form-control form-control-sm']) !!}
+                    {!! Form::label(null, 'Tekstur', ['class' => 'offset-lg-1 col-lg-2 col-form-label']) !!}
+                    {!! Form::select('tekstur', $tekstur_barang, null,
+                    ['class' => 'col-lg-3 form-select form-select-sm', 'required']) !!}
+                </div>
+                <div class="row-lg align-item-center mb-2">
+                    {!! Form::label(null, 'Jenis', ['class' => 'col-lg-2 col-form-label']) !!}
+                    {!! Form::select('jenis', $jenis_barang, null, ['class' =>'col-lg-3 form-select
+                    form-select-sm', 'required']) !!}
                     {!! Form::label(null, 'Satuan', ['class' => 'offset-lg-1 col-lg-2 col-form-label']) !!}
-                    {!! Form::select('satuan', ['01' => 'Pack', '02' => 'Pcs', '03' => 'Kg', '04' => 'Liter'], null,
+                    {!! Form::select('satuan', $satuan_barang, null,
                     ['class' => 'col-lg-3 form-select form-select-sm', 'required']) !!}
                     {!! Form::text('text_satuan', null, ['class' => 'd-none col-lg-7 form-control form-control-sm']) !!}
                 </div>
                 <div class="row-lg align-item-center mb-2">
-                    {!! Form::label(null, 'Kemasan', ['class' => 'col-lg-2 col-form-label']) !!}
-                    {!! Form::select('kemasan', ['01' => 'Karung', '02' => 'Plastik', '03' => 'Botol', '04' => 'Kardus',
-                    '05' => 'Kaleng'], null, ['class' => 'col-lg-3 form-select form-select-sm',
+                    {!! Form::label(null, 'Kemasan', ['class' => 'col-lg-2 col-form-label text-nowrap']) !!}
+                    {!! Form::select('kemasan', $kemasan_barang, null, ['class' => 'col-lg-3 form-select form-select-sm',
                     'required']) !!}
                 </div>
                 <div class="row-lg align-item-center mb-2">
@@ -71,6 +75,11 @@
                     'required']) !!}
                     {!! Form::text('text_supplier', null, ['class' => 'd-none col-lg-7 form-control form-control-sm'])
                     !!}
+                </div>
+                <div class="row-lg align-item-center mb-2">
+                    {!! Form::label(null, 'Tanggal Beli', ['class' => 'col-lg-2 col-form-label']) !!}
+                    {!! Form::date('tanggal_beli', $cur_date, ['class' => 'col-lg-9 form-control form-control-sm',
+                    'required']) !!}
                 </div>
                 <div class="row-lg align-item-center mb-2">
                     {!! Form::label(null, 'Expired', ['class' => 'col-lg-2 col-form-label']) !!}
@@ -85,7 +94,7 @@
                     form-select-sm',
                     'required']) !!}
                 </div>
-                <div class="row-lg align-item-center mb-2">
+                <!-- <div class="row-lg align-item-center mb-2">
                     {!! Form::label(null, 'Rak', ['class' => 'col-lg-2 col-form-label']) !!}
                     {!! Form::label(null, 'Nomor', ['class' => 'col-lg-2 col-form-label']) !!}
                     {!! Form::select('nomor_rak', $rak, null, ['class' => 'col-lg-2 form-select form-select-sm',
@@ -100,7 +109,7 @@
                     {!! Form::label(null, 'Posisi', ['class' => 'offset-lg-2 col-lg-2 col-form-label']) !!}
                     {!! Form::select('posisi_rak', $rak, null, ['class' => 'col-lg-2 form-select form-select-sm',
                     'required']) !!}
-                </div>
+                </div> -->
             </div>
         </div>
         <div class="row-lg align-item-center mb-2">
@@ -183,7 +192,7 @@ $(function() {
         }
     });
 
-    $('input').keyup(function() {
+    $('input[type=text]').keyup(function() {
         setKode();
     });
 
@@ -191,22 +200,31 @@ $(function() {
         setKode();
     });
 
+    $('input[type=date]').change(function() {
+        setKode();
+    });
+
     function setKode() {
-        var split = $("input[name='nama']").val().split(' ');
+        // var split = $("input[name='nama']").val().split(' ');
 
-        var initial = '';
+        // var initial = '';
 
-        for (var i = 0; i < split.length; i++) {
-            if (i < 3 && split[i][0] != null) {
-                initial += split[i][0];
-            }
-        }
+        // for (var i = 0; i < split.length; i++) {
+        //     if (i < 3 && split[i][0] != null) {
+        //         initial += split[i][0];
+        //     }
+        // }
 
-        $("input[name='kode']").val(initial.toUpperCase() + $("[name='kemasan'] option:selected").val() + $(
-                "[name='jenis'] option:selected").val() + $("[name='satuan'] option:selected").val() + $(
-                "[name='supplier'] option:selected").val() + $("[name='bulan']").val() + $("[name='tahun']")
-            .val() + $("[name='nomor_rak'] option:selected").val() + $("[name='tingkat_rak'] option:selected").val() + $("[name='posisi_rak'] option:selected").val());
+        var input_tanggal_beli = $("[name='tanggal_beli']").val().toString().split('-');
+        var tahun_beli = input_tanggal_beli[0].substr(-2);
+        var bulan_beli = input_tanggal_beli[1];
+        var tanggal_beli = input_tanggal_beli[2];
 
+        $("input[name='kode']").val($("[name='kategori'] option:selected").val() + $(
+                "[name='jenis'] option:selected").val() + $("[name='tekstur'] option:selected").val() + $("[name='satuan'] option:selected").val() + 
+                $("[name='kemasan'] option:selected").val() + tanggal_beli + bulan_beli + tahun_beli);
+
+                
         $('[name="text_satuan"]').val($("[name='satuan'] option:selected").text());
         $('[name="text_supplier"]').val($("[name='supplier'] option:selected").text());
     }

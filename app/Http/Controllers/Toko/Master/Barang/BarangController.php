@@ -3,9 +3,15 @@
 namespace App\Http\Controllers\Toko\Master\Barang;
 
 use App\Http\Controllers\Controller;
+use App\Models\Toko\Master\Barang\BarangJenisModel;
+use App\Models\Toko\Master\Barang\BarangKategoriModel;
+use App\Models\Toko\Master\Barang\BarangKemasanModel;
+use App\Models\Toko\Master\Barang\BarangKlasifikasiModel;
 use Illuminate\Http\Request;
 
 use App\Models\Toko\Master\Barang\BarangModel;
+use App\Models\Toko\Master\Barang\BarangSatuanModel;
+use App\Models\Toko\Master\Barang\BarangTeksturModel;
 use App\Models\Toko\Master\Supplier\SupplierModel;
 use App\Models\Toko\Transaksi\Hutang\HutangModel;
 use Carbon\Carbon;
@@ -63,6 +69,8 @@ class BarangController extends Controller
                 ]);
             }
         }
+        
+        $cur_date = Carbon::now();
 
         HutangModel::where(DB::raw('DATE_ADD(DATE(NOW()), INTERVAL 3 DAY)'), '>=', DB::raw('DATE(jatuh_tempo)'))->update([
             'alert_status' => 1
@@ -83,21 +91,68 @@ class BarangController extends Controller
             $supplier[substr($data->kode, 5, 3)] = $data->nama;
         }
 
-        for ($i = 1; $i <= 20; $i++) {
-            if ($i < 10) {
-                $rak["0" . $i] = "0" . $i;
-            } else {
-                $rak[$i] = $i;
+        $data_kategori_barang = BarangKategoriModel::all();
+
+        if (count($data_kategori_barang) > 0){
+            foreach ($data_kategori_barang as $data) {
+                $kategori_barang[str_pad(strval($data->id), 2, '0', STR_PAD_LEFT)] = $data->nama;
             }
+        } else {
+            $kategori_barang[''] = "-- Kategori Tidak Tersedia --";
+        }
+
+        $data_jenis_barang = BarangJenisModel::all();
+
+
+        if (count($data_jenis_barang) > 0){
+            foreach ($data_jenis_barang as $data) {
+                $jenis_barang[str_pad(strval($data->id), 2, '0', STR_PAD_LEFT)] = $data->nama;
+            }
+        } else {
+            $jenis_barang[''] = "-- Jenis Tidak Tersedia --";
+        }
+
+        $data_tekstur_barang = BarangTeksturModel::all();
+
+        if (count($data_tekstur_barang) > 0){
+            foreach ($data_tekstur_barang as $data) {
+                $tekstur_barang[str_pad(strval($data->id), 2, '0', STR_PAD_LEFT)] = $data->nama;
+            }
+        } else {
+            $tekstur_barang[''] = "-- Tekstur Tidak Tersedia --";
+        }
+
+        $data_satuan_barang = BarangSatuanModel::all();
+
+        if (count($data_satuan_barang) > 0){
+            foreach ($data_satuan_barang as $data) {
+                $satuan_barang[str_pad(strval($data->id), 2, '0', STR_PAD_LEFT)] = $data->nama;
+            }
+        } else {
+            $satuan_barang[''] = "-- Satuan Tidak Tersedia --";
+        }
+
+        $data_kemasan_barang = BarangKemasanModel::all();
+
+        if (count($data_kemasan_barang) > 0){
+            foreach ($data_kemasan_barang as $data) {
+                $kemasan_barang[str_pad(strval($data->id), 2, '0', STR_PAD_LEFT)] = $data->nama;
+            }
+        } else {
+            $kemasan_barang[''] = "-- Kemasan Tidak Tersedia --";
         }
         
-        return view('toko.master.barang.create', compact('data_notified', 'data_notif', 'data_notif_hutang', 'rak', 'supplier', 'tahun'));
+        return view('toko.master.barang.create', compact('cur_date', 'data_notified', 'data_notif', 'data_notif_hutang', 'kategori_barang', 'jenis_barang', 'tekstur_barang','satuan_barang', 'kemasan_barang', 'supplier', 'tahun'));
     }
 
     public function store(Request $request) {
         $supplier[""] = "-- Pilih Supplier --";
         $tahun[""] = "";
-        $rak[""] = "";
+        $kategori_barang[""] = "";
+        $jenis_barang[""] = "";
+        $tekstur_barang[""] = "";
+        $satuan_barang[""] = "";
+        $kemasan_barang[""] = "";
         
         $data_notif = BarangModel::where('alert_status', 1)->get();
 
@@ -113,6 +168,8 @@ class BarangController extends Controller
                 ]);
             }
         }
+        
+        $cur_date = Carbon::now();
         
         $id_supplier = SupplierModel::where('nama', $request->input('text_supplier'))->first()->id;
 
@@ -130,10 +187,8 @@ class BarangController extends Controller
                 'harga_grosir' => $request->input('harga_grosir'),
                 'stok_minimal' => $request->input('stok_minimal'),
                 'satuan' => $request->input('text_satuan'),
-                'nomor_rak' => $request->input('nomor_rak'),
-                'tingkat_rak' => $request->input('tingkat_rak'),
-                'posisi_rak' => $request->input('posisi_rak'),
                 'foto' => $request->input('nama') .'.' . $request->file('foto')->getClientOriginalExtension(),
+                'tanggal_beli' => $request->input('tanggal_beli'),
                 'expired_bulan' => $request->input('bulan'),
                 'expired_tahun' => $request->input('tahun')
             ]);
@@ -145,7 +200,7 @@ class BarangController extends Controller
             Session::flash('success', 'Berhasil');
         }
 
-        return view('toko.master.barang.create', compact('data_notified', 'data_notif', 'rak', 'supplier', 'tahun'));
+        return view('toko.master.barang.create', compact('cur_date', 'data_notified', 'data_notif', 'kategori_barang', 'jenis_barang', 'tekstur_barang','satuan_barang', 'kemasan_barang', 'supplier', 'tahun'));
     }
 
     public function update(Request $request) {
